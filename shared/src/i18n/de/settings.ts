@@ -438,7 +438,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Eigene',
   'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
   'settings.appearance.special': 'Special Themes',
-  'settings.appearance.special.halloween.hint': 'Immer dunkel, mit Spinnweben, Fledermäusen, Nebel und dem Maskottchen im Kostüm.',
+  'settings.appearance.special.halloween.hint':
+    'Immer dunkel, mit Spinnweben, Fledermäusen, Nebel und dem Maskottchen im Kostüm.',
   'settings.appearance.special.active': 'Aktiv',
   'settings.appearance.special.try': 'Ausprobieren',
   'settings.appearance.special.modeLocked': 'Special Themes sind immer dunkel.',

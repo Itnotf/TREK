@@ -435,7 +435,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Custom',
   'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
   'settings.appearance.special': 'Különleges témák',
-  'settings.appearance.special.halloween.hint': 'Mindig sötét, pókhálókkal, denevérekkel, köddel és jelmezes kabalával.',
+  'settings.appearance.special.halloween.hint':
+    'Mindig sötét, pókhálókkal, denevérekkel, köddel és jelmezes kabalával.',
   'settings.appearance.special.active': 'Aktív',
   'settings.appearance.special.try': 'Kipróbálom',
   'settings.appearance.special.modeLocked': 'A különleges témák mindig sötétek.',

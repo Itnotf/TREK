@@ -436,7 +436,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Custom',
   'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
   'settings.appearance.special': 'Motywy specjalne',
-  'settings.appearance.special.halloween.hint': 'Zawsze ciemny, z pajęczynami, nietoperzami, mgłą i przebraną maskotką.',
+  'settings.appearance.special.halloween.hint':
+    'Zawsze ciemny, z pajęczynami, nietoperzami, mgłą i przebraną maskotką.',
   'settings.appearance.special.active': 'Aktywny',
   'settings.appearance.special.try': 'Wypróbuj',
   'settings.appearance.special.modeLocked': 'Motywy specjalne są zawsze ciemne.',

@@ -446,7 +446,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Custom',
   'settings.appearance.scheme.halloween': 'Χάλοουιν',
   'settings.appearance.special': 'Ειδικά θέματα',
-  'settings.appearance.special.halloween.hint': 'Πάντα σκοτεινό, με ιστούς αράχνης, νυχτερίδες, ομίχλη και τη μασκότ μεταμφιεσμένη.',
+  'settings.appearance.special.halloween.hint':
+    'Πάντα σκοτεινό, με ιστούς αράχνης, νυχτερίδες, ομίχλη και τη μασκότ μεταμφιεσμένη.',
   'settings.appearance.special.active': 'Ενεργό',
   'settings.appearance.special.try': 'Δοκίμασέ το',
   'settings.appearance.special.modeLocked': 'Τα ειδικά θέματα είναι πάντα σκοτεινά.',

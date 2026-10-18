@@ -436,7 +436,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Custom',
   'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
   'settings.appearance.special': 'Temas especiales',
-  'settings.appearance.special.halloween.hint': 'Siempre oscuro, con telarañas, murciélagos, niebla y la mascota disfrazada.',
+  'settings.appearance.special.halloween.hint':
+    'Siempre oscuro, con telarañas, murciélagos, niebla y la mascota disfrazada.',
   'settings.appearance.special.active': 'Activo',
   'settings.appearance.special.try': 'Probar',
   'settings.appearance.special.modeLocked': 'Los temas especiales siempre son oscuros.',

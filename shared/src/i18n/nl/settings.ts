@@ -435,7 +435,8 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.custom': 'Custom',
   'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
   'settings.appearance.special': 'Speciale thema’s',
-  'settings.appearance.special.halloween.hint': 'Altijd donker, met spinnenwebben, vleermuizen, mist en de mascotte verkleed.',
+  'settings.appearance.special.halloween.hint':
+    'Altijd donker, met spinnenwebben, vleermuizen, mist en de mascotte verkleed.',
   'settings.appearance.special.active': 'Actief',
   'settings.appearance.special.try': 'Probeer het',
   'settings.appearance.special.modeLocked': 'Speciale thema’s zijn altijd donker.',
