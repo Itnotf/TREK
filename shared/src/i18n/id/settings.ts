@@ -430,6 +430,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Amber',
   'settings.appearance.scheme.violet': 'Violet',
   'settings.appearance.scheme.custom': 'Custom',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Tema spesial',
+  'settings.appearance.special.halloween.hint': 'Selalu gelap, dengan sarang laba-laba, kelelawar, kabut, dan maskot berkostum.',
+  'settings.appearance.special.active': 'Aktif',
+  'settings.appearance.special.try': 'Coba',
+  'settings.appearance.special.modeLocked': 'Tema spesial selalu gelap.',
   'settings.appearance.customAccent': 'Custom accent',
   'settings.appearance.contrastOk': 'Good contrast',
   'settings.appearance.contrastLow': 'Low contrast',

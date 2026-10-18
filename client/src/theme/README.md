@@ -19,6 +19,24 @@ free **if they follow the contract below**.
 - Schemes are data: swatch metadata in `src/theme/schemes.ts`, token values in
   the `[data-scheme="…"]` blocks in `src/index.css`.
 
+## Special themes
+
+A special theme (today `halloween`) is a scheme on the same `data-scheme` axis,
+so it needs no applier of its own. Three things set it apart, all keyed to
+`APPEARANCE_SPECIAL_SCHEMES` in `@trek/shared`:
+
+- **Always dark.** `applyAppearance()` and the boot script force `.dark` while
+  one is on; the color-mode control in settings is dimmed with a hint.
+- **Palette** in `src/theme/special/<id>.tokens.css`, loaded eagerly next to
+  `index.css` so first paint is right. It overrides surfaces, text and the
+  feature palettes (`.trek-dash`, `--vg-*`, `--journal-*`, mobile `--m-*`).
+- **Decor** in `src/theme/special/<id>/`, a lazy chunk that `SpecialThemeLayer`
+  mounts while the scheme is on `<html>` (read through `useActiveScheme`, never
+  from the config). It respects reduced motion and transparency off, and never
+  draws over a map: the Atlas gets none, the trip planner dresses only its side
+  panels. Figures are pre-rendered 3D sprite sheets; the mascot plays its own
+  `-<id>-` clips.
+
 ## Token taxonomy
 
 | Purpose | Token / utility |
@@ -40,7 +58,9 @@ Fixed and sticky surfaces read their stacking order from one scale in
 | Token | Value | For |
 | --- | --- | --- |
 | `--z-bar` | 60 | `BottomNav`, page-bound sticky bars |
+| `--z-decor-ambient` | 190 | a special theme's sky, over the content and under the navbar (only while one is on) |
 | `--z-nav` | 200 | the desktop navbar |
+| `--z-decor` | 9000 | a special theme's webs and spiders, over the navbar and under its menus (only while one is on) |
 | `--z-modal` | 10000 | `shared/Modal`, `ConfirmDialog` |
 | `--z-overlay` | 99990 | page-owned full-screen overlays |
 | `--z-notice` | 99998 | app-wide system and release notices |

@@ -14,7 +14,8 @@ import { CLIPS } from './mascotClips';
  * stay 2 px stand-ins: browsers hang their own controls on visible videos.
  *
  * Clips live next to this file as `<scene>[--<mood>]-<light|dark>-<loop|poke>.mp4`,
- * cropped to the area the scene uses; `crop` in clips.meta.json places them back
+ * plus a `halloween` set in costume (hat, pumpkin) whose crops sit under
+ * `<clip>@halloween`. They are cropped to the area the scene uses; `crop` in clips.meta.json places them back
  * inside the full 88:96 box so every scene keeps the same scale. Only URLs are
  * bundled; the files load when a mascot actually renders.
  */
@@ -116,6 +117,7 @@ export default function MascotClip({
   size,
   className = '',
   fallback,
+  costume = false,
 }: {
   clip: string;
   scene: string;
@@ -123,12 +125,17 @@ export default function MascotClip({
   className?: string;
   /** shown when the device refuses to autoplay (e.g. iOS low power mode) */
   fallback: ReactNode;
+  /** The Halloween theme is on: play the clips in costume where they exist. */
+  costume?: boolean;
 }) {
-  const theme = useIsDark() ? 'dark' : 'light';
+  const dark = useIsDark();
+  const dressed = costume && !!CLIPS[`./clips/${clip}-halloween-loop.mp4`];
+  const theme = dressed ? 'halloween' : dark ? 'dark' : 'light';
   const loopUrl = CLIPS[`./clips/${clip}-${theme}-loop.mp4`];
   const pokeUrl = CLIPS[`./clips/${scene}-${theme}-poke.mp4`];
-  const pokeMs = (META[scene]?.poke ?? 2) * 1000;
-  const [x, y, w, h] = META[clip]?.crop ?? [0, 0, 1, 1];
+  const metaKey = (key: string) => (dressed ? `${key}@halloween` : key);
+  const pokeMs = (META[metaKey(scene)]?.poke ?? 2) * 1000;
+  const [x, y, w, h] = META[metaKey(clip)]?.crop ?? [0, 0, 1, 1];
   const boxW = size * CLIP_SCALE,
     boxH = (boxW * 96) / 88;
 

@@ -13,6 +13,7 @@ import HelpButton from '../Help/HelpButton'
 import { resolvePluginIcon } from '../shared/PluginIcon'
 import { visibleManagedNavItems } from '../../managed'
 import { useCollapseOnOverflow } from '../../hooks/useCollapseOnOverflow'
+import { useIsDark } from '../../hooks/useIsDark'
 
 const ADDON_ICONS: Record<string, LucideIcon> = { CalendarDays, Briefcase, Globe, Compass, Bookmark }
 
@@ -41,8 +42,8 @@ export default function Navbar({ tripTitle, tripId, onBack, showBack, onShare }:
   const location = useLocation()
   const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false)
   const [scrolled, setScrolled] = useState<boolean>(false)
-  const darkMode = settings.dark_mode
-  const dark = darkMode === true || darkMode === 'dark' || (darkMode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  // Off the .dark class: a special theme is dark whatever the stored mode says.
+  const dark = useIsDark()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8 || (document.body.scrollTop || 0) > 8)
@@ -121,7 +122,7 @@ export default function Navbar({ tripTitle, tripId, onBack, showBack, onShare }:
       paddingTop: 'env(safe-area-inset-top, 0px)',
       height: 'var(--nav-h)',
       transition: 'background 240ms cubic-bezier(0.23,1,0.32,1), backdrop-filter 240ms cubic-bezier(0.23,1,0.32,1), box-shadow 240ms cubic-bezier(0.23,1,0.32,1)',
-    }} className="hidden md:flex items-center px-4 gap-4 fixed top-0 inset-x-0 z-[200]">
+    }} className="trek-navbar hidden md:flex items-center px-4 gap-4 fixed top-0 inset-x-0 z-[200]">
       {/* Left side. flex-1 basis-0, matching the action cluster on the right, so
           the tab pill between them sits in the middle of the bar rather than
           being centred on top of both (#1983). Both columns keep at least their

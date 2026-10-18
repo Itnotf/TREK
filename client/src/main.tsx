@@ -25,6 +25,9 @@ import '@fontsource/geist-sans/600.css'
 // several .leaflet-* styles.
 import 'leaflet/dist/leaflet.css'
 import './index.css'
+// Special themes: the palette is eager (first paint), the decor loads with its layer.
+import '@fontsource/creepster/400.css'
+import './theme/special/halloween.tokens.css'
 import './styles/ferratas.css'
 import './styles/paddle.css'
 // Native HTML5 drag-and-drop never fires on touch input, so the planner's place /

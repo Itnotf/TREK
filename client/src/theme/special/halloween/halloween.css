@@ -1,0 +1,591 @@
+/* ── Halloween special theme: decor ───────────────────────────────────────────
+ * Loaded with HalloweenLayer, so only while the theme is on. Every rule is
+ * scoped to html[data-scheme="halloween"]; the palette lives in
+ * ../halloween.tokens.css. Motion stops under prefers-reduced-motion and the
+ * user's own reduce-motion switch; fog and glows go with transparency off.
+ */
+
+html[data-scheme='halloween'] {
+  /* Ambient sky over the content, under the navbar (--z-nav 200). */
+  --z-decor-ambient: 190;
+  /* Webs and spiders over the navbar, under its menus (9998) and every dialog. */
+  --z-decor: 9000;
+  --hw-card-web: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 66'%3E%3Cg fill='none' stroke='rgba(232,222,255,0.34)' stroke-linecap='round'%3E%3Cpath d='M0 0L64.0 0.0M0 0L62.1 15.5M0 0L56.0 31.0M0 0L45.3 45.3M0 0L31.0 56.0M0 0L15.5 62.1M0 0L0.0 64.0' stroke-width='0.7'/%3E%3Cpath d='M13.0 0.0Q10.2 1.3 12.6 3.1Q9.6 3.8 11.4 6.3Q8.2 6.2 9.2 9.2Q6.2 8.2 6.3 11.4Q3.8 9.6 3.1 12.6Q1.3 10.2 0.0 13.0M25.0 0.0Q19.7 2.4 24.3 6.0Q18.4 7.3 21.9 12.1Q15.8 11.9 17.7 17.7Q11.9 15.8 12.1 21.9Q7.3 18.4 6.0 24.3Q2.4 19.7 0.0 25.0M37.0 0.0Q29.2 3.6 35.9 9.0Q27.3 10.8 32.4 17.9Q23.4 17.6 26.2 26.2Q17.6 23.4 17.9 32.4Q10.8 27.3 9.0 35.9Q3.6 29.2 0.0 37.0M50.0 0.0Q39.4 4.8 48.5 12.1Q36.9 14.5 43.7 24.2Q31.6 23.8 35.4 35.4Q23.8 31.6 24.2 43.7Q14.5 36.9 12.1 48.5Q4.8 39.4 0.0 50.0' stroke-width='0.55'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ── Night sky behind everything that lets it through ─────────────────────── */
+
+html[data-scheme='halloween'] body {
+  background:
+    radial-gradient(70% 55% at 88% -8%, rgba(124, 58, 237, 0.22), transparent 70%),
+    radial-gradient(60% 40% at 0% 100%, rgba(77, 124, 15, 0.1), transparent 70%), var(--bg-primary);
+  background-attachment: fixed;
+}
+
+/* ── Overlay layers ────────────────────────────────────────────────────────── */
+
+.hw-ambient,
+.hw-decor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hw-ambient {
+  z-index: var(--z-decor-ambient);
+}
+.hw-decor {
+  z-index: var(--z-decor);
+}
+
+.hw-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hw-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130% 100% at 50% 40%, transparent 62%, rgba(6, 2, 12, 0.5) 100%);
+}
+
+/* Corner webs: dew on the silk catches the moon now and then */
+.hw-dew {
+  opacity: 0.35;
+  animation: hw-twinkle 5s ease-in-out infinite;
+}
+@keyframes hw-twinkle {
+  0%,
+  70%,
+  100% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 1;
+  }
+}
+
+/* Corner webs */
+.hw-web {
+  position: absolute;
+  opacity: 0.9;
+  transform-origin: 0 0;
+  animation: hw-sway 9s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 2px rgba(232, 222, 255, 0.15));
+}
+.hw-web--tl {
+  top: 0;
+  left: 0;
+} /* rtl-lint-disable: anchored to the physical viewport corner */
+.hw-web--tr {
+  top: 0;
+  right: 0; /* rtl-lint-disable: anchored to the physical viewport corner */
+  transform-origin: 100% 0;
+  scale: -1 1;
+  animation-duration: 11s;
+  animation-delay: -4s;
+}
+.hw-web--bl {
+  bottom: var(--bottom-nav-h, 0px);
+  left: 0; /* rtl-lint-disable: anchored to the physical viewport corner */
+  transform-origin: 0 100%;
+  scale: 1 -1;
+  opacity: 0.55;
+  animation-duration: 13s;
+}
+
+@keyframes hw-sway {
+  from {
+    rotate: -1.2deg;
+  }
+  to {
+    rotate: 1.4deg;
+  }
+}
+
+@media (max-width: 767px) {
+  .hw-web--tl {
+    width: 120px;
+    height: 120px;
+  }
+  .hw-web--tr {
+    width: 104px;
+    height: 104px;
+  }
+  .hw-web--bl {
+    display: none;
+  }
+}
+
+/* Desktop navbar: deep dusk glass with a slow ember running along its edge.
+   The bar paints itself inline (Navbar.tsx), hence the !important. */
+html[data-scheme='halloween'] .trek-navbar {
+  background: linear-gradient(180deg, rgba(26, 14, 38, 0.92) 0%, rgba(14, 8, 21, 0.9) 100%) !important;
+  border-bottom-color: rgba(249, 115, 22, 0.14) !important;
+  box-shadow:
+    0 10px 30px -12px rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(124, 58, 237, 0.18) !important;
+}
+html[data-scheme='halloween'] .trek-navbar::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0) 30%,
+    rgba(255, 179, 71, 0.95) 50%,
+    rgba(249, 115, 22, 0) 70%,
+    transparent 100%
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.9));
+  animation: hw-ember-run 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes hw-ember-run {
+  0% {
+    background-position: -40% 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 140% 0;
+    opacity: 0;
+  }
+}
+html[data-scheme='halloween'] .trek-nav-pill {
+  background: rgba(124, 58, 237, 0.12) !important;
+  box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.12);
+}
+
+/* A pumpkin patch in the bottom corner, the lanterns lighting the ground. */
+.hw-patch {
+  position: absolute;
+  bottom: calc(var(--bottom-nav-h, 0px) + 6px);
+  left: 14px; /* rtl-lint-disable: anchored to the physical viewport corner */
+  display: flex;
+  align-items: flex-end;
+  filter: drop-shadow(0 0 14px rgba(249, 115, 22, 0.35));
+}
+.hw-patch::before {
+  content: '';
+  position: absolute;
+  inset: auto -30px -10px -30px;
+  height: 40px;
+  background: radial-gradient(50% 50% at 50% 60%, rgba(249, 115, 22, 0.28), transparent 70%);
+  filter: blur(6px);
+}
+.hw-patch-2 {
+  margin-inline-start: -16px;
+  margin-bottom: 2px;
+}
+.hw-patch-3 {
+  margin-inline-start: -10px;
+}
+/* On a phone the corner is content, not floor. */
+@media (max-width: 767px) {
+  .hw-patch {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .hw-patch {
+    bottom: 10px;
+  }
+}
+
+/* Dangling spiders */
+.hw-drop {
+  position: absolute;
+  top: 0;
+  translate: -50% -120%;
+  transition: translate 4.6s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+.hw-drop::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% - 2px);
+  left: 50%; /* rtl-lint-disable: centres the thread on the spider */
+  width: 1px;
+  height: 120vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(232, 222, 255, 0),
+    rgba(232, 222, 255, 0.5) 70%,
+    rgba(232, 222, 255, 0.7)
+  );
+}
+.hw-drop--hang {
+  translate: -50% var(--hw-depth);
+}
+.hw-drop--up {
+  translate: -50% -120%;
+  transition-duration: 2.4s;
+  transition-timing-function: cubic-bezier(0.55, 0, 0.8, 0.4);
+}
+.hw-drop--still {
+  translate: 50% var(--hw-depth);
+  transition: none;
+}
+
+.hw-drop-body {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-origin: 50% 0;
+  animation: hw-bob 3.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 8px rgba(249, 115, 22, 0.25));
+}
+.hw-drop-body:focus {
+  outline: none;
+}
+
+@keyframes hw-bob {
+  from {
+    rotate: -7deg;
+  }
+  to {
+    rotate: 7deg;
+  }
+}
+
+@keyframes hw-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.85;
+  }
+  43% {
+    opacity: 0.45;
+  }
+  46% {
+    opacity: 0.95;
+  }
+  72% {
+    opacity: 0.78;
+  }
+}
+
+/* ── Typography: the display font for the few big titles ──────────────────── */
+
+html[data-scheme='halloween'] .trek-dash .sec-title,
+html[data-scheme='halloween'] .hero-content h1,
+html[data-scheme='halloween'] .hero-content h2 {
+  font-family: var(--hw-font);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 18px rgba(249, 115, 22, 0.45);
+}
+html[data-scheme='halloween'] .trek-dash .sec-title {
+  color: var(--hw-pumpkin-hi);
+}
+
+/* ── Surfaces: webs in the corners, a warmer edge ─────────────────────────── */
+
+html[data-scheme='halloween'] .trip-card,
+html[data-scheme='halloween'] .add-trip-card,
+html[data-scheme='halloween'] .trek-modal-backdrop > .trek-modal-enter,
+html[data-scheme='halloween'] .trek-popover-enter {
+  position: relative;
+}
+
+html[data-scheme='halloween'] .trip-card::after,
+html[data-scheme='halloween'] .trek-modal-backdrop > .trek-modal-enter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0; /* rtl-lint-disable: decor anchored to the card corner */
+  width: 58px;
+  height: 58px;
+  background: var(--hw-card-web) no-repeat top right / contain;
+  transform: scaleX(-1);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.85;
+}
+html[data-scheme='halloween'] .trip-card:nth-child(2n)::after {
+  right: auto; /* rtl-lint-disable: alternate corner */
+  left: 0; /* rtl-lint-disable: alternate corner */
+  transform: none;
+}
+
+html[data-scheme='halloween'] .trip-card {
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+html[data-scheme='halloween'] .trip-card:hover {
+  box-shadow:
+    0 14px 40px -12px rgba(249, 115, 22, 0.45),
+    0 0 0 1px rgba(249, 115, 22, 0.3);
+}
+
+html[data-scheme='halloween'] .trek-menu-enter,
+html[data-scheme='halloween'] .trek-popover-enter {
+  box-shadow:
+    var(--shadow-popover),
+    0 0 24px -6px rgba(249, 115, 22, 0.25);
+}
+
+/* Primary buttons smoulder on hover. */
+html[data-scheme='halloween'] .bg-accent {
+  transition:
+    box-shadow 0.25s ease,
+    background-color 0.2s ease;
+}
+html[data-scheme='halloween'] .bg-accent:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 179, 71, 0.4),
+    0 6px 22px -4px var(--hw-glow);
+}
+
+/* ── Dashboard hero: moonlight and fog over the cover ─────────────────────── */
+
+html[data-scheme='halloween'] .hero-trip .scrim {
+  background:
+    radial-gradient(40% 55% at 86% 18%, rgba(253, 232, 200, 0.28), transparent 60%),
+    linear-gradient(180deg, rgba(42, 22, 64, 0.35) 0%, rgba(12, 8, 18, 0.15) 40%, rgba(7, 4, 11, 0.88) 100%);
+}
+html[data-scheme='halloween'] .hero-trip::after {
+  content: '';
+  position: absolute;
+  inset: auto -20% 0 -20%;
+  height: 55%;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(35% 60% at 25% 80%, rgba(170, 130, 220, 0.3), transparent 70%),
+    radial-gradient(30% 50% at 70% 85%, rgba(120, 170, 120, 0.2), transparent 70%),
+    radial-gradient(40% 60% at 50% 100%, rgba(150, 110, 200, 0.3), transparent 70%);
+  filter: blur(10px);
+  animation: hw-fog-drift 16s ease-in-out infinite alternate;
+}
+html[data-scheme='halloween'] .hero-trip img.bg {
+  filter: saturate(0.7) hue-rotate(-12deg) brightness(0.82) contrast(1.08);
+}
+
+@keyframes hw-fog-drift {
+  from {
+    translate: -6% 0;
+  }
+  to {
+    translate: 6% 0;
+  }
+}
+
+/* Trip covers dim into dusk. */
+html[data-scheme='halloween'] .trip-cover img {
+  filter: saturate(0.75) brightness(0.86) sepia(0.12) hue-rotate(-8deg);
+}
+
+/* ── Trip planner: the side panels are dressed, the map between them is not ─ */
+
+html[data-scheme='halloween'] .trek-planner-panel {
+  position: relative;
+  box-shadow:
+    var(--sidebar-shadow),
+    inset 0 0 0 1px rgba(249, 115, 22, 0.1),
+    inset 0 -40px 60px -40px rgba(124, 58, 237, 0.35) !important;
+}
+html[data-scheme='halloween'] .trek-planner-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0; /* rtl-lint-disable: decor anchored to the panel corner */
+  width: 120px;
+  height: 120px;
+  background: var(--hw-card-web) no-repeat top right / contain;
+  transform: scaleX(-1);
+  pointer-events: none;
+  z-index: 30;
+  opacity: 1;
+  filter: drop-shadow(0 0 2px rgba(232, 222, 255, 0.35)) brightness(1.6);
+  transform-origin: 100% 0;
+  animation: hw-panel-web 10s ease-in-out infinite alternate;
+}
+@keyframes hw-panel-web {
+  from {
+    transform: scaleX(-1) rotate(-1deg);
+  }
+  to {
+    transform: scaleX(-1) rotate(1.2deg);
+  }
+}
+html[data-scheme='halloween'] .trek-planner-panel::before {
+  content: '';
+  position: absolute;
+  inset: auto -30% 0 -30%;
+  height: 90px;
+  pointer-events: none;
+  z-index: 30;
+  background:
+    radial-gradient(40% 70% at 30% 100%, rgba(150, 110, 200, 0.22), transparent 70%),
+    radial-gradient(35% 60% at 70% 100%, rgba(110, 160, 110, 0.14), transparent 70%);
+  filter: blur(6px);
+  animation: hw-fog-drift 14s ease-in-out infinite alternate;
+}
+
+/* ── Loading: lanterns instead of grey rings ──────────────────────────────── */
+
+html[data-scheme='halloween'] .animate-spin.rounded-full {
+  border-color: rgba(124, 58, 237, 0.35);
+  border-top-color: var(--hw-pumpkin);
+  box-shadow: 0 0 16px -2px var(--hw-glow);
+}
+
+html[data-scheme='halloween'] .trek-skeleton {
+  background-color: rgba(124, 58, 237, 0.1);
+}
+
+html[data-scheme='halloween'] .m-splash-bg {
+  background:
+    radial-gradient(40% 40% at 78% 18%, rgba(253, 232, 200, 0.5) 0 12%, rgba(249, 115, 22, 0.25) 13%, transparent 45%),
+    radial-gradient(90% 70% at 20% 100%, rgba(77, 124, 15, 0.25), transparent 70%),
+    linear-gradient(165deg, #2a1640 0%, #140a20 55%, #07040b 100%) !important;
+}
+
+/* ── Maps: the map itself stays as it is, only the clusters become lanterns ─ */
+
+html[data-scheme='halloween'] .marker-cluster-custom {
+  background: radial-gradient(
+    circle at 50% 40%,
+    var(--hw-pumpkin-hi),
+    var(--hw-pumpkin) 55%,
+    var(--hw-pumpkin-lo)
+  ) !important;
+  color: #1a0b02 !important;
+  border-color: rgba(26, 11, 2, 0.6) !important;
+  box-shadow:
+    0 0 14px var(--hw-glow),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.18) !important;
+  border-radius: 46% 46% 50% 50% / 52% 52% 48% 48% !important;
+  animation: hw-lantern 2.6s ease-in-out infinite;
+}
+html[data-scheme='halloween'] .marker-cluster-custom::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: calc(50% - 2px); /* rtl-lint-disable: centred stalk */
+  width: 4px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--hw-stem);
+}
+
+@keyframes hw-lantern {
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--hw-glow);
+  }
+  50% {
+    box-shadow: 0 0 22px var(--hw-glow);
+  }
+}
+
+/* ── The mascot in costume ────────────────────────────────────────────────── */
+
+html[data-scheme='halloween'] .trek-pupils {
+  fill: var(--hw-eye);
+}
+html[data-scheme='halloween'] svg.trek {
+  overflow: visible;
+}
+html[data-scheme='halloween'] svg.trek .trek-body {
+  filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.35));
+}
+
+.hw-mascot-hat-sway {
+  transform-box: view-box;
+  transform-origin: 42px 22px;
+  animation: hw-hat 3.4s ease-in-out infinite alternate;
+}
+@keyframes hw-hat {
+  from {
+    rotate: -3deg;
+  }
+  to {
+    rotate: 3deg;
+  }
+}
+
+.hw-mascot-spider {
+  transform-box: view-box;
+  transform-origin: 57.4px 22.6px;
+  animation: hw-mascot-spider 2.6s ease-in-out infinite alternate;
+}
+@keyframes hw-mascot-spider {
+  from {
+    rotate: -10deg;
+    translate: 0 -1px;
+  }
+  to {
+    rotate: 10deg;
+    translate: 0 1.5px;
+  }
+}
+
+.hw-mascot-pumpkin .hw-pumpkin-face,
+.stc-pumpkin .hw-pumpkin-face {
+  animation: hw-flicker 2.4s infinite;
+}
+.hw-mascot-pumpkin {
+  filter: drop-shadow(0 0 3px rgba(249, 115, 22, 0.7));
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────────── */
+
+html[data-scheme='halloween'] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b2752, #5b2a7a);
+}
+html[data-scheme='halloween'] ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #c2410c, #f97316);
+}
+
+/* ── Quieter when asked ───────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .hw-decor *,
+  html[data-scheme='halloween'] .trek-navbar::after,
+  html[data-scheme='halloween'] .trek-planner-panel::before,
+  html[data-scheme='halloween'] .trek-planner-panel::after,
+  html[data-scheme='halloween'] .hero-trip::after,
+  html[data-scheme='halloween'] .marker-cluster-custom,
+  .hw-mascot-hat-sway,
+  .hw-mascot-spider,
+  .hw-mascot-pumpkin .hw-pumpkin-face {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+html[data-reduce-motion] .hw-decor *,
+html[data-reduce-motion][data-scheme='halloween'] .trek-planner-panel::before,
+html[data-reduce-motion][data-scheme='halloween'] .trek-planner-panel::after,
+html[data-reduce-motion][data-scheme='halloween'] .trek-navbar::after,
+html[data-reduce-motion][data-scheme='halloween'] .hero-trip::after,
+html[data-reduce-motion][data-scheme='halloween'] .marker-cluster-custom,
+html[data-reduce-motion] .hw-mascot-hat-sway,
+html[data-reduce-motion] .hw-mascot-spider,
+html[data-reduce-motion] .hw-mascot-pumpkin .hw-pumpkin-face {
+  animation: none !important;
+  transition: none !important;
+}
+
+html[data-no-transparency] .hw-vignette,
+html[data-no-transparency][data-scheme='halloween'] .hero-trip::after {
+  display: none;
+}

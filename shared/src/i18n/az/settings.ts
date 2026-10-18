@@ -480,6 +480,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Kəhrəba',
   'settings.appearance.scheme.violet': 'Bənövşəyi',
   'settings.appearance.scheme.custom': 'Fərdi',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Xüsusi temalar',
+  'settings.appearance.special.halloween.hint': 'Həmişə qaranlıq: hörümçək toru, yarasalar, duman və kostyumlu maskot.',
+  'settings.appearance.special.active': 'Aktiv',
+  'settings.appearance.special.try': 'Sına',
+  'settings.appearance.special.modeLocked': 'Xüsusi temalar həmişə qaranlıqdır.',
   'settings.appearance.customAccent': 'Fərdi vurğu rəngi',
   'settings.appearance.contrastOk': 'Yaxşı kontrast',
   'settings.appearance.contrastLow': 'Aşağı kontrast',

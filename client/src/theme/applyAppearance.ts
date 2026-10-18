@@ -1,4 +1,4 @@
-import { normalizeAppearance, type AppearanceConfig } from '@trek/shared'
+import { isSpecialScheme, normalizeAppearance, type AppearanceConfig } from '@trek/shared'
 
 /**
  * The ONE place that writes appearance state to the DOM.
@@ -97,7 +97,8 @@ export function applyAppearance(input: ApplyAppearanceInput): AppearanceConfig {
     ? { ...cfg, schemeId: 'default', accent: null, transparency: true }
     : cfg
 
-  const dark = resolveDark(input.darkMode, isShared)
+  // Special themes ship only a dark variant, whatever the color mode says.
+  const dark = isSpecialScheme(eff.schemeId) || resolveDark(input.darkMode, isShared)
   const root = document.documentElement
 
   root.classList.toggle('dark', dark)
@@ -147,9 +148,9 @@ export function applyAppearance(input: ApplyAppearanceInput): AppearanceConfig {
   if (eff.fontScale === 1) root.style.removeProperty('font-size')
   else root.style.fontSize = `${eff.fontScale * 100}%`
 
-  // theme-color meta — unchanged from before (dark #09090b / light #ffffff).
+  // theme-color meta — dark #09090b / light #ffffff, special themes their own night.
   const meta = document.querySelector('meta[name="theme-color"]')
-  if (meta) meta.setAttribute('content', dark ? '#09090b' : '#ffffff')
+  if (meta) meta.setAttribute('content', eff.schemeId === 'halloween' ? '#0c0812' : dark ? '#09090b' : '#ffffff')
 
   writeSnapshot({
     v: 1,

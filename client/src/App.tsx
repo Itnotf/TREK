@@ -33,6 +33,7 @@ import OfflineBanner from './components/Layout/OfflineBanner'
 import NewVersionNotice from './components/Layout/NewVersionNotice'
 import { SystemNoticeHost } from './components/SystemNotices/SystemNoticeHost.js'
 import HelpPanel from './components/Help/HelpPanel'
+import SpecialThemeLayer from './theme/special/SpecialThemeLayer'
 // Notice action registrations (side-effect imports):
 import './pages/Trips/noticeActions.js'
 import { managedRoutes } from './managed'
@@ -405,6 +406,7 @@ export default function App() {
       {!hideAuthedWidgets && (isPhone ? <MSaveToCollectionSheet /> : <SaveToCollectionModal />)}
       <ErrorBoundary boundaryId="widget:offline-banner" fallback={null}><OfflineBanner /></ErrorBoundary>
       <ErrorBoundary boundaryId="widget:new-version" fallback={null}><NewVersionNotice /></ErrorBoundary>
+      <ErrorBoundary boundaryId="widget:special-theme" fallback={null}><SpecialThemeLayer /></ErrorBoundary>
       {/* One boundary for all route chunks, above <Routes> so it stays mounted
           across navigations. react-router runs location updates inside a transition,
           so a mounted boundary keeps the current page on screen instead of flashing

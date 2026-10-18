@@ -7,10 +7,28 @@ import type { AppearanceSchemeId } from '@trek/shared'
  * dot. Labels come from i18n (settings.appearance.scheme.<id>).
  */
 export interface SchemeSwatch {
-  id: Exclude<AppearanceSchemeId, 'custom'>
+  id: Exclude<AppearanceSchemeId, 'custom' | 'halloween'>
   /** Representative accent color shown in the picker, per color mode. */
   swatch: { light: string; dark: string }
 }
+
+/**
+ * Special themes get their own row in the picker with a larger preview card.
+ * Their palette lives in index.css like every scheme; the decor (cobwebs, bats,
+ * the mascot's hat) hangs off `html[data-scheme="<id>"]` in theme/special/.
+ */
+export interface SpecialTheme {
+  id: 'halloween'
+  /** Background of the preview card in the picker. */
+  preview: string
+}
+
+export const SPECIAL_THEMES: SpecialTheme[] = [
+  {
+    id: 'halloween',
+    preview: 'radial-gradient(circle at 78% 26%, #fde8c8 0 7%, #f9a14a 8%, transparent 22%), linear-gradient(160deg, #2a1640 0%, #120a1c 55%, #07040b 100%)',
+  },
+]
 
 export const APPEARANCE_SCHEMES: SchemeSwatch[] = [
   { id: 'default', swatch: { light: '#111827', dark: '#e4e4e7' } },

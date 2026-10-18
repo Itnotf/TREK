@@ -9,6 +9,7 @@ import { resolvePluginIcon } from '../shared/PluginIcon'
 import { useAuthStore } from '../../store/authStore'
 import { visibleManagedNavItems } from '../../managed'
 import { isNavItemActive, useCreateAction } from './useCreateAction'
+import { useIsDark } from '../../hooks/useIsDark'
 
 const ADDON_NAV: Record<string, { icon: LucideIcon; labelKey: string }> = {
   vacay:       { icon: CalendarDays, labelKey: 'admin.addons.catalog.vacay.name' },
@@ -22,8 +23,8 @@ interface NavItem { to: string; label: string; icon: LucideIcon }
 export default function BottomNav() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const darkMode = useSettingsStore(s => s.settings.dark_mode)
-  const dark = darkMode === true || darkMode === 'dark' || (darkMode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  // Off the .dark class: a special theme is dark whatever the stored mode says.
+  const dark = useIsDark()
   const addons = useAddonStore(s => s.addons)
   const globalAddons = addons.filter(a => a.type === 'global' && a.enabled)
   // Page plugins are reachable from the mobile tab bar too, mirroring the desktop

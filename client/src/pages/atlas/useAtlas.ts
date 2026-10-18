@@ -17,6 +17,7 @@ import { useToast } from '../../components/shared/Toast'
 import { getApiErrorMessage } from '../../types'
 import { usePlaceLanguage } from '../../hooks/usePlaceLanguage'
 import type { AtlasConfirmAction, VisitedRegionMap } from './useAtlasCountryActions'
+import { useIsDark } from '../../hooks/useIsDark'
 
 const PLANNED_KEY = 'trek_atlas_show_planned'
 
@@ -126,8 +127,8 @@ export function useAtlas() {
   const navigate = useNavigate()
   const toast = useToast()
   const resolveName = useCountryNames(language)
-  const dm = settings.dark_mode
-  const dark = dm === true || dm === 'dark' || (dm === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  // Off the .dark class: a special theme is dark whatever the stored mode says.
+  const dark = useIsDark()
   // Label-free tiles on purpose (the country fills carry the names here), so the
   // user's own template is deliberately not read, only their CARTO key.
   const tileUrl = useTileUrl(dark ? OFM_DARK : OFM_POSITRON, true)

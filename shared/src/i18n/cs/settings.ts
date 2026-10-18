@@ -426,6 +426,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Amber',
   'settings.appearance.scheme.violet': 'Violet',
   'settings.appearance.scheme.custom': 'Custom',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Speciální motivy',
+  'settings.appearance.special.halloween.hint': 'Vždy tmavý, s pavučinami, netopýry, mlhou a maskotem v kostýmu.',
+  'settings.appearance.special.active': 'Aktivní',
+  'settings.appearance.special.try': 'Vyzkoušet',
+  'settings.appearance.special.modeLocked': 'Speciální motivy jsou vždy tmavé.',
   'settings.appearance.customAccent': 'Custom accent',
   'settings.appearance.contrastOk': 'Good contrast',
   'settings.appearance.contrastLow': 'Low contrast',

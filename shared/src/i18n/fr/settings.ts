@@ -441,6 +441,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Amber',
   'settings.appearance.scheme.violet': 'Violet',
   'settings.appearance.scheme.custom': 'Custom',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Thèmes spéciaux',
+  'settings.appearance.special.halloween.hint': 'Toujours sombre, avec toiles d’araignée, chauves-souris, brume et la mascotte déguisée.',
+  'settings.appearance.special.active': 'Actif',
+  'settings.appearance.special.try': 'Essayer',
+  'settings.appearance.special.modeLocked': 'Les thèmes spéciaux sont toujours sombres.',
   'settings.appearance.customAccent': 'Custom accent',
   'settings.appearance.contrastOk': 'Good contrast',
   'settings.appearance.contrastLow': 'Low contrast',

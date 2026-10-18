@@ -1,0 +1,185 @@
+/* ── Halloween special theme: tokens ──────────────────────────────────────────
+ * Loaded eagerly next to index.css so the palette is there on first paint (the
+ * boot script sets data-scheme before React mounts). The decor itself (webs,
+ * bats, fog, card dressing) lives in halloween.css and is pulled in with the
+ * overlay only while the theme is on.
+ *
+ * `html[data-scheme]` (0,1,1) outranks the plain `.dark` block (0,1,0), and the
+ * applier forces `.dark` while this scheme is on, so only one set is needed.
+ */
+
+html[data-scheme='halloween'] {
+  color-scheme: dark;
+
+  --bg-primary: #0c0812;
+  --bg-secondary: #140d1c;
+  --bg-tertiary: #1b1226;
+  --bg-elevated: rgba(22, 14, 31, 0.86);
+  --bg-card: #150e1e;
+  --bg-input: #1e1429;
+  --bg-hover: rgba(255, 170, 90, 0.07);
+  --bg-selected: rgba(249, 115, 22, 0.15);
+
+  --text-primary: #f6ecdd;
+  --text-secondary: #ddcdbb;
+  --text-muted: #a897b8;
+  --text-faint: #786a8c;
+
+  --border-primary: #2e2040;
+  --border-secondary: #20162d;
+  --border-faint: rgba(255, 190, 140, 0.09);
+
+  --accent: #f97316;
+  --accent-text: #1a0b02;
+  --accent-on: #fb923c;
+  --accent-hover: #ea580c;
+  --accent-subtle: rgba(249, 115, 22, 0.16);
+
+  --sidebar-bg: rgba(20, 13, 29, 0.88);
+  --sidebar-shadow: 0 4px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(249, 115, 22, 0.08);
+  --tooltip-bg: rgba(18, 11, 26, 0.97);
+  --scrollbar-track: #0f0a16;
+  --scrollbar-thumb: #3b2752;
+  --scrollbar-hover: #c2410c;
+
+  --success: #84cc16;
+  --success-soft: rgba(132, 204, 22, 0.16);
+  --danger: #f43f5e;
+  --danger-soft: rgba(244, 63, 94, 0.16);
+  --warning: #fbbf24;
+  --warning-soft: rgba(251, 191, 36, 0.16);
+  --info: #a78bfa;
+  --info-soft: rgba(167, 139, 250, 0.16);
+
+  --bg-inverse: #f6ecdd;
+  --text-inverse: #0c0812;
+  --overlay: rgba(6, 2, 10, 0.72);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249, 115, 22, 0.05);
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-elevated: 0 10px 34px rgba(0, 0, 0, 0.55);
+  --shadow-modal: 0 18px 64px rgba(0, 0, 0, 0.72), 0 0 48px rgba(249, 115, 22, 0.1);
+  --shadow-dropdown: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(249, 115, 22, 0.08);
+  --shadow-popover: 0 10px 36px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(249, 115, 22, 0.08);
+
+  --journal-bg: #0a0610;
+  --journal-card: #170f20;
+  --journal-border: #2e2040;
+  --journal-accent: #f97316;
+  --journal-text: #f6ecdd;
+  --journal-muted: #a897b8;
+  --journal-faint: #5c4d70;
+
+  --vg-ink: oklch(0.95 0.02 75);
+  --vg-ink2: oklch(0.8 0.03 300);
+  --vg-ink3: oklch(0.62 0.04 300);
+  --vg-bg: oklch(0.15 0.03 300);
+  --vg-surf: oklch(0.2 0.04 300);
+  --vg-surf2: oklch(0.24 0.045 300);
+  --vg-line: oklch(0.3 0.05 300);
+  --vg-line2: oklch(0.36 0.06 300);
+  --vg-glass-bg: linear-gradient(135deg, oklch(0.28 0.06 300 / 0.6) 0%, oklch(0.2 0.05 300 / 0.45) 100%);
+  --vg-glass-br: oklch(0.8 0.12 55 / 0.14);
+  --vg-glass-sh: 0 1px 2px oklch(0 0 0 / 0.4), 0 12px 32px -14px oklch(0.1 0.05 300 / 0.7);
+  --vg-hi: inset 0 1px 0 oklch(0.9 0.1 60 / 0.1);
+
+  /* The decor's own palette. Everything in halloween.css and the mascot's hat
+   * reads these, so the look is tuned in one place. */
+  --hw-night: #07040b;
+  --hw-dusk: #2a1640;
+  --hw-pumpkin: #f7811e;
+  --hw-pumpkin-hi: #ffb347;
+  --hw-pumpkin-lo: #b4500c;
+  --hw-stem: #4d7c0f;
+  --hw-glow: rgba(249, 115, 22, 0.55);
+  --hw-glow-soft: rgba(249, 115, 22, 0.18);
+  --hw-ember: #ffcf7a;
+  --hw-slime: #a3e635;
+  --hw-moon: #fde8c8;
+  --hw-web: rgba(232, 222, 255, 0.42);
+  --hw-web-faint: rgba(232, 222, 255, 0.16);
+  --hw-hat: #1d1029;
+  --hw-hat-hi: #3a2152;
+  --hw-hat-band: #f97316;
+  --hw-buckle: #fcd34d;
+  --hw-spider: #0b0710;
+  --hw-eye: #ff8a1f;
+  --hw-ghost: rgba(246, 236, 221, 0.92);
+  --hw-font: 'Creepster', 'Poppins', system-ui, sans-serif;
+}
+
+/* Mobile chrome (mobile.css scopes its tokens to .m-root under `.dark`). */
+html[data-scheme='halloween'] .m-root {
+  --m-ink: #f6ecdd;
+  --m-muted: #b4a3c4;
+  --m-faint: #7c6d90;
+  --m-bg: #0a0610;
+  --m-scr: radial-gradient(120% 70% at 80% -10%, #3a1d52 0%, #1a0e26 40%, #0c0812 70%, #07040b 100%);
+  --m-glass: rgba(28, 17, 40, 0.62);
+  --m-gbr: rgba(249, 115, 22, 0.16);
+  --m-card: rgba(26, 16, 37, 0.6);
+  --m-cbr: rgba(255, 190, 140, 0.11);
+  --m-inner: rgba(255, 190, 140, 0.06);
+  --m-inbr: rgba(255, 190, 140, 0.1);
+  --m-act: #f97316;
+  --m-actfg: #1a0b02;
+  --m-dim: rgba(4, 1, 8, 0.66);
+  --m-sheet: rgba(22, 13, 31, 0.95);
+  --m-sheetop: #1a1024;
+  --m-shbr: rgba(249, 115, 22, 0.18);
+  --m-ic: rgba(255, 190, 140, 0.08);
+  --m-avbr: rgba(249, 115, 22, 0.25);
+  --m-rowbr: rgba(255, 190, 140, 0.07);
+  --m-conn: #7c6d90;
+  --m-mapb: #120b19;
+  --m-mapr: #241733;
+  --m-mapw: #0b0c16;
+  --m-mkr: #f97316;
+  --m-mkfg: #1a0b02;
+  --m-trackoff: rgba(255, 190, 140, 0.16);
+}
+
+html[data-scheme='halloween'] ::selection {
+  background: rgba(249, 115, 22, 0.42);
+  color: #fff7ed;
+}
+
+/* Dashboard (styles/dashboard.css keeps its own palette under .trek-dash). */
+html[data-scheme='halloween'] .trek-dash {
+  --bg: oklch(0.14 0.03 300);
+  --bg-2: oklch(0.18 0.04 300);
+  --surface: oklch(0.2 0.045 300);
+  --surface-2: oklch(0.23 0.05 300);
+  --ink: oklch(0.95 0.025 75);
+  --ink-2: oklch(0.8 0.035 300);
+  --ink-3: oklch(0.63 0.045 300);
+  --line: oklch(0.3 0.06 300);
+  --line-2: oklch(0.36 0.07 300);
+  --success: oklch(0.78 0.2 130);
+  --warn: oklch(0.8 0.15 70);
+  --sh-md: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 28px -8px oklch(0.1 0.06 300 / 0.7);
+  --sh-lg: 0 2px 4px oklch(0 0 0 / 0.45), 0 24px 56px -16px oklch(0.1 0.08 300 / 0.8);
+  --glass-bg: linear-gradient(135deg, oklch(0.27 0.07 300 / 0.62) 0%, oklch(0.19 0.05 300 / 0.48) 100%);
+  --glass-border: oklch(0.82 0.12 55 / 0.13);
+  --glass-shadow: 0 1px 2px oklch(0 0 0 / 0.4), 0 14px 34px -14px oklch(0.08 0.06 300 / 0.8);
+  --glass-shadow-hover: 0 2px 6px oklch(0 0 0 / 0.45), 0 26px 56px -18px oklch(0.6 0.18 50 / 0.35);
+  --glass-highlight: inset 0 1px 0 oklch(0.92 0.1 70 / 0.1);
+  background: transparent;
+}
+
+html[data-scheme='halloween'] .trek-dash .fab-new-trip {
+  background: linear-gradient(135deg, #ffb347 0%, #f97316 45%, #c2410c 100%);
+  color: #1a0b02;
+  box-shadow:
+    0 0 0 1px rgba(255, 179, 71, 0.5),
+    0 8px 22px rgba(249, 115, 22, 0.45),
+    0 16px 40px rgba(0, 0, 0, 0.5);
+}
+html[data-scheme='halloween'] .trek-dash .fab-new-trip:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 210, 140, 0.7),
+    0 10px 30px rgba(249, 115, 22, 0.65),
+    0 20px 50px rgba(0, 0, 0, 0.55);
+}

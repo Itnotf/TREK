@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useActiveScheme } from '../../hooks/useActiveScheme';
+import { MascotHat, MascotPumpkin } from '../../theme/special/halloween/MascotCostume';
 import MascotClip from './trek3d/MascotClip';
 import { findClip, mascot3dEnabled } from './trek3d/mascotClips';
 
@@ -66,6 +68,8 @@ type MascotProps = {
 export default function MDancingTrek(props: MascotProps) {
   const { size = 96, scene = 'idle', mood, className = '' } = props;
   const sceneMood = SCENE_MOOD[scene] ?? 'default';
+  // Special themes dress the mascot: the 3D clips come in costume, and so does the SVG.
+  const costume = useActiveScheme() === 'halloween';
   const clip =
     import.meta.env.MODE !== 'test' && mascot3dEnabled() ? findClip(scene, mood ?? sceneMood, sceneMood) : null;
   if (clip)
@@ -75,13 +79,20 @@ export default function MDancingTrek(props: MascotProps) {
         scene={scene}
         size={size}
         className={className}
-        fallback={<MDancingTrekSvg {...props} />}
+        costume={costume}
+        fallback={<MDancingTrekSvg {...props} costume={costume} />}
       />
     );
-  return <MDancingTrekSvg {...props} />;
+  return <MDancingTrekSvg {...props} costume={costume} />;
 }
 
-function MDancingTrekSvg({ size = 96, scene = 'idle', mood, className = '' }: MascotProps) {
+function MDancingTrekSvg({
+  size = 96,
+  scene = 'idle',
+  mood,
+  className = '',
+  costume = false,
+}: MascotProps & { costume?: boolean }) {
   const face = mood ?? SCENE_MOOD[scene] ?? 'default';
   // Ground shadow sits under whatever the mascot stands on this scene.
   const shadowCy = scene === 'transport' ? 86 : 73;
@@ -111,8 +122,10 @@ function MDancingTrekSvg({ size = 96, scene = 'idle', mood, className = '' }: Ma
             </g>
             <Eyes mood={face} />
             <SceneOnBody scene={scene} />
+            {costume && <MascotHat />}
           </g>
         </g>
+        {costume && <MascotPumpkin groundY={shadowCy} />}
 
         {/* scene prop in front of the body — animates on its own */}
         <SceneFront scene={scene} />

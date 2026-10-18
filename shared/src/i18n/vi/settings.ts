@@ -432,6 +432,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Hổ phách',
   'settings.appearance.scheme.violet': 'Tím',
   'settings.appearance.scheme.custom': 'Tùy chỉnh',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Chủ đề đặc biệt',
+  'settings.appearance.special.halloween.hint': 'Luôn tối, với mạng nhện, dơi, sương mù và linh vật hóa trang.',
+  'settings.appearance.special.active': 'Đang dùng',
+  'settings.appearance.special.try': 'Dùng thử',
+  'settings.appearance.special.modeLocked': 'Chủ đề đặc biệt luôn ở chế độ tối.',
   'settings.appearance.customAccent': 'Màu nhấn tùy chỉnh',
   'settings.appearance.contrastOk': 'Tương phản tốt',
   'settings.appearance.contrastLow': 'Tương phản thấp',

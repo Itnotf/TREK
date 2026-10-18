@@ -1,6 +1,7 @@
-import { DEFAULT_APPEARANCE, normalizeAppearance, type AppearanceConfig } from '@trek/shared';
+import { DEFAULT_APPEARANCE, isSpecialScheme, normalizeAppearance, type AppearanceConfig } from '@trek/shared';
 import { useEffect, useRef, useState } from 'react';
 
+import { useIsDark } from '../../hooks/useIsDark';
 import { useTranslation } from '../../i18n';
 import { useSettingsStore } from '../../store/settingsStore';
 import { applyAppearance } from '../../theme/applyAppearance';
@@ -42,10 +43,10 @@ export function useAppearanceEditor() {
     [updateSetting]
   );
 
-  const isDark =
-    settings.dark_mode === true ||
-    settings.dark_mode === 'dark' ||
-    (settings.dark_mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  // Off the `.dark` class: a special theme forces dark whatever the stored mode says.
+  const isDark = useIsDark();
+  // While a special theme is on, the color mode has nothing to switch.
+  const modeLocked = isSpecialScheme(cfg.schemeId);
 
   // Live preview now (DOM), persist after a short debounce (API).
   const update = (patch: Partial<AppearanceConfig>) => {
@@ -83,6 +84,7 @@ export function useAppearanceEditor() {
     cfg,
     darkMode: settings.dark_mode,
     isDark,
+    modeLocked,
     update,
     setMode,
     setWidget,

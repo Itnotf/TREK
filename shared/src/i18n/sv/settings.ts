@@ -431,6 +431,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Amber',
   'settings.appearance.scheme.violet': 'Violet',
   'settings.appearance.scheme.custom': 'Custom',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Specialteman',
+  'settings.appearance.special.halloween.hint': 'Alltid mörkt, med spindelväv, fladdermöss, dimma och maskoten utklädd.',
+  'settings.appearance.special.active': 'Aktivt',
+  'settings.appearance.special.try': 'Prova',
+  'settings.appearance.special.modeLocked': 'Specialteman är alltid mörka.',
   'settings.appearance.customAccent': 'Custom accent',
   'settings.appearance.contrastOk': 'Good contrast',
   'settings.appearance.contrastLow': 'Low contrast',

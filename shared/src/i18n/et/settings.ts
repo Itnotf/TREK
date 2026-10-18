@@ -438,6 +438,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Merevaigukollane',
   'settings.appearance.scheme.violet': 'Violetne',
   'settings.appearance.scheme.custom': 'Kohandatud',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Eriteemad',
+  'settings.appearance.special.halloween.hint': 'Alati tume, ämblikuvõrkude, nahkhiirte, udu ja kostümeeritud maskotiga.',
+  'settings.appearance.special.active': 'Aktiivne',
+  'settings.appearance.special.try': 'Proovi',
+  'settings.appearance.special.modeLocked': 'Eriteemad on alati tumedad.',
   'settings.appearance.customAccent': 'Kohandatud aktsentvärv',
   'settings.appearance.contrastOk': 'Hea kontrast',
   'settings.appearance.contrastLow': 'Madal kontrast',

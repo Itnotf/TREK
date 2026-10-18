@@ -24,6 +24,8 @@
     if (isShared) dark = false;
     else if (s.darkMode === 'auto') dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     else dark = s.darkMode === true || s.darkMode === 'dark';
+    // Special themes (APPEARANCE_SPECIAL_SCHEMES in @trek/shared) are dark-only.
+    if (!isShared && s.scheme === 'halloween') dark = true;
     root.classList.toggle('dark', dark);
 
     var scheme = isShared ? 'default' : s.scheme;

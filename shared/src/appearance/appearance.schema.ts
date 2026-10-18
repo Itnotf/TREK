@@ -25,7 +25,20 @@ export const APPEARANCE_PRESET_SCHEMES = [
   'rose', // warm rose/coral
   'amber', // warm gold/sunrise
   'violet', // purple/plum
+  'halloween', // seasonal special theme: always dark, adds the spooky decor layer
 ] as const;
+
+/**
+ * Special themes are more than a palette: they carry their own decor layer and
+ * only exist in a dark variant, so the applier forces `.dark` while one is on.
+ */
+export const APPEARANCE_SPECIAL_SCHEMES = [
+  'halloween',
+] as const satisfies readonly (typeof APPEARANCE_PRESET_SCHEMES)[number][];
+
+export function isSpecialScheme(id: string): boolean {
+  return (APPEARANCE_SPECIAL_SCHEMES as readonly string[]).includes(id);
+}
 
 /** All selectable scheme ids, including the user-defined custom accent. */
 export const APPEARANCE_SCHEME_IDS = [...APPEARANCE_PRESET_SCHEMES, 'custom'] as const;

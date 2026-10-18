@@ -409,6 +409,12 @@ const settings: TranslationStrings = {
   'settings.appearance.scheme.amber': 'Ambre',
   'settings.appearance.scheme.violet': 'Violeta',
   'settings.appearance.scheme.custom': 'Personalitzat',
+  'settings.appearance.scheme.halloween': 'Halloween', // same-as-en
+  'settings.appearance.special': 'Temes especials',
+  'settings.appearance.special.halloween.hint': 'Sempre fosc, amb teranyines, ratpenats, boira i la mascota disfressada.',
+  'settings.appearance.special.active': 'Actiu',
+  'settings.appearance.special.try': 'Prova-ho',
+  'settings.appearance.special.modeLocked': 'Els temes especials sempre són foscos.',
   'settings.appearance.customAccent': "Color d'accent personalitzat",
   'settings.appearance.contrastOk': 'Bon contrast',
   'settings.appearance.contrastLow': 'Contrast baix',

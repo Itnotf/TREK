@@ -4,6 +4,7 @@ import { useTranslation } from '../../i18n'
 import type { InAppNotification } from '../../store/inAppNotificationStore'
 import { useSettingsStore } from '../../store/settingsStore'
 import { compactTime, useNotificationItemActions } from './useNotificationItemActions'
+import { useIsDark } from '../../hooks/useIsDark'
 
 function relativeTime(dateStr: string, locale: string): string {
   return compactTime(dateStr, locale === 'ar' ? 'الآن' : 'just now')
@@ -17,8 +18,8 @@ interface NotificationItemProps {
 export default function InAppNotificationItem({ notification, onClose }: NotificationItemProps): React.ReactElement {
   const { t, locale } = useTranslation()
   const { settings } = useSettingsStore()
-  const darkMode = settings.dark_mode
-  const dark = darkMode === true || darkMode === 'dark' || (darkMode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  // Off the .dark class: a special theme is dark whatever the stored mode says.
+  const dark = useIsDark()
   const { responding, handleRespond, handleNavigate, markRead, deleteNotification } =
     useNotificationItemActions(notification, onClose)
 

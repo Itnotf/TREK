@@ -6,7 +6,8 @@ import { Segmented } from '../shared/dialogParts'
 import Section from './Section'
 import ToggleSwitch from './ToggleSwitch'
 import { SETTINGS_BUTTON, SettingRow, SettingRows, StatusPill } from './settingsKit'
-import { APPEARANCE_SCHEMES, CUSTOM_ACCENT_PRESETS } from '../../theme/schemes'
+import { APPEARANCE_SCHEMES, CUSTOM_ACCENT_PRESETS, SPECIAL_THEMES } from '../../theme/schemes'
+import SpecialThemeCard from '../../theme/special/SpecialThemeCard'
 import { APPEARANCE_SCALE_MIN, APPEARANCE_SCALE_MAX } from '@trek/shared'
 import { DESKTOP_GROUPS, MOBILE_GROUPS, isHex } from './appearanceModel'
 import { useAppearanceEditor } from './useAppearanceEditor'
@@ -35,7 +36,7 @@ const DOT = 'h-4 w-4 flex-none rounded-full shadow-[inset_0_0_0_1px_var(--border
 export default function AppearanceSettingsTab(): React.ReactElement {
   const { t } = useTranslation()
   const tr = (key: string, fallback: string) => t(key) || fallback
-  const { cfg, darkMode, isDark, update, setMode, setWidget, resetAll, accentLight, accentDark, customRatio } =
+  const { cfg, darkMode, isDark, modeLocked, update, setMode, setWidget, resetAll, accentLight, accentDark, customRatio } =
     useAppearanceEditor()
 
   // The stored mode, read the way the old boolean values meant it.
@@ -50,7 +51,9 @@ export default function AppearanceSettingsTab(): React.ReactElement {
           {/* Color mode */}
           <SettingRow
             label={tr('settings.colorMode', 'Color mode')}
+            hint={modeLocked ? t('settings.appearance.special.modeLocked') : undefined}
             control={
+              <div className={modeLocked ? 'pointer-events-none opacity-45' : undefined} aria-disabled={modeLocked || undefined}>
               <Segmented
                 label={tr('settings.colorMode', 'Color mode')}
                 value={mode}
@@ -70,8 +73,19 @@ export default function AppearanceSettingsTab(): React.ReactElement {
                   },
                 ]}
               />
+              </div>
             }
           />
+
+          {/* Special themes: a whole look, not just an accent */}
+          <SettingRow label={t('settings.appearance.special')} stacked>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {SPECIAL_THEMES.map((s) => (
+                <SpecialThemeCard key={s.id} theme={s} active={cfg.schemeId === s.id}
+                  onSelect={() => update({ schemeId: s.id })} />
+              ))}
+            </div>
+          </SettingRow>
 
           {/* Color scheme swatches */}
           <SettingRow label={tr('settings.appearance.scheme', 'Color scheme')} stacked>
@@ -290,6 +304,7 @@ function schemeFallback(id: string): string {
     rose: 'Rose',
     amber: 'Amber',
     violet: 'Violet',
+    halloween: 'Halloween',
   }
   return map[id] || id
 }

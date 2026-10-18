@@ -295,7 +295,7 @@ function TripPlannerPageDesktop(): React.ReactElement | null {
             <div className="hidden md:block" style={{ position: 'absolute', left: 10, top: 10, bottom: 10, zIndex: 20 }}>
               <PanelTab hidden={leftHidden} label={leftHidden ? t('trip.mobilePlan') : t('common.collapse')} onToggle={toggleLeft} />
 
-              <div style={{
+              <div className="trek-planner-panel" style={{
                 width: leftHidden ? 0 : leftWidth, height: '100%',
                 background: 'var(--sidebar-bg)',
                 backdropFilter: 'blur(24px) saturate(180%)',
@@ -420,7 +420,7 @@ function TripPlannerPageDesktop(): React.ReactElement | null {
             <div className="hidden md:block" style={{ position: 'absolute', right: 10, top: 10, bottom: 10, zIndex: 20 }}>
               <PanelTab side="right" hidden={rightHidden} label={rightHidden ? t('trip.mobilePlaces') : t('common.collapse')} onToggle={toggleRight} />
 
-              <div style={{
+              <div className="trek-planner-panel" style={{
                 width: rightHidden ? 0 : rightWidth, height: '100%',
                 background: 'var(--sidebar-bg)',
                 backdropFilter: 'blur(24px) saturate(180%)',
@@ -638,7 +638,7 @@ function TripPlannerPageDesktop(): React.ReactElement | null {
             />
             <div className="hidden md:block" style={{ position: 'absolute', left: 10, top: 10, bottom: 10, zIndex: 20 }}>
               <PanelTab hidden={leftHidden} label={leftHidden ? t('trip.mobilePlan') : t('common.collapse')} onToggle={toggleLeft} />
-              <div style={{
+              <div className="trek-planner-panel" style={{
                 width: leftHidden ? 0 : leftPanelPx, height: '100%', position: 'relative',
                 background: 'var(--sidebar-bg)', backdropFilter: 'blur(24px) saturate(180%)',
                 WebkitBackdropFilter: 'blur(24px) saturate(180%)', boxShadow: leftHidden ? 'none' : 'var(--sidebar-shadow)',

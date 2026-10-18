@@ -17,6 +17,7 @@ import type { Collection, CollectionStatus, CollectionFile } from '@trek/shared'
 import type { Category, Place } from '../../types'
 import { filterPlaces, sortPlaces, statusCounts, mappablePlaces, presentCategories, presentLabels } from './collectionsModel'
 import type { CollectionLabelUpdateRequest } from '@trek/shared'
+import { useIsDark } from '../../hooks/useIsDark'
 
 /** Quiet time after the last collections:* event before the page reloads. */
 const WS_RELOAD_SETTLE_MS = 400
@@ -34,8 +35,9 @@ export function useCollections() {
   const { id: routeId } = useParams<{ id: string }>()
   const toast = useToast()
 
-  const dm = useSettingsStore(s => s.settings.dark_mode)
-  const dark = dm === true || dm === 'dark' || (dm === 'auto' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+  // Off the .dark class: a special theme is dark whatever the stored mode says.
+
+  const dark = useIsDark()
 
   // Desktop breakpoint for the list+map split (list view only). Below it the
   // list stays single-column and the map is its own view.

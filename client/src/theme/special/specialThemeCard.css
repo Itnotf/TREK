@@ -1,0 +1,381 @@
+/* ── Special theme picker card ────────────────────────────────────────────────
+ * A tiny moonlit scene. At rest it glows softly; on hover the night sky starts
+ * to churn (an animated gradient), a conic border runs round the edge, the bats
+ * take off, the ghost rises and the lanterns flare.
+ */
+
+@property --stc-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.stc--halloween {
+  /* The decor palette, set on the card so it previews before the theme is on. */
+  --hw-night: #07040b;
+  --hw-pumpkin: #f7811e;
+  --hw-pumpkin-hi: #ffb347;
+  --hw-pumpkin-lo: #b4500c;
+  --hw-stem: #4d7c0f;
+  --hw-ember: #ffcf7a;
+  --hw-web: rgba(232, 222, 255, 0.5);
+  --hw-web-faint: rgba(232, 222, 255, 0.2);
+  --hw-spider: #0b0710;
+  --hw-eye: #ff8a1f;
+  --hw-ghost: rgba(246, 236, 221, 0.9);
+}
+
+.stc {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 84px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: start;
+  color: #fff7ed;
+  cursor: pointer;
+  background: #0b0612;
+  box-shadow:
+    0 8px 30px -12px rgba(124, 58, 237, 0.55),
+    0 0 0 1px rgba(249, 115, 22, 0.22);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+.stc:hover,
+.stc:focus-visible {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow:
+    0 18px 50px -14px rgba(249, 115, 22, 0.6),
+    0 0 0 1px rgba(249, 115, 22, 0.5);
+  outline: none;
+}
+
+.stc:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Running conic border: masked to a 1.5px ring. */
+.stc-border {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--stc-angle),
+    #f97316,
+    #7c3aed 25%,
+    #a3e635 45%,
+    #f97316 60%,
+    #db2777 80%,
+    #f97316
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.stc:hover .stc-border,
+.stc:focus-visible .stc-border,
+.stc--active .stc-border {
+  opacity: 1;
+  animation: stc-spin 3.2s linear infinite;
+}
+
+@keyframes stc-spin {
+  to {
+    --stc-angle: 360deg;
+  }
+}
+
+.stc-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 82% 0%, rgba(124, 58, 237, 0.55) 0%, transparent 55%),
+    linear-gradient(165deg, #2a1640 0%, #140a20 50%, #07040b 100%);
+}
+
+/* The churning gradient that wakes up on hover. */
+.stc-aurora {
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    115deg,
+    rgba(249, 115, 22, 0) 10%,
+    rgba(249, 115, 22, 0.55) 30%,
+    rgba(124, 58, 237, 0.6) 48%,
+    rgba(163, 230, 53, 0.35) 62%,
+    rgba(219, 39, 119, 0.5) 78%,
+    rgba(249, 115, 22, 0) 92%
+  );
+  background-size: 260% 260%;
+  mix-blend-mode: screen;
+  filter: blur(18px);
+  opacity: 0.18;
+  transition: opacity 0.5s ease;
+  animation: stc-aurora 9s ease-in-out infinite alternate;
+}
+
+.stc:hover .stc-aurora,
+.stc:focus-visible .stc-aurora {
+  opacity: 0.85;
+  animation-duration: 3.5s;
+}
+
+@keyframes stc-aurora {
+  0% {
+    background-position: 0% 50%;
+    transform: rotate(0deg);
+  }
+  100% {
+    background-position: 100% 50%;
+    transform: rotate(8deg);
+  }
+}
+
+.stc-moon {
+  position: absolute;
+  top: 9px;
+  inset-inline-end: 16px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 38%, rgba(180, 140, 100, 0.35) 0 9%, transparent 10%),
+    radial-gradient(circle at 62% 64%, rgba(180, 140, 100, 0.3) 0 7%, transparent 8%),
+    radial-gradient(circle at 60% 30%, rgba(180, 140, 100, 0.25) 0 5%, transparent 6%),
+    radial-gradient(circle at 40% 40%, #fff6e4, #fde8c8 55%, #f9c98a 100%);
+  box-shadow:
+    0 0 14px 4px rgba(253, 232, 200, 0.32),
+    0 0 36px 10px rgba(249, 115, 22, 0.16);
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s ease;
+}
+
+.stc:hover .stc-moon {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow:
+    0 0 30px 10px rgba(253, 232, 200, 0.5),
+    0 0 90px 30px rgba(249, 115, 22, 0.3);
+}
+
+.stc-fog {
+  position: absolute;
+  inset: auto -20% -30% -20%;
+  height: 70%;
+  background:
+    radial-gradient(40% 60% at 25% 60%, rgba(150, 110, 200, 0.35), transparent 70%),
+    radial-gradient(35% 50% at 70% 70%, rgba(110, 160, 110, 0.22), transparent 70%);
+  filter: blur(8px);
+  animation: stc-fog 12s ease-in-out infinite alternate;
+}
+
+@keyframes stc-fog {
+  to {
+    transform: translateX(10%);
+  }
+}
+
+.stc-web {
+  position: absolute;
+  top: 0;
+  opacity: 0.8;
+}
+.stc-web--l {
+  inset-inline-start: 0;
+}
+.stc-web--r {
+  inset-inline-end: 0;
+  transform: scaleX(-1);
+  opacity: 0.55;
+}
+
+.stc-bats {
+  position: absolute;
+  inset: 0;
+}
+
+.stc-bat {
+  position: absolute;
+  transition:
+    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.6s ease;
+}
+.stc-bat--1 {
+  top: 12px;
+  inset-inline-end: 54px;
+}
+.stc-bat--2 {
+  top: 34px;
+  inset-inline-end: 84px;
+  opacity: 0.8;
+}
+.stc-bat--3 {
+  top: 8px;
+  inset-inline-end: 112px;
+  opacity: 0.7;
+}
+
+.stc:hover .stc-bat--1 {
+  transform: translate(-40px, -14px) rotate(-8deg);
+}
+.stc:hover .stc-bat--2 {
+  transform: translate(-60px, -22px) rotate(-12deg);
+}
+.stc:hover .stc-bat--3 {
+  transform: translate(-30px, -8px) rotate(6deg);
+}
+
+.stc-ghost {
+  position: absolute;
+  bottom: -40px;
+  inset-inline-start: 44%;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(220, 210, 255, 0.7));
+  transition:
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.6s ease;
+}
+.stc:hover .stc-ghost {
+  opacity: 0.7;
+  transform: translateY(-46px) rotate(-6deg);
+}
+
+.stc-pumpkins {
+  position: absolute;
+  bottom: 4px;
+  inset-inline-end: 10px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.stc-pumpkin {
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.45));
+  transition:
+    filter 0.4s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.stc:hover .stc-pumpkin {
+  filter: drop-shadow(0 0 16px rgba(249, 115, 22, 0.9));
+}
+.stc:hover .stc-pumpkin--1 {
+  transform: translateY(-4px) rotate(-6deg);
+}
+.stc:hover .stc-pumpkin--2 {
+  transform: translateY(-2px) rotate(8deg);
+}
+
+.stc-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.stc-title {
+  font-family: 'Creepster', 'Poppins', system-ui, sans-serif;
+  font-size: calc(21px * var(--fs-scale-title, 1));
+  line-height: 1;
+  letter-spacing: 0.04em;
+  background: linear-gradient(90deg, #ffb347, #f97316 40%, #fde68a 60%, #f97316 80%, #ffb347);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(249, 115, 22, 0.55));
+}
+.stc:hover .stc-title {
+  animation: stc-title 1.6s linear infinite;
+}
+
+@keyframes stc-title {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.stc-hint {
+  font-size: calc(11px * var(--fs-scale-caption, 1));
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: rgba(246, 236, 221, 0.78);
+}
+
+.stc-badge {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: calc(10.5px * var(--fs-scale-caption, 1));
+  font-weight: 600;
+  color: #fff7ed;
+  background: rgba(20, 10, 30, 0.6);
+  box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.45);
+  backdrop-filter: blur(6px);
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 50px;
+}
+.stc-badge--on {
+  color: #1a0b02;
+  background: linear-gradient(90deg, #f97316, #fb923c);
+  box-shadow: 0 0 18px rgba(249, 115, 22, 0.6);
+}
+
+.stc--active {
+  box-shadow:
+    0 14px 44px -12px rgba(249, 115, 22, 0.65),
+    0 0 0 1px rgba(249, 115, 22, 0.6);
+}
+
+@media (max-width: 520px) {
+  .stc {
+    min-height: 80px;
+  }
+  .stc-copy {
+    max-width: 68%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stc,
+  .stc * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+html[data-reduce-motion] .stc,
+html[data-reduce-motion] .stc * {
+  animation: none !important;
+  transition: none !important;
+}
