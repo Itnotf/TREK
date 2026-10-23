@@ -244,6 +244,8 @@ const CORE_TOOL_GROUPS: ToolGroups = {
       'CollectionToursMcp',
       'PaddleRoutingMcp',
       'SkiRoutingMcp',
+      'HikeWaysMcp',
+      'ToursWandererMcp',
     ],
   },
   roadtrip: {

@@ -143,6 +143,8 @@ describe('tourRouteModel', () => {
     expect(canTake(SAVED)).toBe(false);
     expect(canTake({ ...HIKE, activity: 'kayak', source: 'plan' })).toBe(false);
     expect(canTake({ ...HIKE, source: 'pending' })).toBe(false);
+    // Another way for a leg of a saved hike changes that hike; it is not created anew.
+    expect(canTake({ ...HIKE, placeId: 12 })).toBe(false);
   });
 
   it('FE-AI-TOUR-010: proposals of one answer form ways of three at most; anything else stands alone', () => {

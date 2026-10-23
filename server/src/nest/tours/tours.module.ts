@@ -38,6 +38,8 @@ import { CollectionToursService } from './collection-tours.service';
 import { HikePlanMcp } from './hike-plan.mcp';
 import { HikePlanService } from './hike-plan.service';
 import { HikeRoutingService } from './hike-routing.service';
+import { HikeWaysMcp } from './hike-ways.mcp';
+import { HikeWaysService } from './hike-ways.service';
 import { TourActivitiesController } from './tour-activities.controller';
 import { TourActivitiesMcp } from './tour-activities.mcp';
 import { TourActivitiesService } from './tour-activities.service';
@@ -77,6 +79,7 @@ import { TourWalkImportMcp } from './tour-walk-import.mcp';
 import { TourWalkImportService } from './tour-walk-import.service';
 import { ToursImportController } from './tours-import.controller';
 import { ToursWandererController } from './tours-wanderer.controller';
+import { ToursWandererMcp } from './tours-wanderer.mcp';
 import { ToursWandererService } from './tours-wanderer.service';
 import { ToursController } from './tours.controller';
 import { ToursMcp } from './tours.mcp';
@@ -99,7 +102,9 @@ import { Module } from '@nestjs/common';
  * tours' own repositories, is planned on foot by RoadtripModule's router and
  * is created through ToursService (CW-11). A hike an assistant plans with the
  * traveller is proposed, created, changed or taken in from a GPX file through
- * the same writes, its way planned on the server by HikeRoutingService, its
+ * the same writes, its way planned on the server by HikeRoutingService (a
+ * round of a wished length and the other ways of a leg found by HikeWaysService
+ * with the planner's own search), its
  * day read from WeatherModule's detailed weather and the places along it from
  * the tours' own search; one created on a day is put there through
  * AssignmentsService in the same write. A
@@ -212,6 +217,7 @@ import { Module } from '@nestjs/common';
     CityWalkBriefingService,
     HikeRoutingService,
     HikePlanService,
+    HikeWaysService,
     TourChangePreviewService,
     TourChangeSaveService,
     TourChangeUndoService,
@@ -233,6 +239,8 @@ import { Module } from '@nestjs/common';
     TourActivityStatsMcp,
     CollectionToursMcp,
     TourPackingMcp,
+    HikeWaysMcp,
+    ToursWandererMcp,
   ],
 })
 export class ToursModule {}

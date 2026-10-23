@@ -22,6 +22,7 @@ import { RateLimitService } from '../common/rate-limit.service';
 import { UnitOfWork } from '../database/unit-of-work';
 import { buildTripCard, categoriesFrom, todayIn, type TripCard } from './assistant-context';
 import { partsOf, toThreadMessages } from './assistant-history';
+import { isWayProposal, WAY_CREATES, wayTakeArgsOf } from './assistant-proposal-ways';
 import { AssistantStreamRegistry } from './assistant-stream.registry';
 import { TAKE_PROPOSAL_TOOL, TURNS_PER_MINUTE } from './assistant-tools.constants';
 import { AssistantToolsService, type ToolRun } from './assistant-tools.service';
@@ -69,9 +70,10 @@ interface StoredProposal {
 }
 
 /** The proposing reads a card can be taken from, and the tool each one is created through. */
-const CREATES: Readonly<Record<string, 'create_hike' | 'create_city_walk'>> = {
+const CREATES: Readonly<Record<string, string>> = {
   propose_hike: 'create_hike',
   propose_city_walk: 'create_city_walk',
+  ...WAY_CREATES,
 };
 const PROPOSING: ReadonlySet<string> = new Set(Object.keys(CREATES));
 
@@ -151,6 +153,9 @@ const HIKE_FIELDS = [
  * nothing can be created from.
  */
 export function takeArgsOf(proposal: StoredProposal): Row | null {
+  if (isWayProposal(proposal.toolName)) {
+    return wayTakeArgsOf(proposal.toolName, proposal.args, proposal.result, proposal.card);
+  }
   const via = CREATES[proposal.toolName];
   if (via === 'create_hike') {
     if (!proposal.card.routed) return null;

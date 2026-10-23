@@ -16,6 +16,7 @@ import { proposalCard, savedTourCard } from './tour-route.cards';
 import { cityWalkCard, paddleCard, skiCard } from './tour-sport.cards';
 import { DELETE_CREATED_TOUR, DELETE_IMPORTED_TOUR } from './tour-undo';
 import { describeVisit, loadVisit, SET_VISIT_UNDO } from './tour-visit.cards';
+import { IMPORT_WANDERER_TRAIL, legWayCard, roundHikeCard, wandererPreviewCard } from './tour-ways.cards';
 import { TOUR_WRITE_CARDS } from './tour-writes.cards';
 
 /**
@@ -61,6 +62,10 @@ export const TOUR_CARDS: DomainCards = {
   tools: {
     propose_hike: { argPolicy: WITH_GEOMETRY, answer: proposalCard },
     propose_city_walk: { argPolicy: WITH_GEOMETRY, answer: cityWalkCard },
+    propose_round_hike: { argPolicy: WITH_GEOMETRY, answer: roundHikeCard },
+    propose_hike_leg_way: { argPolicy: WITH_GEOMETRY, answer: legWayCard },
+    preview_wanderer_trail: { argPolicy: WITH_GEOMETRY, answer: wandererPreviewCard },
+    import_wanderer_trail: IMPORT_WANDERER_TRAIL,
     plan_paddle_route: { argPolicy: WITH_GEOMETRY, answer: paddleCard },
     plan_ski_route: { argPolicy: WITH_GEOMETRY, answer: skiCard },
     get_tour_plan: { project: withoutPreview, answer: savedTourCard },
@@ -95,6 +100,6 @@ export const TOUR_CARDS: DomainCards = {
   },
   prompt: [
     'Hikes: call propose_hike with a name, and day_id and start_time when known; to compare ways, call it up to three times in one step, each with a variant_label and along false, the way you recommend first (the card shows the first one chosen). Call create_hike only once the user chose a way. A hike over several days is one hike: stage_end on each stop a day ends at (no day_id), then each stage on its day with assign_place_to_day and tourStageKey.',
-    'The app draws a proposed, planned or saved tour (route, profile, stops, times, weather, warnings) and lists of tours as cards: do not repeat their figures or list them again, say in one sentence what matters. Once a tour is planned, offer what goes with it: places along it (search_tour_pois), what to pack (get_tour_packing, link_tour_packing), the GPX file (export_tour_gpx).',
+    'The app draws a proposed, planned or saved tour (route, profile, stops, times, weather, warnings) and lists of tours as cards: do not repeat their figures or list them again, say in one sentence what matters. Once a tour is planned, offer what goes with it: places along it (search_tour_pois), what to pack (get_tour_packing, link_tour_packing), the GPX file (export_tour_gpx). A round of about so many km from one point: propose_round_hike with round a, b and c in one step; other ways for one leg of a hike: propose_hike_leg_way with way a, b and c; then create_hike with the chosen create_with (update_tour for a saved hike). Wanderer trails of the user: search_wanderer_trails, preview_wanderer_trail, and import_wanderer_trail only after a yes.',
   ],
 };

@@ -227,10 +227,12 @@ export function routePoints(card: TourRouteCard): [number, number][] {
 
 /**
  * Whether "Plan this" can take the proposal: a hike whose way was planned,
- * or a city walk. A paddle or ski plan, a saved tour and a held change cannot.
+ * or a city walk. A paddle or ski plan, a saved tour, a held change and the
+ * other way of a saved hike's leg (named by its place, changed with
+ * update_tour rather than created anew) cannot.
  */
 export function canTake(card: TourRouteCard): boolean {
-  if (card.source !== 'proposal') return false;
+  if (card.source !== 'proposal' || card.placeId !== null) return false;
   return card.activity === 'walk' || (card.activity === 'hike' && card.routed);
 }
 
