@@ -566,7 +566,12 @@ describe('editBook', () => {
 
     const [tool, studio] = await Promise.all([
       catchDomainError(() => books.editBook(journey.id, user.id, edited('tool'), { expectedVersion: 1 })),
-      books.saveBook(journey.id, user.id, { title: 'T', document: doc('studio'), baseVersion: 1 }),
+      // The Studio stamps what it saves with its revision, as the book tools do (useBookStore).
+      books.saveBook(journey.id, user.id, {
+        title: 'T',
+        document: { ...doc('studio'), schemaRev: BOOK_SCHEMA_REV },
+        baseVersion: 1,
+      }),
     ]);
 
     const toolLost = tool instanceof DomainError && tool.getStatus() === 409;

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
 import type { BookDocument, BookRecord } from '@trek/shared'
+import { BOOK_SCHEMA_REV } from '@trek/shared'
 
 /**
  * Autosaving a Studio book (#1973).
@@ -852,12 +853,14 @@ describe('a book a newer Studio saved', () => {
   })
 
   /* A book of today goes out exactly as it went out before the revision existed. */
-  it('FE-STUDIO-REV-006: sends a book of today without a revision in it', async () => {
+  it('FE-STUDIO-REV-006: stamps a book with the revision this Studio writes, and none while that is 1', async () => {
     const { result } = await mount()
 
     act(() => { result.current.queueSave(doc('a'), 'T') })
     await tick()
 
-    expect(api.saveBook.mock.calls[0][1].document).not.toHaveProperty('schemaRev')
+    const sent = api.saveBook.mock.calls[0][1].document
+    if (BOOK_SCHEMA_REV > 1) expect(sent.schemaRev).toBe(BOOK_SCHEMA_REV)
+    else expect(sent).not.toHaveProperty('schemaRev')
   })
 })
