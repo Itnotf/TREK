@@ -28,7 +28,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { Client } from '@modelcontextprotocol/sdk/client/index';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory';
 import type { INestApplication } from '@nestjs/common';
-import { bookWriteResultSchema } from '@trek/shared';
+import { BOOK_SCHEMA_REV, bookWriteResultSchema } from '@trek/shared';
 
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -37,6 +37,7 @@ const BOOK_TOOLS = [
   'get_book',
   'describe_book_page',
   'list_book_layouts',
+  'list_book_assets',
   'create_book',
   'add_book_pages',
   'move_book_page',
@@ -209,7 +210,7 @@ describe('Studio book over MCP and REST', () => {
       .get(`/api/journeys/${journey.id}/book`)
       .set('Cookie', authCookie(owner.id));
     const row = await findRow(orm, JourneyBooks, { journey: journey.id });
-    const newer = JSON.stringify({ ...JSON.parse(String(row?.document)), schemaRev: 2 });
+    const newer = JSON.stringify({ ...JSON.parse(String(row?.document)), schemaRev: BOOK_SCHEMA_REV + 1 });
     await updateRows(orm, JourneyBooks, { journey: journey.id }, { document: newer });
 
     const saved = await request(app.getHttpServer())
@@ -220,7 +221,7 @@ describe('Studio book over MCP and REST', () => {
     expect(saved.body).toEqual({
       error: 'Book was saved by a newer version of TREK Studio',
       code: 'book_schema_newer',
-      schemaRev: 2,
+      schemaRev: BOOK_SCHEMA_REV + 1,
     });
 
     const tool = await callTool(owner.id, 'edit_book_page', {

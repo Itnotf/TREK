@@ -1,4 +1,5 @@
 import { bookVisiblePart, sortBookFindings } from './book-findings-design';
+import { stickerFindings } from './book-findings-sticker';
 import type { BookPhotoInfo } from './book-ops-core';
 import type { BookFinding } from './book-ops.schema';
 import type { BookElement, BookPageSetup, BookPhotoElement, BookSpread, BookTextElement } from './book.schema';
@@ -53,7 +54,7 @@ const contains = (b: Box, px: number, py: number) => px >= b.x && px <= b.x + b.
 
 const mm = (v: number) => `${Math.round(v * 10) / 10}`;
 
-/** Words, shapes aside: what reads as content rather than decoration. */
+/** Words, shapes aside: what reads as content rather than decoration. A sticker is decoration (book-findings-sticker.ts). */
 const WORDS = new Set<BookElement['kind']>(['text', 'badge', 'stats', 'list', 'countries', 'icon']);
 
 /** The effective resolution of a photo at its printed size, or null when the original's size is unknown. */
@@ -507,5 +508,6 @@ export function spreadFindings(
   overflow(ctx);
   photoChecks(ctx);
   parked(ctx);
+  for (const f of stickerFindings(spread)) add(ctx, f);
   return sortBookFindings(ctx.out);
 }

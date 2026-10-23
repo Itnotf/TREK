@@ -8,6 +8,7 @@ import { iconComponent } from './iconLibrary'
 import { HOLED_SHAPES, SHAPE_PATHS, scalePath, unitPath } from './shapes'
 import { TravelElementView } from './TravelElements'
 import { PageNumbers } from './PageNumbers'
+import { StickerView } from './StickerView'
 
 /**
  * One spread, drawn.
@@ -399,6 +400,7 @@ export function ElementView({
   // Above the catch-all below, which routes everything that is not text into
   // the travel elements and draws null for anything they do not know.
   if (el.kind === 'icon') return <IconView el={el} />
+  if (el.kind === 'sticker') return <StickerView el={el} frameStyle={frameStyle(el)} />
 
   if (el.kind !== 'text') {
     // map, stats, countries, badge — the elements drawn from the journey's own
