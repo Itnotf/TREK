@@ -58,6 +58,7 @@ import settings from './settings';
 import share from './share';
 import shared from './shared';
 import storage from './storage';
+import studioPaint from './studioPaint';
 import system_notice from './system_notice';
 import todo from './todo';
 import tourCollection from './tourCollection';
@@ -115,6 +116,7 @@ const locale = {
   ...todo,
   ...notif,
   ...journey,
+  ...studioPaint,
   ...oauth,
   ...system_notice,
   ...transport,
