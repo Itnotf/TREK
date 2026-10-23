@@ -49,8 +49,10 @@ import { TourChangeSaveService } from './tour-change-save.service';
 import { TourChangeUndoMcp } from './tour-change-undo.mcp';
 import { TourChangeUndoService } from './tour-change-undo.service';
 import { TourChangeMcp } from './tour-change.mcp';
+import { TourDetailsService } from './tour-details.service';
 import { TourDraftsController } from './tour-drafts.controller';
 import { TourDraftsService } from './tour-drafts.service';
+import { TourEditMcp } from './tour-edit.mcp';
 import { TourGpxExportService } from './tour-gpx-export.service';
 import { TourHorseRoutesController } from './tour-horse-routes.controller';
 import { TourHorseRoutesService } from './tour-horse-routes.service';
@@ -68,6 +70,8 @@ import { TourPoiSearchController } from './tour-poi-search.controller';
 import { TourPoiSearchService } from './tour-poi-search.service';
 import { TourSkiController } from './tour-ski.controller';
 import { TourSkiService } from './tour-ski.service';
+import { TourSportWritesMcp } from './tour-sport-writes.mcp';
+import { TourTrailDetailsService } from './tour-trail-details.service';
 import { TourTrailGradeController } from './tour-trail-grade.controller';
 import { TourTrailGradeService } from './tour-trail-grade.service';
 import { TourVisitsController } from './tour-visits.controller';
@@ -206,6 +210,9 @@ import { Module } from '@nestjs/common';
     TourPoiSearchService,
     TourSkiService,
     TourTrailGradeService,
+    // P8, P9: a tour's words, times and colour, and the trail details along a saved one.
+    TourDetailsService,
+    TourTrailDetailsService,
     TourVisitsService,
     TourWalkImportService,
     CityWalkFootWayService,
@@ -233,6 +240,8 @@ import { Module } from '@nestjs/common';
     TourActivityStatsMcp,
     CollectionToursMcp,
     TourPackingMcp,
+    TourEditMcp,
+    TourSportWritesMcp,
   ],
 })
 export class ToursModule {}

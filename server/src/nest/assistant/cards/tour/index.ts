@@ -11,6 +11,7 @@ import {
   type TourLoaded,
 } from './tour-change.cards';
 import { TOUR_DESCRIBERS } from './tour-describe';
+import { TOUR_EDIT_CARDS } from './tour-edit.cards';
 import { tourListCard } from './tour-lists.cards';
 import { proposalCard, savedTourCard } from './tour-route.cards';
 import { cityWalkCard, paddleCard, skiCard } from './tour-sport.cards';
@@ -76,6 +77,13 @@ export const TOUR_CARDS: DomainCards = {
     },
     update_tour: updateTour,
     ...TOUR_WRITE_CARDS,
+    ...TOUR_EDIT_CARDS,
+    // A copy is a tour of its own, taken back by deleting it while it is as it was made.
+    copy_tour: {
+      write: { verbKey: 'copyTour', entity: 'tour' },
+      describe: TOUR_DESCRIBERS.copy_tour,
+      undo: DELETE_CREATED_TOUR,
+    },
     set_city_walk_visit: {
       write: { verbKey: 'markVisited', entity: 'tour' },
       load: loadVisit,
@@ -95,6 +103,8 @@ export const TOUR_CARDS: DomainCards = {
   },
   prompt: [
     'Hikes: call propose_hike with a name, and day_id and start_time when known; to compare ways, call it up to three times in one step, each with a variant_label and along false, the way you recommend first (the card shows the first one chosen). Call create_hike only once the user chose a way. A hike over several days is one hike: stage_end on each stop a day ends at (no day_id), then each stage on its day with assign_place_to_day and tourStageKey.',
-    'The app draws a proposed, planned or saved tour (route, profile, stops, times, weather, warnings) and lists of tours as cards: do not repeat their figures or list them again, say in one sentence what matters. Once a tour is planned, offer what goes with it: places along it (search_tour_pois), what to pack (get_tour_packing, link_tour_packing), the GPX file (export_tour_gpx).',
+    "The app draws a proposed, planned or saved tour (route, profile, stops, times, weather, warnings) and lists of tours as cards: do not repeat their figures or list them again, say in one sentence what matters. Once a tour is planned, offer what goes with it: places along it (search_tour_pois), what to pack (get_tour_packing, link_tour_packing), the GPX file (export_tour_gpx). To change a saved tour: a city walk's stations (name, stay, importance, protection, opening hours), its direction or its loop through prepare_tour_change and save_tour_change (edit, reverse, close_loop); a hike's direction or loop with update_tour and reshape; breaks, website, words and planned time of any tour with update_tour_details; its colour with set_tour_route_color; a variant with copy_tour first.",
   ],
+  // P8, P9: edits besides the route, and the writes and reads a ski, paddle or horse tour has of its own.
+  toolControllers: { tours: ['TourEditMcp', 'TourSportWritesMcp'] },
 };
