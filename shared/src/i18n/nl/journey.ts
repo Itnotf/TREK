@@ -585,7 +585,6 @@ const journey: TranslationStrings = {
   'journey.studio.tpl.mosaic': 'Mozaïek',
   'journey.studio.tpl.bandQuote': 'Woorden ertussen',
   'journey.studio.tpl.staggerFour': 'Vier verspringend',
-  'journey.studio.weightMissing': 'Dit lettertype heeft die dikte niet',
   'journey.studio.mapSource': 'Kaartbron',
   'journey.studio.mapSourceVector': 'Omtrekken',
   'journey.studio.mapSourceRelief': 'Reliëf',
