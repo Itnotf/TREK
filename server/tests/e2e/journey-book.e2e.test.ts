@@ -28,7 +28,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { Client } from '@modelcontextprotocol/sdk/client/index';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory';
 import type { INestApplication } from '@nestjs/common';
-import { bookWriteResultSchema } from '@trek/shared';
+import { BOOK_SCHEMA_REV, bookWriteResultSchema } from '@trek/shared';
 
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -209,7 +209,7 @@ describe('Studio book over MCP and REST', () => {
       .get(`/api/journeys/${journey.id}/book`)
       .set('Cookie', authCookie(owner.id));
     const row = await findRow(orm, JourneyBooks, { journey: journey.id });
-    const newer = JSON.stringify({ ...JSON.parse(String(row?.document)), schemaRev: 2 });
+    const newer = JSON.stringify({ ...JSON.parse(String(row?.document)), schemaRev: BOOK_SCHEMA_REV + 1 });
     await updateRows(orm, JourneyBooks, { journey: journey.id }, { document: newer });
 
     const saved = await request(app.getHttpServer())
@@ -220,7 +220,7 @@ describe('Studio book over MCP and REST', () => {
     expect(saved.body).toEqual({
       error: 'Book was saved by a newer version of TREK Studio',
       code: 'book_schema_newer',
-      schemaRev: 2,
+      schemaRev: BOOK_SCHEMA_REV + 1,
     });
 
     const tool = await callTool(owner.id, 'edit_book_page', {
@@ -249,15 +249,43 @@ describe('Studio book over MCP and REST', () => {
     const saved = await request(app.getHttpServer())
       .put(`/api/journeys/${journey.id}/book`)
       .set('Cookie', authCookie(owner.id))
-      .send({ title: before.body.book.title, document: { ...document, schemaRev: 2 }, baseVersion: 1 });
+      .send({
+        title: before.body.book.title,
+        document: { ...document, schemaRev: BOOK_SCHEMA_REV + 1 },
+        baseVersion: 1,
+      });
     expect(saved.status).toBe(409);
     expect(saved.body).toEqual({
       error: 'Book was saved by a newer version of TREK Studio',
       code: 'book_schema_newer',
-      schemaRev: 2,
+      schemaRev: BOOK_SCHEMA_REV + 1,
     });
     expect(sent()).toEqual([]);
     const after = await findRow(orm, JourneyBooks, { journey: journey.id });
     expect(after?.version).toBe(1);
+  });
+
+  it('JBE2E-007: the photo look set over MCP is what GET reads next, stamped with the revision that wrote it', async () => {
+    const { owner, journey, inner } = await journeyWithBook();
+    await callTool(owner.id, 'edit_book_page', {
+      journeyId: journey.id,
+      spreadId: inner,
+      ops: [{ op: 'add', element: { kind: 'photo' } }],
+    });
+    const read = async () =>
+      (await request(app.getHttpServer()).get(`/api/journeys/${journey.id}/book`).set('Cookie', authCookie(owner.id)))
+        .body.book.document as { schemaRev?: number; spreads: Array<{ elements: Array<Record<string, unknown>> }> };
+    const frame = (await read()).spreads[2]?.elements.find((e) => e.kind === 'photo');
+    const look = { border: { width: 5, color: '#ffffff' }, zoom: 1.5, flipX: true, adjust: { warmth: 0.4 } };
+
+    const styled = await callTool(owner.id, 'edit_book_page', {
+      journeyId: journey.id,
+      spreadId: inner,
+      ops: [{ op: 'style', elementId: frame?.id, set: { kind: 'photo', ...look } }],
+    });
+    expect(bookWriteResultSchema.safeParse(styled).success).toBe(true);
+    const after = await read();
+    expect(after.schemaRev).toBe(BOOK_SCHEMA_REV);
+    expect(after.spreads[2]?.elements.find((e) => e.id === frame?.id)).toMatchObject(look);
   });
 });

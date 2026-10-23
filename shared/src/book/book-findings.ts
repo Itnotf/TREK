@@ -1,6 +1,8 @@
 import { bookVisiblePart, sortBookFindings } from './book-findings-design';
+import { photoLookChecks } from './book-findings-photo';
 import type { BookPhotoInfo } from './book-ops-core';
 import type { BookFinding } from './book-ops.schema';
+import { photoZoomOf } from './book-photo-look';
 import type { BookElement, BookPageSetup, BookPhotoElement, BookSpread, BookTextElement } from './book.schema';
 
 /**
@@ -63,7 +65,8 @@ export function photoDpi(el: BookPhotoElement, info: BookPhotoInfo | undefined):
     el.fit === 'contain'
       ? Math.min(el.frame.w / info.width, el.frame.h / info.height)
       : Math.max(el.frame.w / info.width, el.frame.h / info.height);
-  return Math.round(25.4 / mmPerPx);
+  // A zoomed picture spreads each pixel over that many times the paper.
+  return Math.round(25.4 / (mmPerPx * photoZoomOf(el)));
 }
 
 /** Average letter width per em at weight 400, per family: measured on story text as the Studio sets each family. */
@@ -506,6 +509,7 @@ export function spreadFindings(
   emptyFrames(ctx);
   overflow(ctx);
   photoChecks(ctx);
+  ctx.out.push(...photoLookChecks(spread, page));
   parked(ctx);
   return sortBookFindings(ctx.out);
 }

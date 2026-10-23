@@ -10,6 +10,7 @@ import type {
   BookPageDescription,
   BookSpreadSummary,
 } from './book-ops.schema';
+import { photoLookWords } from './book-photo-look';
 import {
   bookPageSetupSchema,
   type BookDocument,
@@ -74,6 +75,7 @@ function photoWords(el: BookPhotoElement, info: BookPhotoInfo | undefined): stri
   if (el.mask) parts.push(`mask ${el.mask}`);
   if (el.frameStyle !== 'none') parts.push(`frame style ${el.frameStyle}`);
   if (el.radius > 0) parts.push(`radius ${n(el.radius)}`);
+  parts.push(...photoLookWords(el));
   return parts.join(', ');
 }
 

@@ -31,7 +31,7 @@ import {
 import { createTestJourneyBooksRepo } from '../../helpers/journey-share-repos';
 import { resetTestDb } from '../../helpers/test-db';
 import { createTestUnitOfWork, sharedTestOrm, createTestTripsRepo, createTestPlacesRepo } from '../../helpers/test-uow';
-import { normalizeBookDocument } from '@trek/shared';
+import { BOOK_SCHEMA_REV, normalizeBookDocument } from '@trek/shared';
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from 'vitest';
 
@@ -697,7 +697,7 @@ describe('format revisions', () => {
   });
 
   it('JBOOK-014: the book tools leave a book this server cannot read whole alone, before any edit runs', async () => {
-    const { user, journey } = await storedAt(2);
+    const { user, journey } = await storedAt(BOOK_SCHEMA_REV + 1);
     const rec = await recordSends();
     try {
       const edit = vi.fn(() => ({ title: 'T', document: normalizeBookDocument(doc('tool')), result: null }));
@@ -716,7 +716,7 @@ describe('format revisions', () => {
     const { user, journey } = await storedAt(1);
     const rec = await recordSends();
     try {
-      const ahead = normalizeBookDocument({ ...doc('ahead'), schemaRev: 2 });
+      const ahead = normalizeBookDocument({ ...doc('ahead'), schemaRev: BOOK_SCHEMA_REV + 1 });
       const thrown = await catchDomainError(() =>
         books.editBook(journey.id, user.id, () => ({ title: 'T', document: ahead, result: null })),
       );

@@ -1,3 +1,5 @@
+import { BOOK_PHOTO_LOOK_FIELDS } from './book-photo-look.schema';
+
 import { z } from 'zod';
 
 /**
@@ -221,6 +223,8 @@ export const bookPhotoElementSchema = z.object({
    * and it is the one thing you cannot express with either.
    */
   frameStyle: z.enum(['none', 'polaroid', 'white', 'shadow', 'film', 'tape']).default('none'),
+  /** Border, hard shadow, zoom, mirror, adjustments, duotone and cutout (book-photo-look.schema.ts). */
+  ...BOOK_PHOTO_LOOK_FIELDS,
 });
 
 export const bookTextElementSchema = z.object({

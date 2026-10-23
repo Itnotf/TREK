@@ -1,6 +1,6 @@
 {
   "src": {
-    "@typescript-eslint/no-non-null-assertion": 404,
+    "@typescript-eslint/no-non-null-assertion": 402,
     "@typescript-eslint/no-misused-promises": 854,
     "no-console": 88,
     "complexity": 226,
