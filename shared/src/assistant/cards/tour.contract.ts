@@ -27,6 +27,9 @@ export const TOUR_VERB_KEYS = [
   // A tour pointed at its trip's packing list, or let go of it.
   'linkPacking',
   'unlinkPacking',
+  // A found place taken into a saved tour as a stop, or taken out again (P6).
+  'addTourStop',
+  'removeTourStop',
 ] as const;
 /** 'tour' is a core entity already. */
 export const TOUR_APPLIED_ENTITIES = [] as const;

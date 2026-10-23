@@ -14,6 +14,7 @@ import { TOUR_DESCRIBERS } from './tour-describe';
 import { tourListCard } from './tour-lists.cards';
 import { proposalCard, savedTourCard } from './tour-route.cards';
 import { cityWalkCard, paddleCard, skiCard } from './tour-sport.cards';
+import { TOUR_STOP_CARDS } from './tour-stop.cards';
 import { DELETE_CREATED_TOUR, DELETE_IMPORTED_TOUR } from './tour-undo';
 import { describeVisit, loadVisit, SET_VISIT_UNDO } from './tour-visit.cards';
 import { TOUR_WRITE_CARDS } from './tour-writes.cards';
@@ -87,6 +88,7 @@ export const TOUR_CARDS: DomainCards = {
       describe: TOUR_DESCRIBERS.import_tour_gpx,
       undo: DELETE_IMPORTED_TOUR,
     },
+    ...TOUR_STOP_CARDS,
     take_over_tour: {
       write: { verbKey: 'addTour', entity: 'tour' },
       describe: TOUR_DESCRIBERS.take_over_tour,

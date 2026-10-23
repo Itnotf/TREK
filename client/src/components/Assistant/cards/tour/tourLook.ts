@@ -1,5 +1,15 @@
 import { type AssistantApplied, cumulativeMetres, type TourRouteCard, type TrekCard } from '@trek/shared';
-import { ChartNoAxesColumn, Circle, CircleCheck, CircleSlash, Footprints, Luggage, Route } from 'lucide-react';
+import {
+  ChartNoAxesColumn,
+  Circle,
+  CircleCheck,
+  CircleSlash,
+  Footprints,
+  Luggage,
+  MapPinMinus,
+  MapPinPlus,
+  Route,
+} from 'lucide-react';
 
 import type { RouteLineSpec, RouteUse } from '../../../../types/assistantMap';
 import type { EntityTarget, PackLook } from '../cardTypes';
@@ -95,6 +105,8 @@ export const TOUR_LOOK = {
     countTour: { Icon: ChartNoAxesColumn, tone: 'success', labelKey: 'assistant.change.verb.countTour' },
     linkPacking: { Icon: Luggage, tone: 'success', labelKey: 'assistant.change.verb.linkPacking' },
     unlinkPacking: { Icon: Luggage, tone: 'info', labelKey: 'assistant.change.verb.unlinkPacking' },
+    addTourStop: { Icon: MapPinPlus, tone: 'success', labelKey: 'assistant.change.verb.addTourStop' },
+    removeTourStop: { Icon: MapPinMinus, tone: 'danger', labelKey: 'assistant.change.verb.removeTourStop' },
   },
   tools: {},
   steps: {
@@ -106,6 +118,8 @@ export const TOUR_LOOK = {
     find_tours_for_day: { stepKey: 'assistant.step.readingTours' },
     search_tour_pois: { stepKey: 'assistant.step.tourPois' },
     get_city_walk_progress: { stepKey: 'assistant.step.readingTour' },
+    // P7: a route file attached in the chat, read by the server into its tracks.
+    read_tour_file: { stepKey: 'assistant.step.readingTourFile' },
   },
   entities: {
     tour: {

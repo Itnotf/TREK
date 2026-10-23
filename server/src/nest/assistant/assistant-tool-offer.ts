@@ -241,6 +241,7 @@ const CORE_TOOL_GROUPS: ToolGroups = {
       'TourActivitiesMcp',
       'TourActivityStatsMcp',
       'TourWalkImportMcp',
+      'TourStopsMcp',
       'CollectionToursMcp',
       'PaddleRoutingMcp',
       'SkiRoutingMcp',
