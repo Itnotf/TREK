@@ -1,4 +1,5 @@
 import { bookGridElements, defaultBookGridBox, findBookGrid, type BookGridDef } from './book-grids';
+import { tidyGroups } from './book-groups';
 import { bookElementId } from './book-ids';
 import { BOOK_TEXT_STYLES, applyBookTemplate, classifyBookTexts, findBookTemplate } from './book-layouts';
 import {
@@ -20,6 +21,7 @@ import {
   type BookPhotoInfo,
 } from './book-ops-core';
 import { applyElementOp, autoRelayout } from './book-ops-elements';
+import { applyGroupOp, isGroupOp } from './book-ops-groups';
 import { BOOK_OP_LIMITS, bookPageOpSchema, type BookPageOp } from './book-ops.schema';
 import { applySavedBookLayout, bookLayoutRole } from './book-saved-layouts';
 import {
@@ -86,6 +88,8 @@ export function applyBookOps(
       env.opIndex = i;
       spread = applyOne(spread, op, env);
     });
+    // A removal or a layout can leave a group with one member: it goes, with its name.
+    spread = tidyGroups(spread);
     checkedSpread(spread, null);
     const spreads = doc.spreads.slice();
     spreads[index] = spread;
@@ -120,7 +124,7 @@ function applyOne(spread: BookSpread, op: BookPageOp, env: Env): BookSpread {
     case 'background':
       return { ...spread, background: op.color };
     default:
-      return applyElementOp(spread, op, env);
+      return isGroupOp(op) ? applyGroupOp(spread, op, env) : applyElementOp(spread, op, env);
   }
 }
 

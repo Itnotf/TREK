@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  Camera, Check, ChevronDown, ImagePlus, ChevronUp, Compass, Copy, FileDown, Files, ImageIcon, LayoutTemplate,
+  Camera, Check, ChevronDown, ImagePlus, ChevronUp, Compass, Copy, FileDown, Files, ImageIcon, Layers, LayoutTemplate,
   Plus, Search, Shapes, Trash2, Upload, X,
 } from 'lucide-react'
 import type { BookElement, BookPageSetup, JourneyStats } from '@trek/shared'
@@ -21,6 +21,7 @@ import {
 import { MOOD_CONFIG, WEATHER_CONFIG } from '../../pages/journeyDetail/JourneyDetailPage.constants'
 import { PanelHead as Head } from './StudioPanelHead'
 import { StudioElementsPanel } from './StudioElementsPanel'
+import { StudioLayersPanel } from './StudioLayersPanel'
 import { StudioTravelPanel } from './StudioTravelPanel'
 import { StudioSavedLayouts } from './StudioSavedLayouts'
 import { MAX_SPREAD_FILE_BYTES, importSpread } from './spreadFile'
@@ -39,7 +40,7 @@ import type { StudioUploader } from './studioUpload'
  * costs 52px and gives the panel the room a photo browser actually needs.
  */
 
-type Section = 'pages' | 'content' | 'elements' | 'travel' | 'templates'
+type Section = 'pages' | 'content' | 'elements' | 'travel' | 'templates' | 'layers'
 
 export interface JourneySource {
   entries: {
@@ -120,6 +121,7 @@ export function StudioSidebar({
     { id: 'elements', icon: Shapes, labelKey: 'journey.studio.elements' },
     { id: 'travel', icon: Compass, labelKey: 'journey.studio.travel' },
     { id: 'templates', icon: LayoutTemplate, labelKey: 'journey.studio.templates' },
+    { id: 'layers', icon: Layers, labelKey: 'journey.studio.layers' },
   ]
 
   return (
@@ -157,6 +159,7 @@ export function StudioSidebar({
             onToggleStop={onToggleStop}
           />
         )}
+        {section === 'layers' && <StudioLayersPanel t={t} />}
         {section === 'templates' && <TemplatesPanel page={page} pxPerMm={pxPerMm} t={t} onOpenContent={() => setSection('content')} />}
       </aside>
     </>

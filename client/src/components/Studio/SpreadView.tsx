@@ -485,7 +485,8 @@ export function SpreadView({
         overflow: print ? 'visible' : 'hidden',
       }}
     >
-      {spread.elements.map(el => (
+      {/* A hidden layer stays in the layers panel and off the page, here and in print. */}
+      {spread.elements.filter(el => !el.hidden).map(el => (
         <ElementView
           key={el.id}
           el={el}

@@ -1,4 +1,5 @@
 import { bookVisiblePart, sortBookFindings } from './book-findings-design';
+import { visibleSpread } from './book-groups';
 import type { BookPhotoInfo } from './book-ops-core';
 import type { BookFinding } from './book-ops.schema';
 import type { BookElement, BookPageSetup, BookPhotoElement, BookSpread, BookTextElement } from './book.schema';
@@ -248,6 +249,8 @@ function overlaps(ctx: Ctx): void {
       const a = content[i] as BookElement;
       const b = content[j] as BookElement;
       if (a.kind !== b.kind) continue;
+      // Set over each other inside one group on purpose: a lockup, a framed caption.
+      if (a.group !== undefined && a.group === b.group) continue;
       const ba = elementBox(a);
       const bb = elementBox(b);
       const shared = overlapArea(ba, bb);
@@ -493,7 +496,8 @@ export function spreadFindings(
   photos?: readonly BookPhotoInfo[],
 ): BookFinding[] {
   const ctx: Ctx = {
-    spread,
+    // A hidden element is not on the page, so nothing about it is a fault of the page.
+    spread: visibleSpread(spread),
     page,
     W: page.pageWidth * (spread.role === 'inner' ? 2 : 1),
     H: page.pageHeight,
