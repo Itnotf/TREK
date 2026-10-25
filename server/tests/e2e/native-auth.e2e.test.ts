@@ -45,12 +45,7 @@ let userId: number;
 
 async function build() {
   const moduleRef = await Test.createTestingModule({
-    imports: [
-      await TestUnitOfWorkModule.forRoot(db),
-      await createTestMikroOrmModule(db),
-      AuthModule,
-      NativeAuthModule,
-    ],
+    imports: [await TestUnitOfWorkModule.forRoot(db), await createTestMikroOrmModule(db), AuthModule, NativeAuthModule],
   })
     .overrideProvider(MailerService)
     .useValue({ sendPasswordResetEmail: vi.fn() })

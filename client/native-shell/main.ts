@@ -41,8 +41,15 @@ function failureMessage(reason: ProbeFailure): string {
   }
 }
 
-function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLElementTagNameMap[K]> = {}, ...children: (Node | string)[]) {
-  const node = Object.assign(document.createElement(tag), props)
+function el<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  props: Partial<HTMLElementTagNameMap[K]> = {},
+  ...children: (Node | string)[]
+): HTMLElementTagNameMap[K] {
+  // Typed as the plain element, not as Object.assign's intersection with the
+  // props, which strict mode cannot represent for an <input>.
+  const node: HTMLElementTagNameMap[K] = document.createElement(tag)
+  Object.assign(node, props)
   node.append(...children)
   return node
 }

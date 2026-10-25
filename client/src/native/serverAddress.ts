@@ -4,7 +4,7 @@
  */
 
 export type ProbeFailure = 'invalid' | 'unreachable' | 'notTrek' | 'tooOld'
-export type ProbeResult =
+type ProbeResult =
   | { ok: true; url: string; reason?: undefined }
   | { ok: false; reason: ProbeFailure; url?: undefined }
 

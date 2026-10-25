@@ -19,7 +19,7 @@ describe('toastHaptic', () => {
     toastHaptic('success')
     toastHaptic('warning')
     toastHaptic('error')
-    expect(vi.mocked(Haptics.notification).mock.calls.map(([o]) => o.type)).toEqual([
+    expect(vi.mocked(Haptics.notification).mock.calls.map(([o]) => o?.type)).toEqual([
       NotificationType.Success, NotificationType.Warning, NotificationType.Error,
     ])
   })

@@ -16,10 +16,10 @@ import { isNativeIos } from './platform'
  * the app.
  */
 
-export const OFFLINE_SCHEME = 'trek-offline'
+const OFFLINE_SCHEME = 'trek-offline'
 const PREFIX = `${OFFLINE_SCHEME}://`
 
-export function offlineTilesActive(): boolean {
+function offlineTilesActive(): boolean {
   return isNativeIos() && typeof caches !== 'undefined'
 }
 
