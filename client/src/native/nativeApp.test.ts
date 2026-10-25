@@ -98,9 +98,11 @@ describe('startNativeApp', () => {
   it('logs a failed refresh instead of throwing', async () => {
     vi.mocked(isNativeIos).mockReturnValue(true)
     vi.mocked(keepOfflineShellFresh).mockRejectedValue(new Error('down'))
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const report = vi.fn()
+    vi.stubGlobal('reportError', report)
     startNativeApp()
     vi.advanceTimersByTime(15_000)
-    await vi.waitFor(() => expect(warn).toHaveBeenCalled())
+    await vi.waitFor(() => expect(report).toHaveBeenCalledWith(expect.any(Error)))
+    vi.unstubAllGlobals()
   })
 })

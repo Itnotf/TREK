@@ -3,7 +3,7 @@ import type { TranslationStrings } from '../types';
 const native: TranslationStrings = {
   'native.connect.title': 'Csatlakozás a TREK-hez',
   'native.connect.hint': 'Add meg azt a címet, amelyen a böngésződben megnyitod a TREK-et.',
-  'native.connect.placeholder': 'trek.example.com',
+  'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Csatlakozás',
   'native.connect.checking': 'Ellenőrzés…',
   'native.connect.errorInvalid': 'Ez nem úgy néz ki, mint egy webcím.',
@@ -16,7 +16,8 @@ const native: TranslationStrings = {
   'native.changeServer': 'Szerver módosítása',
   'native.login.failed': 'A bejelentkezés nem sikerült. Próbáld újra.',
   'native.handoff.title': 'Folytatás az alkalmazásban',
-  'native.handoff.hint': '{name} néven vagy bejelentkezve. Nyisd meg a TREK alkalmazást, hogy ott befejezd a bejelentkezést.',
+  'native.handoff.hint':
+    '{name} néven vagy bejelentkezve. Nyisd meg a TREK alkalmazást, hogy ott befejezd a bejelentkezést.',
   'native.handoff.open': 'TREK alkalmazás megnyitása',
   'native.handoff.switchAccount': 'Másik fiók használata',
   'native.settings.server': 'Szerver',

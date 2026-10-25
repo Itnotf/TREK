@@ -3,7 +3,7 @@ import type { TranslationStrings } from '../types';
 const native: TranslationStrings = {
   'native.connect.title': 'Připojit k TREK',
   'native.connect.hint': 'Zadejte adresu, na které otevíráte TREK v prohlížeči.',
-  'native.connect.placeholder': 'trek.example.com',
+  'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Připojit',
   'native.connect.checking': 'Ověřování…',
   'native.connect.errorInvalid': 'To nevypadá jako webová adresa.',
@@ -19,7 +19,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Jste přihlášeni jako {name}. Otevřete aplikaci TREK a dokončete přihlášení v ní.',
   'native.handoff.open': 'Otevřít aplikaci TREK',
   'native.handoff.switchAccount': 'Použít jiný účet',
-  'native.settings.server': 'Server',
+  'native.settings.server': 'Server', // same-as-en
   'native.settings.serverHint': 'Tato aplikace je připojena k {server}.',
 };
 

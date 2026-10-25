@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useShallow } from 'zustand/react/shallow'
 import { useAuthStore } from '../../store/authStore'
-import { nativeAuthApi } from '../../api/nativeAuth'
 import { APP_URL_SCHEME } from '../../native/trekShell'
-import { HANDOFF_PATH } from '../../native/browserSignIn'
+import { HANDOFF_PATH, requestHandoffCode } from '../../native/browserSignIn'
 
 const CHALLENGE = /^[0-9a-f]{64}$/
 
@@ -43,7 +42,7 @@ export function useNativeHandoff() {
   const openApp = async (): Promise<void> => {
     setStatus('sending')
     try {
-      const { code } = await nativeAuthApi.handoff(challenge)
+      const code = await requestHandoffCode(challenge)
       window.location.href = `${APP_URL_SCHEME}://auth?code=${encodeURIComponent(code)}`
     } catch {
       setStatus('failed')

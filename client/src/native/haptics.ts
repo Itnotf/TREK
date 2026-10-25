@@ -1,5 +1,6 @@
 import { Haptics, NotificationType } from '@capacitor/haptics'
 import { isNativeApp } from './platform'
+import { reportNativeFailure } from './reportFailure'
 
 const FEEDBACK: Record<string, NotificationType | undefined> = {
   success: NotificationType.Success,
@@ -15,5 +16,5 @@ const FEEDBACK: Record<string, NotificationType | undefined> = {
 export function toastHaptic(type: string): void {
   const feedback = FEEDBACK[type]
   if (!feedback || !isNativeApp()) return
-  Haptics.notification({ type: feedback }).catch((err) => console.debug('[haptics]', err))
+  Haptics.notification({ type: feedback }).catch(reportNativeFailure)
 }

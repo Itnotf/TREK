@@ -25,10 +25,11 @@ describe('fileDownload inside the native app', () => {
   })
 
   it('logs a share that failed rather than losing it', async () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const report = vi.fn()
+    vi.stubGlobal('reportError', report)
     vi.mocked(shareFile).mockRejectedValue(new Error('no space'))
     downloadBlob(pdf, 'report.pdf')
-    await vi.waitFor(() => expect(error).toHaveBeenCalledWith('[download]', expect.any(Error)))
+    await vi.waitFor(() => expect(report).toHaveBeenCalledWith(expect.any(Error)))
   })
 
   it('shares a protected file under its given name, or the one from its URL', async () => {

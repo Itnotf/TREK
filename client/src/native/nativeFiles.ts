@@ -17,7 +17,8 @@ export function cacheFileName(filename: string): string {
 }
 
 export function fileNameFromUrl(url: string): string {
-  const last = url.split('?')[0]!.split('/').filter(Boolean).pop() ?? ''
+  const [path = ''] = url.split('?', 1)
+  const last = path.split('/').filter(Boolean).pop() ?? ''
   try {
     return decodeURIComponent(last)
   } catch {

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { sha256 } from '@noble/hashes/sha2'
 import { bytesToHex } from '@noble/hashes/utils'
-import { BrowserSignInCancelled, createHandoffSecret, handoffUrl, signInThroughBrowser } from './browserSignIn'
+import { BrowserSignInCancelled, createHandoffSecret, handoffUrl, requestHandoffCode, signInThroughBrowser } from './browserSignIn'
 import { TrekShell } from './trekShell'
 import { nativeAuthApi } from '../api/nativeAuth'
 
 vi.mock('./trekShell', () => ({ APP_URL_SCHEME: 'com.liketrek.trek', TrekShell: { authenticate: vi.fn() } }))
-vi.mock('../api/nativeAuth', () => ({ nativeAuthApi: { exchange: vi.fn() } }))
+vi.mock('../api/nativeAuth', () => ({ nativeAuthApi: { exchange: vi.fn(), handoff: vi.fn() } }))
 
 beforeEach(() => {
   vi.mocked(TrekShell.authenticate).mockReset()
@@ -19,6 +19,14 @@ describe('createHandoffSecret', () => {
     expect(verifier).toMatch(/^[0-9a-f]{64}$/)
     expect(challenge).toBe(bytesToHex(sha256(new TextEncoder().encode(verifier))))
     expect(createHandoffSecret().verifier).not.toBe(verifier)
+  })
+})
+
+describe('requestHandoffCode', () => {
+  it('asks the server for the one-time code bound to the challenge', async () => {
+    vi.mocked(nativeAuthApi.handoff).mockResolvedValue({ code: 'c-1' })
+    await expect(requestHandoffCode('ab'.repeat(32))).resolves.toBe('c-1')
+    expect(nativeAuthApi.handoff).toHaveBeenCalledWith('ab'.repeat(32))
   })
 })
 

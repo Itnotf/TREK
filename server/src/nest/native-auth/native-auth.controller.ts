@@ -1,15 +1,24 @@
-import { Body, Controller, HttpCode, HttpException, Post, Req, Res, UseGuards } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import { NativeAuthService } from './native-auth.service';
-import { NativeExchangeDto, NativeHandoffDto } from './native-auth.dto';
-import { AuthService } from '../auth/auth.service';
-import { CookieAuthGuard } from '../auth/cookie-auth.guard';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { Public } from '../auth/public.decorator';
+import type { User } from '../../types';
 import { AuditService } from '../audit/audit.service';
 import { getClientIp } from '../audit/client-ip';
+import { CookieAuthGuard } from '../auth-core/cookie-auth.guard';
+import { CurrentUser } from '../auth-core/current-user.decorator';
+import { Public } from '../auth-core/public.decorator';
+import { setAuthCookie } from '../common/cookie';
 import { RateLimitService } from '../common/rate-limit.service';
-import type { User } from '../../types';
+import { ResponseContract } from '../common/response-contract';
+import { sessionClientFrom } from '../sessions/sessions.service';
+import { NativeExchangeDto, NativeHandoffDto } from './native-auth.dto';
+import { NativeAuthService } from './native-auth.service';
+import { Body, Controller, HttpCode, HttpException, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  nativeHandoffResponseSchema,
+  successResponseSchema,
+  type NativeHandoffResponse,
+  type SuccessResponse,
+} from '@trek/shared';
+
+import type { Request, Response } from 'express';
 
 const EXCHANGE_WINDOW_MS = 15 * 60 * 1000;
 const EXCHANGE_MAX = 20;
@@ -22,7 +31,6 @@ const EXCHANGE_MAX = 20;
 export class NativeAuthController {
   constructor(
     private readonly nativeAuth: NativeAuthService,
-    private readonly auth: AuthService,
     private readonly audit: AuditService,
     private readonly rl: RateLimitService,
   ) {}
@@ -34,21 +42,31 @@ export class NativeAuthController {
   @Post('handoff')
   @UseGuards(CookieAuthGuard)
   @HttpCode(200)
-  handoff(@Body() body: NativeHandoffDto, @CurrentUser() user: User) {
-    return { code: this.nativeAuth.issueCode(user.id, body.challenge) };
+  @ResponseContract(nativeHandoffResponseSchema)
+  async handoff(@Body() body: NativeHandoffDto, @CurrentUser() user: User): Promise<NativeHandoffResponse> {
+    return { code: await this.nativeAuth.issueCode(user.id, body.challenge) };
   }
 
   @Post('exchange')
   @Public('the one-time code together with its verifier is the credential')
   @HttpCode(200)
-  exchange(@Body() body: NativeExchangeDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    if (!this.rl.check('native-exchange', req.ip || 'unknown', EXCHANGE_MAX, EXCHANGE_WINDOW_MS, Date.now())) {
+  @ResponseContract(successResponseSchema)
+  async exchange(
+    @Body() body: NativeExchangeDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<SuccessResponse> {
+    if (!(await this.rl.check('native-exchange', req.ip || 'unknown', EXCHANGE_MAX, EXCHANGE_WINDOW_MS, Date.now()))) {
       throw new HttpException({ error: 'Too many attempts. Please try again later.' }, 429);
     }
-    const session = this.nativeAuth.redeem(body.code, body.verifier);
-    if (!session) throw new HttpException({ error: 'Invalid or expired code' }, 400);
-    this.auth.setAuthCookie(res, session.token, req, true);
-    this.audit.writeAudit({ userId: session.userId, action: 'user.login', ip: getClientIp(req), details: { method: 'native_app' } });
-    return { ok: true };
+    const session = await this.nativeAuth.redeem(body.code, body.verifier, sessionClientFrom(req));
+    setAuthCookie(res, session.token, req, true);
+    await this.audit.writeAudit({
+      userId: session.userId,
+      action: 'user.login',
+      ip: getClientIp(req),
+      details: { method: 'native_app' },
+    });
+    return { success: true };
   }
 }

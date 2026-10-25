@@ -32,9 +32,11 @@ describe('toastHaptic', () => {
   })
 
   it('does not let a missing vibrator surface as an error', async () => {
-    const debug = vi.spyOn(console, 'debug').mockImplementation(() => {})
+    const report = vi.fn()
+    vi.stubGlobal('reportError', report)
     vi.mocked(Haptics.notification).mockRejectedValue(new Error('not available'))
     toastHaptic('error')
-    await vi.waitFor(() => expect(debug).toHaveBeenCalledWith('[haptics]', expect.any(Error)))
+    await vi.waitFor(() => expect(report).toHaveBeenCalledWith(expect.any(Error)))
+    vi.unstubAllGlobals()
   })
 })

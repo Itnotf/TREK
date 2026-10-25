@@ -21,13 +21,13 @@ export default function NativeHandoffPage() {
             {status === 'failed' && <p role="alert" className="text-body text-danger">{t('native.login.failed')}</p>}
             <button
               type="button"
-              onClick={openApp}
+              onClick={() => { void openApp() }}
               disabled={status === 'sending'}
               className="w-full rounded-lg bg-accent text-accent-on py-3 font-semibold disabled:opacity-60"
             >
               {t('native.handoff.open')}
             </button>
-            <button type="button" onClick={switchAccount} className="text-caption text-content-muted py-1">
+            <button type="button" onClick={() => { void switchAccount() }} className="text-caption text-content-muted py-1">
               {t('native.handoff.switchAccount')}
             </button>
           </>

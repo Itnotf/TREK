@@ -35,6 +35,12 @@ export function handoffUrl(origin: string, challenge: string, start?: BrowserSig
   return url.href
 }
 
+/** The browser side: trade the signed-in session for a one-time code bound to `challenge`. */
+export async function requestHandoffCode(challenge: string): Promise<string> {
+  const { code } = await nativeAuthApi.handoff(challenge)
+  return code
+}
+
 export class BrowserSignInCancelled extends Error {
   constructor() {
     super('Sign-in cancelled')

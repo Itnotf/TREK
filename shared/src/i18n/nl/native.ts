@@ -3,7 +3,7 @@ import type { TranslationStrings } from '../types';
 const native: TranslationStrings = {
   'native.connect.title': 'Verbinden met TREK',
   'native.connect.hint': 'Voer het adres in waarop je TREK in je browser opent.',
-  'native.connect.placeholder': 'trek.example.com',
+  'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Verbinden',
   'native.connect.checking': 'Controleren…',
   'native.connect.errorInvalid': 'Dat lijkt geen webadres.',
@@ -19,7 +19,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Je bent ingelogd als {name}. Open de TREK-app om daar het inloggen af te ronden.',
   'native.handoff.open': 'TREK-app openen',
   'native.handoff.switchAccount': 'Ander account gebruiken',
-  'native.settings.server': 'Server',
+  'native.settings.server': 'Server', // same-as-en
   'native.settings.serverHint': 'Deze app is verbonden met {server}.',
 };
 

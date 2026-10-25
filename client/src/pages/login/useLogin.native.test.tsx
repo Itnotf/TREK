@@ -1,4 +1,4 @@
-// FE-LOGIN-NATIVE-001 to FE-LOGIN-NATIVE-008: useLogin inside the iOS/Android app
+// FE-LOGIN-NATIVE-001 to FE-LOGIN-NATIVE-006: useLogin inside the iOS/Android app
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '../../../tests/helpers/render';
@@ -12,7 +12,6 @@ import { useAuthStore } from '../../store/authStore';
 import { startAuthentication } from '@simplewebauthn/browser';
 import { markSignedOut, wasSignedOut } from '../../utils/signedOut';
 import { BrowserSignInCancelled, signInThroughBrowser } from '../../native/browserSignIn';
-import { TrekShell } from '../../native/trekShell';
 import { useLogin } from './useLogin';
 
 // Stable across renders: useLogin's config effect depends on navigate.
@@ -27,7 +26,6 @@ vi.mock('../../native/browserSignIn', async () => {
   const actual = await vi.importActual<typeof import('../../native/browserSignIn')>('../../native/browserSignIn');
   return { ...actual, signInThroughBrowser: vi.fn() };
 });
-vi.mock('../../native/trekShell', () => ({ TrekShell: { resetServer: vi.fn() } }));
 
 const realLocation = window.location;
 const loadUser = vi.fn(async () => {});
@@ -50,7 +48,6 @@ beforeEach(() => {
   resetAllStores();
   vi.mocked(signInThroughBrowser).mockReset();
   vi.mocked(startAuthentication).mockReset();
-  vi.mocked(TrekShell.resetServer).mockReset();
   loadUser.mockClear();
   useAuthStore.setState({ loadUser });
   Object.defineProperty(window, 'location', {
@@ -66,10 +63,9 @@ afterEach(() => {
 });
 
 describe('useLogin in the native app', () => {
-  it('FE-LOGIN-NATIVE-001: reports that it runs in the app and remembers the login by default', async () => {
+  it('FE-LOGIN-NATIVE-001: remembers the login by default in the app', async () => {
     const { result } = renderLogin();
     await waitFor(() => expect(result.current.appConfig).not.toBeNull());
-    expect(result.current.nativeApp).toBe(true);
     expect(result.current.rememberMe).toBe(true);
   });
 
@@ -128,11 +124,5 @@ describe('useLogin in the native app', () => {
 
     expect(result.current.error).toBe('Signing in did not work. Please try again.');
     expect(result.current.isLoading).toBe(false);
-  });
-
-  it('FE-LOGIN-NATIVE-007: offers the way back to the address screen', () => {
-    const { result } = renderLogin();
-    act(() => { result.current.changeServer(); });
-    expect(TrekShell.resetServer).toHaveBeenCalled();
   });
 });

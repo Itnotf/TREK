@@ -3,7 +3,7 @@ import type { TranslationStrings } from '../types';
 const native: TranslationStrings = {
   'native.connect.title': 'Conectar ao TREK',
   'native.connect.hint': 'Digite o endereço em que você abre o TREK no navegador.',
-  'native.connect.placeholder': 'trek.example.com',
+  'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Conectar',
   'native.connect.checking': 'Verificando…',
   'native.connect.errorInvalid': 'Isso não parece um endereço da web.',

@@ -28,11 +28,17 @@ const get: ProbeGet = async (url) => {
   return { status: response.status, data: response.data, url: response.url }
 }
 
-const FAILURE_KEYS: Record<ProbeFailure, string> = {
-  invalid: 'native.connect.errorInvalid',
-  unreachable: 'native.connect.errorUnreachable',
-  notTrek: 'native.connect.errorNotTrek',
-  tooOld: 'native.connect.errorTooOld',
+function failureMessage(reason: ProbeFailure): string {
+  switch (reason) {
+    case 'invalid':
+      return t('native.connect.errorInvalid')
+    case 'unreachable':
+      return t('native.connect.errorUnreachable')
+    case 'notTrek':
+      return t('native.connect.errorNotTrek')
+    case 'tooOld':
+      return t('native.connect.errorTooOld')
+  }
 }
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLElementTagNameMap[K]> = {}, ...children: (Node | string)[]) {
@@ -77,7 +83,7 @@ function showConnect(prefill = '') {
       await TrekShell.setServer({ url: result.url })
       return
     }
-    error.textContent = t(FAILURE_KEYS[result.reason])
+    error.textContent = failureMessage(result.reason)
     input.disabled = false
     submit.disabled = false
     submit.textContent = t('native.connect.submit')

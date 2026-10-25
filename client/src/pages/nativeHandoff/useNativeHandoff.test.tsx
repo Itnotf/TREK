@@ -5,7 +5,7 @@ import { renderHook, act, waitFor } from '../../../tests/helpers/render'
 import { MemoryRouter } from 'react-router'
 import { resetAllStores } from '../../../tests/helpers/store'
 import { useAuthStore } from '../../store/authStore'
-import { nativeAuthApi } from '../../api/nativeAuth'
+import { requestHandoffCode } from '../../native/browserSignIn'
 import { useNativeHandoff } from './useNativeHandoff'
 
 const mockNavigate = vi.fn()
@@ -13,7 +13,7 @@ vi.mock('react-router', async () => {
   const actual = await vi.importActual<typeof import('react-router')>('react-router')
   return { ...actual, useNavigate: () => mockNavigate }
 })
-vi.mock('../../api/nativeAuth', () => ({ nativeAuthApi: { handoff: vi.fn() } }))
+vi.mock('../../native/browserSignIn', () => ({ HANDOFF_PATH: '/native-handoff', requestHandoffCode: vi.fn() }))
 
 const challenge = 'ab'.repeat(32)
 const realLocation = window.location
@@ -37,7 +37,7 @@ beforeEach(() => {
   resetAllStores()
   mockNavigate.mockClear()
   logout.mockClear()
-  vi.mocked(nativeAuthApi.handoff).mockReset()
+  vi.mocked(requestHandoffCode).mockReset()
   sessionStorage.clear()
   setSearch(`?challenge=${challenge}`)
   useAuthStore.setState({ isLoading: false, isAuthenticated: true, user: { id: 1, username: 'maria' } as never, logout })
@@ -90,18 +90,18 @@ describe('useNativeHandoff', () => {
   })
 
   it('FE-NATIVE-HANDOFF-006: only mints the code on the tap, then hands it to the app scheme', async () => {
-    vi.mocked(nativeAuthApi.handoff).mockResolvedValue({ code: 'c/1' })
+    vi.mocked(requestHandoffCode).mockResolvedValue('c/1')
     const { result } = renderHandoff()
-    expect(nativeAuthApi.handoff).not.toHaveBeenCalled()
+    expect(requestHandoffCode).not.toHaveBeenCalled()
 
     await act(async () => { await result.current.openApp() })
 
-    expect(nativeAuthApi.handoff).toHaveBeenCalledWith(challenge)
+    expect(requestHandoffCode).toHaveBeenCalledWith(challenge)
     expect(window.location.href).toBe('com.liketrek.trek://auth?code=c%2F1')
   })
 
   it('FE-NATIVE-HANDOFF-007: reports a failed hand-off', async () => {
-    vi.mocked(nativeAuthApi.handoff).mockRejectedValue(new Error('401'))
+    vi.mocked(requestHandoffCode).mockRejectedValue(new Error('401'))
     const { result } = renderHandoff()
     await act(async () => { await result.current.openApp() })
     expect(result.current.status).toBe('failed')

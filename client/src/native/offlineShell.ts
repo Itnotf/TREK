@@ -35,8 +35,11 @@ async function warmCache(files: string[], fetchFile: (path: string) => Promise<u
   const queue = [...files]
   const worker = async (): Promise<void> => {
     for (let path = queue.shift(); path !== undefined; path = queue.shift()) {
-      // One missing chunk must not stop the rest; the next launch tries again.
-      await fetchFile(`/${path}`).catch(() => undefined)
+      try {
+        await fetchFile(`/${path}`)
+      } catch {
+        // One missing chunk must not stop the rest; the next launch tries again.
+      }
     }
   }
   await Promise.all(Array.from({ length: CONCURRENCY }, worker))

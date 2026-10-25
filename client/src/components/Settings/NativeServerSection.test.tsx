@@ -1,8 +1,9 @@
-// FE-SETTINGS-NATIVE-SERVER-001 to FE-SETTINGS-NATIVE-SERVER-004
+// FE-SETTINGS-NATIVE-SERVER-001 to FE-SETTINGS-NATIVE-SERVER-006
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '../../../tests/helpers/render'
 import NativeServerSection from './NativeServerSection'
 import MSettingsServer from '../../mobile/screens/settings/MSettingsServer'
+import NativeServerLink from '../../pages/login/NativeServerLink'
 import { nativeServerHost } from '../../native/platform'
 import { TrekShell } from '../../native/trekShell'
 
@@ -27,6 +28,21 @@ describe.each([
     vi.mocked(nativeServerHost).mockReturnValue('trek.example.com')
     render(<Section />)
     expect(screen.getByText('This app is connected to trek.example.com.')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Change server' }))
+    expect(TrekShell.resetServer).toHaveBeenCalled()
+  })
+})
+
+describe('the sign-in screen link', () => {
+  it('renders nothing in a browser', () => {
+    vi.mocked(nativeServerHost).mockReturnValue(null)
+    const { container } = render(<NativeServerLink />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('leads back to the address screen in the app', () => {
+    vi.mocked(nativeServerHost).mockReturnValue('trek.example.com')
+    render(<NativeServerLink />)
     fireEvent.click(screen.getByRole('button', { name: 'Change server' }))
     expect(TrekShell.resetServer).toHaveBeenCalled()
   })

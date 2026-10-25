@@ -3,11 +3,12 @@ import type { TranslationStrings } from '../types';
 const native: TranslationStrings = {
   'native.connect.title': 'Kết nối với TREK',
   'native.connect.hint': 'Nhập địa chỉ bạn dùng để mở TREK trong trình duyệt.',
-  'native.connect.placeholder': 'trek.example.com',
+  'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Kết nối',
   'native.connect.checking': 'Đang kiểm tra…',
   'native.connect.errorInvalid': 'Đây có vẻ không phải là địa chỉ web.',
-  'native.connect.errorUnreachable': 'Không có máy chủ nào phản hồi tại địa chỉ này. Hãy kiểm tra địa chỉ và kết nối của bạn.',
+  'native.connect.errorUnreachable':
+    'Không có máy chủ nào phản hồi tại địa chỉ này. Hãy kiểm tra địa chỉ và kết nối của bạn.',
   'native.connect.errorNotTrek': 'Máy chủ tại địa chỉ này không phải TREK.',
   'native.connect.errorTooOld': 'Máy chủ TREK này quá cũ đối với ứng dụng. Máy chủ cần được cập nhật trước.',
   'native.offline.title': 'Không kết nối được máy chủ',

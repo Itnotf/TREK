@@ -4,6 +4,7 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import { StatusBar, Style } from '@capacitor/status-bar'
 import { isNativeApp, isNativeIos } from './platform'
 import { keepOfflineShellFresh } from './offlineShell'
+import { reportNativeFailure } from './reportFailure'
 import { isEffectivelyOffline } from '../sync/networkMode'
 
 /** Long enough that the warm-up never competes with the first screen's requests. */
@@ -32,7 +33,8 @@ export function startNativeApp(): void {
     void Keyboard.setAccessoryBarVisible({ isVisible: false })
     window.setTimeout(() => {
       if (isEffectivelyOffline()) return
-      keepOfflineShellFresh().catch((err) => console.warn('[native] offline start page not refreshed', err))
+      // Not refreshed this time is no harm: the next launch tries again.
+      keepOfflineShellFresh().catch(reportNativeFailure)
     }, OFFLINE_SHELL_DELAY_MS)
   }
 }
