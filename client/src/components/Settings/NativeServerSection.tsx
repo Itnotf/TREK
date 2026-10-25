@@ -8,7 +8,7 @@ import { useNativeServer } from './useNativeServer';
 /** Only inside the iOS/Android app: which server it talks to, and the way to another one. */
 export default function NativeServerSection(): React.ReactElement | null {
   const { t } = useTranslation();
-  const { host, changeServer } = useNativeServer();
+  const { host, changeServer, privacyUrl } = useNativeServer();
   if (!host) return null;
   return (
     <Section title={t('native.settings.server')} icon={Server}>
@@ -20,6 +20,14 @@ export default function NativeServerSection(): React.ReactElement | null {
       >
         {t('native.changeServer')}
       </button>
+      <a
+        href={privacyUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block text-caption text-content-muted underline"
+      >
+        {t('native.privacy')}
+      </a>
     </Section>
   );
 }

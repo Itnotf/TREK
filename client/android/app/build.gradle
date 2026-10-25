@@ -7,8 +7,11 @@ android {
         applicationId "com.liketrek.trek"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        // The release workflow (.github/workflows/native-release.yml) passes both:
+        // the version from client/package.json and a build number that only grows.
+        // Local and PR builds fall back to these placeholders.
+        versionCode((project.findProperty('trekVersionCode') ?: '1') as Integer)
+        versionName(project.findProperty('trekVersionName') ?: '0.0.0-dev')
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +19,27 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // The upload key only exists in the release workflow, which decodes it from a
+    // secret and passes its path and passwords as Gradle properties. Every other
+    // build (local, fork, PR) stays unsigned and needs no secret.
+    signingConfigs {
+        release {
+            if (project.hasProperty('trekKeystore')) {
+                storeFile file(project.property('trekKeystore'))
+                storePassword project.property('trekKeystorePassword')
+                keyAlias project.property('trekKeyAlias')
+                keyPassword project.property('trekKeyPassword')
+            }
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (project.hasProperty('trekKeystore')) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -44,12 +64,3 @@ dependencies {
 }
 
 apply from: 'capacitor.build.gradle'
-
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
-}

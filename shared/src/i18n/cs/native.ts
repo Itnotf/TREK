@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Připojit',
   'native.connect.checking': 'Ověřování…',
+  'native.connect.tryDemo': 'Ještě nemáte server? Vyzkoušejte demo',
+  'native.connect.whatIsServer': 'Co je server TREK?',
   'native.connect.errorInvalid': 'To nevypadá jako webová adresa.',
   'native.connect.errorUnreachable': 'Na této adrese neodpovídá žádný server. Zkontrolujte adresu a připojení.',
   'native.connect.errorNotTrek': 'Server na této adrese není TREK.',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Jste přihlášeni jako {name}. Otevřete aplikaci TREK a dokončete přihlášení v ní.',
   'native.handoff.open': 'Otevřít aplikaci TREK',
   'native.handoff.switchAccount': 'Použít jiný účet',
+  'native.privacy': 'Zásady ochrany osobních údajů',
   'native.settings.server': 'Server', // same-as-en
   'native.settings.serverHint': 'Tato aplikace je připojena k {server}.',
 };

@@ -106,4 +106,22 @@ describe('startNativeApp', () => {
     await vi.waitFor(() => expect(report).toHaveBeenCalledWith(expect.any(Error)));
     vi.unstubAllGlobals();
   });
+
+  it('stays quiet when the installed app is older than the offline copy', async () => {
+    vi.mocked(isNativeIos).mockReturnValue(true);
+    vi.mocked(keepOfflineShellFresh).mockRejectedValue(
+      Object.assign(new Error('not implemented'), { code: 'UNIMPLEMENTED' })
+    );
+    const report = vi.fn();
+    vi.stubGlobal('reportError', report);
+    startNativeApp();
+    vi.advanceTimersByTime(15_000);
+    await vi.waitFor(() => expect(keepOfflineShellFresh).toHaveBeenCalled());
+    // Let the rejection reach its handler.
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(report).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
 });

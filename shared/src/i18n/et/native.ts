@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Ühenda',
   'native.connect.checking': 'Kontrollin…',
+  'native.connect.tryDemo': 'Serverit veel pole? Proovi demot',
+  'native.connect.whatIsServer': 'Mis on TREKi server?',
   'native.connect.errorInvalid': 'See ei näe välja nagu veebiaadress.',
   'native.connect.errorUnreachable': 'Sellel aadressil ei vastanud ükski server. Kontrolli aadressi ja oma ühendust.',
   'native.connect.errorNotTrek': 'Sellel aadressil olev server ei ole TREK.',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Oled sisse logitud kui {name}. Ava TREKi rakendus, et sisselogimine seal lõpetada.',
   'native.handoff.open': 'Ava TREKi rakendus',
   'native.handoff.switchAccount': 'Kasuta teist kontot',
+  'native.privacy': 'Privaatsuspoliitika',
   'native.settings.server': 'Server', // same-as-en
   'native.settings.serverHint': 'See rakendus on ühendatud serveriga {server}.',
 };

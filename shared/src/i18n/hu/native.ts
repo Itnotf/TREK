@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Csatlakozás',
   'native.connect.checking': 'Ellenőrzés…',
+  'native.connect.tryDemo': 'Még nincs szervered? Próbáld ki a demót',
+  'native.connect.whatIsServer': 'Mi az a TREK-szerver?',
   'native.connect.errorInvalid': 'Ez nem úgy néz ki, mint egy webcím.',
   'native.connect.errorUnreachable': 'Ezen a címen nem válaszol szerver. Ellenőrizd a címet és a kapcsolatot.',
   'native.connect.errorNotTrek': 'Az ezen a címen futó szerver nem TREK.',
@@ -20,6 +22,7 @@ const native: TranslationStrings = {
     '{name} néven vagy bejelentkezve. Nyisd meg a TREK alkalmazást, hogy ott befejezd a bejelentkezést.',
   'native.handoff.open': 'TREK alkalmazás megnyitása',
   'native.handoff.switchAccount': 'Másik fiók használata',
+  'native.privacy': 'Adatvédelmi irányelvek',
   'native.settings.server': 'Szerver',
   'native.settings.serverHint': 'Ez az alkalmazás ehhez csatlakozik: {server}.',
 };

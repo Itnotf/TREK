@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': '連線',
   'native.connect.checking': '正在檢查…',
+  'native.connect.tryDemo': '還沒有伺服器？試試示範版',
+  'native.connect.whatIsServer': '什麼是 TREK 伺服器？',
   'native.connect.errorInvalid': '這看起來不像網址。',
   'native.connect.errorUnreachable': '此網址沒有伺服器回應。請檢查網址與網路連線。',
   'native.connect.errorNotTrek': '此網址上的伺服器不是 TREK。',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': '你已以 {name} 身分登入。請開啟 TREK App，在那裡完成登入。',
   'native.handoff.open': '開啟 TREK App',
   'native.handoff.switchAccount': '使用其他帳號',
+  'native.privacy': '隱私權政策',
   'native.settings.server': '伺服器',
   'native.settings.serverHint': '此 App 已連線到 {server}。',
 };

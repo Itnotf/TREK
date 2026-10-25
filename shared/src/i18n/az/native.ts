@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Qoşul',
   'native.connect.checking': 'Yoxlanılır…',
+  'native.connect.tryDemo': 'Hələ serveriniz yoxdur? Demonu sınayın',
+  'native.connect.whatIsServer': 'TREK serveri nədir?',
   'native.connect.errorInvalid': 'Bu, veb ünvana bənzəmir.',
   'native.connect.errorUnreachable': 'Bu ünvanda heç bir server cavab vermədi. Ünvanı və bağlantınızı yoxlayın.',
   'native.connect.errorNotTrek': 'Bu ünvandakı server TREK deyil.',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Siz {name} kimi daxil olmusunuz. Girişi orada tamamlamaq üçün TREK tətbiqini açın.',
   'native.handoff.open': 'TREK tətbiqini aç',
   'native.handoff.switchAccount': 'Başqa hesabdan istifadə et',
+  'native.privacy': 'Məxfilik siyasəti',
   'native.settings.server': 'Server', // same-as-en
   'native.settings.serverHint': 'Bu tətbiq {server} serverinə qoşulub.',
 };

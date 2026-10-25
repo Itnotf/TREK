@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Σύνδεση',
   'native.connect.checking': 'Έλεγχος…',
+  'native.connect.tryDemo': 'Δεν έχετε ακόμη διακομιστή; Δοκιμάστε την επίδειξη',
+  'native.connect.whatIsServer': 'Τι είναι ένας διακομιστής TREK;',
   'native.connect.errorInvalid': 'Αυτό δεν μοιάζει με διεύθυνση ιστού.',
   'native.connect.errorUnreachable':
     'Κανένας διακομιστής δεν απαντά σε αυτή τη διεύθυνση. Ελέγξτε τη διεύθυνση και τη σύνδεσή σας.',
@@ -21,6 +23,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Έχετε συνδεθεί ως {name}. Ανοίξτε την εφαρμογή TREK για να ολοκληρώσετε εκεί τη σύνδεση.',
   'native.handoff.open': 'Άνοιγμα της εφαρμογής TREK',
   'native.handoff.switchAccount': 'Χρήση άλλου λογαριασμού',
+  'native.privacy': 'Πολιτική απορρήτου',
   'native.settings.server': 'Διακομιστής',
   'native.settings.serverHint': 'Αυτή η εφαρμογή είναι συνδεδεμένη στο {server}.',
 };

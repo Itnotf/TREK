@@ -37,6 +37,7 @@ describe('FeaturesController (GET /api/health/features)', () => {
       aiParsing: true,
       aiAssistant: true,
       nativeApp: true,
+      nativeApi: 1,
     });
   });
 
@@ -47,6 +48,7 @@ describe('FeaturesController (GET /api/health/features)', () => {
       aiParsing: false,
       aiAssistant: false,
       nativeApp: true,
+      nativeApi: 1,
     });
   });
 
@@ -56,12 +58,14 @@ describe('FeaturesController (GET /api/health/features)', () => {
       aiParsing: false,
       aiAssistant: false,
       nativeApp: true,
+      nativeApi: 1,
     });
     expect(await make(false, true).controller.features()).toEqual({
       bookingImport: false,
       aiParsing: true,
       aiAssistant: true,
       nativeApp: true,
+      nativeApi: 1,
     });
   });
 
@@ -83,8 +87,10 @@ describe('FeaturesController (GET /api/health/features)', () => {
     }
   });
 
-  it('FEAT-014: always tells the native apps this server speaks their sign-in hand-off', async () => {
-    expect((await make(false, false).controller.features()).nativeApp).toBe(true);
+  it('FEAT-014: tells the native apps it speaks their sign-in hand-off, and at which version', async () => {
+    const features = await make(false, false).controller.features();
+    expect(features.nativeApp).toBe(true);
+    expect(features.nativeApi).toBe(1);
   });
 
   it('FEAT-005: bookingImport is read live, not cached at construction', async () => {

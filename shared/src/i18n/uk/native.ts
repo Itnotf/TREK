@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Підключитися',
   'native.connect.checking': 'Перевірка…',
+  'native.connect.tryDemo': 'Ще немає сервера? Спробуйте демо',
+  'native.connect.whatIsServer': 'Що таке сервер TREK?',
   'native.connect.errorInvalid': 'Це не схоже на вебадресу.',
   'native.connect.errorUnreachable': 'За цією адресою не відповідає жоден сервер. Перевірте адресу та з’єднання.',
   'native.connect.errorNotTrek': 'Сервер за цією адресою не є TREK.',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Ви увійшли як {name}. Відкрийте застосунок TREK, щоб завершити вхід у ньому.',
   'native.handoff.open': 'Відкрити застосунок TREK',
   'native.handoff.switchAccount': 'Використати інший обліковий запис',
+  'native.privacy': 'Політика конфіденційності',
   'native.settings.server': 'Сервер',
   'native.settings.serverHint': 'Застосунок підключено до {server}.',
 };

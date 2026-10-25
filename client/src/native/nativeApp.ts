@@ -6,6 +6,7 @@ import { isEffectivelyOffline } from '../sync/networkMode';
 import { keepOfflineShellFresh } from './offlineShell';
 import { isNativeApp, isNativeIos } from './platform';
 import { reportNativeFailure } from './reportFailure';
+import { isUnimplemented } from './trekShell';
 
 /** Long enough that the warm-up never competes with the first screen's requests. */
 const OFFLINE_SHELL_DELAY_MS = 15_000;
@@ -35,8 +36,11 @@ export function startNativeApp(): void {
     void Keyboard.setAccessoryBarVisible({ isVisible: false });
     window.setTimeout(() => {
       if (isEffectivelyOffline()) return;
-      // Not refreshed this time is no harm: the next launch tries again.
-      keepOfflineShellFresh().catch(reportNativeFailure);
+      // Not refreshed this time is no harm: the next launch tries again. An app
+      // older than the offline copy has no such method, which is no failure.
+      keepOfflineShellFresh().catch((err: unknown) => {
+        if (!isUnimplemented(err)) reportNativeFailure(err);
+      });
     }, OFFLINE_SHELL_DELAY_MS);
   }
 }

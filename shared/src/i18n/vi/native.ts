@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Kết nối',
   'native.connect.checking': 'Đang kiểm tra…',
+  'native.connect.tryDemo': 'Chưa có máy chủ? Dùng thử bản demo',
+  'native.connect.whatIsServer': 'Máy chủ TREK là gì?',
   'native.connect.errorInvalid': 'Đây có vẻ không phải là địa chỉ web.',
   'native.connect.errorUnreachable':
     'Không có máy chủ nào phản hồi tại địa chỉ này. Hãy kiểm tra địa chỉ và kết nối của bạn.',
@@ -20,6 +22,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': 'Bạn đã đăng nhập với tên {name}. Mở ứng dụng TREK để hoàn tất đăng nhập ở đó.',
   'native.handoff.open': 'Mở ứng dụng TREK',
   'native.handoff.switchAccount': 'Dùng tài khoản khác',
+  'native.privacy': 'Chính sách quyền riêng tư',
   'native.settings.server': 'Máy chủ',
   'native.settings.serverHint': 'Ứng dụng này đang kết nối với {server}.',
 };

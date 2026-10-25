@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { candidateUrls, probeServer, type ProbeResponse } from './serverAddress';
+import { candidateUrls, probeDemo, probeServer, type ProbeResponse } from './serverAddress';
 
 const features = (
   url: string,
@@ -25,6 +25,18 @@ describe('candidateUrls', () => {
 });
 
 describe('probeServer', () => {
+  it('accepts a server at the minimum native API version or above', async () => {
+    const data = { bookingImport: false, nativeApp: true, nativeApi: 1 };
+    const get = vi.fn().mockResolvedValue(features('https://trek.example.com/api/health/features', data));
+    expect(await probeServer('https://trek.example.com', get)).toEqual({ ok: true, url: 'https://trek.example.com' });
+  });
+
+  it('calls a server below the minimum native API version too old', async () => {
+    const data = { bookingImport: false, nativeApp: true, nativeApi: 0 };
+    const get = vi.fn().mockResolvedValue(features('https://trek.example.com/api/health/features', data));
+    expect(await probeServer('https://trek.example.com', get)).toEqual({ ok: false, reason: 'tooOld' });
+  });
+
   it('accepts a server that reports nativeApp and follows its redirect', async () => {
     const get = vi.fn().mockResolvedValue(features('https://trek.example.com/api/health/features'));
     expect(await probeServer('http://trek.example.com', get)).toEqual({ ok: true, url: 'https://trek.example.com' });
@@ -81,5 +93,13 @@ describe('probeServer', () => {
     const get = vi.fn();
     expect(await probeServer('', get)).toEqual({ ok: false, reason: 'invalid' });
     expect(get).not.toHaveBeenCalled();
+  });
+});
+
+describe('probeDemo', () => {
+  it('probes the public demo server the address screen offers', async () => {
+    const get = vi.fn().mockResolvedValue(features('https://demo.liketrek.com/api/health/features'));
+    expect(await probeDemo(get)).toEqual({ ok: true, url: 'https://demo.liketrek.com' });
+    expect(get).toHaveBeenCalledWith('https://demo.liketrek.com/api/health/features');
   });
 });

@@ -1,4 +1,4 @@
-// FE-SETTINGS-NATIVE-SERVER-001 to FE-SETTINGS-NATIVE-SERVER-006
+// FE-SETTINGS-NATIVE-SERVER-001 to FE-SETTINGS-NATIVE-SERVER-008
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '../../../tests/helpers/render';
 import MSettingsServer from '../../mobile/screens/settings/MSettingsServer';
@@ -30,6 +30,14 @@ describe.each([
     expect(screen.getByText('This app is connected to trek.example.com.')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Change server' }));
     expect(TrekShell.resetServer).toHaveBeenCalled();
+  });
+
+  it('links to the privacy policy, opened outside the app', () => {
+    vi.mocked(nativeServerHost).mockReturnValue('trek.example.com');
+    render(<Section />);
+    const link = screen.getByRole('link', { name: 'Privacy policy' });
+    expect(link).toHaveAttribute('href', 'https://liketrek.com/privacy');
+    expect(link).toHaveAttribute('target', '_blank');
   });
 });
 

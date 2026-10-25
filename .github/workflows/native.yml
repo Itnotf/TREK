@@ -20,6 +20,8 @@ on:
       - 'client/src/native/serverAddress.ts'
       - 'client/capacitor.config.ts'
       - 'client/vite.native.config.js'
+      - 'client/scripts/check-store-metadata.mjs'
+      - 'client/fastlane/**'
       - 'client/package.json'
       - 'package-lock.json'
       - 'shared/src/i18n/*/native.ts'
@@ -31,6 +33,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The store texts fit their limits and every listing image has its size and
+  # no alpha channel (client/fastlane/README.md). Plain Node, no install.
+  metadata:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Check the store listings
+        run: node client/scripts/check-store-metadata.mjs
+
   android:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
@@ -58,9 +75,12 @@ jobs:
         working-directory: client
         run: npm run cap:sync -- android
 
-      - name: Assemble debug APK
+      # The release build runs R8 with the keep rules in proguard-rules.pro, so a
+      # rule that goes missing fails here rather than in the store build. It is
+      # unsigned: the upload key only exists in native-release.yml.
+      - name: Assemble debug and release APKs
         working-directory: client/android
-        run: ./gradlew assembleDebug lintDebug --no-daemon
+        run: ./gradlew assembleDebug assembleRelease lintDebug --no-daemon
 
       - uses: actions/upload-artifact@v6
         with:
@@ -73,6 +93,17 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v6
+
+      # App Store uploads must be built with Xcode 26; the image's default is older.
+      - name: Select Xcode 26
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
+          test -n "$XCODE"
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Check the property lists
+        run: plutil -lint client/ios/App/App/Info.plist client/ios/ExportOptions.plist
 
       - uses: actions/setup-node@v6
         with:

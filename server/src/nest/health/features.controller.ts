@@ -66,6 +66,10 @@ export class FeaturesController {
       // one serves a UI that knows neither the sign-in hand-off nor the way
       // back to the server picker, and the user would be stuck in it.
       nativeApp: true,
+      // The version of what the apps rely on from the server (the hand-off
+      // routes, the shell bridge in the served UI). Raised only for a change an
+      // older app cannot follow; the app refuses a server below its minimum.
+      nativeApi: 1,
     };
   }
 }

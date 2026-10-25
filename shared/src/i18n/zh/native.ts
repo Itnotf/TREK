@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': '连接',
   'native.connect.checking': '正在检查…',
+  'native.connect.tryDemo': '还没有服务器？试试演示版',
+  'native.connect.whatIsServer': '什么是 TREK 服务器？',
   'native.connect.errorInvalid': '这看起来不像网址。',
   'native.connect.errorUnreachable': '此地址没有服务器响应。请检查地址和网络连接。',
   'native.connect.errorNotTrek': '此地址上的服务器不是 TREK。',
@@ -19,6 +21,7 @@ const native: TranslationStrings = {
   'native.handoff.hint': '你已以 {name} 身份登录。请打开 TREK 应用，在那里完成登录。',
   'native.handoff.open': '打开 TREK 应用',
   'native.handoff.switchAccount': '使用其他账号',
+  'native.privacy': '隐私政策',
   'native.settings.server': '服务器',
   'native.settings.serverHint': '此应用已连接到 {server}。',
 };

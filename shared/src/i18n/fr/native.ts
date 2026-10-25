@@ -6,6 +6,8 @@ const native: TranslationStrings = {
   'native.connect.placeholder': 'https://trek.example.com',
   'native.connect.submit': 'Se connecter',
   'native.connect.checking': 'Vérification…',
+  'native.connect.tryDemo': 'Pas encore de serveur ? Essayez la démo',
+  'native.connect.whatIsServer': 'Qu’est-ce qu’un serveur TREK ?',
   'native.connect.errorInvalid': 'Cela ne ressemble pas à une adresse web.',
   'native.connect.errorUnreachable': 'Aucun serveur ne répond à cette adresse. Vérifiez l’adresse et votre connexion.',
   'native.connect.errorNotTrek': 'Le serveur à cette adresse n’est pas TREK.',
@@ -20,6 +22,7 @@ const native: TranslationStrings = {
     'Vous êtes connecté en tant que {name}. Ouvrez l’application TREK pour y terminer la connexion.',
   'native.handoff.open': 'Ouvrir l’application TREK',
   'native.handoff.switchAccount': 'Utiliser un autre compte',
+  'native.privacy': 'Politique de confidentialité',
   'native.settings.server': 'Serveur',
   'native.settings.serverHint': 'Cette application est connectée à {server}.',
 };

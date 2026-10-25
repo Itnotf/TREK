@@ -34,3 +34,12 @@ export interface TrekShellPlugin {
 export const TrekShell = registerPlugin<TrekShellPlugin>('TrekShell');
 
 export const APP_URL_SCHEME = 'com.liketrek.trek';
+
+/**
+ * True for the rejection Capacitor gives when the installed app has no such
+ * native method: the UI comes from the server, so a newer server can call into
+ * an app binary that predates the method.
+ */
+export function isUnimplemented(err: unknown): boolean {
+  return typeof err === 'object' && err !== null && (err as { code?: unknown }).code === 'UNIMPLEMENTED';
+}

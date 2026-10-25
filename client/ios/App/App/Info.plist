@@ -22,6 +22,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<!-- The app uses no encryption beyond the system's own HTTPS, which is exempt,
+	     so uploads skip the export compliance question in App Store Connect. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<!-- TREK is self-hosted: the user types in their own server address, so the
@@ -58,6 +62,9 @@
 	     The WebView's file picker offers "Take Photo" and "Photo Library". -->
 	<key>NSCameraUsageDescription</key>
 	<string>TREK uses the camera so you can photograph a place, a journey entry or a booking document and add it to your trip.</string>
+	<!-- "Take Video" in the same picker records sound with the film. -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>TREK records sound when you film a video for a journey entry.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>TREK needs access to your photos so you can add them to trips, places and journey entries.</string>
 	<!-- "Save Image" in the share sheet that exports and downloads open in. -->

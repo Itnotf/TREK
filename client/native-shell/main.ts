@@ -1,7 +1,8 @@
 import { CapacitorHttp } from '@capacitor/core'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { TrekShell } from '../src/native/trekShell'
-import { probeServer, type ProbeFailure, type ProbeGet } from '../src/native/serverAddress'
+import { probeDemo, probeServer, type ProbeFailure, type ProbeGet } from '../src/native/serverAddress'
+import { PRIVACY_URL, SERVER_DOCS_URL } from '../src/native/links'
 import { pickLocale, translator } from './i18n'
 import logoUrl from '../public/icons/icon-white.svg'
 import './shell.css'
@@ -62,6 +63,11 @@ function header(title: string, hint: string) {
   ]
 }
 
+/** A page outside the app; the WebView hands it to the system browser. */
+function externalLink(text: string, href: string) {
+  return el('a', { href, target: '_blank', rel: 'noopener noreferrer', className: 'shell-link' }, text)
+}
+
 function showConnect(prefill = '') {
   const input = el('input', {
     type: 'url',
@@ -97,7 +103,32 @@ function showConnect(prefill = '') {
     input.focus()
   })
 
-  root.replaceChildren(...header(t('native.connect.title'), t('native.connect.hint')), form)
+  // For someone without a server of their own yet: the public demo, through the
+  // same probe, so an outdated or unreachable demo says so like any server.
+  const demo = el('button', { type: 'button', className: 'shell-link' }, t('native.connect.tryDemo'))
+  demo.addEventListener('click', async () => {
+    error.textContent = ''
+    demo.disabled = true
+    const result = await probeDemo(get)
+    if (result.ok) {
+      await TrekShell.setServer({ url: result.url })
+      return
+    }
+    error.textContent = failureMessage(result.reason)
+    demo.disabled = false
+  })
+
+  root.replaceChildren(
+    ...header(t('native.connect.title'), t('native.connect.hint')),
+    form,
+    demo,
+    el(
+      'div',
+      { className: 'shell-links' },
+      externalLink(t('native.connect.whatIsServer'), SERVER_DOCS_URL),
+      externalLink(t('native.privacy'), PRIVACY_URL),
+    ),
+  )
 }
 
 function showUnreachable(server: string) {
@@ -112,6 +143,7 @@ function showUnreachable(server: string) {
   root.replaceChildren(
     ...header(t('native.offline.title'), t('native.offline.hint', { server: new URL(server).host })),
     el('div', { className: 'shell-form' }, retry, change),
+    el('div', { className: 'shell-links' }, externalLink(t('native.privacy'), PRIVACY_URL)),
   )
 }
 

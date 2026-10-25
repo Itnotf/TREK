@@ -1,3 +1,5 @@
+import { DEMO_SERVER_URL } from './links';
+
 /**
  * Turns what someone typed into the app's address field into a TREK server it
  * can load, or a reason it cannot.
@@ -15,6 +17,13 @@ export interface ProbeResponse {
 export type ProbeGet = (url: string) => Promise<ProbeResponse>;
 
 const FEATURES_PATH = '/api/health/features';
+
+/**
+ * The oldest server API this app can work with (`nativeApi` in the features
+ * response). A server from before the field existed answers without it and is
+ * accepted while the minimum is 1.
+ */
+const MIN_NATIVE_API = 1;
 
 function normalize(raw: string): string | null {
   let parsed: URL;
@@ -47,6 +56,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function judge(response: ProbeResponse): ProbeResult {
   if (response.status !== 200 || !isRecord(response.data)) return { ok: false, reason: 'notTrek' };
   if (response.data.nativeApp === true) {
+    const api = response.data.nativeApi;
+    if (typeof api === 'number' && api < MIN_NATIVE_API) return { ok: false, reason: 'tooOld' };
     // Follow a redirect (http to https, a canonical host) so the app loads the
     // address the server actually answers on.
     const base = response.url.endsWith(FEATURES_PATH) ? response.url.slice(0, -FEATURES_PATH.length) : null;
@@ -73,4 +84,9 @@ export async function probeServer(input: string, get: ProbeGet): Promise<ProbeRe
     if (FAILURE_RANK[verdict.reason] > FAILURE_RANK[failure]) failure = verdict.reason;
   }
   return { ok: false, reason: failure };
+}
+
+/** The address screen's "Try the demo": the same probe, against the public demo server. */
+export function probeDemo(get: ProbeGet): Promise<ProbeResult> {
+  return probeServer(DEMO_SERVER_URL, get);
 }
