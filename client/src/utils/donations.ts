@@ -29,10 +29,10 @@ export function withoutDonationsInApp<T extends { href: string }>(links: T[]): T
   return donationsShown() ? links : links.filter((link) => !isDonationLink(link.href));
 }
 
+/** A notice button: a link or a navigation carries an href, an action does not. */
+type NoticeButton = { kind: string; href?: string } | null | undefined;
+
 /** Whether a system notice asks for a donation through one of its buttons. */
-export function noticeAsksForDonation(notice: {
-  cta?: { href?: string } | null;
-  secondaryCta?: { href?: string } | null;
-}): boolean {
+export function noticeAsksForDonation(notice: { cta?: NoticeButton; secondaryCta?: NoticeButton }): boolean {
   return isDonationLink(notice.cta?.href) || isDonationLink(notice.secondaryCta?.href);
 }

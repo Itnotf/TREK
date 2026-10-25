@@ -42,9 +42,10 @@ describe('in the native app', () => {
 
 describe('noticeAsksForDonation', () => {
   it('looks at both buttons', () => {
-    expect(noticeAsksForDonation({ cta: { href: 'https://ko-fi.com/x' } })).toBe(true);
-    expect(noticeAsksForDonation({ secondaryCta: { href: 'https://buymeacoffee.com/x' } })).toBe(true);
-    expect(noticeAsksForDonation({ cta: { href: '/settings' }, secondaryCta: null })).toBe(false);
+    expect(noticeAsksForDonation({ cta: { kind: 'link', href: 'https://ko-fi.com/x' } })).toBe(true);
+    expect(noticeAsksForDonation({ secondaryCta: { kind: 'link', href: 'https://buymeacoffee.com/x' } })).toBe(true);
+    expect(noticeAsksForDonation({ cta: { kind: 'nav', href: '/settings' }, secondaryCta: null })).toBe(false);
+    expect(noticeAsksForDonation({ cta: { kind: 'action' } })).toBe(false);
     expect(noticeAsksForDonation({})).toBe(false);
   });
 });
