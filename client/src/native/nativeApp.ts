@@ -1,41 +1,43 @@
-import { App } from '@capacitor/app'
-import { Keyboard } from '@capacitor/keyboard'
-import { SplashScreen } from '@capacitor/splash-screen'
-import { StatusBar, Style } from '@capacitor/status-bar'
-import { isNativeApp, isNativeIos } from './platform'
-import { keepOfflineShellFresh } from './offlineShell'
-import { reportNativeFailure } from './reportFailure'
-import { isEffectivelyOffline } from '../sync/networkMode'
+import { App } from '@capacitor/app';
+import { Keyboard } from '@capacitor/keyboard';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { isEffectivelyOffline } from '../sync/networkMode';
+import { keepOfflineShellFresh } from './offlineShell';
+import { isNativeApp, isNativeIos } from './platform';
+import { reportNativeFailure } from './reportFailure';
 
 /** Long enough that the warm-up never competes with the first screen's requests. */
-const OFFLINE_SHELL_DELAY_MS = 15_000
+const OFFLINE_SHELL_DELAY_MS = 15_000;
 
 /**
  * What the UI does differently when it runs inside the iOS or Android app.
  * Everything else is the same UI a browser gets from this server.
  */
 export function startNativeApp(): void {
-  if (!isNativeApp()) return
+  if (!isNativeApp()) return;
 
-  followThemeInStatusBar()
+  followThemeInStatusBar();
 
   // Android's back gesture: through the app's own history first, and only
   // then out of the app, the way a browser tab would behave.
   void App.addListener('backButton', ({ canGoBack }) => {
-    if (canGoBack) window.history.back()
-    else void App.minimizeApp()
-  })
+    if (canGoBack) window.history.back();
+    else void App.minimizeApp();
+  });
 
-  requestAnimationFrame(() => { void SplashScreen.hide() })
+  requestAnimationFrame(() => {
+    void SplashScreen.hide();
+  });
 
   if (isNativeIos()) {
     // The "‹ › Done" strip above the keyboard is a web form's, not an app's.
-    void Keyboard.setAccessoryBarVisible({ isVisible: false })
+    void Keyboard.setAccessoryBarVisible({ isVisible: false });
     window.setTimeout(() => {
-      if (isEffectivelyOffline()) return
+      if (isEffectivelyOffline()) return;
       // Not refreshed this time is no harm: the next launch tries again.
-      keepOfflineShellFresh().catch(reportNativeFailure)
-    }, OFFLINE_SHELL_DELAY_MS)
+      keepOfflineShellFresh().catch(reportNativeFailure);
+    }, OFFLINE_SHELL_DELAY_MS);
   }
 }
 
@@ -45,10 +47,10 @@ export function startNativeApp(): void {
  * every way the scheme changes, including "follow the system".
  */
 function followThemeInStatusBar(): void {
-  const root = document.documentElement
+  const root = document.documentElement;
   const apply = (): void => {
-    void StatusBar.setStyle({ style: root.classList.contains('dark') ? Style.Dark : Style.Light })
-  }
-  apply()
-  new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ['class'] })
+    void StatusBar.setStyle({ style: root.classList.contains('dark') ? Style.Dark : Style.Light });
+  };
+  apply();
+  new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ['class'] });
 }

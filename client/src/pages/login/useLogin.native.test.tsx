@@ -1,17 +1,17 @@
 // FE-LOGIN-NATIVE-001 to FE-LOGIN-NATIVE-006: useLogin inside the iOS/Android app
-import React from 'react';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook, act, waitFor } from '../../../tests/helpers/render';
-import { MemoryRouter } from 'react-router';
-import { http, HttpResponse } from 'msw';
-import { server } from '../../../tests/helpers/msw/server';
-import { resetAllStores } from '../../../tests/helpers/store';
-import { buildAppConfig } from '../../../tests/helpers/factories';
-import { TranslationProvider } from '../../i18n/TranslationContext';
-import { useAuthStore } from '../../store/authStore';
 import { startAuthentication } from '@simplewebauthn/browser';
-import { markSignedOut, wasSignedOut } from '../../utils/signedOut';
+import { http, HttpResponse } from 'msw';
+import React from 'react';
+import { MemoryRouter } from 'react-router';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { buildAppConfig } from '../../../tests/helpers/factories';
+import { server } from '../../../tests/helpers/msw/server';
+import { act, renderHook, waitFor } from '../../../tests/helpers/render';
+import { resetAllStores } from '../../../tests/helpers/store';
+import { TranslationProvider } from '../../i18n/TranslationContext';
 import { BrowserSignInCancelled, signInThroughBrowser } from '../../native/browserSignIn';
+import { useAuthStore } from '../../store/authStore';
+import { markSignedOut, wasSignedOut } from '../../utils/signedOut';
 import { useLogin } from './useLogin';
 
 // Stable across renders: useLogin's config effect depends on navigate.
@@ -72,8 +72,8 @@ describe('useLogin in the native app', () => {
   it('FE-LOGIN-NATIVE-002: does not bounce an OIDC-only install to the IdP inside the WebView', async () => {
     server.use(
       http.get('/api/auth/app-config', () =>
-        HttpResponse.json(buildAppConfig({ password_login: false, oidc_configured: true, oidc_login: true })),
-      ),
+        HttpResponse.json(buildAppConfig({ password_login: false, oidc_configured: true, oidc_login: true }))
+      )
     );
     const { result } = renderLogin();
     await waitFor(() => expect(result.current.appConfig).not.toBeNull());
@@ -87,7 +87,9 @@ describe('useLogin in the native app', () => {
     const { result } = renderLogin();
     const event = clickEvent();
 
-    await act(async () => { result.current.handleSsoClick(event); });
+    await act(async () => {
+      result.current.handleSsoClick(event);
+    });
 
     expect(event.preventDefault).toHaveBeenCalled();
     expect(wasSignedOut()).toBe(false);
@@ -100,7 +102,9 @@ describe('useLogin in the native app', () => {
     vi.mocked(signInThroughBrowser).mockResolvedValue();
     const { result } = renderLogin();
 
-    await act(async () => { await result.current.handlePasskeyLogin(); });
+    await act(async () => {
+      await result.current.handlePasskeyLogin();
+    });
 
     expect(signInThroughBrowser).toHaveBeenCalledWith(undefined);
     expect(startAuthentication).not.toHaveBeenCalled();
@@ -110,7 +114,9 @@ describe('useLogin in the native app', () => {
     vi.mocked(signInThroughBrowser).mockRejectedValue(new BrowserSignInCancelled());
     const { result } = renderLogin();
 
-    await act(async () => { await result.current.handlePasskeyLogin(); });
+    await act(async () => {
+      await result.current.handlePasskeyLogin();
+    });
 
     expect(result.current.error).toBe('');
     expect(result.current.isLoading).toBe(false);
@@ -120,7 +126,9 @@ describe('useLogin in the native app', () => {
     vi.mocked(signInThroughBrowser).mockRejectedValue(new Error('exchange failed'));
     const { result } = renderLogin();
 
-    await act(async () => { await result.current.handlePasskeyLogin(); });
+    await act(async () => {
+      await result.current.handlePasskeyLogin();
+    });
 
     expect(result.current.error).toBe('Signing in did not work. Please try again.');
     expect(result.current.isLoading).toBe(false);

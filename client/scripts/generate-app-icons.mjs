@@ -11,22 +11,22 @@
  * Android's adaptive icon masks the foreground to a circle inside the
  * canvas, so the mark there sits smaller than on the iOS tile.
  */
-import { mkdirSync, readFileSync } from 'fs'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
-import sharp from 'sharp'
+import { mkdirSync, readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import sharp from 'sharp';
+import { fileURLToPath } from 'url';
 
-const clientDir = join(dirname(fileURLToPath(import.meta.url)), '..')
-const outDir = join(clientDir, 'assets')
-mkdirSync(outDir, { recursive: true })
+const clientDir = join(dirname(fileURLToPath(import.meta.url)), '..');
+const outDir = join(clientDir, 'assets');
+mkdirSync(outDir, { recursive: true });
 
-const source = readFileSync(join(clientDir, 'public', 'icons', 'icon-white.svg'), 'utf8')
-const markPath = [...source.matchAll(/<path d="([^"]+)"/g)].map((m) => m[1]).find((d) => d.length > 500)
-if (!markPath) throw new Error('No mark path found in icon-white.svg')
+const source = readFileSync(join(clientDir, 'public', 'icons', 'icon-white.svg'), 'utf8');
+const markPath = [...source.matchAll(/<path d="([^"]+)"/g)].map((m) => m[1]).find((d) => d.length > 500);
+if (!markPath) throw new Error('No mark path found in icon-white.svg');
 // The mark's extent inside its 1500 x 1500 viewBox.
-const MARK = { x: 40, y: 5, w: 1420, h: 1490 }
+const MARK = { x: 40, y: 5, w: 1420, h: 1490 };
 
-const LAUNCH_BG = '#09090b'
+const LAUNCH_BG = '#09090b';
 
 function tile(size) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 1024 1024">
@@ -55,16 +55,16 @@ function tile(size) {
   <rect width="1024" height="1024" fill="url(#depth)"/>
   <rect width="1024" height="1024" fill="url(#light)"/>
   <rect width="1024" height="1024" fill="url(#sheen)"/>
-</svg>`
+</svg>`;
 }
 
 /** The white mark, `share` of the canvas tall, centred, with a soft shadow for depth. */
 function mark(size, share, shadow = true) {
-  const scale = (1024 * share) / MARK.h
-  const w = MARK.w * scale
-  const h = MARK.h * scale
-  const tx = (1024 - w) / 2 - MARK.x * scale
-  const ty = (1024 - h) / 2 - MARK.y * scale
+  const scale = (1024 * share) / MARK.h;
+  const w = MARK.w * scale;
+  const h = MARK.h * scale;
+  const tx = (1024 - w) / 2 - MARK.x * scale;
+  const ty = (1024 - h) / 2 - MARK.y * scale;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 1024 1024">
   <defs>
     <linearGradient id="ink" x1="0" y1="0" x2="0" y2="1">
@@ -78,27 +78,31 @@ function mark(size, share, shadow = true) {
   <g ${shadow ? 'filter="url(#lift)"' : ''}>
     <path transform="translate(${tx} ${ty}) scale(${scale})" fill="url(#ink)" d="${markPath}"/>
   </g>
-</svg>`
+</svg>`;
 }
 
 async function render(svg, file) {
-  await sharp(Buffer.from(svg)).png().toFile(join(outDir, file))
+  await sharp(Buffer.from(svg)).png().toFile(join(outDir, file));
 }
 
 async function composite(background, overlay, file, size) {
-  const base = await sharp(Buffer.from(background)).resize(size, size).png().toBuffer()
-  const top = await sharp(Buffer.from(overlay)).resize(size, size).png().toBuffer()
-  await sharp(base).composite([{ input: top }]).flatten({ background: LAUNCH_BG }).png().toFile(join(outDir, file))
+  const base = await sharp(Buffer.from(background)).resize(size, size).png().toBuffer();
+  const top = await sharp(Buffer.from(overlay)).resize(size, size).png().toBuffer();
+  await sharp(base)
+    .composite([{ input: top }])
+    .flatten({ background: LAUNCH_BG })
+    .png()
+    .toFile(join(outDir, file));
 }
 
 // iOS and store listings: one opaque tile, the mark at about half its height.
-await composite(tile(1024), mark(1024, 0.5), 'icon-only.png', 1024)
+await composite(tile(1024), mark(1024, 0.5), 'icon-only.png', 1024);
 // Android adaptive icon: the two layers apart, the mark inside the safe circle.
-await render(tile(1024), 'icon-background.png')
-await render(mark(1024, 0.58), 'icon-foreground.png')
+await render(tile(1024), 'icon-background.png');
+await render(mark(1024, 0.58), 'icon-foreground.png');
 // Splash: the launch background with the mark, light and dark alike.
-const splashBg = `<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732"><rect width="2732" height="2732" fill="${LAUNCH_BG}"/></svg>`
-await composite(splashBg, mark(2732, 0.2, false), 'splash.png', 2732)
-await composite(splashBg, mark(2732, 0.2, false), 'splash-dark.png', 2732)
+const splashBg = `<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732"><rect width="2732" height="2732" fill="${LAUNCH_BG}"/></svg>`;
+await composite(splashBg, mark(2732, 0.2, false), 'splash.png', 2732);
+await composite(splashBg, mark(2732, 0.2, false), 'splash-dark.png', 2732);
 
-console.log(`[app-icons] wrote icon and splash sources to ${outDir}`)
+console.log(`[app-icons] wrote icon and splash sources to ${outDir}`);

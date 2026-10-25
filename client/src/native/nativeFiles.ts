@@ -1,28 +1,30 @@
-import { Directory, Filesystem } from '@capacitor/filesystem'
-import { Share } from '@capacitor/share'
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 function toBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result).slice(String(reader.result).indexOf(',') + 1))
-    reader.onerror = () => reject(reader.error)
-    reader.readAsDataURL(blob)
-  })
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).slice(String(reader.result).indexOf(',') + 1));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
 }
 
 /** Readable, but safe as a single path segment inside the cache directory. */
 export function cacheFileName(filename: string): string {
-  const cleaned = Array.from(filename, (ch) => (ch.charCodeAt(0) < 32 || '\\/:*?"<>|'.includes(ch) ? '_' : ch)).join('').trim()
-  return cleaned.replace(/^\.+/, '') || 'download'
+  const cleaned = Array.from(filename, (ch) => (ch.charCodeAt(0) < 32 || '\\/:*?"<>|'.includes(ch) ? '_' : ch))
+    .join('')
+    .trim();
+  return cleaned.replace(/^\.+/, '') || 'download';
 }
 
 export function fileNameFromUrl(url: string): string {
-  const [path = ''] = url.split('?', 1)
-  const last = path.split('/').filter(Boolean).pop() ?? ''
+  const [path = ''] = url.split('?', 1);
+  const last = path.split('/').filter(Boolean).pop() ?? '';
   try {
-    return decodeURIComponent(last)
+    return decodeURIComponent(last);
   } catch {
-    return last
+    return last;
   }
 }
 
@@ -36,12 +38,12 @@ export async function shareFile(blob: Blob, filename: string): Promise<void> {
     path: cacheFileName(filename),
     data: await toBase64(blob),
     directory: Directory.Cache,
-  })
+  });
   try {
-    await Share.share({ files: [uri] })
+    await Share.share({ files: [uri] });
   } catch (err) {
     // Dismissing the sheet rejects; that is the user's choice, not a failure.
-    if (/cancel/i.test(String((err as Error)?.message))) return
-    throw err
+    if (/cancel/i.test(String((err as Error)?.message))) return;
+    throw err;
   }
 }

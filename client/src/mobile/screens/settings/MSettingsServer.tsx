@@ -11,7 +11,7 @@ export default function MSettingsServer() {
   if (!host) return null;
   return (
     <MSetCard title={t('native.settings.server')} icon={Server} className="mb-3">
-      <MSetHint className="mt-0 mb-3">{t('native.settings.serverHint', { server: host })}</MSetHint>
+      <MSetHint className="mb-3 mt-0">{t('native.settings.serverHint', { server: host })}</MSetHint>
       <MSetButton variant="ghost" onClick={changeServer}>
         {t('native.changeServer')}
       </MSetButton>

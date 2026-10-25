@@ -1,4 +1,4 @@
-import { TrekShell } from './trekShell'
+import { TrekShell } from './trekShell';
 
 /**
  * iOS only. WKWebView runs no service worker for a domain the app does not
@@ -10,45 +10,45 @@ import { TrekShell } from './trekShell'
  * routes nobody has opened yet.
  */
 
-const MANIFEST_URL = '/asset-manifest.json'
-const CONCURRENCY = 4
+const MANIFEST_URL = '/asset-manifest.json';
+const CONCURRENCY = 4;
 
 interface ManifestChunk {
-  file?: string
-  css?: string[]
-  assets?: string[]
+  file?: string;
+  css?: string[];
+  assets?: string[];
 }
 
 export function manifestFiles(manifest: unknown): string[] {
-  if (typeof manifest !== 'object' || manifest === null) return []
-  const files = new Set<string>()
+  if (typeof manifest !== 'object' || manifest === null) return [];
+  const files = new Set<string>();
   for (const chunk of Object.values(manifest as Record<string, ManifestChunk>)) {
-    if (typeof chunk?.file === 'string') files.add(chunk.file)
+    if (typeof chunk?.file === 'string') files.add(chunk.file);
     for (const list of [chunk?.css, chunk?.assets]) {
-      if (Array.isArray(list)) list.forEach((f) => typeof f === 'string' && files.add(f))
+      if (Array.isArray(list)) list.forEach((f) => typeof f === 'string' && files.add(f));
     }
   }
-  return [...files]
+  return [...files];
 }
 
 async function warmCache(files: string[], fetchFile: (path: string) => Promise<unknown>): Promise<void> {
-  const queue = [...files]
+  const queue = [...files];
   const worker = async (): Promise<void> => {
     for (let path = queue.shift(); path !== undefined; path = queue.shift()) {
       try {
-        await fetchFile(`/${path}`)
+        await fetchFile(`/${path}`);
       } catch {
         // One missing chunk must not stop the rest; the next launch tries again.
       }
     }
-  }
-  await Promise.all(Array.from({ length: CONCURRENCY }, worker))
+  };
+  await Promise.all(Array.from({ length: CONCURRENCY }, worker));
 }
 
 export async function keepOfflineShellFresh(fetchImpl: typeof fetch = fetch): Promise<void> {
-  await TrekShell.refreshOfflineCopy()
-  const response = await fetchImpl(MANIFEST_URL, { cache: 'no-store' })
-  if (!response.ok) return
-  const files = manifestFiles(await response.json())
-  await warmCache(files, (path) => fetchImpl(path).then((r) => r.blob()))
+  await TrekShell.refreshOfflineCopy();
+  const response = await fetchImpl(MANIFEST_URL, { cache: 'no-store' });
+  if (!response.ok) return;
+  const files = manifestFiles(await response.json());
+  await warmCache(files, (path) => fetchImpl(path).then((r) => r.blob()));
 }

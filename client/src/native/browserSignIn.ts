@@ -1,7 +1,7 @@
-import { sha256 } from '@noble/hashes/sha2'
-import { bytesToHex } from '@noble/hashes/utils'
-import { nativeAuthApi } from '../api/nativeAuth'
-import { APP_URL_SCHEME, TrekShell } from './trekShell'
+import { sha256 } from '@noble/hashes/sha2';
+import { bytesToHex } from '@noble/hashes/utils';
+import { nativeAuthApi } from '../api/nativeAuth';
+import { APP_URL_SCHEME, TrekShell } from './trekShell';
 
 /**
  * SSO and passkeys cannot run inside the app's WebView: identity providers
@@ -17,51 +17,51 @@ import { APP_URL_SCHEME, TrekShell } from './trekShell'
  * home networks reach theirs.
  */
 
-export const HANDOFF_PATH = '/native-handoff'
+export const HANDOFF_PATH = '/native-handoff';
 
-export type BrowserSignInStart = 'oidc'
+export type BrowserSignInStart = 'oidc';
 
 export function createHandoffSecret(): { verifier: string; challenge: string } {
-  const bytes = crypto.getRandomValues(new Uint8Array(32))
-  const verifier = bytesToHex(bytes)
-  return { verifier, challenge: bytesToHex(sha256(new TextEncoder().encode(verifier))) }
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  const verifier = bytesToHex(bytes);
+  return { verifier, challenge: bytesToHex(sha256(new TextEncoder().encode(verifier))) };
 }
 
 export function handoffUrl(origin: string, challenge: string, start?: BrowserSignInStart, invite?: string): string {
-  const url = new URL(HANDOFF_PATH, origin)
-  url.searchParams.set('challenge', challenge)
-  if (start) url.searchParams.set('start', start)
-  if (invite) url.searchParams.set('invite', invite)
-  return url.href
+  const url = new URL(HANDOFF_PATH, origin);
+  url.searchParams.set('challenge', challenge);
+  if (start) url.searchParams.set('start', start);
+  if (invite) url.searchParams.set('invite', invite);
+  return url.href;
 }
 
 /** The browser side: trade the signed-in session for a one-time code bound to `challenge`. */
 export async function requestHandoffCode(challenge: string): Promise<string> {
-  const { code } = await nativeAuthApi.handoff(challenge)
-  return code
+  const { code } = await nativeAuthApi.handoff(challenge);
+  return code;
 }
 
 export class BrowserSignInCancelled extends Error {
   constructor() {
-    super('Sign-in cancelled')
-    this.name = 'BrowserSignInCancelled'
+    super('Sign-in cancelled');
+    this.name = 'BrowserSignInCancelled';
   }
 }
 
 /** Resolves once the WebView holds a session cookie of its own. */
 export async function signInThroughBrowser(start?: BrowserSignInStart, invite?: string): Promise<void> {
-  const { verifier, challenge } = createHandoffSecret()
-  let returned: string
+  const { verifier, challenge } = createHandoffSecret();
+  let returned: string;
   try {
-    ;({ url: returned } = await TrekShell.authenticate({
+    ({ url: returned } = await TrekShell.authenticate({
       url: handoffUrl(window.location.origin, challenge, start, invite),
       callbackScheme: APP_URL_SCHEME,
-    }))
+    }));
   } catch (err) {
-    if ((err as { code?: string })?.code === 'CANCELLED') throw new BrowserSignInCancelled()
-    throw err
+    if ((err as { code?: string })?.code === 'CANCELLED') throw new BrowserSignInCancelled();
+    throw err;
   }
-  const code = new URL(returned).searchParams.get('code')
-  if (!code) throw new Error('The browser returned without a sign-in code')
-  await nativeAuthApi.exchange({ code, verifier })
+  const code = new URL(returned).searchParams.get('code');
+  if (!code) throw new Error('The browser returned without a sign-in code');
+  await nativeAuthApi.exchange({ code, verifier });
 }

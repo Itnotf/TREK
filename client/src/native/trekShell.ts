@@ -1,4 +1,4 @@
-import { registerPlugin } from '@capacitor/core'
+import { registerPlugin } from '@capacitor/core';
 
 /**
  * The app's own native plugin, implemented in
@@ -12,25 +12,25 @@ import { registerPlugin } from '@capacitor/core'
  * worker.
  */
 export interface TrekShellPlugin {
-  getServer(): Promise<{ url: string | null }>
+  getServer(): Promise<{ url: string | null }>;
   /** Remembers the server and loads it. The current page is gone afterwards. */
-  setServer(options: { url: string }): Promise<void>
+  setServer(options: { url: string }): Promise<void>;
   /** Forgets the server and returns to the address screen. */
-  resetServer(): Promise<void>
+  resetServer(): Promise<void>;
   /** Loads the remembered server again, after it could not be reached. */
-  reload(): Promise<void>
+  reload(): Promise<void>;
   /**
    * Opens `url` in the system browser and resolves with the URL it was sent
    * back to under `callbackScheme`. Rejects with code `CANCELLED` when the
    * user closes the browser.
    */
-  authenticate(options: { url: string; callbackScheme: string }): Promise<{ url: string }>
+  authenticate(options: { url: string; callbackScheme: string }): Promise<{ url: string }>;
   /** iOS: stores the server's start page for a cold start without network. */
-  refreshOfflineCopy(): Promise<{ saved: boolean }>
+  refreshOfflineCopy(): Promise<{ saved: boolean }>;
   /** iOS: loads that copy under the server's origin. False when there is none. */
-  openOfflineCopy(): Promise<{ opened: boolean }>
+  openOfflineCopy(): Promise<{ opened: boolean }>;
 }
 
-export const TrekShell = registerPlugin<TrekShellPlugin>('TrekShell')
+export const TrekShell = registerPlugin<TrekShellPlugin>('TrekShell');
 
-export const APP_URL_SCHEME = 'com.liketrek.trek'
+export const APP_URL_SCHEME = 'com.liketrek.trek';
