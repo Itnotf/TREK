@@ -55,7 +55,6 @@ export default function AccountTab(): React.ReactElement {
     backupCodesText,
     mfaRequiredByPolicy,
     oidcIssuer,
-    passkeysAvailable,
     dismissBackupCodes,
     copyBackupCodes,
     downloadBackupCodes,
@@ -363,8 +362,8 @@ export default function AccountTab(): React.ReactElement {
         </>
       </Section>
 
-      {/* Passkeys: managed in the browser, not in the native app (see useAccountSettings). */}
-      {passkeysAvailable && <PasskeysSection demoMode={demoMode} />}
+      {/* Passkeys */}
+      <PasskeysSection demoMode={demoMode} />
       </AccountDemoLock>
 
       {/* Delete Account Blocked */}

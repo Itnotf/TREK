@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { adminApi, authApi } from '../../api/client';
 import { useTranslation } from '../../i18n';
-import { isNativeApp } from '../../native/platform';
 import { useAuthStore } from '../../store/authStore';
 import { getApiErrorMessage, type UserWithOidc } from '../../types';
 import { downloadBlob } from '../../utils/fileDownload';
@@ -272,10 +271,6 @@ export function useAccountSettings({ avatarRemoveErrorKey, ignoreEmptyBackupCode
   };
 
   const oidcIssuer = (user as UserWithOidc)?.oidc_issuer;
-  // Passkeys stay in the browser: WebAuthn in the native app's WebView needs a
-  // domain association no build can have for every server, so they are managed
-  // there (signing in with one works through the browser hand-off too).
-  const passkeysAvailable = !isNativeApp();
 
   return {
     user,
@@ -308,7 +303,6 @@ export function useAccountSettings({ avatarRemoveErrorKey, ignoreEmptyBackupCode
     backupCodesText,
     mfaRequiredByPolicy,
     oidcIssuer,
-    passkeysAvailable,
     dismissBackupCodes,
     copyBackupCodes,
     downloadBackupCodes,

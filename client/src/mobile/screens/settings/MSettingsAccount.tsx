@@ -61,7 +61,6 @@ export default function MSettingsAccount() {
     backupCodesText,
     mfaRequiredByPolicy,
     oidcIssuer,
-    passkeysAvailable,
     dismissBackupCodes,
     copyBackupCodes,
     downloadBackupCodes,
@@ -291,7 +290,7 @@ export default function MSettingsAccount() {
         </>
       </MSetCard>
 
-      {passkeysAvailable && <MPasskeysCard demoMode={demoMode} />}
+      <MPasskeysCard demoMode={demoMode} />
       </AccountDemoLock>
 
       <MConfirmSheet
