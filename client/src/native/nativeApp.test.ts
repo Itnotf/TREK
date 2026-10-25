@@ -18,7 +18,8 @@ vi.mock('../sync/networkMode', () => ({ isEffectivelyOffline: vi.fn() }))
 
 function backButtonHandler(): (event: { canGoBack: boolean }) => void {
   const call = vi.mocked(App.addListener).mock.calls.find(([name]) => name === 'backButton')
-  return call![1] as unknown as (event: { canGoBack: boolean }) => void
+  if (!call) throw new Error('no backButton listener')
+  return call[1] as unknown as (event: { canGoBack: boolean }) => void
 }
 
 beforeEach(() => {

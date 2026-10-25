@@ -43,11 +43,11 @@ describe('signInThroughBrowser', () => {
 
     await signInThroughBrowser('oidc')
 
-    const opened = new URL(vi.mocked(TrekShell.authenticate).mock.calls[0]![0].url)
+    const opened = new URL(vi.mocked(TrekShell.authenticate).mock.calls[0][0].url)
     expect(opened.pathname).toBe('/native-handoff')
     expect(opened.searchParams.get('start')).toBe('oidc')
-    expect(vi.mocked(TrekShell.authenticate).mock.calls[0]![0].callbackScheme).toBe('com.liketrek.trek')
-    const { code, verifier } = vi.mocked(nativeAuthApi.exchange).mock.calls[0]![0]
+    expect(vi.mocked(TrekShell.authenticate).mock.calls[0][0].callbackScheme).toBe('com.liketrek.trek')
+    const { code, verifier } = vi.mocked(nativeAuthApi.exchange).mock.calls[0][0]
     expect(code).toBe('abc')
     expect(bytesToHex(sha256(new TextEncoder().encode(verifier)))).toBe(opened.searchParams.get('challenge'))
   })

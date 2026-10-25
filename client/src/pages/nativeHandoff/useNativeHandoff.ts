@@ -36,7 +36,7 @@ export function useNativeHandoff() {
       window.location.replace('/api/auth/oidc/login?remember=1')
       return
     }
-    navigate(`/login?redirect=${encodeURIComponent(returnPath)}`, { replace: true })
+    void navigate(`/login?redirect=${encodeURIComponent(returnPath)}`, { replace: true })
   }, [valid, isLoading, isAuthenticated, params, returnPath, navigate])
 
   const openApp = async (): Promise<void> => {
@@ -51,7 +51,7 @@ export function useNativeHandoff() {
 
   const switchAccount = async (): Promise<void> => {
     await logout()
-    navigate(`/login?redirect=${encodeURIComponent(returnPath)}`, { replace: true })
+    void navigate(`/login?redirect=${encodeURIComponent(returnPath)}`, { replace: true })
   }
 
   return {

@@ -37,6 +37,8 @@ export function offlineStyle<T>(style: T): T {
 }
 
 type Doc = Record<string, unknown>
+/** What a protocol handler may hand MapLibre back. */
+type ProtocolData = Awaited<ReturnType<AddProtocolAction>>['data']
 
 const isDoc = (value: unknown): value is Doc => typeof value === 'object' && value !== null && !Array.isArray(value)
 const rewriteList = (value: unknown): unknown => (Array.isArray(value) ? value.map((v) => (typeof v === 'string' ? toOfflineUrl(v) : v)) : value)
@@ -90,11 +92,11 @@ async function load(url: string, networkFirst: boolean, signal: AbortSignal): Pr
   throw new Error(`Not available offline: ${url}`)
 }
 
-export const offlineProtocol: AddProtocolAction = async (params: RequestParameters, abortController: AbortController): Promise<GetResourceResponse<unknown>> => {
+export const offlineProtocol: AddProtocolAction = async (params: RequestParameters, abortController: AbortController): Promise<GetResourceResponse<ProtocolData>> => {
   const url = fromOfflineUrl(params.url)
   const response = await load(url, params.type === 'json', abortController.signal)
   if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`)
-  if (params.type === 'json') return { data: rewriteDocument(await response.json()) }
+  if (params.type === 'json') return { data: rewriteDocument(await response.json()) as ProtocolData }
   if (params.type === 'string') return { data: await response.text() }
   return { data: await response.arrayBuffer() }
 }

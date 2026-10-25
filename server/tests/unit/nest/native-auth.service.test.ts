@@ -130,16 +130,17 @@ describe('InMemoryNativeHandoffStore', () => {
   it('NATIVE-STORE-001: holds at most its cap of live codes', async () => {
     const store = new InMemoryNativeHandoffStore();
     const later = Date.now() + 60_000;
-    for (let i = 0; i < MAX_PENDING_HANDOFFS; i++) {
-      expect(await store.put(`c${i}`, entry(later))).toBe(true);
-    }
+    const stored = await Promise.all(
+      Array.from({ length: MAX_PENDING_HANDOFFS }, (_, i) => store.put(`c${i}`, entry(later))),
+    );
+    expect(stored.every(Boolean)).toBe(true);
     expect(await store.put('one-too-many', entry(later))).toBe(false);
   });
 
   it('NATIVE-STORE-002: expired codes are dropped on the next write and make room', async () => {
     const store = new InMemoryNativeHandoffStore();
     const past = Date.now() - 1;
-    for (let i = 0; i < MAX_PENDING_HANDOFFS; i++) await store.put(`c${i}`, entry(past));
+    await Promise.all(Array.from({ length: MAX_PENDING_HANDOFFS }, (_, i) => store.put(`c${i}`, entry(past))));
 
     expect(await store.put('fresh', entry(Date.now() + 60_000))).toBe(true);
     expect(await store.take('c0')).toBeNull();

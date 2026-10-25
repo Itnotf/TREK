@@ -129,9 +129,7 @@ describe('Native sign-in hand-off e2e', () => {
   });
 
   it('NATIVE-E2E-005: rate-limits the exchange per ip', async () => {
-    for (let i = 0; i < 20; i++) {
-      await exchange({ code: `nope-${i}`, verifier });
-    }
+    await Promise.all(Array.from({ length: 20 }, (_, i) => exchange({ code: `nope-${i}`, verifier })));
     const blocked = await exchange({ code: 'nope', verifier });
     expect(blocked.status).toBe(429);
   });
