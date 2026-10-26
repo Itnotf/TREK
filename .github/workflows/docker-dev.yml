@@ -32,7 +32,7 @@ jobs:
       version: ${{ steps.bump.outputs.VERSION }}
       sha: ${{ steps.bump.outputs.SHA }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -107,7 +107,7 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
         run: echo "PLATFORM_PAIR=${PLATFORM//\//-}" >> "$GITHUB_ENV"
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.version-bump.outputs.sha }}
 
@@ -157,7 +157,7 @@ jobs:
     timeout-minutes: 120
     needs: [version-bump, build]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.version-bump.outputs.sha }}
           fetch-depth: 0
