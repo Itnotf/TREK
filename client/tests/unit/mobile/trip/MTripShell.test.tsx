@@ -4,7 +4,7 @@ import { act, fireEvent, render, screen, waitFor, within } from '../../../helper
 import { buildPlanner, buildShell } from '../../../helpers/mobileTrip'
 import { server } from '../../../helpers/msw/server'
 import { seedStore } from '../../../helpers/store'
-import { buildUser } from '../../../helpers/factories'
+import { buildTrip, buildUser } from '../../../helpers/factories'
 import { useAuthStore } from '../../../../src/store/authStore'
 import { useDocSyncOfferStore } from '../../../../src/store/docSyncOfferStore'
 import type { MTripShellApi, TripPlanner } from '../../../../src/mobile/screens/trip/MTripShell'
@@ -200,6 +200,29 @@ describe('MTripShell', () => {
     const { planner } = renderShell({ days: [], selectedDayId: null } as Partial<TripPlanner>)
     expect(planner.tripActions.setSelectedDay).not.toHaveBeenCalled()
     expect(screen.queryByRole('button', { name: 'Sat 2' })).not.toBeInTheDocument()
+  })
+
+  it('replaces a selected day that does not belong to the loaded trip', () => {
+    const { planner } = renderShell({ selectedDayId: 99 })
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(11)
+  })
+
+  it('seeds the new trip when the mounted shell still holds the previous trip’s selection', () => {
+    const { planner, rerenderShell } = renderShell()
+    planner.tripId = 2
+    planner.trip = buildTrip({ id: 2 })
+    planner.days = DAYS.map(day => ({ ...day, id: day.id + 10, trip_id: 2 }))
+    rerenderShell()
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(21)
+  })
+
+  it('waits for the routed trip before seeding a day from a stale render', () => {
+    const { planner, rerenderShell } = renderShell({ tripId: 2, selectedDayId: null })
+    expect(planner.tripActions.setSelectedDay).not.toHaveBeenCalled()
+    planner.trip = buildTrip({ id: 2 })
+    planner.days = DAYS.map(day => ({ ...day, id: day.id + 10, trip_id: 2 }))
+    rerenderShell()
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(21)
   })
 
   it('FE-MOB-SHELL-007b: re-seeds after re-entering the same trip from the dashboard', () => {
