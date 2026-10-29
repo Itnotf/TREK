@@ -24,6 +24,7 @@ function plan(): ItineraryPlan {
     start_date: null,
     currency: 'CNY',
     transport_mode: 'driving',
+    roadtrip_preferences: { roadtrip_day_minutes: 180 },
     requirements: ['带老人，少爬山'],
     assumptions: ['日期待定'],
     days: [
@@ -108,6 +109,20 @@ describe('conversational itinerary tools', () => {
       value: expect.stringContaining('schedule_version: 2'),
     });
     expect(t.callbacks.save).not.toHaveBeenCalled();
+  });
+
+  it('requires the driving limit as a setting rather than only a sentence', async () => {
+    const t = setup();
+    const candidate = plan();
+    candidate.requirements.push('每天驾驶不超过3小时');
+    delete candidate.roadtrip_preferences;
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate })).toMatchObject({
+      ok: false,
+      value: expect.stringContaining('roadtrip_day_minutes'),
+    });
+    expect(t.callbacks.save).not.toHaveBeenCalled();
+    candidate.roadtrip_preferences = { roadtrip_day_minutes: 180 };
+    expect((await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate })).ok).toBe(true);
   });
 
   it('keeps hotel locations server-owned and retains their evidence on subsequent turns', async () => {

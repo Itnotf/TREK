@@ -215,6 +215,12 @@ export function planningPort(
         value:
           'Use schedule_version: 2. Split visits, meals and rest into separate activities with stable ids, kind, time_kind and travel_from_previous; supply a stay plan or null per day. Do not put the daily schedule into notes.',
       };
+    if (parsed.data.plan.transport_mode === 'driving' && !parsed.data.plan.roadtrip_preferences?.roadtrip_day_minutes)
+      return {
+        ok: false,
+        value:
+          'Set roadtrip_preferences.roadtrip_day_minutes to the agreed daily driving limit in minutes (for example 180 for 3 hours). A limit written only in requirements cannot be checked. If no limit was requested, choose a reasonable one and state that assumption.',
+      };
     const previous = await callbacks.current();
     const plan = withLocations(parsed.data.plan, known, previous);
     const combined = new Map((previous?.plan.sources ?? []).map((source) => [source.url, source]));
