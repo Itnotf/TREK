@@ -23,7 +23,6 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import {
   addIsoDays,
-  dayNoteCreateRequestSchema,
   itineraryApplyRequestSchema,
   itinerarySaveRequestSchema,
   tripSchema,
@@ -119,10 +118,20 @@ export class AssistantItineraryService {
         await this.days.update(day.id, day, {
           title: dayPlan.title,
         });
-        await itineraryNotes(dayPlan).reduce<Promise<void>>(async (previousNote, text, order) => {
-          await previousNote;
-          await this.dayNotes.create(day.id, tripId, text, undefined, undefined, order);
-        }, Promise.resolve());
+        if (dayPlan.notes.trim()) {
+          // Day notes use text as their title and time as their Markdown body.
+          await this.dayNotes.create(day.id, tripId, dayPlan.title, dayPlan.notes, 'FileText', 0);
+        }
+        if (dayPlan.overnight_city.trim()) {
+          await this.dayNotes.create(
+            day.id,
+            tripId,
+            dayPlan.overnight_city,
+            undefined,
+            'BedDouble',
+            dayPlan.notes.trim() ? 1 : 0,
+          );
+        }
         await this.days.setDefaultTransportMode(day.id, plan.transport_mode);
         await dayPlan.stops.reduce<Promise<void>>(async (previousStop, stop) => {
           await previousStop;
@@ -183,24 +192,6 @@ export class AssistantItineraryService {
     );
     if (allowed.includes(false)) throw new DomainError(403, 'No permission to create this itinerary');
   }
-}
-
-function itineraryNotes(day: ItineraryPlan['days'][number]): string[] {
-  const maxLength = dayNoteCreateRequestSchema.shape.text.maxLength ?? 500;
-  return [day.notes, day.overnight_city ? `Overnight / 住宿城市: ${day.overnight_city}` : ''].flatMap((text) => {
-    const chunks: string[] = [];
-    let chunk = '';
-    // Saved notes must fit the same editable limit as notes entered by a user.
-    for (const character of text.trim()) {
-      if (chunk.length + character.length > maxLength) {
-        if (chunk.trim()) chunks.push(chunk);
-        chunk = '';
-      }
-      chunk += character;
-    }
-    if (chunk.trim()) chunks.push(chunk);
-    return chunks;
-  });
 }
 
 function tripDescription(plan: ItineraryPlan): string {

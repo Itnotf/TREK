@@ -15,13 +15,10 @@ export interface MergedItem {
 
 export function parseTimeToMinutes(time?: string | null): number | null {
   if (!time) return null
-  if (time.includes('T')) {
-    const [h, m] = time.split('T')[1].split(':').map(Number)
-    return h * 60 + m
-  }
-  const parts = time.split(':').map(Number)
-  if (parts.length >= 2 && !Number.isNaN(parts[0]) && !Number.isNaN(parts[1])) return parts[0] * 60 + parts[1]
-  return null
+  const clock = /^\d{4}-\d{2}-\d{2}T/.test(time) ? time.split('T')[1] : time
+  const [h, m] = clock.split(':').map(Number)
+  const minutes = h * 60 + m
+  return Number.isFinite(minutes) ? minutes : null
 }
 
 export function getSpanPhase(

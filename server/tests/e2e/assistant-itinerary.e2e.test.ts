@@ -277,8 +277,8 @@ describe('assistant itinerary over HTTP', () => {
         title: '成都到乐山',
         date: '2027-01-01',
         notes_items: [
-          expect.objectContaining({ text: revisedPlan.days[1].notes }),
-          expect.objectContaining({ text: 'Overnight / 住宿城市: 乐山' }),
+          expect.objectContaining({ text: revisedPlan.days[1].title, time: revisedPlan.days[1].notes }),
+          expect.objectContaining({ text: '乐山', time: null, icon: 'BedDouble' }),
         ],
         assignments: [
           expect.objectContaining({

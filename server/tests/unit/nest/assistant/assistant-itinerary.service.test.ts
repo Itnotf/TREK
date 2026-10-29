@@ -166,9 +166,9 @@ describe('AssistantItineraryService', () => {
     expect(days).toHaveLength(2);
     expect(days[0]).toMatchObject({ title: '成都慢游', date: '2026-12-31', default_transport_mode: 'driving' });
     const visibleDays = await t.get(DaysService).list(trip.id);
-    expect(visibleDays.days[0].notes_items.map((note) => note.text)).toEqual([
-      '午后留出休息时间。',
-      'Overnight / 住宿城市: 成都',
+    expect(visibleDays.days[0].notes_items).toEqual([
+      expect.objectContaining({ text: '成都慢游', time: '午后留出休息时间。', icon: 'FileText' }),
+      expect.objectContaining({ text: '成都', time: null, icon: 'BedDouble' }),
     ]);
     expect(days[1]).toMatchObject({ title: '成都到乐山', date: '2027-01-01' });
     const places = await findRows(orm, Places, { trip_id: trip.id }, { id: 'asc' });
@@ -271,27 +271,23 @@ describe('AssistantItineraryService', () => {
     ]);
   });
 
-  it('keeps long daily instructions editable without losing text or splitting emoji', async () => {
+  it('keeps the full 2000-character instructions in one editable body with a short title', async () => {
     const c = await conversation();
     const itinerary = plan();
-    itinerary.days[0].notes = `${'行'.repeat(499)}🧳${'休'.repeat(499)}结束`;
-    itinerary.days[1].notes = '';
+    itinerary.days[0].notes = '09:30 出发\n\n**带好行李** 🧳\n午后休息。'.padEnd(2000, '休');
+    itinerary.days[1].notes = ' \n ';
     itinerary.days[1].overnight_city = '';
     const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
     const { trip } = await service.apply(c.userId, saved.id, { revision: 1 });
     const { days } = await t.get(DaysService).list(trip.id);
     const notes = days[0].notes_items;
-    expect(notes).toHaveLength(4);
-    expect(
-      notes
-        .slice(0, -1)
-        .map((note) => note.text)
-        .join(''),
-    ).toBe(itinerary.days[0].notes);
-    expect(notes.at(-1)?.text).toBe('Overnight / 住宿城市: 成都');
-    expect(notes.map((note) => note.sort_order)).toEqual([0, 1, 2, 3]);
+    expect(notes).toHaveLength(2);
+    expect(notes[0]).toMatchObject({ text: itinerary.days[0].title, time: itinerary.days[0].notes });
+    expect(notes[0].time).toHaveLength(2000);
+    expect(notes[1]).toMatchObject({ text: '成都', icon: 'BedDouble', time: null });
+    expect(notes.map((note) => note.sort_order)).toEqual([0, 1]);
     expect(notes.every((note) => dayNoteCreateRequestSchema.safeParse(note).success)).toBe(true);
-    expect(() => notes.map((note) => encodeURIComponent(note.text))).not.toThrow();
+    expect(() => encodeURIComponent(notes[0].time ?? '')).not.toThrow();
     expect(days[1].notes_items).toEqual([]);
   });
 
