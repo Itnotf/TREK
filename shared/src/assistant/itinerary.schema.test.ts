@@ -4,6 +4,7 @@ import {
   itineraryApplyResponseSchema,
   itineraryDraftResponseSchema,
   itineraryLocationSchema,
+  itineraryStopEndTime,
   itineraryModelPlanSchema,
   itineraryModelSaveSchema,
   itineraryPlanSchema,
@@ -99,10 +100,10 @@ describe.each([
   it('allows a rest day and the day/stop boundaries without accepting an empty or overfull trip', () => {
     expect(schema.safeParse(plan({ days: [day(0)] })).success).toBe(true);
     expect(schema.safeParse(plan({ days: Array.from({ length: 30 }, () => day(0)) })).success).toBe(true);
-    expect(schema.safeParse(plan({ days: [day(8)] })).success).toBe(true);
+    expect(schema.safeParse(plan({ days: [day(20)] })).success).toBe(true);
     expect(schema.safeParse(plan({ days: [] })).success).toBe(false);
     expect(schema.safeParse(plan({ days: Array.from({ length: 31 }, () => day(0)) })).success).toBe(false);
-    expect(schema.safeParse(plan({ days: [day(9)] })).success).toBe(false);
+    expect(schema.safeParse(plan({ days: [day(21)] })).success).toBe(false);
   });
 
   it('caps the entire itinerary at 120 stops even when every day is within its own limit', () => {
@@ -268,5 +269,142 @@ describe('revision requests and response contracts', () => {
       expect(trekCardSchema.safeParse(invalid).success).toBe(false);
       expect(storedTrekCardSchema.parse(invalid)).toBeNull();
     }
+  });
+});
+
+describe('complete daily schedules', () => {
+  const schedule = (): ItineraryPlan =>
+    plan({
+      schedule_version: 2,
+      roadtrip_preferences: { roadtrip_day_minutes: 180, roadtrip_leg_minutes: 120 },
+      days: [
+        {
+          ...day(),
+          overnight_city: '',
+          stay: null,
+          stops: [
+            {
+              ...stop(),
+              id: 'lunch',
+              kind: 'meal',
+              time_kind: 'suggested',
+              arrival_time: '12:00',
+              duration_minutes: 50,
+              travel_from_previous: null,
+            },
+            {
+              ...stop(),
+              id: 'rest',
+              kind: 'rest',
+              time_kind: 'suggested',
+              arrival_time: '12:50',
+              duration_minutes: 40,
+              travel_from_previous: { mode: 'walking', duration_minutes: 0, notes: 'Rest at the restaurant' },
+            },
+            {
+              ...stop(),
+              id: 'visit',
+              kind: 'visit',
+              time_kind: 'fixed',
+              arrival_time: '13:45',
+              duration_minutes: 75,
+              travel_from_previous: {
+                mode: 'walking',
+                duration_minutes: 15,
+                notes: 'Allow time to reach the entrance',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+  it('keeps meals, rest and transfer buffers in a feasible timeline', () => {
+    for (const schema of [itineraryPlanSchema, itineraryModelPlanSchema]) {
+      const candidate = schedule();
+      expect(schema.parse(candidate)).toEqual(candidate);
+      expect(itineraryStopEndTime(candidate.days[0]!.stops[0]!)).toBe('12:50');
+      candidate.days[0]!.stops[2]!.arrival_time = '13:30';
+      expect(schema.safeParse(candidate).success).toBe(false);
+    }
+  });
+
+  it.each([
+    'missing id',
+    'duplicate id',
+    'missing kind',
+    'missing time kind',
+    'zero meal',
+    'zero rest',
+    'missing transfer',
+    'null transfer',
+    'fixed without time',
+    'overnight on final day',
+    'long notes',
+    'empty day',
+  ])('rejects %s instead of saving a misleading plan', (problem) => {
+    const candidate = schedule();
+    const d = candidate.days[0]!;
+    const first = d.stops[0]!;
+    const second = d.stops[1]!;
+    if (problem === 'missing id') delete first.id;
+    if (problem === 'duplicate id') second.id = first.id;
+    if (problem === 'missing kind') delete first.kind;
+    if (problem === 'missing time kind') delete first.time_kind;
+    if (problem === 'zero meal') first.duration_minutes = 0;
+    if (problem === 'zero rest') second.duration_minutes = 0;
+    if (problem === 'missing transfer') delete second.travel_from_previous;
+    if (problem === 'null transfer') second.travel_from_previous = null;
+    if (problem === 'fixed without time') d.stops[2]!.arrival_time = null;
+    if (problem === 'overnight on final day')
+      d.stay = { area: 'Chengdu', name: null, check_in: null, check_out: null, notes: '' };
+    if (problem === 'long notes') d.notes = 'x'.repeat(601);
+    if (problem === 'empty day') d.stops = [];
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(false);
+  });
+
+  it('allows unknown transfer times without treating them as verified zero-minute travel', () => {
+    const candidate = schedule();
+    candidate.days[0]!.stops[2]!.travel_from_previous!.duration_minutes = null;
+    expect(itineraryPlanSchema.parse(candidate).days[0]!.stops[2]!.travel_from_previous!.duration_minutes).toBeNull();
+  });
+
+  it('checks both uninterrupted and total daily driving estimates', () => {
+    const candidate = schedule();
+    for (const s of candidate.days[0]!.stops) {
+      s.time_kind = 'suggested';
+      s.arrival_time = null;
+      s.travel_from_previous = { mode: 'driving', duration_minutes: 70, notes: 'Estimate' };
+    }
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(false);
+    candidate.roadtrip_preferences = { roadtrip_day_minutes: 240, roadtrip_leg_minutes: 60 };
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(false);
+    candidate.roadtrip_preferences.roadtrip_leg_minutes = 90;
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(true);
+  });
+
+  it('refuses activities that run past midnight, even without start times', () => {
+    const candidate = schedule();
+    candidate.days[0]!.stops[2]!.arrival_time = '23:50';
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(false);
+    expect(itineraryStopEndTime(candidate.days[0]!.stops[2]!)).toBeNull();
+    for (const s of candidate.days[0]!.stops) {
+      s.time_kind = 'suggested';
+      s.arrival_time = null;
+      s.duration_minutes = 500;
+    }
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(false);
+    expect(itineraryStopEndTime(candidate.days[0]!.stops[0]!)).toBeNull();
+  });
+
+  it('does not let a model fabricate a hotel location', () => {
+    const candidate = schedule();
+    candidate.days.unshift({
+      ...day(),
+      stops: [{ ...candidate.days[0]!.stops[0]!, id: 'earlier-meal' }],
+      stay: { area: 'Chengdu', name: 'Example hotel', check_in: '16:00', check_out: '09:00', notes: '', location },
+    });
+    expect(itineraryPlanSchema.safeParse(candidate).success).toBe(true);
+    expect(itineraryModelPlanSchema.safeParse(candidate).success).toBe(false);
   });
 });

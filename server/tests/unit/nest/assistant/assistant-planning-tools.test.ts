@@ -19,6 +19,7 @@ const sourceUrl = 'https://travel.example/yunnan';
 function plan(): ItineraryPlan {
   return {
     title: '云南自驾',
+    schedule_version: 2,
     summary: '昆明到大理，带老人慢慢玩',
     start_date: null,
     currency: 'CNY',
@@ -28,10 +29,15 @@ function plan(): ItineraryPlan {
     days: [
       {
         title: '大理古城',
-        overnight_city: '大理',
+        overnight_city: '',
+        stay: null,
         notes: '驾驶耗时待核实',
         stops: [
           {
+            id: 'oldtown',
+            kind: 'visit',
+            time_kind: 'suggested',
+            travel_from_previous: null,
             name: '大理古城',
             city: '大理',
             description: '古城街区散步',
@@ -93,6 +99,78 @@ function setup(history: AiChatMessage[] = [{ role: 'user', text: `参考 ${sourc
 }
 
 describe('conversational itinerary tools', () => {
+  it('requires structured activities for newly generated drafts', async () => {
+    const t = setup();
+    const legacy = plan();
+    delete legacy.schedule_version;
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: legacy })).toMatchObject({
+      ok: false,
+      value: expect.stringContaining('schedule_version: 2'),
+    });
+    expect(t.callbacks.save).not.toHaveBeenCalled();
+  });
+
+  it('keeps hotel locations server-owned and retains their evidence on subsequent turns', async () => {
+    const t = setup();
+    t.search.mockResolvedValue({
+      ok: true,
+      value: {
+        places: [
+          {
+            id: 'amap:hotel',
+            amap_poi_id: 'amap:hotel',
+            name: '示例酒店',
+            lat: 25.7,
+            lng: 100.16,
+            address: '云南大理',
+          },
+        ],
+      },
+    });
+    await t.tools.call('search_place', { query: '示例酒店 大理' });
+    const candidate = plan();
+    candidate.days[0].stay = {
+      area: '大理',
+      name: '示例酒店',
+      place_ref: 'amap:hotel',
+      check_in: '16:00',
+      check_out: '09:00',
+      notes: '仅为建议，未预订',
+    };
+    candidate.days.push({ ...plan().days[0], stops: [{ ...plan().days[0].stops[0], id: 'return' }] });
+    expect((await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate })).ok).toBe(true);
+    expect(t.callbacks.save.mock.calls[0][0].plan.days[0].stay?.location?.place_id).toBe('amap:hotel');
+    const next = planningPort(t.base, t.callbacks, [{ role: 'user', text: '入住晚半小时' }]);
+    candidate.days[0].stay.check_in = '16:30';
+    await next.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate });
+    expect(t.callbacks.save.mock.calls[1][0].plan.days[0].stay?.location?.place_id).toBe('amap:hotel');
+    candidate.days[0].stay.name = '另一家酒店';
+    await next.call(SAVE_ITINERARY_TOOL, { base_revision: 2, plan: candidate });
+    expect(t.callbacks.save.mock.calls[2][0].plan.days[0].stay?.location).toBeNull();
+  });
+
+  it('returns actionable schedule conflicts without replacing the saved draft', async () => {
+    const t = setup();
+    const candidate = plan();
+    await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate });
+    candidate.days[0].stops.push({
+      ...candidate.days[0].stops[0],
+      id: 'rest',
+      kind: 'rest',
+      arrival_time: '14:30',
+      duration_minutes: 30,
+      travel_from_previous: { mode: 'walking', duration_minutes: 0, notes: '' },
+    });
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate })).toMatchObject({
+      ok: false,
+      value: {
+        issues: expect.arrayContaining([expect.objectContaining({ message: expect.stringContaining('overlaps') })]),
+      },
+    });
+    expect(t.callbacks.save).toHaveBeenCalledTimes(1);
+    expect((await t.callbacks.current())?.revision).toBe(1);
+  });
+
   it('offers drafts as conversation reads and preserves existing tool behavior', async () => {
     const { tools } = setup();
     expect(tools.specs().map((spec) => spec.name)).toEqual([
@@ -173,9 +251,14 @@ describe('conversational itinerary tools', () => {
     });
     await t.tools.call('search_place', {});
     const draft = plan();
-    draft.days = Array.from({ length: 10 }, () => ({
+    draft.days = Array.from({ length: 10 }, (_, d) => ({
       ...draft.days[0],
-      stops: Array.from({ length: 8 }, () => draft.days[0].stops[0]),
+      stops: Array.from({ length: 8 }, (_, i) => ({
+        ...draft.days[0].stops[0],
+        id: `day-${d}-stop-${i}`,
+        arrival_time: null,
+        travel_from_previous: { mode: 'walking', duration_minutes: null, notes: '' },
+      })),
     }));
     expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: draft })).toMatchObject({
       ok: false,

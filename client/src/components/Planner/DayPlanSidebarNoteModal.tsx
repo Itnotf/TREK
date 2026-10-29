@@ -12,6 +12,7 @@ import { DeleteButton, DialogButton, DialogFooter, DialogHeader, DialogShell, Di
 import { EditorField, TEXTAREA } from '../shared/dialogParts'
 import { EYEBROW } from './bookings/bookingParts'
 import { tintOf } from './planParts'
+import { DayNoteContent } from './DayNoteContent'
 
 interface NoteModalUi {
   mode: 'add' | 'edit'
@@ -146,9 +147,7 @@ function OpenNoteDialog({ dayId, ui, setNoteUi, cancelNote, saveNote, onRequestD
               <span className="grid h-7 w-7 flex-none place-items-center rounded-full" style={{ background: surface.iconBackground }}>
                 <NoteIcon size={13} strokeWidth={1.8} color={surface.iconColor} />
               </span>
-              <span className="min-w-0 break-words font-medium text-content" style={fs(12.5, 'body')}>
-                {ui.text?.trim() || t('dayplan.noteTitle')}
-              </span>
+              <DayNoteContent text={ui.text?.trim() || t('dayplan.noteTitle')} />
             </div>
           </EditorField>
         </div>

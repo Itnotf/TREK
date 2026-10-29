@@ -470,5 +470,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'เก็บไฟล์ไว้ในไฟล์',
   'assistant.change.label.attachedTo': 'แนบกับ',
   'assistant.card.file.open': 'เปิดในไฟล์',
+  'assistant.plan.timeSuggested': 'เวลาที่แนะนำ',
+  'assistant.plan.timeFixed': 'เวลาที่กำหนดแน่นอน',
+  'assistant.plan.timePending': 'รอกำหนดเวลา',
+  'assistant.plan.kind.visit': 'เที่ยวชมสถานที่',
+  'assistant.plan.kind.meal': 'มื้ออาหาร',
+  'assistant.plan.kind.rest': 'พักผ่อน',
+  'assistant.plan.kind.activity': 'กิจกรรม',
+  'assistant.plan.travelEstimated': 'ประมาณ {duration}',
+  'assistant.plan.travelPending': 'ระยะเวลาเดินทางรอยืนยัน',
+  'assistant.plan.stayPending': 'ที่พักรอยืนยัน · ยังไม่ได้จอง',
+  'assistant.plan.hotelPending': 'รอเลือกโรงแรม',
 };
 export default assistant;

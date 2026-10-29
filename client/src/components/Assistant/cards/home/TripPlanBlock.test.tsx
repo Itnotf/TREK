@@ -58,6 +58,82 @@ describe('TripPlanBlock', () => {
     expect(apply).not.toHaveBeenCalled();
   });
 
+  it('separates suggested and fixed activities, estimated travel and an unbooked stay', async () => {
+    const draft = buildItineraryDraft();
+    draft.plan.schedule_version = 2;
+    draft.plan.days[0].stops = [
+      {
+        id: 'lunch',
+        kind: 'meal',
+        time_kind: 'suggested',
+        name: 'Lunch by the river',
+        city: 'Kangding',
+        description: 'Choose a quiet restaurant and try the local noodles.',
+        arrival_time: '12:00',
+        duration_minutes: 60,
+        travel_from_previous: { mode: 'driving', duration_minutes: 45, notes: 'Allow extra time for traffic.' },
+      },
+      {
+        id: 'walk',
+        kind: 'visit',
+        time_kind: 'fixed',
+        name: 'Guided old town walk',
+        city: 'Kangding',
+        description: 'Meet the guide at the bridge.',
+        arrival_time: '14:00',
+        duration_minutes: 90,
+        travel_from_previous: { mode: 'walking', duration_minutes: null, notes: '' },
+        location: { place_id: 'coords:30:102', lat: 30, lng: 102, address: 'Old town bridge' },
+      },
+    ];
+    draft.plan.days[0].stay = {
+      area: 'Kangding riverside',
+      name: 'Riverside hotel',
+      check_in: '17:00',
+      check_out: '09:00',
+      notes: 'Ask for a quiet room.',
+    };
+    vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(draft);
+    show();
+    expect(await screen.findByText('12:00 – 13:00')).toBeInTheDocument();
+    expect(screen.getByText('Suggested time')).toBeInTheDocument();
+    expect(screen.getByText('14:00 – 15:30')).toBeInTheDocument();
+    expect(screen.getByText('Fixed time')).toBeInTheDocument();
+    expect(screen.getByText('Kangding · Meal')).toBeInTheDocument();
+    expect(screen.getByText('Estimated 45 min')).toBeInTheDocument();
+    expect(screen.getByText('Travel time to confirm')).toBeInTheDocument();
+    expect(screen.getByText('Riverside hotel')).toBeInTheDocument();
+    expect(screen.getByText('Stay to confirm · not booked')).toBeInTheDocument();
+    expect(screen.getByText('Check-in 17:00 · Check-out 09:00')).toBeInTheDocument();
+    const description = screen.getByText('Choose a quiet restaurant and try the local noodles.');
+    expect(description.closest('details')).not.toHaveAttribute('open');
+    fireEvent.click(screen.getByLabelText('Details: Lunch by the river'));
+    expect(description.closest('details')).toHaveAttribute('open');
+  });
+
+  it('keeps an older draft usable without inventing a time or hotel', async () => {
+    const draft = buildItineraryDraft();
+    draft.plan.days[0].stops[0].arrival_time = null;
+    vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(draft);
+    show();
+    expect(await screen.findByText('Time to arrange')).toBeInTheDocument();
+    expect(screen.getByText('Kangding · Sightseeing · 90 min')).toBeInTheDocument();
+    expect(screen.queryByText('Fixed time')).not.toBeInTheDocument();
+    expect(screen.queryByText('Suggested time')).not.toBeInTheDocument();
+    expect(screen.getByText('Hotel to choose')).toBeInTheDocument();
+    expect(screen.getByText('Stay to confirm · not booked')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Confirm and create trip' })).toBeEnabled();
+  });
+
+  it('does not turn a return city into an overnight stay when the new draft says no stay', async () => {
+    const draft = buildItineraryDraft();
+    draft.plan.days[0].stay = null;
+    vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(draft);
+    show();
+    await screen.findByText('Day 1 · Arrive in Kangding');
+    expect(screen.queryByText('Overnight in Kangding')).not.toBeInTheDocument();
+  });
+
   it('confirms the displayed revision once and opens the actual trip', async () => {
     vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(buildItineraryDraft());
     const trip = buildTrip({ id: 31 });

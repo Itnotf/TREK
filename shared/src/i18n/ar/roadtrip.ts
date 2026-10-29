@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'أماكن لم تُحدَّد بعد',
+  'roadtrip.unlocated.hint':
+    'تحتاج هذه الأنشطة إلى {time}. إجماليات المسار غير مكتملة. حدِّد أماكنها قبل التخطيط اليومي التلقائي.',
   'roadtrip.stay.portals': 'العثور على إقامة',
   'roadtrip.stay.portalHint': 'تحقق من الوجهة والتواريخ والضيوف في الموقع. ابحث يدوياً في CHECK24.',
   'roadtrip.charging.available': 'متاح',

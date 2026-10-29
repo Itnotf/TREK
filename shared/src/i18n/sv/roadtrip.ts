@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'Platser att välja',
+  'roadtrip.unlocated.hint':
+    'Dessa aktiviteter kräver {time}. Ruttens totalsiffror är ofullständiga. Välj platserna före automatisk dagsplanering.',
   'roadtrip.stay.portals': 'Hitta boende',
   'roadtrip.stay.portalHint': 'Kontrollera resmål, datum och gäster på portalen. Sök manuellt på CHECK24.',
   'roadtrip.charging.available': 'lediga',

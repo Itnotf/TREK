@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'Valimist ootavad kohad',
+  'roadtrip.unlocated.hint':
+    'Need tegevused vajavad {time}. Marsruudi koondandmed on puudulikud. Vali kohad enne päevade automaatset planeerimist.',
   'roadtrip.stay.portals': 'Otsi majutust',
   'roadtrip.stay.portalHint': 'Kontrolli portaalis sihtkohta, kuupäevi ja külalisi. CHECK24 nõuab käsitsi otsingut.',
   'roadtrip.charging.available': 'saadaval',

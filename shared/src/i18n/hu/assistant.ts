@@ -503,5 +503,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'A fájl mentése a Fájlok közé',
   'assistant.change.label.attachedTo': 'Csatolva ehhez',
   'assistant.card.file.open': 'Megnyitás a Fájlokban',
+  'assistant.plan.timeSuggested': 'Javasolt időpont',
+  'assistant.plan.timeFixed': 'Rögzített időpont',
+  'assistant.plan.timePending': 'Időpont még nincs megadva',
+  'assistant.plan.kind.visit': 'Városnézés',
+  'assistant.plan.kind.meal': 'Étkezés',
+  'assistant.plan.kind.rest': 'Pihenő',
+  'assistant.plan.kind.activity': 'Program',
+  'assistant.plan.travelEstimated': 'Becsült idő: {duration}',
+  'assistant.plan.travelPending': 'Az utazási idő még ellenőrizendő',
+  'assistant.plan.stayPending': 'Szállás még megerősítésre vár · nincs lefoglalva',
+  'assistant.plan.hotelPending': 'Szálloda még nincs kiválasztva',
 };
 export default assistant;

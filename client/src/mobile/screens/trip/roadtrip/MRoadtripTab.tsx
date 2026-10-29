@@ -1,3 +1,4 @@
+import { UnlocatedActivities } from '../../../../components/Roadtrip/UnlocatedActivities'
 import { Fragment, useCallback, useMemo, useRef } from 'react'
 import { AlertTriangle, MapPin, Navigation } from 'lucide-react'
 import { useMPlanDaySwipe } from '../plan/useMPlanDaySwipe'
@@ -189,6 +190,10 @@ export default function MRoadtripTab({ planner, shell }: MTripTabPanelProps) {
         }`}
       >
         <UndatedRides rides={undated} t={t} onOpen={openBooking} />
+        <UnlocatedActivities
+          activities={planner.roadtripRoutes.unlocatedActivities}
+          minutes={planner.roadtripRoutes.unlocatedDwellMinutes}
+        />
         {noDayPicked ? (
           <PickDay planner={planner} />
         ) : rt.empty || !stage ? (

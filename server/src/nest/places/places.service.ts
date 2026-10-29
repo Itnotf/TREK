@@ -343,7 +343,7 @@ export class PlacesService {
   // Create place
   // -------------------------------------------------------------------------
 
-  async create(tripId: string, body: PlaceCreateInput) {
+  async create(tripId: string, body: PlaceCreateInput, source?: 'assistant') {
     const {
       name, description, lat, lng, address, category_id, price, currency,
       place_time, end_time,
@@ -365,8 +365,7 @@ export class PlacesService {
     // gate, a bug to surface, not a trip id to silently coerce to -1.
     const tid = toRowId(tripId)!;
 
-    // PL4 — the 27-column INSERT. lat/lng/price/duration_minutes/fill_percent
-    // use an explicit undefined check, not `||`: 0 is a legitimate value for
+    // lat/lng/price/duration_minutes/fill_percent use an explicit undefined check: 0 is a legitimate value for
     // all five (Null Island, a free entry, a drive-by stop, an empty tank)
     // and the falsy coercion silently threw it away.
     //
@@ -406,7 +405,8 @@ export class PlacesService {
         opening_hours: opening_hours || null,
       });
 
-      // PL5: the row and its tags are one write.
+      if (source) await this.placesRepo.setSource(id, source);
+      // PL5: the row, source and tags are one write.
       if (tags && tags.length > 0) await this.tagsRepo.insertIgnore(id, await this.tagsOnTrip(tid, tags));
       return id;
     });

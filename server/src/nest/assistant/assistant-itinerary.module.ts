@@ -1,5 +1,6 @@
 import { AssistantItineraryDrafts } from '../../db/entities/AssistantItineraryDrafts.entity';
 import { AssistantThreads } from '../../db/entities/AssistantThreads.entity';
+import { AccommodationsDomainModule } from '../accommodations/accommodations-domain.module';
 import { AddonsModule } from '../addons/addons.module';
 import { AssignmentsDomainModule } from '../assignments/assignments-domain.module';
 import { DayNotesModule } from '../day-notes/day-notes.module';
@@ -16,6 +17,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
   imports: [
+    AccommodationsDomainModule,
     AddonsModule,
     AssignmentsDomainModule,
     DayNotesModule,

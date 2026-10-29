@@ -519,5 +519,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Uložiť súbor do Súborov',
   'assistant.change.label.attachedTo': 'Pripojené k',
   'assistant.card.file.open': 'Otvoriť v Súboroch',
+  'assistant.plan.timeSuggested': 'Navrhovaný čas',
+  'assistant.plan.timeFixed': 'Pevný čas',
+  'assistant.plan.timePending': 'Čas bude upresnený',
+  'assistant.plan.kind.visit': 'Prehliadka',
+  'assistant.plan.kind.meal': 'Jedlo',
+  'assistant.plan.kind.rest': 'Odpočinok',
+  'assistant.plan.kind.activity': 'Aktivita',
+  'assistant.plan.travelEstimated': 'Odhad: {duration}',
+  'assistant.plan.travelPending': 'Čas presunu treba overiť',
+  'assistant.plan.stayPending': 'Ubytovanie čaká na potvrdenie · bez rezervácie',
+  'assistant.plan.hotelPending': 'Hotel zatiaľ nevybraný',
 };
 export default assistant;

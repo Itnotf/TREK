@@ -499,5 +499,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Salvesta fail failidesse',
   'assistant.change.label.attachedTo': 'Lisatud juurde',
   'assistant.card.file.open': 'Ava failides',
+  'assistant.plan.timeSuggested': 'Soovitatud aeg',
+  'assistant.plan.timeFixed': 'Kindel aeg',
+  'assistant.plan.timePending': 'Aeg veel määramata',
+  'assistant.plan.kind.visit': 'Vaatamisväärsused',
+  'assistant.plan.kind.meal': 'Söögikord',
+  'assistant.plan.kind.rest': 'Puhkus',
+  'assistant.plan.kind.activity': 'Tegevus',
+  'assistant.plan.travelEstimated': 'Hinnanguliselt {duration}',
+  'assistant.plan.travelPending': 'Sõiduaeg vajab kinnitamist',
+  'assistant.plan.stayPending': 'Majutus vajab kinnitamist · broneerimata',
+  'assistant.plan.hotelPending': 'Hotell veel valimata',
 };
 export default assistant;

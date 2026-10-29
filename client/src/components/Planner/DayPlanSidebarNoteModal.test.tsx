@@ -39,6 +39,16 @@ function setup(initial: Record<string, Ui | undefined>, overrides: Partial<React
 const adding = (fields: Partial<Ui> = {}): Ui => ({ mode: 'add', icon: 'FileText', text: '', time: '', color: null, ...fields })
 
 describe('DayPlanSidebarNoteModal', () => {
+  it('shows legacy prose as preview body while preserving the full editable title', () => {
+    const prose = '10:30 成都出发，午饭后休息。'.repeat(12)
+    setup({ '10': adding({ text: prose }) })
+    expect(screen.getByRole('textbox', { name: 'dayplan.noteTitle' })).toHaveValue(prose)
+    expect(screen.getByText('Daily Note')).toHaveClass('font-semibold')
+    const body = screen.getByText(prose)
+    expect(body).not.toHaveClass('font-semibold')
+    expect(body.closest('.line-clamp-3')).toBeInTheDocument()
+  })
+
   it('FE-PLANNER-NOTEMODAL-001: nothing open, nothing shown', () => {
     setup({ '10': undefined })
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

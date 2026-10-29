@@ -463,5 +463,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': '把文件保存到文件',
   'assistant.change.label.attachedTo': '附加到',
   'assistant.card.file.open': '在文件中打开',
+  'assistant.plan.timeSuggested': '建议时间',
+  'assistant.plan.timeFixed': '固定时间',
+  'assistant.plan.timePending': '时间待安排',
+  'assistant.plan.kind.visit': '游览',
+  'assistant.plan.kind.meal': '用餐',
+  'assistant.plan.kind.rest': '休息',
+  'assistant.plan.kind.activity': '活动',
+  'assistant.plan.travelEstimated': '预估 {duration}',
+  'assistant.plan.travelPending': '交通时长待核实',
+  'assistant.plan.stayPending': '住宿待确认 · 尚未预订',
+  'assistant.plan.hotelPending': '酒店待选',
 };
 export default assistant;

@@ -494,5 +494,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Keep the file in Files',
   'assistant.change.label.attachedTo': 'Attached to',
   'assistant.card.file.open': 'Open in Files',
+  'assistant.plan.timeSuggested': 'Suggested time',
+  'assistant.plan.timeFixed': 'Fixed time',
+  'assistant.plan.timePending': 'Time to arrange',
+  'assistant.plan.kind.visit': 'Sightseeing',
+  'assistant.plan.kind.meal': 'Meal',
+  'assistant.plan.kind.rest': 'Rest',
+  'assistant.plan.kind.activity': 'Activity',
+  'assistant.plan.travelEstimated': 'Estimated {duration}',
+  'assistant.plan.travelPending': 'Travel time to confirm',
+  'assistant.plan.stayPending': 'Stay to confirm · not booked',
+  'assistant.plan.hotelPending': 'Hotel to choose',
 };
 export default assistant;

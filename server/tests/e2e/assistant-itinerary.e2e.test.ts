@@ -136,6 +136,7 @@ function savedCard(chunks: UiStreamChunk[], toolCallId: string) {
 
 function plan(): ItineraryPlan {
   return {
+    schedule_version: 2,
     title: '成都到乐山两日自驾',
     summary: '先逛成都，再去乐山慢游。',
     start_date: '2026-12-31',
@@ -149,13 +150,40 @@ function plan(): ItineraryPlan {
         title: '成都慢游',
         overnight_city: '成都',
         notes: '午后休息。',
+        stay: { area: '成都', name: null, check_in: '15:00', check_out: '10:00', notes: '酒店待选。' },
         stops: [
           {
+            id: 'day-1-park',
+            kind: 'visit',
+            time_kind: 'suggested',
+            travel_from_previous: null,
             name: '人民公园',
             city: '成都',
             description: '逛公园、体验茶馆。',
             arrival_time: '09:30',
             duration_minutes: 90,
+          },
+          {
+            id: 'day-1-lunch',
+            kind: 'meal',
+            time_kind: 'suggested',
+            name: '午餐',
+            city: '成都',
+            description: '餐厅待选。',
+            arrival_time: '12:00',
+            duration_minutes: 50,
+            travel_from_previous: { mode: 'walking', duration_minutes: 15, notes: '短距离步行，待核实。' },
+          },
+          {
+            id: 'day-1-rest',
+            kind: 'rest',
+            time_kind: 'suggested',
+            name: '坐休',
+            city: '成都',
+            description: '留足休息时间。',
+            arrival_time: '12:50',
+            duration_minutes: 40,
+            travel_from_previous: { mode: 'walking', duration_minutes: 0, notes: '同一地点休息。' },
           },
         ],
       },
@@ -163,8 +191,13 @@ function plan(): ItineraryPlan {
         title: '成都到乐山',
         overnight_city: '乐山',
         notes: '上午出发。',
+        stay: null,
         stops: [
           {
+            id: 'day-2-visit',
+            kind: 'visit',
+            time_kind: 'suggested',
+            travel_from_previous: null,
             name: '乐山老街',
             city: '乐山',
             description: '沿街散步，品尝当地小吃。',
@@ -178,7 +211,7 @@ function plan(): ItineraryPlan {
 }
 
 describe('assistant itinerary over HTTP', () => {
-  it('plans a first trip through chat, revises it, and creates only the latest confirmed version once', async () => {
+  it('revises daily activities three times, confirms once and exports meals and rest as separate calendar events', async () => {
     const { user } = await makeUser(orm);
     const { user: other } = await makeUser(orm);
     expect((await get('/api/trips', user.id)).body.trips).toEqual([]);
@@ -208,18 +241,46 @@ describe('assistant itinerary over HTTP', () => {
       { text: '第二天已改为午后出发，其余需求保留。' },
     );
     const secondTurn = await chat(user.id, threadId, '第二天晚一点出发，其余安排保留。');
-    const latestCard = savedCard(secondTurn, 'save_v2');
+    let latestCard = savedCard(secondTurn, 'save_v2');
+    const expectedCards = [firstCard, latestCard];
     expect(secondTurn.filter((chunk) => chunk.type === 'data-trek-card')).toHaveLength(1);
     expect(latestCard).toMatchObject({ revision: 2, dayCount: 2, title: revisedPlan.title });
     expect(latestCard.draftId).not.toBe(firstCard.draftId);
     expect(replies).toHaveLength(0);
     expect(modelRequests).toHaveLength(5);
 
+    await [3, 4].reduce<Promise<void>>(async (previous, revision) => {
+      await previous;
+      if (revision === 3) {
+        revisedPlan.days[0].stops[1].arrival_time = '12:30';
+        revisedPlan.days[0].stops[2].arrival_time = '13:20';
+        revisedPlan.requirements.push('第一天午餐延后半小时，随后休息同步延后');
+      } else {
+        revisedPlan.days[0].stops[2].duration_minutes = 60;
+        revisedPlan.requirements.push('第一天下午坐休一小时');
+      }
+      replies.push(
+        { id: `read_v${revision - 1}`, name: 'get_itinerary_draft', args: {} },
+        {
+          id: `save_v${revision}`,
+          name: 'save_itinerary_draft',
+          args: { base_revision: revision - 1, plan: revisedPlan },
+        },
+        { text: '已调整对应活动，保留其他旅行需求。' },
+      );
+      const turn = await chat(user.id, threadId, revisedPlan.requirements.at(-1) ?? '调整休息');
+      latestCard = savedCard(turn, `save_v${revision}`);
+      expectedCards.push(latestCard);
+      expect(latestCard.revision).toBe(revision);
+    }, Promise.resolve());
+    expect(replies).toHaveLength(0);
+    expect(modelRequests).toHaveLength(11);
+
     const oldResponse = await get(`${BASE}/itinerary-drafts/${firstCard.draftId}`, user.id);
     expect(oldResponse.status).toBe(200);
     expect(itineraryDraftResponseSchema.parse(oldResponse.body).draft).toMatchObject({
       revision: 1,
-      latest_revision: 2,
+      latest_revision: 4,
       plan: { title: firstPlan.title },
     });
     const latestPath = `${BASE}/itinerary-drafts/${latestCard.draftId}`;
@@ -227,8 +288,8 @@ describe('assistant itinerary over HTTP', () => {
     expect(latestResponse.status).toBe(200);
     expect(itineraryDraftResponseSchema.parse(latestResponse.body).draft).toMatchObject({
       thread_id: threadId,
-      revision: 2,
-      latest_revision: 2,
+      revision: 4,
+      latest_revision: 4,
       created_trip_id: null,
       plan: revisedPlan,
     });
@@ -239,16 +300,16 @@ describe('assistant itinerary over HTTP', () => {
       .messages.flatMap((message) => message.parts)
       .filter((part) => part.type === 'data-trek-card')
       .map((part) => part.data.card);
-    expect(cards).toEqual([firstCard, latestCard]);
+    expect(cards).toEqual(expectedCards);
 
     expect((await request(app.getHttpServer()).get(latestPath)).status).toBe(401);
-    expect((await request(app.getHttpServer()).post(`${latestPath}/apply`).send({ revision: 2 })).status).toBe(401);
+    expect((await request(app.getHttpServer()).post(`${latestPath}/apply`).send({ revision: 4 })).status).toBe(401);
     expect((await get(latestPath, other.id)).status).toBe(404);
-    expect((await apply(latestCard.draftId, 2, other.id)).status).toBe(404);
+    expect((await apply(latestCard.draftId, 4, other.id)).status).toBe(404);
     expect((await apply(firstCard.draftId, 1, user.id)).status).toBe(409);
     expect((await get('/api/trips', user.id)).body.trips).toEqual([]);
 
-    const confirmed = await apply(latestCard.draftId, 2, user.id);
+    const confirmed = await apply(latestCard.draftId, 4, user.id);
     expect(confirmed.status).toBe(200);
     const { trip } = itineraryApplyResponseSchema.parse(confirmed.body);
     expect(trip).toMatchObject({
@@ -258,7 +319,7 @@ describe('assistant itinerary over HTTP', () => {
       end_date: '2027-01-01',
       currency: 'CNY',
       day_count: 2,
-      place_count: 2,
+      place_count: 4,
     });
     expect(trip.description).toContain('带老人，少爬山');
     expect(trip.description).toContain('第二天晚一点出发');
@@ -271,15 +332,20 @@ describe('assistant itinerary over HTTP', () => {
         default_transport_mode: 'driving',
         assignments: [
           expect.objectContaining({ order_index: 0, place: expect.objectContaining({ name: '人民公园' }) }),
+          expect.objectContaining({
+            order_index: 1,
+            place: expect.objectContaining({ name: '午餐', place_time: '12:30', end_time: '13:20' }),
+          }),
+          expect.objectContaining({
+            order_index: 2,
+            place: expect.objectContaining({ name: '坐休', place_time: '13:20', end_time: '14:20' }),
+          }),
         ],
       }),
       expect.objectContaining({
         title: '成都到乐山',
         date: '2027-01-01',
-        notes_items: [
-          expect.objectContaining({ text: revisedPlan.days[1].title, time: revisedPlan.days[1].notes }),
-          expect.objectContaining({ text: '乐山', time: null, icon: 'BedDouble' }),
-        ],
+        notes_items: [expect.objectContaining({ text: revisedPlan.days[1].title, time: revisedPlan.days[1].notes })],
         assignments: [
           expect.objectContaining({
             order_index: 0,
@@ -288,11 +354,22 @@ describe('assistant itinerary over HTTP', () => {
         ],
       }),
     ]);
+    const calendar = await get(`/api/trips/${trip.id}/export.ics`, user.id);
+    expect(calendar.status).toBe(200);
+    const events = calendar.text.split('BEGIN:VEVENT');
+    const lunch = events.find((event) => event.includes('SUMMARY:午餐'));
+    const rest = events.find((event) => event.includes('SUMMARY:坐休'));
+    expect(lunch).toContain('20261231T123000');
+    expect(lunch).toContain('20261231T132000');
+    expect(rest).toContain('20261231T132000');
+    expect(rest).toContain('20261231T142000');
+    expect(lunch).not.toBe(rest);
+
     const preferences = await get(`/api/trips/${trip.id}/roadtrip/preferences`, user.id);
     expect(preferences.status).toBe(200);
     expect(preferences.body.preferences).toMatchObject(revisedPlan.roadtrip_preferences);
 
-    const repeated = await apply(latestCard.draftId, 2, user.id);
+    const repeated = await apply(latestCard.draftId, 4, user.id);
     expect(repeated.status).toBe(200);
     expect(itineraryApplyResponseSchema.parse(repeated.body)).toEqual({ trip });
     expect((await get('/api/trips', user.id)).body.trips).toEqual([expect.objectContaining({ id: trip.id })]);

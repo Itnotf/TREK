@@ -23,7 +23,7 @@ const SPECS: AiToolSpec[] = [
   {
     name: SAVE_ITINERARY_TOOL,
     description:
-      'Save a complete new-trip draft for the user to preview and keep revising in chat. This does not create a trip or require approval. Send the entire plan, preserving agreed requirements, with base_revision from get_itinerary_draft (0 for the first). Search actual places first and copy their provider id into place_ref; never supply coordinates or photo URLs. Include each day, its overnight city and concise place descriptions. Up to 30 days, 120 stops and 32000 characters. Only the user can create the trip using the card button.',
+      'Save a complete schedule_version: 2 new-trip draft for preview and chat revision. Send the entire plan with base_revision from get_itinerary_draft (0 initially). Keep requirements and stable activity ids across revisions. Every day needs separate visits, meals and rest in stops (id, kind, time_kind, arrival_time, duration_minutes, travel_from_previous), plus stay (area, name or null, check_in, check_out, notes; null on the final/return day). Transfers are estimates: provide mode, duration_minutes or null when unknown, and notes. Use zero for adjacent activities at the same location. Times must allow both activities and transfers. Search places and hotels; copy provider ids to place_ref, never coordinates or photo URLs. Keep notes brief. Up to 20 activities per day, 30 days, 120 activities and 32000 characters total. This saves only a draft; only the user can create the trip using the card button.',
     parameters: z.toJSONSchema(itineraryModelSaveSchema, { unrepresentable: 'any' }),
   },
   {
@@ -117,6 +117,21 @@ function withLocations(
         ...stop,
         location: (stop.place_ref ? known.get(stop.place_ref) : null) ?? priorLocation(stop, previous),
       })),
+      ...(day.stay && {
+        stay: {
+          ...day.stay,
+          location:
+            (day.stay.place_ref ? known.get(day.stay.place_ref) : null) ??
+            previous?.plan.days.find(
+              (old) =>
+                day.stay?.place_ref &&
+                old.stay?.place_ref === day.stay.place_ref &&
+                old.stay?.name === day.stay.name &&
+                old.stay?.area === day.stay.area,
+            )?.stay?.location ??
+            null,
+        },
+      }),
     })),
   };
 }
@@ -193,6 +208,12 @@ export function planningPort(
           error: 'Invalid itinerary draft',
           issues: parsed.error.issues.map((issue) => ({ path: issue.path, message: issue.message })),
         },
+      };
+    if (parsed.data.plan.schedule_version !== 2)
+      return {
+        ok: false,
+        value:
+          'Use schedule_version: 2. Split visits, meals and rest into separate activities with stable ids, kind, time_kind and travel_from_previous; supply a stay plan or null per day. Do not put the daily schedule into notes.',
       };
     const previous = await callbacks.current();
     const plan = withLocations(parsed.data.plan, known, previous);

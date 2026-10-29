@@ -56,6 +56,7 @@ export function formatAssignmentWithPlace(
       id: a.place_id,
       name: a.place_name,
       description: a.place_description,
+      source: a.place_source,
       lat: a.lat,
       lng: a.lng,
       address: a.address,

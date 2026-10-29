@@ -503,5 +503,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Αποθήκευση του αρχείου στα Αρχεία',
   'assistant.change.label.attachedTo': 'Επισυνάπτεται σε',
   'assistant.card.file.open': 'Άνοιγμα στα Αρχεία',
+  'assistant.plan.timeSuggested': 'Προτεινόμενη ώρα',
+  'assistant.plan.timeFixed': 'Σταθερή ώρα',
+  'assistant.plan.timePending': 'Η ώρα εκκρεμεί',
+  'assistant.plan.kind.visit': 'Περιήγηση',
+  'assistant.plan.kind.meal': 'Γεύμα',
+  'assistant.plan.kind.rest': 'Ξεκούραση',
+  'assistant.plan.kind.activity': 'Δραστηριότητα',
+  'assistant.plan.travelEstimated': 'Εκτίμηση: {duration}',
+  'assistant.plan.travelPending': 'Η διάρκεια μετακίνησης χρειάζεται επιβεβαίωση',
+  'assistant.plan.stayPending': 'Διαμονή προς επιβεβαίωση · χωρίς κράτηση',
+  'assistant.plan.hotelPending': 'Εκκρεμεί επιλογή ξενοδοχείου',
 };
 export default assistant;

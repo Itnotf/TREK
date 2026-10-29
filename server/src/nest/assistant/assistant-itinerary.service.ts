@@ -8,6 +8,7 @@ import type {
 import type { AssistantThreadsRepository } from '../../db/repositories/AssistantThreads.repository';
 import { dbNow } from '../../db/types';
 import { decodeJsonResult, encodeJson } from '../../utils/json-column';
+import { AccommodationsService } from '../accommodations/accommodations.service';
 import { AssignmentsService } from '../assignments/assignments.service';
 import { DomainError } from '../common/domain-error';
 import { UnitOfWork } from '../database/unit-of-work';
@@ -25,6 +26,7 @@ import {
   addIsoDays,
   itineraryApplyRequestSchema,
   itinerarySaveRequestSchema,
+  itineraryStopEndTime,
   tripSchema,
   type ItineraryApplyRequest,
   type ItineraryDraft,
@@ -44,6 +46,7 @@ export class AssistantItineraryService {
     private readonly dayNotes: DayNotesService,
     private readonly places: PlacesService,
     private readonly assignments: AssignmentsService,
+    private readonly accommodations: AccommodationsService,
     private readonly permissions: PermissionsService,
     private readonly guards: McpToolGuardsService,
     private readonly realtime: RealtimeService,
@@ -122,7 +125,7 @@ export class AssistantItineraryService {
           // Day notes use text as their title and time as their Markdown body.
           await this.dayNotes.create(day.id, tripId, dayPlan.title, dayPlan.notes, 'FileText', 0);
         }
-        if (dayPlan.overnight_city.trim()) {
+        if (plan.schedule_version !== 2 && dayPlan.overnight_city.trim()) {
           await this.dayNotes.create(
             day.id,
             tripId,
@@ -133,23 +136,103 @@ export class AssistantItineraryService {
           );
         }
         await this.days.setDefaultTransportMode(day.id, plan.transport_mode);
-        await dayPlan.stops.reduce<Promise<void>>(async (previousStop, stop) => {
+        const stopPlaces = new Map<string, number>();
+        let previousAssignmentId: number | null = null;
+        await dayPlan.stops.reduce<Promise<void>>(async (previousStop, stop, stopIndex) => {
           await previousStop;
           const location = stop.location;
-          const place = await this.places.create(String(tripId), {
-            name: stop.name,
-            description: stop.description,
-            address: location?.address || stop.city,
-            notes: stop.city,
-            lat: location?.lat,
-            lng: location?.lng,
-            ...providerIds(location?.place_id),
-            place_time: stop.arrival_time ?? undefined,
-            duration_minutes: stop.duration_minutes,
-            transport_mode: plan.transport_mode,
-          });
-          await this.assignments.createAssignment(day.id, place.id);
+          const place = await this.places.create(
+            String(tripId),
+            {
+              name: stop.name,
+              description: [stop.description, stop.travel_from_previous?.notes].filter(Boolean).join('\n\n'),
+              address: location?.address || stop.city,
+              notes: stop.city,
+              lat: location?.lat,
+              lng: location?.lng,
+              ...providerIds(location?.place_id),
+              place_time: stop.arrival_time ?? undefined,
+              end_time: plan.schedule_version === 2 ? (itineraryStopEndTime(stop) ?? undefined) : undefined,
+              duration_minutes: stop.duration_minutes,
+              transport_mode: plan.transport_mode,
+              stop_type: location ? activityStopType(stop.kind) : undefined,
+            },
+            plan.schedule_version === 2 ? 'assistant' : undefined,
+          );
+          const assignment = await this.assignments.createAssignment(day.id, place.id);
+          if (plan.schedule_version === 2) {
+            if (stop.id) stopPlaces.set(stop.id, place.id);
+            if (stop.time_kind === 'fixed') {
+              await this.assignments.updateTime(assignment.id, stop.arrival_time, itineraryStopEndTime(stop));
+            }
+            const travel = stop.travel_from_previous;
+            if (travel) {
+              await this.assignments.setIncomingLegTransportMode(assignment.id, travel.mode);
+              if (previousAssignmentId !== null) {
+                await this.assignments.setLegTransportMode(previousAssignmentId, travel.mode);
+              }
+            }
+            if (travel && travel.duration_minutes !== 0) {
+              await this.dayNotes.create(
+                day.id,
+                tripId,
+                travelTitle(stop),
+                travel.duration_minutes !== null && stop.arrival_time
+                  ? travelStart(stop.arrival_time, travel.duration_minutes)
+                  : undefined,
+                'ArrowRight',
+                stopIndex - 0.5,
+              );
+            }
+          }
+          previousAssignmentId = assignment.id;
         }, Promise.resolve());
+        if (plan.schedule_version === 2 && dayPlan.stay) {
+          const stay = dayPlan.stay;
+          const nextDay = days[index + 1];
+          if (!nextDay) throw new DomainError(400, 'An overnight stay needs a following checkout day');
+          if (stay.name && stay.location) {
+            const existing = dayPlan.stops.find(
+              (stop) => stop.location?.place_id === stay.location?.place_id && stop.name === stay.name,
+            );
+            let placeId = existing?.id ? stopPlaces.get(existing.id) : undefined;
+            if (!placeId) {
+              const place = await this.places.create(
+                String(tripId),
+                {
+                  name: stay.name,
+                  description: stay.notes,
+                  address: stay.location.address || stay.area,
+                  lat: stay.location.lat,
+                  lng: stay.location.lng,
+                  ...providerIds(stay.location.place_id),
+                  stop_type: 'hotel',
+                  duration_minutes: 0,
+                  transport_mode: plan.transport_mode,
+                },
+                'assistant',
+              );
+              placeId = place.id;
+            }
+            await this.accommodations.createAccommodation(tripId, {
+              place_id: placeId,
+              start_day_id: day.id,
+              end_day_id: nextDay.id,
+              check_in: stay.check_in ?? undefined,
+              check_out: stay.check_out ?? undefined,
+              notes: stay.notes,
+            });
+          } else {
+            await this.dayNotes.create(
+              day.id,
+              tripId,
+              [`${stay.area} · 酒店待选 / Hotel to choose`, stay.name, stay.notes].filter(Boolean).join('\n'),
+              stay.check_in ?? undefined,
+              'BedDouble',
+              dayPlan.stops.length,
+            );
+          }
+        }
       }, Promise.resolve());
       await this.drafts.markApplied(id, tripId, dbNow());
       return { trip: tripSchema.parse(await this.trips.get(tripId, userId)), created: true };
@@ -217,4 +300,31 @@ function providerIds(id: string | undefined) {
   if (OSM_PLACE_ID.test(id) || id.startsWith('gers:')) return { osm_id: id };
   if (isGooglePlaceId(id)) return { google_place_id: id };
   return {};
+}
+
+function travelStart(start: string, duration: number): string | undefined {
+  const [hour, minute] = start.split(':').map(Number);
+  const minutes = hour * 60 + minute - duration;
+  if (minutes < 0 || minutes >= 1440) return undefined;
+  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+}
+
+function activityStopType(kind: ItineraryPlan['days'][number]['stops'][number]['kind']) {
+  if (kind === 'meal') return 'restaurant';
+  if (kind === 'rest') return 'rest_area';
+  return undefined;
+}
+
+function travelTitle(stop: ItineraryPlan['days'][number]['stops'][number]): string {
+  const travel = stop.travel_from_previous;
+  if (!travel) return '';
+  const modes = {
+    driving: '驾车 / Drive',
+    walking: '步行 / Walk',
+    transit: '公共交通 / Transit',
+    cycling: '骑行 / Cycle',
+  };
+  const duration =
+    travel.duration_minutes === null ? '车程待核实 / Time unknown' : `约 ${travel.duration_minutes} min · Estimate`;
+  return `${modes[travel.mode]} → ${stop.name}\n${duration} · 路线待核实 / Route unverified`;
 }

@@ -472,5 +472,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'ファイルに保存',
   'assistant.change.label.attachedTo': '添付先',
   'assistant.card.file.open': 'ファイルで開く',
+  'assistant.plan.timeSuggested': '予定時刻',
+  'assistant.plan.timeFixed': '確定した時刻',
+  'assistant.plan.timePending': '時刻未定',
+  'assistant.plan.kind.visit': '観光',
+  'assistant.plan.kind.meal': '食事',
+  'assistant.plan.kind.rest': '休憩',
+  'assistant.plan.kind.activity': 'アクティビティ',
+  'assistant.plan.travelEstimated': '目安 {duration}',
+  'assistant.plan.travelPending': '移動時間は要確認',
+  'assistant.plan.stayPending': '宿泊先は要確認・未予約',
+  'assistant.plan.hotelPending': 'ホテル未選択',
 };
 export default assistant;

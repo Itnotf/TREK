@@ -545,5 +545,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Сохранить файл в Файлы',
   'assistant.change.label.attachedTo': 'Прикреплён к',
   'assistant.card.file.open': 'Открыть в Файлах',
+  'assistant.plan.timeSuggested': 'Предлагаемое время',
+  'assistant.plan.timeFixed': 'Фиксированное время',
+  'assistant.plan.timePending': 'Время пока не определено',
+  'assistant.plan.kind.visit': 'Осмотр достопримечательностей',
+  'assistant.plan.kind.meal': 'Приём пищи',
+  'assistant.plan.kind.rest': 'Отдых',
+  'assistant.plan.kind.activity': 'Занятие',
+  'assistant.plan.travelEstimated': 'Примерно {duration}',
+  'assistant.plan.travelPending': 'Время в пути требует уточнения',
+  'assistant.plan.stayPending': 'Проживание требует подтверждения · не забронировано',
+  'assistant.plan.hotelPending': 'Отель пока не выбран',
 };
 export default assistant;

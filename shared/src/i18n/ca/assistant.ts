@@ -502,5 +502,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Desa el fitxer a Fitxers',
   'assistant.change.label.attachedTo': 'Adjunt a',
   'assistant.card.file.open': 'Obre a Fitxers',
+  'assistant.plan.timeSuggested': 'Hora suggerida',
+  'assistant.plan.timeFixed': 'Hora fixa',
+  'assistant.plan.timePending': 'Hora per concretar',
+  'assistant.plan.kind.visit': 'Visita',
+  'assistant.plan.kind.meal': 'Àpat',
+  'assistant.plan.kind.rest': 'Descans',
+  'assistant.plan.kind.activity': 'Activitat',
+  'assistant.plan.travelEstimated': 'Durada estimada: {duration}',
+  'assistant.plan.travelPending': 'Temps de desplaçament per confirmar',
+  'assistant.plan.stayPending': 'Allotjament per confirmar · sense reserva',
+  'assistant.plan.hotelPending': 'Hotel per triar',
 };
 export default assistant;

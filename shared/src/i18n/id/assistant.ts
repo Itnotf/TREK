@@ -478,5 +478,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Simpan berkas di Berkas',
   'assistant.change.label.attachedTo': 'Dilampirkan ke',
   'assistant.card.file.open': 'Buka di Berkas',
+  'assistant.plan.timeSuggested': 'Waktu yang disarankan',
+  'assistant.plan.timeFixed': 'Waktu tetap',
+  'assistant.plan.timePending': 'Waktu belum ditentukan',
+  'assistant.plan.kind.visit': 'Wisata',
+  'assistant.plan.kind.meal': 'Makan',
+  'assistant.plan.kind.rest': 'Istirahat',
+  'assistant.plan.kind.activity': 'Aktivitas',
+  'assistant.plan.travelEstimated': 'Perkiraan {duration}',
+  'assistant.plan.travelPending': 'Durasi perjalanan perlu dikonfirmasi',
+  'assistant.plan.stayPending': 'Penginapan perlu dikonfirmasi · belum dipesan',
+  'assistant.plan.hotelPending': 'Hotel belum dipilih',
 };
 export default assistant;

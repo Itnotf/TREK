@@ -543,5 +543,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Зберегти файл у Файлах',
   'assistant.change.label.attachedTo': 'Прикріплено до',
   'assistant.card.file.open': 'Відкрити у Файлах',
+  'assistant.plan.timeSuggested': 'Запропонований час',
+  'assistant.plan.timeFixed': 'Фіксований час',
+  'assistant.plan.timePending': 'Час ще не визначено',
+  'assistant.plan.kind.visit': 'Огляд пам’яток',
+  'assistant.plan.kind.meal': 'Прийом їжі',
+  'assistant.plan.kind.rest': 'Відпочинок',
+  'assistant.plan.kind.activity': 'Активність',
+  'assistant.plan.travelEstimated': 'Приблизно {duration}',
+  'assistant.plan.travelPending': 'Час у дорозі потребує уточнення',
+  'assistant.plan.stayPending': 'Проживання потребує підтвердження · не заброньовано',
+  'assistant.plan.hotelPending': 'Готель ще не обрано',
 };
 export default assistant;

@@ -501,5 +501,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Bestand bewaren in Bestanden',
   'assistant.change.label.attachedTo': 'Gekoppeld aan',
   'assistant.card.file.open': 'Openen in Bestanden',
+  'assistant.plan.timeSuggested': 'Voorgestelde tijd',
+  'assistant.plan.timeFixed': 'Vaste tijd',
+  'assistant.plan.timePending': 'Tijd nog te bepalen',
+  'assistant.plan.kind.visit': 'Bezienswaardigheden',
+  'assistant.plan.kind.meal': 'Maaltijd',
+  'assistant.plan.kind.rest': 'Rust',
+  'assistant.plan.kind.activity': 'Activiteit',
+  'assistant.plan.travelEstimated': 'Geschat: {duration}',
+  'assistant.plan.travelPending': 'Reistijd nog te controleren',
+  'assistant.plan.stayPending': 'Verblijf nog te bevestigen · niet geboekt',
+  'assistant.plan.hotelPending': 'Hotel nog te kiezen',
 };
 export default assistant;

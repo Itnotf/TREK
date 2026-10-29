@@ -44,6 +44,7 @@ import { type AssertRowKeys } from './_shared/rows';
 export interface AssignmentWithPlaceRow extends DayAssignmentRow {
   place_name: string;
   place_description: string | null;
+  place_source: string | null;
   lat: number | null;
   lng: number | null;
   address: string | null;
@@ -81,6 +82,7 @@ export interface AssignmentWithPlaceRow extends DayAssignmentRow {
  */
 export type SharePublicAssignmentRow = Omit<
   AssignmentWithPlaceRow,
+  | 'place_source'
   | 'google_place_id'
   | 'google_ftid'
   | 'osm_id'
@@ -163,6 +165,9 @@ export type AssignmentTimeSortKyselyDB = Pick<DB, 'day_assignments' | 'places' |
  * the carrier terminals are seated against.
  */
 export interface RoadtripVisitRow {
+  source: string | null;
+  assignment_time: string | null;
+  assignment_end_time: string | null;
   id: number;
   day_id: number;
   order_index: number;

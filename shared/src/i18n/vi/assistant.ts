@@ -473,5 +473,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Lưu tệp vào Tệp',
   'assistant.change.label.attachedTo': 'Đính kèm vào',
   'assistant.card.file.open': 'Mở trong Tệp',
+  'assistant.plan.timeSuggested': 'Thời gian gợi ý',
+  'assistant.plan.timeFixed': 'Thời gian cố định',
+  'assistant.plan.timePending': 'Thời gian chưa xác định',
+  'assistant.plan.kind.visit': 'Tham quan',
+  'assistant.plan.kind.meal': 'Bữa ăn',
+  'assistant.plan.kind.rest': 'Nghỉ ngơi',
+  'assistant.plan.kind.activity': 'Hoạt động',
+  'assistant.plan.travelEstimated': 'Ước tính {duration}',
+  'assistant.plan.travelPending': 'Thời gian di chuyển cần xác nhận',
+  'assistant.plan.stayPending': 'Chỗ ở cần xác nhận · chưa đặt',
+  'assistant.plan.hotelPending': 'Khách sạn chưa chọn',
 };
 export default assistant;

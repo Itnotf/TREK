@@ -499,5 +499,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Dosyayı Dosyalar’a kaydet',
   'assistant.change.label.attachedTo': 'Eklendiği yer',
   'assistant.card.file.open': 'Dosyalar’da aç',
+  'assistant.plan.timeSuggested': 'Önerilen saat',
+  'assistant.plan.timeFixed': 'Sabit saat',
+  'assistant.plan.timePending': 'Saat henüz belirlenmedi',
+  'assistant.plan.kind.visit': 'Gezi',
+  'assistant.plan.kind.meal': 'Yemek',
+  'assistant.plan.kind.rest': 'Dinlenme',
+  'assistant.plan.kind.activity': 'Etkinlik',
+  'assistant.plan.travelEstimated': 'Tahmini {duration}',
+  'assistant.plan.travelPending': 'Yolculuk süresi doğrulanmalı',
+  'assistant.plan.stayPending': 'Konaklama onay bekliyor · rezervasyon yapılmadı',
+  'assistant.plan.hotelPending': 'Otel henüz seçilmedi',
 };
 export default assistant;

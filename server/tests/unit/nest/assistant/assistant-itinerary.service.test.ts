@@ -1,11 +1,14 @@
 import { AssistantItineraryDrafts } from '../../../../src/db/entities/AssistantItineraryDrafts.entity';
 import { AssistantThreads } from '../../../../src/db/entities/AssistantThreads.entity';
+import { DayAccommodations } from '../../../../src/db/entities/DayAccommodations.entity';
 import { DayAssignments } from '../../../../src/db/entities/DayAssignments.entity';
 import { DayNotes } from '../../../../src/db/entities/DayNotes.entity';
 import { Days } from '../../../../src/db/entities/Days.entity';
 import { Places } from '../../../../src/db/entities/Places.entity';
+import { Reservations } from '../../../../src/db/entities/Reservations.entity';
 import { RoadtripPreferences } from '../../../../src/db/entities/RoadtripPreferences.entity';
 import { Trips } from '../../../../src/db/entities/Trips.entity';
+import { AccommodationsService } from '../../../../src/nest/accommodations/accommodations.service';
 import { AssignmentsService } from '../../../../src/nest/assignments/assignments.service';
 import { AssistantItineraryModule } from '../../../../src/nest/assistant/assistant-itinerary.module';
 import { AssistantItineraryService } from '../../../../src/nest/assistant/assistant-itinerary.service';
@@ -79,6 +82,64 @@ function plan(): ItineraryPlan {
   };
 }
 
+function dailyPlan(): ItineraryPlan {
+  const itinerary = plan();
+  itinerary.schedule_version = 2;
+  for (const [dayIndex, day] of itinerary.days.entries()) {
+    day.stay = null;
+    day.stops = day.stops.slice(0, 1).map((stop) => ({
+      ...stop,
+      id: `day-${dayIndex}-visit`,
+      kind: 'visit',
+      time_kind: 'suggested',
+      travel_from_previous: null,
+    }));
+  }
+  itinerary.days[0].stops.push(
+    {
+      id: 'day-0-lunch',
+      kind: 'meal',
+      time_kind: 'suggested',
+      name: '午餐与如厕',
+      city: '成都',
+      description: '餐厅待选，安排座位休息。',
+      arrival_time: '12:00',
+      duration_minutes: 50,
+      travel_from_previous: { mode: 'driving', duration_minutes: 30, notes: '含停车缓冲，车程待核实。' },
+    },
+    {
+      id: 'day-0-rest',
+      kind: 'rest',
+      time_kind: 'suggested',
+      name: '坐休',
+      city: '成都',
+      description: '连续步行不超过 15 分钟。',
+      arrival_time: '12:50',
+      duration_minutes: 40,
+      travel_from_previous: { mode: 'walking', duration_minutes: 0, notes: '原地休息。' },
+    },
+    {
+      id: 'day-0-appointment',
+      kind: 'visit',
+      time_kind: 'fixed',
+      name: '下午预约活动',
+      city: '成都',
+      description: '按预约时间抵达。',
+      arrival_time: '13:30',
+      duration_minutes: 75,
+      travel_from_previous: { mode: 'walking', duration_minutes: 0, notes: '同一地点。' },
+    },
+  );
+  itinerary.days[0].stay = {
+    area: '成都城区',
+    name: null,
+    check_in: '15:30',
+    check_out: '09:00',
+    notes: '酒店待选，避免楼梯。',
+  };
+  return itinerary;
+}
+
 beforeAll(async () => {
   t = await createTestModule({ db, imports: [AssistantItineraryModule] });
   service = t.get(AssistantItineraryService);
@@ -108,6 +169,127 @@ async function draft() {
 }
 
 describe('AssistantItineraryService', () => {
+  it('saves meals and rests as editable timed activities, estimates as notes and area-only stays as unbooked suggestions', async () => {
+    const c = await conversation();
+    const itinerary = dailyPlan();
+    const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
+    const { trip } = await service.apply(c.userId, saved.id, { revision: 1 });
+    const orm = t.get(MikroORM);
+    const places = await findRows(orm, Places, { trip_id: trip.id }, { id: 'asc' });
+    expect(places).toHaveLength(5);
+    expect(places.map((place) => place.source)).toEqual(Array(5).fill('assistant'));
+    expect(places[1]).toMatchObject({
+      name: '午餐与如厕',
+      lat: null,
+      lng: null,
+      place_time: '12:00',
+      end_time: '12:50',
+      duration_minutes: 50,
+    });
+    expect(places[1].description).toContain('含停车缓冲，车程待核实。');
+    expect(places[2]).toMatchObject({ name: '坐休', place_time: '12:50', end_time: '13:30', duration_minutes: 40 });
+    const assignments = await findRows(orm, DayAssignments, {}, { id: 'asc' });
+    expect(assignments[0]).toMatchObject({ leg_transport_mode: 'driving' });
+    expect(assignments[1]).toMatchObject({
+      assignment_time: null,
+      incoming_leg_transport_mode: 'driving',
+      leg_transport_mode: 'walking',
+    });
+    expect(assignments[3]).toMatchObject({ assignment_time: '13:30', assignment_end_time: '14:45' });
+    const { days } = await t.get(DaysService).list(trip.id);
+    expect(days[0].notes_items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ time: '11:30', text: expect.stringContaining('30 min'), icon: 'ArrowRight' }),
+        expect.objectContaining({ text: expect.stringContaining('酒店待选'), time: '15:30', icon: 'BedDouble' }),
+      ]),
+    );
+    expect(days[0].notes_items.filter((note) => note.icon === 'ArrowRight')).toHaveLength(1);
+    expect(days[1].notes_items.some((note) => note.icon === 'BedDouble')).toBe(false);
+    expect(await findRows(orm, Reservations, {})).toHaveLength(0);
+    expect(await findRows(orm, DayAccommodations, {})).toHaveLength(0);
+    expect(await service.apply(c.userId, saved.id, { revision: 1 })).toEqual({ trip });
+    expect(await findRows(orm, DayAssignments, {})).toHaveLength(5);
+  });
+
+  it('creates a verified suggested hotel as one pending stay without a confirmation or duplicate visit', async () => {
+    const c = await conversation();
+    const itinerary = dailyPlan();
+    const location = { lat: 30.67, lng: 104.07, place_id: 'amap:HOTEL', address: '酒店已定位地址' };
+    itinerary.days[0].stops.push({
+      id: 'day-0-hotel',
+      kind: 'activity',
+      time_kind: 'suggested',
+      name: '建议酒店',
+      city: '成都',
+      description: '办理入住后休息。',
+      arrival_time: '15:30',
+      duration_minutes: 30,
+      location,
+      travel_from_previous: { mode: 'driving', duration_minutes: 30, notes: '预计车程。' },
+    });
+    itinerary.days[0].stay = {
+      area: '成都城区',
+      name: '建议酒店',
+      location,
+      check_in: '15:30',
+      check_out: '09:00',
+      notes: '待确认，未预订。',
+    };
+    const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
+    const { trip } = await service.apply(c.userId, saved.id, { revision: 1 });
+    const orm = t.get(MikroORM);
+    const days = await findRows(orm, Days, { trip_id: trip.id }, { day_number: 'asc' });
+    const hotels = await findRows(orm, Places, { trip_id: trip.id, name: '建议酒店' });
+    expect(hotels).toHaveLength(1);
+    const stays = await findRows(orm, DayAccommodations, { trip_id: trip.id });
+    expect(stays).toEqual([
+      expect.objectContaining({
+        place_id: hotels[0].id,
+        start_day_id: days[0].id,
+        end_day_id: days[1].id,
+        check_in: '15:30',
+        check_out: '09:00',
+        confirmation: null,
+      }),
+    ]);
+    expect(await findRows(orm, DayAssignments, { place_id: hotels[0].id })).toHaveLength(1);
+    expect(await findRows(orm, Reservations, { trip_id: trip.id })).toEqual([
+      expect.objectContaining({ type: 'hotel', status: 'pending', confirmation_number: null }),
+    ]);
+    const repeated = await service.apply(c.userId, saved.id, { revision: 1 });
+    expect(repeated).toEqual({ trip });
+    expect(await findRows(orm, Reservations, { trip_id: trip.id })).toHaveLength(1);
+  });
+
+  it('rolls back the whole itinerary when accommodation creation fails after the activities', async () => {
+    const c = await conversation();
+    const itinerary = dailyPlan();
+    itinerary.days[0].stay = {
+      area: '成都城区',
+      name: '建议酒店',
+      check_in: '15:30',
+      check_out: '09:00',
+      notes: '',
+      location: { lat: 30.67, lng: 104.07, place_id: 'amap:HOTEL', address: '酒店已定位地址' },
+    };
+    const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
+    const accommodations = t.get(AccommodationsService);
+    const create = accommodations.createAccommodation.bind(accommodations);
+    vi.spyOn(accommodations, 'createAccommodation').mockImplementationOnce(async (...args) => {
+      await create(...args);
+      throw new Error('stay storage failure');
+    });
+    await expect(service.apply(c.userId, saved.id, { revision: 1 })).rejects.toThrow('stay storage failure');
+    const orm = t.get(MikroORM);
+    expect(await findRows(orm, Trips, {})).toHaveLength(0);
+    expect(await findRows(orm, Places, {})).toHaveLength(0);
+    expect(await findRows(orm, DayAssignments, {})).toHaveLength(0);
+    expect(await findRows(orm, DayAccommodations, {})).toHaveLength(0);
+    expect(await findRows(orm, Reservations, {})).toHaveLength(0);
+    expect(await service.get(c.userId, saved.id)).toMatchObject({ created_trip_id: null });
+    expect(t.realtime.broadcastToUserMock).not.toHaveBeenCalled();
+    expect((await service.apply(c.userId, saved.id, { revision: 1 })).trip.id).toBeGreaterThan(0);
+  });
   it('keeps immutable revisions without creating any trip while the user is still chatting', async () => {
     const c = await conversation();
     expect(await service.current(c.userId, c.threadId)).toBeNull();
@@ -239,13 +421,19 @@ describe('AssistantItineraryService', () => {
     );
     await tools.call('search_place', { query: 'Downing Street' });
     const { sources: _sources, ...modelPlan } = plan();
+    modelPlan.schedule_version = 2;
     modelPlan.days = [
       {
         title: 'London',
         overnight_city: 'London',
         notes: '',
+        stay: null,
         stops: [
           {
+            id: 'london-visit',
+            kind: 'visit',
+            time_kind: 'suggested',
+            travel_from_previous: null,
             name: 'Downing Street',
             city: 'London',
             description: '',

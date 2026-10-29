@@ -469,5 +469,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': '파일에 보관',
   'assistant.change.label.attachedTo': '첨부 대상',
   'assistant.card.file.open': '파일에서 열기',
+  'assistant.plan.timeSuggested': '제안 시간',
+  'assistant.plan.timeFixed': '고정 시간',
+  'assistant.plan.timePending': '시간 미정',
+  'assistant.plan.kind.visit': '관광',
+  'assistant.plan.kind.meal': '식사',
+  'assistant.plan.kind.rest': '휴식',
+  'assistant.plan.kind.activity': '활동',
+  'assistant.plan.travelEstimated': '예상 {duration}',
+  'assistant.plan.travelPending': '이동 시간 확인 필요',
+  'assistant.plan.stayPending': '숙소 확인 필요 · 미예약',
+  'assistant.plan.hotelPending': '호텔 선택 필요',
 };
 export default assistant;

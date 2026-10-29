@@ -581,5 +581,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'احفظ الملف في الملفات',
   'assistant.change.label.attachedTo': 'مرفق بـ',
   'assistant.card.file.open': 'افتح في الملفات',
+  'assistant.plan.timeSuggested': 'وقت مقترح',
+  'assistant.plan.timeFixed': 'وقت ثابت',
+  'assistant.plan.timePending': 'الوقت لم يُحدد بعد',
+  'assistant.plan.kind.visit': 'زيارة معالم',
+  'assistant.plan.kind.meal': 'وجبة',
+  'assistant.plan.kind.rest': 'استراحة',
+  'assistant.plan.kind.activity': 'نشاط',
+  'assistant.plan.travelEstimated': 'المدة المقدرة {duration}',
+  'assistant.plan.travelPending': 'مدة التنقل بحاجة إلى تأكيد',
+  'assistant.plan.stayPending': 'الإقامة بحاجة إلى تأكيد · لم تُحجز',
+  'assistant.plan.hotelPending': 'الفندق لم يُختر بعد',
 };
 export default assistant;

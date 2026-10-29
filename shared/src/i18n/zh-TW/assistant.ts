@@ -463,5 +463,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': '將檔案儲存到檔案',
   'assistant.change.label.attachedTo': '附加到',
   'assistant.card.file.open': '在檔案中開啟',
+  'assistant.plan.timeSuggested': '建議時間',
+  'assistant.plan.timeFixed': '固定時間',
+  'assistant.plan.timePending': '時間待安排',
+  'assistant.plan.kind.visit': '遊覽',
+  'assistant.plan.kind.meal': '用餐',
+  'assistant.plan.kind.rest': '休息',
+  'assistant.plan.kind.activity': '活動',
+  'assistant.plan.travelEstimated': '預估 {duration}',
+  'assistant.plan.travelPending': '交通時間待確認',
+  'assistant.plan.stayPending': '住宿待確認 · 尚未預訂',
+  'assistant.plan.hotelPending': '飯店待選',
 };
 export default assistant;

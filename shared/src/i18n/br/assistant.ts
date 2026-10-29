@@ -500,5 +500,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Guardar o arquivo em Arquivos',
   'assistant.change.label.attachedTo': 'Anexado a',
   'assistant.card.file.open': 'Abrir em Arquivos',
+  'assistant.plan.timeSuggested': 'Horário sugerido',
+  'assistant.plan.timeFixed': 'Horário fixo',
+  'assistant.plan.timePending': 'Horário a definir',
+  'assistant.plan.kind.visit': 'Passeio',
+  'assistant.plan.kind.meal': 'Refeição',
+  'assistant.plan.kind.rest': 'Descanso',
+  'assistant.plan.kind.activity': 'Atividade',
+  'assistant.plan.travelEstimated': 'Estimativa: {duration}',
+  'assistant.plan.travelPending': 'Tempo de deslocamento a confirmar',
+  'assistant.plan.stayPending': 'Hospedagem a confirmar · sem reserva',
+  'assistant.plan.hotelPending': 'Hotel a escolher',
 };
 export default assistant;

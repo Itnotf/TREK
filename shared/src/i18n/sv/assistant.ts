@@ -499,5 +499,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Spara filen i Filer',
   'assistant.change.label.attachedTo': 'Bifogad till',
   'assistant.card.file.open': 'Öppna i Filer',
+  'assistant.plan.timeSuggested': 'Föreslagen tid',
+  'assistant.plan.timeFixed': 'Fast tid',
+  'assistant.plan.timePending': 'Tid att bestämma',
+  'assistant.plan.kind.visit': 'Sevärdheter',
+  'assistant.plan.kind.meal': 'Måltid',
+  'assistant.plan.kind.rest': 'Vila',
+  'assistant.plan.kind.activity': 'Aktivitet',
+  'assistant.plan.travelEstimated': 'Uppskattat: {duration}',
+  'assistant.plan.travelPending': 'Restid att bekräfta',
+  'assistant.plan.stayPending': 'Boende att bekräfta · inte bokat',
+  'assistant.plan.hotelPending': 'Hotell att välja',
 };
 export default assistant;

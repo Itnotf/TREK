@@ -544,5 +544,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Zapisz plik w Plikach',
   'assistant.change.label.attachedTo': 'Dołączono do',
   'assistant.card.file.open': 'Otwórz w Plikach',
+  'assistant.plan.timeSuggested': 'Proponowana godzina',
+  'assistant.plan.timeFixed': 'Stała godzina',
+  'assistant.plan.timePending': 'Godzina do ustalenia',
+  'assistant.plan.kind.visit': 'Zwiedzanie',
+  'assistant.plan.kind.meal': 'Posiłek',
+  'assistant.plan.kind.rest': 'Odpoczynek',
+  'assistant.plan.kind.activity': 'Aktywność',
+  'assistant.plan.travelEstimated': 'Szacunkowo {duration}',
+  'assistant.plan.travelPending': 'Czas przejazdu do sprawdzenia',
+  'assistant.plan.stayPending': 'Nocleg do potwierdzenia · bez rezerwacji',
+  'assistant.plan.hotelPending': 'Hotel do wyboru',
 };
 export default assistant;
