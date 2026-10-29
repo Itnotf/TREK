@@ -11,7 +11,7 @@ The assistant runs on an AI model from a provider you or your administrator conn
 | Where | What it is about | What it may change |
 |---|---|---|
 | In a trip | That trip: its days, places, bookings, transports, costs, lists, tours, road trip and collab | Everything you may change in the trip yourself, after you confirm |
-| Outside a trip (the home chat) | All your trips at once, plus your Atlas, Vacay and journals | Nothing. It reads, compares and answers, and hands you over to a trip's own chat |
+| Outside a trip (the home chat) | New trip drafts and all your trips, plus your Atlas, Vacay and journals | Revisable itinerary drafts; creates a complete trip only when you confirm its latest version. Existing trip changes go to that trip's chat |
 | In [TREK Studio](TREK-Studio#the-book-assistant) | One journey and its photo book | The book's pages, layouts and theme, after you confirm |
 
 The assistant appears only once a connection you can use is set up. Until then there is no button for it, so nobody is shown a feature they cannot use.
@@ -45,6 +45,16 @@ The assistant can remember things about a trip for every later conversation: *we
 The assistant looks over the plan on its own and lists what is **Worth a look**: two things that overlap, a place that is closed on the day you planned it or opens too late, a long gap in a day, a leg that is far or tight, nights with nowhere to stay yet, and bookings that are not on any day. Each hint is one click away from a question about it, and **Hide this hint** puts one away. The launcher shows how many hints are waiting; **Stop showing hints** in the **More options** menu switches them off.
 
 ## Suggested changes
+
+### Planning a new trip
+
+Choose **Plan a trip with AI** on the dashboard and describe the trip, or paste a travel guide link or its text. You do not need to create an empty trip first. The assistant asks only for missing essentials, then shows a day-by-day draft with places, introductions, suggested times, overnight cities and assumptions. Verified places can show photos through TREK's existing photo service; unlocated suggestions are marked for checking.
+
+Keep chatting to revise the draft. Each version stays readable, and drafts do not block the chat while you decide. **Confirm and create trip** on the latest version creates the trip, days, places and assignments together. Retrying the confirmation returns the same trip. Continue later changes in that trip's own assistant.
+
+Link reading uses accessible article text or public share-page metadata. Metadata is only a caption, not a video transcript. If a page cannot be read, paste its travel text. Driving times still need verification; this version does not add a domestic routing provider. See [the requirements and acceptance guide](AI-Trip-Planning.md).
+
+### Editing an existing trip
 
 When the assistant wants to change something, it does not do it. It shows a **Suggested changes** card:
 

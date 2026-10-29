@@ -107,7 +107,7 @@ function DashboardPageDesktop(): React.ReactElement {
     tripFilter, setTripFilter, viewMode, toggleViewMode,
     showForm, setShowForm, editingTrip, setEditingTrip,
     deleteTrip, setDeleteTrip, copyTrip, setCopyTrip, applyCoverUpdate,
-    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    newTrip, handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
     allSubOpen, setAllSubOpen, search,
   } = useDashboard()
 
@@ -236,6 +236,11 @@ function DashboardPageDesktop(): React.ReactElement {
                 </div>
               )}
 
+              {newTrip.available && <div className="mb-3 flex justify-end">
+                <button type="button" className="min-h-11 px-3 text-caption text-content-secondary underline" onClick={newTrip.manual}>
+                  {t('assistant.plan.manual')}
+                </button>
+              </div>}
               <div className={`trips${viewMode === 'list' ? ' list-view' : ''}`}>
                 {gridTrips.map(trip => (
                   <TripCard
@@ -259,10 +264,10 @@ function DashboardPageDesktop(): React.ReactElement {
                   </>
                 )}
                 {tripFilter === 'planned' && !search.active && !isLoading && (
-                  <button type="button" className="add-trip-card" onClick={() => { setEditingTrip(null); setShowForm(true) }}>
+                  <button type="button" className="add-trip-card" onClick={() => { void newTrip.start() }}>
                     <div>
                       <div className="circ"><Plus size={20} /></div>
-                      <div className="ttl">{t('dashboard.newTrip')}</div>
+                      <div className="ttl">{t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}</div>
                       <div className="sub">{t('dashboard.newTripSub')}</div>
                     </div>
                   </button>
@@ -285,12 +290,12 @@ function DashboardPageDesktop(): React.ReactElement {
 
       <button type="button"
         className="fab-new-trip"
-        onClick={() => { setEditingTrip(null); setShowForm(true) }}
-        aria-label={t('dashboard.newTrip')}
-        title={t('dashboard.newTrip')}
+        onClick={() => { void newTrip.start() }}
+        aria-label={t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}
+        title={t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}
       >
         <Plus size={22} strokeWidth={2.4} />
-        <span className="fab-label">{t('dashboard.newTrip')}</span>
+        <span className="fab-label">{t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}</span>
       </button>
 
       {showForm && (

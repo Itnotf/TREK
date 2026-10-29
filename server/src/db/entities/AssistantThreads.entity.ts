@@ -2,6 +2,7 @@ import { Collection, EntityRepositoryType, type Opt, type Ref, defineEntity, p }
 import { AssistantThreadsRepository } from '../repositories/AssistantThreads.repository';
 import { DbTimestampType } from '../types';
 import { AssistantAttachments } from './AssistantAttachments.entity';
+import { AssistantItineraryDrafts } from './AssistantItineraryDrafts.entity';
 import { AssistantMessages } from './AssistantMessages.entity';
 import { AssistantToolCalls } from './AssistantToolCalls.entity';
 import { Journeys } from './Journeys.entity';
@@ -21,6 +22,7 @@ export class AssistantThreads {
   created_at!: string & Opt;
   last_message_at!: string & Opt;
   assistant_attachments_collection = new Collection<AssistantAttachments>(this);
+  assistant_itinerary_drafts_collection = new Collection<AssistantItineraryDrafts>(this);
   assistant_messages_collection = new Collection<AssistantMessages>(this);
   assistant_tool_calls_collection = new Collection<AssistantToolCalls>(this);
 }
@@ -50,6 +52,7 @@ export const AssistantThreadsSchema = defineEntity({
     created_at: p.type(DbTimestampType).defaultRaw(`CURRENT_TIMESTAMP`),
     last_message_at: p.type(DbTimestampType).defaultRaw(`CURRENT_TIMESTAMP`),
     assistant_attachments_collection: () => p.oneToMany(AssistantAttachments).mappedBy('thread').hidden(),
+    assistant_itinerary_drafts_collection: () => p.oneToMany(AssistantItineraryDrafts).mappedBy('thread').hidden(),
     assistant_messages_collection: () => p.oneToMany(AssistantMessages).mappedBy('thread').hidden(),
     assistant_tool_calls_collection: () => p.oneToMany(AssistantToolCalls).mappedBy('thread').hidden(),
   },

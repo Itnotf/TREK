@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Ваші подорожі',
   'assistant.home.welcome': 'Чим можу допомогти?',
-  'assistant.home.placeholder': 'Запитайте що завгодно про свої подорожі',
+  'assistant.home.placeholder': 'Опишіть подорож або вставте посилання на путівник',
   'assistant.home.switch': 'Чат про одну подорож',
   'assistant.home.back': 'Назад до всіх подорожей',
-  'assistant.suggest.homeNext': 'Яка подорож наступна і що ще не готово?',
+  'assistant.suggest.homeNext': 'Сплануй спокійну автомобільну подорож на 5 днів із Ченду західною частиною Сичуаню',
   'assistant.suggest.homeCompare': 'Порівняй мої майбутні подорожі',
   'assistant.suggest.homeAtlas': 'Скільки країн я відвідав?',
   'assistant.suggest.homeVacay': 'Скільки днів відпустки мені лишилося цього року?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Щоденник',
   'assistant.card.journalChat.open': 'Продовжити в чаті цього щоденника',
   'assistant.step.openJournalChat': 'Шукаю щоденник',
+  'assistant.plan.start': 'Спланувати з ШІ',
+  'assistant.plan.manual': 'Створити вручну',
+  'assistant.plan.unavailable': 'Планування з ШІ зараз недоступне. Ви й надалі можете створити подорож вручну.',
+  'assistant.plan.label': 'Чернетка подорожі',
+  'assistant.plan.version': 'Версія {version}',
+  'assistant.plan.requirements': 'Ваші побажання щодо подорожі',
+  'assistant.plan.assumptions': 'Перевірте ці припущення',
+  'assistant.plan.overnight': 'Ночівля: {city}',
+  'assistant.plan.editHint':
+    'Бажаєте щось змінити? Напишіть мені в чаті, і я оновлю чернетку. Підтвердьте її, коли будете задоволені.',
+  'assistant.plan.stale': 'Нижче доступна новіша версія. Щоб створити подорож, підтвердьте останню версію.',
+  'assistant.plan.confirm': 'Підтвердити й створити подорож',
+  'assistant.plan.created': 'Цю чернетку збережено як подорож.',
+  'assistant.plan.loadFailed': 'Не вдалося завантажити цю чернетку. Спробуйте ще раз.',
+  'assistant.plan.applyFailed': 'Не вдалося створити подорож. Перевірте останню чернетку й спробуйте ще раз.',
+  'assistant.plan.unverified': 'Точне розташування ще не перевірено',
 };
 
 export default assistantHome;

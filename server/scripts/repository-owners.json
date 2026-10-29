@@ -4,6 +4,7 @@
   "AppSettings": "settings",
   "AssignmentParticipants": "assignments",
   "AssistantAttachments": "assistant",
+  "AssistantItineraryDrafts": "assistant",
   "AssistantMessages": "assistant",
   "AssistantThreads": "assistant",
   "AssistantToolCalls": "assistant",

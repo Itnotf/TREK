@@ -63,6 +63,8 @@ import { useTripStore } from './tripStore';
 interface AssistantTripChat {
   /** The open thread; null for a new one the first message creates. */
   threadId: number | null;
+  /** An explicitly new chat must not resume the previous one when its view mounts. */
+  fresh?: boolean;
   /** The user's latest threads in this trip; null until loaded. */
   threads: AssistantThreadSummary[] | null;
   messages: AssistantMessage[];
@@ -663,7 +665,7 @@ function threadActions(ctx: Ctx) {
   const openThread = async (tripId: number, threadId: number) => {
     if (chat(ctx, tripId).isRunning) return;
     ctx.set(NO_ROUTE);
-    patch(ctx, tripId, { threadId, loading: true, error: null, unsent: null });
+    patch(ctx, tripId, { threadId, fresh: false, loading: true, error: null, unsent: null });
     try {
       const { messages } = await assistantRepo.thread(assistantTargetOf(tripId), threadId);
       // Another thread may have been opened while this one loaded.
@@ -690,6 +692,8 @@ function threadActions(ctx: Ctx) {
     // The block a comparison belonged to leaves the screen with its thread.
     patch(ctx, tripId, {
       threadId: null,
+      fresh: true,
+      loading: false,
       messages: [],
       isRunning: false,
       error: null,
@@ -708,7 +712,8 @@ function threadActions(ctx: Ctx) {
       await loadThreads(tripId);
       const c = chat(ctx, tripId);
       const latest = c.threads?.[0];
-      if (latest && c.threadId === null && c.messages.length === 0 && !c.isRunning) await openThread(tripId, latest.id);
+      if (latest && !c.fresh && c.threadId === null && c.messages.length === 0 && !c.isRunning)
+        await openThread(tripId, latest.id);
     },
     deleteThread: async (tripId: number, threadId: number) => {
       await assistantRepo.deleteThread(assistantTargetOf(tripId), threadId);

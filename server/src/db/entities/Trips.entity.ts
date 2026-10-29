@@ -2,6 +2,7 @@ import { Collection, EntityRepositoryType, type Opt, type Ref, defineEntity, p }
 import { TripsRepository } from '../repositories/Trips.repository';
 import { DbTimestampType } from '../types';
 import { AssistantAttachments } from './AssistantAttachments.entity';
+import { AssistantItineraryDrafts } from './AssistantItineraryDrafts.entity';
 import { AssistantThreads } from './AssistantThreads.entity';
 import { BudgetCategoryOrder } from './BudgetCategoryOrder.entity';
 import { BudgetItems } from './BudgetItems.entity';
@@ -59,6 +60,7 @@ export class Trips {
   updated_at?: string | null;
   reminder_sent_for?: string | null;
   assistant_attachments_collection = new Collection<AssistantAttachments>(this);
+  assistant_itinerary_drafts_collection = new Collection<AssistantItineraryDrafts>(this);
   assistant_threads_collection = new Collection<AssistantThreads>(this);
   budget_category_order_collection = new Collection<BudgetCategoryOrder>(this);
   budget_items_collection = new Collection<BudgetItems>(this);
@@ -125,6 +127,7 @@ export const TripsSchema = defineEntity({
     updated_at: p.type(DbTimestampType).nullable().defaultRaw(`CURRENT_TIMESTAMP`),
     reminder_sent_for: p.text().nullable(),
     assistant_attachments_collection: () => p.oneToMany(AssistantAttachments).mappedBy('trip').hidden(),
+    assistant_itinerary_drafts_collection: () => p.oneToMany(AssistantItineraryDrafts).mappedBy('appliedTrip').hidden(),
     assistant_threads_collection: () => p.oneToMany(AssistantThreads).mappedBy('trip').hidden(),
     budget_category_order_collection: () => p.oneToMany(BudgetCategoryOrder).mappedBy('trip').hidden(),
     budget_items_collection: () => p.oneToMany(BudgetItems).mappedBy('trip').hidden(),

@@ -71,6 +71,7 @@ function buildDash(over: Record<string, unknown> = {}): Record<string, unknown> 
     copyTrip: null,
     setCopyTrip: vi.fn(),
     applyCoverUpdate: vi.fn(),
+    newTrip: { available: false, start: vi.fn(), manual: vi.fn() },
     handleCreate: vi.fn(),
     handleUpdate: vi.fn(),
     confirmDelete: vi.fn(),
@@ -153,17 +154,26 @@ describe('MDashboard', () => {
     expect(retryLoad).toHaveBeenCalledTimes(1);
   });
 
-  it('FE-MOB-DASH-006: the empty state opens a blank create sheet', () => {
-    const setShowForm = vi.fn();
-    const setEditingTrip = vi.fn();
-    mocks.dash = buildDash({ setShowForm, setEditingTrip });
+  it('FE-MOB-DASH-006: the empty state uses the shared new-trip action', () => {
+    const start = vi.fn();
+    mocks.dash = buildDash({ newTrip: { available: false, start, manual: vi.fn() } });
     render(<MDashboard />);
 
     expect(screen.getByText('dashboard.emptyTitle')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'dashboard.emptyButton' }));
 
-    expect(setEditingTrip).toHaveBeenCalledWith(null);
-    expect(setShowForm).toHaveBeenCalledWith(true);
+    expect(start).toHaveBeenCalledOnce();
+  });
+
+  it('offers AI planning and a separate manual route when AI is available', () => {
+    const start = vi.fn();
+    const manual = vi.fn();
+    mocks.dash = buildDash({ newTrip: { available: true, start, manual } });
+    render(<MDashboard />);
+    fireEvent.click(screen.getByRole('button', { name: 'assistant.plan.start' }));
+    expect(start).toHaveBeenCalledOnce();
+    fireEvent.click(screen.getByRole('button', { name: 'assistant.plan.manual' }));
+    expect(manual).toHaveBeenCalledOnce();
   });
 
   it('FE-MOB-DASH-007: a still-loading dashboard shows no empty state', () => {

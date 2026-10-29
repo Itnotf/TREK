@@ -96,7 +96,7 @@ describe('the empty home chat', () => {
     render(<Suggestions />);
     const items = screen.getAllByRole('listitem').map((item) => item.textContent);
     expect(items).toHaveLength(HOME_SUGGESTIONS.length);
-    expect(items).toContain('Which trip is next, and what is still open?');
+    expect(items).toContain('Plan a relaxed 5-day road trip from Chengdu to western Sichuan');
     expect(items).toContain('How many countries have I visited?');
     expect(screen.getByRole('list')).toHaveAttribute('data-can-edit', 'true');
   });

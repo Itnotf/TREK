@@ -48,7 +48,7 @@ export default function MDashboard(): React.ReactElement {
     tripFilter, setTripFilter, viewMode, toggleViewMode,
     showForm, setShowForm, editingTrip, setEditingTrip,
     deleteTrip, setDeleteTrip, copyTrip, setCopyTrip, applyCoverUpdate,
-    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    newTrip, handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
   } = useDashboard()
 
   const user = useAuthStore(s => s.user)
@@ -71,7 +71,6 @@ export default function MDashboard(): React.ReactElement {
 
   useEffect(() => { if (isAuthenticated) fetchUnreadCount() }, [isAuthenticated, fetchUnreadCount])
 
-  const openCreate = () => { setEditingTrip(null); setShowForm(true) }
   const openEdit = (trip: DashboardTrip) => { setEditingTrip(trip); setShowForm(true) }
 
   const isArchivedFilter = tripFilter === 'archive'
@@ -156,6 +155,14 @@ export default function MDashboard(): React.ReactElement {
           </button>
         </div>
 
+        {newTrip.available && <div className="mt-3 flex flex-wrap items-center gap-2">
+          {!showEmpty && <button type="button" className="min-h-11 rounded-full bg-accent px-4 py-2 text-body font-semibold text-accent-on" onClick={() => { void newTrip.start() }}>
+            {t('assistant.plan.start')}
+          </button>}
+          <button type="button" className="min-h-11 px-3 text-caption text-content-secondary underline" onClick={newTrip.manual}>
+            {t('assistant.plan.manual')}
+          </button>
+        </div>}
         {showEmpty && (
           <div className="mt-[10px] flex flex-col items-center rounded-[20px] border border-[color:var(--m-gbr)] bg-[color:var(--m-glass)] px-4 py-8 text-center">
             <MDancingTrek scene="dashboard" size={96} className="mb-2" />
@@ -163,11 +170,11 @@ export default function MDashboard(): React.ReactElement {
             <div className="mt-1 font-geist text-[0.6875rem] text-m-muted">{t('dashboard.emptyText')}</div>
             <button
               type="button"
-              onClick={openCreate}
+              onClick={() => { void newTrip.start() }}
               className="mt-4 flex items-center gap-[6px] rounded-full bg-m-act px-4 py-[9px] text-[0.75rem] font-semibold text-m-actfg"
             >
               <Plus size={14} strokeWidth={2.4} />
-              {t('dashboard.emptyButton')}
+              {t(newTrip.available ? 'assistant.plan.start' : 'dashboard.emptyButton')}
             </button>
           </div>
         )}

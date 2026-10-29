@@ -11,6 +11,7 @@ import { useToast } from '../../components/shared/Toast'
 import { getApiErrorMessage } from '../../types'
 import { localIsoToday } from './dashboardModel'
 import { useTripSearch } from './useTripSearch'
+import { useNewTripPlanning } from '../../components/Trips/useNewTripPlanning'
 import type { Trip, TripCreateRequest } from '@trek/shared'
 import {
   type DashboardTrip,
@@ -50,6 +51,7 @@ export function useDashboard() {
   const toast = useToast()
   const { t, locale } = useTranslation()
   const { demoMode, authCheckFailed, loadUser } = useAuthStore()
+  const newTrip = useNewTripPlanning(() => { setEditingTrip(null); setShowForm(true) })
 
   const toggleViewMode = () => {
     setViewMode(prev => {
@@ -61,8 +63,8 @@ export function useDashboard() {
 
   useEffect(() => {
     if (searchParams.get('create') === '1') {
-      setShowForm(true)
       setSearchParams({}, { replace: true })
+      void newTrip.start()
     }
   }, [searchParams])
 
@@ -270,6 +272,6 @@ export function useDashboard() {
     allSubOpen, setAllSubOpen,
     search,
     // actions
-    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    newTrip, handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
   }
 }

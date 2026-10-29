@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Twoje podróże',
   'assistant.home.welcome': 'W czym mogę pomóc?',
-  'assistant.home.placeholder': 'Zapytaj o cokolwiek w sprawie swoich podróży',
+  'assistant.home.placeholder': 'Opisz swoją podróż lub wklej link do przewodnika turystycznego',
   'assistant.home.switch': 'Czat o jednej podróży',
   'assistant.home.back': 'Wróć do wszystkich podróży',
-  'assistant.suggest.homeNext': 'Która podróż jest następna i co jeszcze zostało?',
+  'assistant.suggest.homeNext': 'Zaplanuj spokojną, 5-dniową podróż samochodem z Chengdu do zachodniego Syczuanu',
   'assistant.suggest.homeCompare': 'Porównaj moje nadchodzące podróże',
   'assistant.suggest.homeAtlas': 'Ile krajów odwiedziłem?',
   'assistant.suggest.homeVacay': 'Ile dni urlopu zostało mi w tym roku?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Dziennik',
   'assistant.card.journalChat.open': 'Kontynuuj na czacie tego dziennika',
   'assistant.step.openJournalChat': 'Szukam dziennika',
+  'assistant.plan.start': 'Zaplanuj z AI',
+  'assistant.plan.manual': 'Utwórz ręcznie',
+  'assistant.plan.unavailable': 'Planowanie z AI jest teraz niedostępne. Nadal możesz utworzyć podróż ręcznie.',
+  'assistant.plan.label': 'Szkic podróży',
+  'assistant.plan.version': 'Wersja {version}',
+  'assistant.plan.requirements': 'Twoje preferencje podróży',
+  'assistant.plan.assumptions': 'Sprawdź te założenia',
+  'assistant.plan.overnight': 'Nocleg w: {city}',
+  'assistant.plan.editHint':
+    'Chcesz coś zmienić? Napisz mi na czacie, a zaktualizuję szkic. Zatwierdź go, gdy będzie Ci odpowiadać.',
+  'assistant.plan.stale': 'Poniżej jest nowsza wersja. Zatwierdź najnowszą wersję, aby utworzyć podróż.',
+  'assistant.plan.confirm': 'Zatwierdź i utwórz podróż',
+  'assistant.plan.created': 'Ten szkic został zapisany jako podróż.',
+  'assistant.plan.loadFailed': 'Nie udało się wczytać tego szkicu. Spróbuj ponownie.',
+  'assistant.plan.applyFailed': 'Nie udało się utworzyć podróży. Sprawdź najnowszy szkic i spróbuj ponownie.',
+  'assistant.plan.unverified': 'Dokładna lokalizacja nie została jeszcze zweryfikowana',
 };
 
 export default assistantHome;

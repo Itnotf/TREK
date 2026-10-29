@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Els teus viatges',
   'assistant.home.welcome': 'En què et puc ajudar?',
-  'assistant.home.placeholder': 'Pregunta el que vulguis sobre els teus viatges',
+  'assistant.home.placeholder': 'Descriu el teu viatge o enganxa un enllaç a una guia de viatge',
   'assistant.home.switch': 'Xatejar sobre un viatge',
   'assistant.home.back': 'Tornar a tots els viatges',
-  'assistant.suggest.homeNext': 'Quin és el proper viatge i què queda pendent?',
+  'assistant.suggest.homeNext': 'Planifica una ruta tranquil·la de 5 dies en cotxe de Chengdu a l’oest de Sichuan',
   'assistant.suggest.homeCompare': 'Compara els meus propers viatges',
   'assistant.suggest.homeAtlas': 'Quants països he visitat?',
   'assistant.suggest.homeVacay': 'Quants dies de vacances em queden aquest any?',
@@ -26,6 +26,23 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Diari',
   'assistant.card.journalChat.open': "Continuar al xat d'aquest diari",
   'assistant.step.openJournalChat': 'Buscant el diari',
+  'assistant.plan.start': 'Planifica amb IA',
+  'assistant.plan.manual': 'Crea manualment',
+  'assistant.plan.unavailable':
+    'La planificació amb IA no està disponible ara mateix. Encara pots crear el viatge manualment.',
+  'assistant.plan.label': 'Esborrany del viatge',
+  'assistant.plan.version': 'Versió {version}',
+  'assistant.plan.requirements': 'Les teves preferències de viatge',
+  'assistant.plan.assumptions': 'Revisa aquestes suposicions',
+  'assistant.plan.overnight': 'Nit a {city}',
+  'assistant.plan.editHint':
+    'Vols canviar alguna cosa? Digues-m’ho al xat i actualitzaré l’esborrany. Confirma’l quan t’agradi.',
+  'assistant.plan.stale': 'Més avall hi ha una versió més recent. Confirma l’última versió per crear el viatge.',
+  'assistant.plan.confirm': 'Confirma i crea el viatge',
+  'assistant.plan.created': 'Aquest esborrany s’ha desat com a viatge.',
+  'assistant.plan.loadFailed': 'No s’ha pogut carregar aquest esborrany. Torna-ho a provar.',
+  'assistant.plan.applyFailed': 'No s’ha pogut crear el viatge. Revisa l’últim esborrany i torna-ho a provar.',
+  'assistant.plan.unverified': 'La ubicació exacta encara no s’ha verificat',
 };
 
 export default assistantHome;

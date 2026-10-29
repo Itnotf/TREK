@@ -168,6 +168,15 @@ describe('AssistantWindow', () => {
     expect(screen.queryByRole('button', { name: 'go on in Lisbon' })).not.toBeInTheDocument();
   });
 
+  it('a fresh planning request returns an already open trip chat to the home chat', () => {
+    seed({ open: true, minimized: false });
+    render(<AssistantWindow trip={null} />);
+    fireEvent.click(screen.getByRole('button', { name: 'go on in Lisbon' }));
+    expect(screen.getByText('chat 9 Lisbon')).toBeInTheDocument();
+    act(() => useAssistantStore.getState().newThread(0));
+    expect(screen.getByText('chat 0 Your travels')).toBeInTheDocument();
+  });
+
   it('FE-AI-WIN-014: minimized outside a trip, the round button brings the home chat back', () => {
     seed({ open: true, minimized: true });
     render(<AssistantWindow trip={null} />);

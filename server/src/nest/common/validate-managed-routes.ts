@@ -99,6 +99,8 @@ export const MANAGED_ROUTE_ALLOW_LIST: string[] = [
   'AssistantController.thread',
   'AssistantController.threads',
   'AssistantController.undo',
+  'AssistantItineraryController.apply',
+  'AssistantItineraryController.get',
   'AssistantRendersController.upload',
   'AuthController.createMcpToken',
   'AuthController.validateKeys',

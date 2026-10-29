@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Tvoje cesty',
   'assistant.home.welcome': 'S čím ti můžu pomoct?',
-  'assistant.home.placeholder': 'Zeptej se na cokoli o svých cestách',
+  'assistant.home.placeholder': 'Popište svou cestu nebo vložte odkaz na cestovatelského průvodce',
   'assistant.home.switch': 'Chatovat o jedné cestě',
   'assistant.home.back': 'Zpět na všechny cesty',
-  'assistant.suggest.homeNext': 'Která cesta je na řadě a co ještě zbývá?',
+  'assistant.suggest.homeNext': 'Naplánuj pohodový pětidenní výlet autem z Čcheng-tu do západního S’-čchuanu',
   'assistant.suggest.homeCompare': 'Porovnej moje nadcházející cesty',
   'assistant.suggest.homeAtlas': 'Kolik zemí jsem navštívil?',
   'assistant.suggest.homeVacay': 'Kolik dní dovolené mi letos zbývá?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Deník',
   'assistant.card.journalChat.open': 'Pokračovat v chatu tohoto deníku',
   'assistant.step.openJournalChat': 'Hledám deník',
+  'assistant.plan.start': 'Plánovat s AI',
+  'assistant.plan.manual': 'Vytvořit ručně',
+  'assistant.plan.unavailable': 'Plánování s AI teď není dostupné. Cestu můžete stále vytvořit ručně.',
+  'assistant.plan.label': 'Návrh cesty',
+  'assistant.plan.version': 'Verze {version}',
+  'assistant.plan.requirements': 'Vaše cestovní preference',
+  'assistant.plan.assumptions': 'Zkontrolujte tyto předpoklady',
+  'assistant.plan.overnight': 'Nocleh v místě {city}',
+  'assistant.plan.editHint':
+    'Chcete něco změnit? Napište mi do chatu a návrh upravím. Potvrďte ho, až budete spokojeni.',
+  'assistant.plan.stale': 'Níže je k dispozici novější verze. Pro vytvoření cesty potvrďte nejnovější verzi.',
+  'assistant.plan.confirm': 'Potvrdit a vytvořit cestu',
+  'assistant.plan.created': 'Tento návrh byl uložen jako cesta.',
+  'assistant.plan.loadFailed': 'Tento návrh se nepodařilo načíst. Zkuste to znovu.',
+  'assistant.plan.applyFailed': 'Cestu se nepodařilo vytvořit. Zkontrolujte nejnovější návrh a zkuste to znovu.',
+  'assistant.plan.unverified': 'Přesná poloha zatím nebyla ověřena',
 };
 
 export default assistantHome;

@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Sinu reisid',
   'assistant.home.welcome': 'Millega saan aidata?',
-  'assistant.home.placeholder': 'Küsi oma reiside kohta mida iganes',
+  'assistant.home.placeholder': 'Kirjelda oma reisi või kleebi reisijuhi link',
   'assistant.home.switch': 'Vestle ühe reisi üle',
   'assistant.home.back': 'Tagasi kõigi reiside juurde',
-  'assistant.suggest.homeNext': 'Milline reis on järgmine ja mis on veel tegemata?',
+  'assistant.suggest.homeNext': 'Koosta rahulik 5-päevane autoreis Chengdust Sichuani lääneossa',
   'assistant.suggest.homeCompare': 'Võrdle mu eelseisvaid reise',
   'assistant.suggest.homeAtlas': 'Mitu riiki olen külastanud?',
   'assistant.suggest.homeVacay': 'Mitu puhkusepäeva mul tänavu veel on?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Päevik',
   'assistant.card.journalChat.open': 'Jätka selle päeviku vestluses',
   'assistant.step.openJournalChat': 'Otsin päeviku üles',
+  'assistant.plan.start': 'Planeeri tehisaruga',
+  'assistant.plan.manual': 'Loo käsitsi',
+  'assistant.plan.unavailable': 'Tehisaruga planeerimine pole praegu saadaval. Saad reisi endiselt käsitsi luua.',
+  'assistant.plan.label': 'Reisi kavand',
+  'assistant.plan.version': 'Kavandi versioon {version}',
+  'assistant.plan.requirements': 'Sinu reisieelistused',
+  'assistant.plan.assumptions': 'Kontrolli neid eeldusi',
+  'assistant.plan.overnight': 'Ööbimine: {city}',
+  'assistant.plan.editHint':
+    'Soovid midagi muuta? Kirjuta mulle vestluses ja uuendan kavandit. Kinnita see, kui oled rahul.',
+  'assistant.plan.stale': 'Allpool on saadaval uuem versioon. Reisi loomiseks kinnita uusim versioon.',
+  'assistant.plan.confirm': 'Kinnita ja loo reis',
+  'assistant.plan.created': 'See kavand on reisina salvestatud.',
+  'assistant.plan.loadFailed': 'Seda kavandit ei saanud laadida. Proovi uuesti.',
+  'assistant.plan.applyFailed': 'Reisi ei saanud luua. Kontrolli uusimat kavandit ja proovi uuesti.',
+  'assistant.plan.unverified': 'Täpset asukohta pole veel kontrollitud',
 };
 
 export default assistantHome;

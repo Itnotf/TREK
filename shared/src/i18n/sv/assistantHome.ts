@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Dina resor',
   'assistant.home.welcome': 'Vad kan jag hjälpa till med?',
-  'assistant.home.placeholder': 'Fråga vad som helst om dina resor',
+  'assistant.home.placeholder': 'Beskriv din resa eller klistra in en länk till en reseguide',
   'assistant.home.switch': 'Chatta om en resa',
   'assistant.home.back': 'Tillbaka till alla resor',
-  'assistant.suggest.homeNext': 'Vilken resa är nästa, och vad återstår?',
+  'assistant.suggest.homeNext': 'Planera en lugn bilresa på 5 dagar från Chengdu till västra Sichuan',
   'assistant.suggest.homeCompare': 'Jämför mina kommande resor',
   'assistant.suggest.homeAtlas': 'Hur många länder har jag besökt?',
   'assistant.suggest.homeVacay': 'Hur många semesterdagar har jag kvar i år?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Dagbok',
   'assistant.card.journalChat.open': 'Fortsätt i den här dagbokens chatt',
   'assistant.step.openJournalChat': 'Letar upp dagboken',
+  'assistant.plan.start': 'Planera med AI',
+  'assistant.plan.manual': 'Skapa manuellt',
+  'assistant.plan.unavailable': 'AI-planering är inte tillgänglig just nu. Du kan fortfarande skapa din resa manuellt.',
+  'assistant.plan.label': 'Reseutkast',
+  'assistant.plan.version': 'Utkast {version}',
+  'assistant.plan.requirements': 'Dina reseönskemål',
+  'assistant.plan.assumptions': 'Kontrollera dessa antaganden',
+  'assistant.plan.overnight': 'Övernattning i {city}',
+  'assistant.plan.editHint':
+    'Vill du ändra något? Säg till i chatten så uppdaterar jag utkastet. Bekräfta när du är nöjd.',
+  'assistant.plan.stale': 'Det finns en nyare version nedan. Bekräfta den senaste versionen för att skapa din resa.',
+  'assistant.plan.confirm': 'Bekräfta och skapa resa',
+  'assistant.plan.created': 'Det här utkastet har sparats som en resa.',
+  'assistant.plan.loadFailed': 'Det gick inte att läsa in utkastet. Försök igen.',
+  'assistant.plan.applyFailed': 'Det gick inte att skapa resan. Kontrollera det senaste utkastet och försök igen.',
+  'assistant.plan.unverified': 'Den exakta platsen har inte verifierats ännu',
 };
 
 export default assistantHome;

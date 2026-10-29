@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Tvoje cesty',
   'assistant.home.welcome': 'S čím ti môžem pomôcť?',
-  'assistant.home.placeholder': 'Opýtaj sa čokoľvek o svojich cestách',
+  'assistant.home.placeholder': 'Opíšte svoju cestu alebo vložte odkaz na cestovateľského sprievodcu',
   'assistant.home.switch': 'Chatovať o jednej ceste',
   'assistant.home.back': 'Späť na všetky cesty',
-  'assistant.suggest.homeNext': 'Ktorá cesta je na rade a čo ešte zostáva?',
+  'assistant.suggest.homeNext': 'Naplánuj pohodový päťdňový výlet autom z Čcheng-tu do západného S’-čchuanu',
   'assistant.suggest.homeCompare': 'Porovnaj moje nadchádzajúce cesty',
   'assistant.suggest.homeAtlas': 'Koľko krajín som navštívil?',
   'assistant.suggest.homeVacay': 'Koľko dní dovolenky mi tento rok zostáva?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Denník',
   'assistant.card.journalChat.open': 'Pokračovať v chate tohto denníka',
   'assistant.step.openJournalChat': 'Hľadám denník',
+  'assistant.plan.start': 'Plánovať s AI',
+  'assistant.plan.manual': 'Vytvoriť ručne',
+  'assistant.plan.unavailable': 'Plánovanie s AI momentálne nie je dostupné. Cestu môžete stále vytvoriť ručne.',
+  'assistant.plan.label': 'Návrh cesty',
+  'assistant.plan.version': 'Verzia {version}',
+  'assistant.plan.requirements': 'Vaše cestovné preferencie',
+  'assistant.plan.assumptions': 'Skontrolujte tieto predpoklady',
+  'assistant.plan.overnight': 'Nocľah v mieste {city}',
+  'assistant.plan.editHint':
+    'Chcete niečo zmeniť? Napíšte mi do četu a návrh upravím. Potvrďte ho, keď budete spokojní.',
+  'assistant.plan.stale': 'Nižšie je k dispozícii novšia verzia. Na vytvorenie cesty potvrďte najnovšiu verziu.',
+  'assistant.plan.confirm': 'Potvrdiť a vytvoriť cestu',
+  'assistant.plan.created': 'Tento návrh bol uložený ako cesta.',
+  'assistant.plan.loadFailed': 'Tento návrh sa nepodarilo načítať. Skúste to znova.',
+  'assistant.plan.applyFailed': 'Cestu sa nepodarilo vytvoriť. Skontrolujte najnovší návrh a skúste to znova.',
+  'assistant.plan.unverified': 'Presná poloha zatiaľ nebola overená',
 };
 
 export default assistantHome;

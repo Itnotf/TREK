@@ -128,10 +128,19 @@ describe('useDashboard', () => {
     expect(result.current.gridTrips.map(t => t.title)).toEqual(['Old Rome']);
   });
 
-  it('FE-HOOK-DASH-003: ?create=1 opens the form and clears the query', async () => {
+  it('FE-HOOK-DASH-003: ?create=1 falls back to the manual form when AI is unavailable', async () => {
     const { result } = await mountLoaded('/dashboard?create=1');
 
     await waitFor(() => expect(result.current.showForm).toBe(true));
+  });
+
+  it('the mobile create shortcut starts a fresh AI conversation when available', async () => {
+    useAssistantStore.setState({ status: ASSISTANT_STATUS });
+    const { result } = await mountLoaded('/dashboard?create=1');
+    expect(result.current.showForm).toBe(false);
+    expect(result.current.location.search).toBe('');
+    expect(useAssistantStore.getState().window.open).toBe(true);
+    expect(chatOf(useAssistantStore.getState(), 0)).toMatchObject({ fresh: true, threadId: null, messages: [], draft: '' });
   });
 
   it('FE-HOOK-DASH-004: a failing trip load raises the error banner and toasts', async () => {

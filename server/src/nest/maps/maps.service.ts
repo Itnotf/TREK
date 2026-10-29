@@ -45,6 +45,7 @@ export { withPhotoFetchSlot } from './photo-fetch-slot';
 export type { BrandLogo, CommonsCandidate } from './providers/wikimedia.client';
 export { GOOGLE_SHORT_HOSTS, isGoogleMapsHost } from '../common/google-maps-hosts';
 export { type KeyedProvider } from './places-provider.selector';
+export { isGooglePlaceId, OSM_PLACE_ID } from './maps.helpers';
 
 // Places near a point (#976): cached longer than the POI boxes, because the
 // likely caller is an import asking the same photo location again, and Google

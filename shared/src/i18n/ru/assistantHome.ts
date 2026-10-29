@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Ваши поездки',
   'assistant.home.welcome': 'Чем могу помочь?',
-  'assistant.home.placeholder': 'Спросите что угодно о своих поездках',
+  'assistant.home.placeholder': 'Опишите поездку или вставьте ссылку на путеводитель',
   'assistant.home.switch': 'Чат об одной поездке',
   'assistant.home.back': 'Назад ко всем поездкам',
-  'assistant.suggest.homeNext': 'Какая поездка следующая и что ещё не готово?',
+  'assistant.suggest.homeNext': 'Спланируй спокойное автопутешествие на 5 дней из Чэнду по западному Сычуаню',
   'assistant.suggest.homeCompare': 'Сравни мои предстоящие поездки',
   'assistant.suggest.homeAtlas': 'Сколько стран я посетил?',
   'assistant.suggest.homeVacay': 'Сколько дней отпуска у меня осталось в этом году?',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Дневник',
   'assistant.card.journalChat.open': 'Продолжить в чате этого дневника',
   'assistant.step.openJournalChat': 'Ищу дневник',
+  'assistant.plan.start': 'Спланировать с ИИ',
+  'assistant.plan.manual': 'Создать вручную',
+  'assistant.plan.unavailable': 'Планирование с ИИ сейчас недоступно. Вы по-прежнему можете создать поездку вручную.',
+  'assistant.plan.label': 'Черновик поездки',
+  'assistant.plan.version': 'Версия {version}',
+  'assistant.plan.requirements': 'Ваши пожелания к поездке',
+  'assistant.plan.assumptions': 'Проверьте эти предположения',
+  'assistant.plan.overnight': 'Ночёвка: {city}',
+  'assistant.plan.editHint':
+    'Хотите что-то изменить? Напишите мне в чате, и я обновлю черновик. Подтвердите его, когда будете довольны.',
+  'assistant.plan.stale': 'Ниже доступна более новая версия. Чтобы создать поездку, подтвердите последнюю версию.',
+  'assistant.plan.confirm': 'Подтвердить и создать поездку',
+  'assistant.plan.created': 'Этот черновик сохранён как поездка.',
+  'assistant.plan.loadFailed': 'Не удалось загрузить этот черновик. Попробуйте ещё раз.',
+  'assistant.plan.applyFailed': 'Не удалось создать поездку. Проверьте последний черновик и попробуйте ещё раз.',
+  'assistant.plan.unverified': 'Точное расположение ещё не проверено',
 };
 
 export default assistantHome;

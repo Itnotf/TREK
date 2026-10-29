@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'あなたの旅',
   'assistant.home.welcome': '何をお手伝いしましょうか？',
-  'assistant.home.placeholder': '旅について何でも質問',
+  'assistant.home.placeholder': '旅行の希望を話すか、旅行ガイドのリンクを貼り付けてください',
   'assistant.home.switch': 'ひとつの旅についてチャット',
   'assistant.home.back': 'すべての旅に戻る',
-  'assistant.suggest.homeNext': '次の旅はどれで、まだ何が残っていますか？',
+  'assistant.suggest.homeNext': '成都発、四川省西部を巡るゆったりとした5日間のドライブ旅行を計画して',
   'assistant.suggest.homeCompare': '今後の旅を比べて',
   'assistant.suggest.homeAtlas': 'これまでに何か国を訪れましたか？',
   'assistant.suggest.homeVacay': '今年の休暇はあと何日残っていますか？',
@@ -26,6 +26,22 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'ジャーナル',
   'assistant.card.journalChat.open': 'このジャーナルのチャットで続ける',
   'assistant.step.openJournalChat': 'ジャーナルを探しています',
+  'assistant.plan.start': 'AIで旅行を計画',
+  'assistant.plan.manual': '手動で作成',
+  'assistant.plan.unavailable': '現在、AIによる旅行計画は利用できません。手動で旅行を作成することはできます。',
+  'assistant.plan.label': '旅行プランの下書き',
+  'assistant.plan.version': '第{version}版',
+  'assistant.plan.requirements': '旅行の希望',
+  'assistant.plan.assumptions': 'この前提条件を確認してください',
+  'assistant.plan.overnight': '{city}で宿泊',
+  'assistant.plan.editHint':
+    '変更したいことがあれば、チャットで教えてください。下書きを更新します。内容に満足したら確定してください。',
+  'assistant.plan.stale': '下に新しい版があります。旅行を作成するには、最新版を確定してください。',
+  'assistant.plan.confirm': '確定して旅行を作成',
+  'assistant.plan.created': 'この下書きは旅行として保存されました。',
+  'assistant.plan.loadFailed': 'この下書きを読み込めませんでした。もう一度お試しください。',
+  'assistant.plan.applyFailed': '旅行を作成できませんでした。最新の下書きを確認して、もう一度お試しください。',
+  'assistant.plan.unverified': '正確な場所はまだ確認できていません',
 };
 
 export default assistantHome;

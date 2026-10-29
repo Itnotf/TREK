@@ -5,6 +5,7 @@ import type { AiConnectionsTable } from './AiConnections.table';
 import type { AppSettingsTable } from './AppSettings.table';
 import type { AssignmentParticipantsTable } from './AssignmentParticipants.table';
 import type { AssistantAttachmentsTable } from './AssistantAttachments.table';
+import type { AssistantItineraryDraftsTable } from './AssistantItineraryDrafts.table';
 import type { AssistantMessagesTable } from './AssistantMessages.table';
 import type { AssistantThreadsTable } from './AssistantThreads.table';
 import type { AssistantToolCallsTable } from './AssistantToolCalls.table';
@@ -175,6 +176,7 @@ export interface DB {
   app_settings: AppSettingsTable;
   assignment_participants: AssignmentParticipantsTable;
   assistant_attachments: AssistantAttachmentsTable;
+  assistant_itinerary_drafts: AssistantItineraryDraftsTable;
   assistant_messages: AssistantMessagesTable;
   assistant_threads: AssistantThreadsTable;
   assistant_tool_calls: AssistantToolCallsTable;
