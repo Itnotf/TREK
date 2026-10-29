@@ -156,7 +156,7 @@ export default function MDashboard(): React.ReactElement {
         </div>
 
         {newTrip.available && <div className="mt-3 flex flex-wrap items-center gap-2">
-          {!showEmpty && <button type="button" className="min-h-11 rounded-full bg-accent px-4 py-2 text-body font-semibold text-accent-on" onClick={() => { void newTrip.start() }}>
+          {!showEmpty && <button type="button" className="min-h-11 rounded-full bg-accent px-4 py-2 text-body font-semibold text-accent-text" onClick={() => { void newTrip.start() }}>
             {t('assistant.plan.start')}
           </button>}
           <button type="button" className="min-h-11 px-3 text-caption text-content-secondary underline" onClick={newTrip.manual}>

@@ -375,9 +375,17 @@ export function toThreadMessages(
   now: Date,
 ): AssistantMessage[] {
   const messages: AssistantMessage[] = [];
+  const shownDrafts = new Set<number>();
   let previousRole: string | null = null;
   for (const row of rows) {
-    const parts = currentParts(partsOf(row), calls, now);
+    const parts = currentParts(partsOf(row), calls, now).filter((part) => {
+      if (part.type !== 'data-trek-card' || part.data.card.kind !== 'tripPlan') return true;
+      // Earlier versions also displayed a card whenever the model read a draft.
+      const id = part.data.card.draftId;
+      if (shownDrafts.has(id)) return false;
+      shownDrafts.add(id);
+      return true;
+    });
     const last = messages[messages.length - 1];
     if (row.role === 'assistant' && previousRole === 'assistant' && last) {
       last.parts.push(...parts);

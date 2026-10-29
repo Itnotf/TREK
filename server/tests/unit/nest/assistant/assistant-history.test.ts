@@ -623,6 +623,29 @@ describe('toChatHistory: calls the model made of the server tools (#2845)', () =
 });
 
 describe('toThreadMessages', () => {
+  it('shows each saved itinerary version once when old history contains repeated draft reads', () => {
+    const card = (id: number, toolCallId: string): AssistantMessagePart => ({
+      type: 'data-trek-card',
+      data: {
+        toolCallId,
+        card: { kind: 'tripPlan', draftId: id, revision: id, title: '成都两日游', summary: '轻松自驾', dayCount: 2 },
+      },
+    });
+    const first = card(1, 'save_v1');
+    const latest = card(2, 'save_v2');
+    const text: AssistantMessagePart = { type: 'text', text: 'Updated the second day.' };
+    const rows = [
+      row('assistant', [first]),
+      row('user', [{ type: 'text', text: 'Leave later.' }]),
+      row('assistant', [card(1, 'read_v1'), latest, text]),
+      row('assistant', [card(2, 'read_v2')]),
+    ];
+    const messages = toThreadMessages(rows, new Map(), NOW);
+    expect(messages[0].parts).toEqual([first]);
+    expect(messages[2].parts).toEqual([latest, text]);
+    expect(toThreadMessages(rows, new Map(), NOW)).toEqual(messages);
+  });
+
   it('ASTHIS-010: the steps of one answer are one message under the first row id', () => {
     nextId = 10;
     const rows = [

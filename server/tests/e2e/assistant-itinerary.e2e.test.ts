@@ -209,6 +209,7 @@ describe('assistant itinerary over HTTP', () => {
     );
     const secondTurn = await chat(user.id, threadId, '第二天晚一点出发，其余安排保留。');
     const latestCard = savedCard(secondTurn, 'save_v2');
+    expect(secondTurn.filter((chunk) => chunk.type === 'data-trek-card')).toHaveLength(1);
     expect(latestCard).toMatchObject({ revision: 2, dayCount: 2, title: revisedPlan.title });
     expect(latestCard.draftId).not.toBe(firstCard.draftId);
     expect(replies).toHaveLength(0);
@@ -238,7 +239,7 @@ describe('assistant itinerary over HTTP', () => {
       .messages.flatMap((message) => message.parts)
       .filter((part) => part.type === 'data-trek-card')
       .map((part) => part.data.card);
-    expect(cards).toEqual(expect.arrayContaining([firstCard, latestCard]));
+    expect(cards).toEqual([firstCard, latestCard]);
 
     expect((await request(app.getHttpServer()).get(latestPath)).status).toBe(401);
     expect((await request(app.getHttpServer()).post(`${latestPath}/apply`).send({ revision: 2 })).status).toBe(401);
@@ -275,7 +276,10 @@ describe('assistant itinerary over HTTP', () => {
       expect.objectContaining({
         title: '成都到乐山',
         date: '2027-01-01',
-        notes: expect.stringContaining(revisedPlan.days[1].notes),
+        notes_items: [
+          expect.objectContaining({ text: revisedPlan.days[1].notes }),
+          expect.objectContaining({ text: 'Overnight / 住宿城市: 乐山' }),
+        ],
         assignments: [
           expect.objectContaining({
             order_index: 0,

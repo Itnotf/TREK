@@ -1,6 +1,7 @@
 import { AssistantItineraryDrafts } from '../../../../src/db/entities/AssistantItineraryDrafts.entity';
 import { AssistantThreads } from '../../../../src/db/entities/AssistantThreads.entity';
 import { DayAssignments } from '../../../../src/db/entities/DayAssignments.entity';
+import { DayNotes } from '../../../../src/db/entities/DayNotes.entity';
 import { Days } from '../../../../src/db/entities/Days.entity';
 import { Places } from '../../../../src/db/entities/Places.entity';
 import { RoadtripPreferences } from '../../../../src/db/entities/RoadtripPreferences.entity';
@@ -9,6 +10,7 @@ import { AssignmentsService } from '../../../../src/nest/assignments/assignments
 import { AssistantItineraryModule } from '../../../../src/nest/assistant/assistant-itinerary.module';
 import { AssistantItineraryService } from '../../../../src/nest/assistant/assistant-itinerary.service';
 import { planningPort } from '../../../../src/nest/assistant/assistant-planning-tools';
+import { DaysService } from '../../../../src/nest/days/days.service';
 import { GooglePlacesClient } from '../../../../src/nest/maps/providers/google-places.provider';
 import { PermissionsService } from '../../../../src/nest/permissions/permissions.service';
 import { createSnapshotTestDb } from '../../../helpers/db-mock';
@@ -17,7 +19,7 @@ import { makeUser } from '../../../helpers/factories/users';
 import { resetTestDb } from '../../../helpers/test-db';
 import { createTestModule, type TestModule } from '../../../helpers/test-module';
 import { MikroORM } from '@mikro-orm/core';
-import type { ItineraryPlan } from '@trek/shared';
+import { dayNoteCreateRequestSchema, type ItineraryPlan } from '@trek/shared';
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -163,7 +165,11 @@ describe('AssistantItineraryService', () => {
     const days = await findRows(orm, Days, { trip_id: trip.id }, { day_number: 'asc' });
     expect(days).toHaveLength(2);
     expect(days[0]).toMatchObject({ title: '成都慢游', date: '2026-12-31', default_transport_mode: 'driving' });
-    expect(days[0].notes).toContain('成都');
+    const visibleDays = await t.get(DaysService).list(trip.id);
+    expect(visibleDays.days[0].notes_items.map((note) => note.text)).toEqual([
+      '午后留出休息时间。',
+      'Overnight / 住宿城市: 成都',
+    ]);
     expect(days[1]).toMatchObject({ title: '成都到乐山', date: '2027-01-01' });
     const places = await findRows(orm, Places, { trip_id: trip.id }, { id: 'asc' });
     expect(places).toHaveLength(3);
@@ -265,6 +271,30 @@ describe('AssistantItineraryService', () => {
     ]);
   });
 
+  it('keeps long daily instructions editable without losing text or splitting emoji', async () => {
+    const c = await conversation();
+    const itinerary = plan();
+    itinerary.days[0].notes = `${'行'.repeat(499)}🧳${'休'.repeat(499)}结束`;
+    itinerary.days[1].notes = '';
+    itinerary.days[1].overnight_city = '';
+    const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
+    const { trip } = await service.apply(c.userId, saved.id, { revision: 1 });
+    const { days } = await t.get(DaysService).list(trip.id);
+    const notes = days[0].notes_items;
+    expect(notes).toHaveLength(4);
+    expect(
+      notes
+        .slice(0, -1)
+        .map((note) => note.text)
+        .join(''),
+    ).toBe(itinerary.days[0].notes);
+    expect(notes.at(-1)?.text).toBe('Overnight / 住宿城市: 成都');
+    expect(notes.map((note) => note.sort_order)).toEqual([0, 1, 2, 3]);
+    expect(notes.every((note) => dayNoteCreateRequestSchema.safeParse(note).success)).toBe(true);
+    expect(() => notes.map((note) => encodeURIComponent(note.text))).not.toThrow();
+    expect(days[1].notes_items).toEqual([]);
+  });
+
   it('keeps the explicit driving mode when no vehicle preferences were supplied', async () => {
     const c = await conversation();
     const { roadtrip_preferences: _preferences, ...withoutPreferences } = plan();
@@ -286,6 +316,7 @@ describe('AssistantItineraryService', () => {
     expect(first.trip).toMatchObject({ start_date: null, end_date: null, day_count: 2 });
     expect(await service.apply(c.userId, saved.id, { revision: 1 })).toEqual(first);
     expect(await findRows(t.get(MikroORM), Trips, {})).toHaveLength(1);
+    expect(await findRows(t.get(MikroORM), DayNotes, {})).toHaveLength(4);
     expect(t.realtime.broadcastToUserMock).toHaveBeenCalledTimes(1);
     await expect(service.save(c.userId, c.threadId, { base_revision: 1, plan: plan() })).rejects.toMatchObject({
       status: 409,
@@ -336,6 +367,7 @@ describe('AssistantItineraryService', () => {
     const orm = t.get(MikroORM);
     expect(await findRows(orm, Trips, {})).toHaveLength(0);
     expect(await findRows(orm, Days, {})).toHaveLength(0);
+    expect(await findRows(orm, DayNotes, {})).toHaveLength(0);
     expect(await findRows(orm, Places, {})).toHaveLength(0);
     expect(await findRows(orm, DayAssignments, {})).toHaveLength(0);
     expect(await findRows(orm, RoadtripPreferences, {})).toHaveLength(0);

@@ -2,6 +2,7 @@ import { AssistantItineraryDrafts } from '../../db/entities/AssistantItineraryDr
 import { AssistantThreads } from '../../db/entities/AssistantThreads.entity';
 import { AddonsModule } from '../addons/addons.module';
 import { AssignmentsDomainModule } from '../assignments/assignments-domain.module';
+import { DayNotesModule } from '../day-notes/day-notes.module';
 import { DaysModule } from '../days/days.module';
 import { McpSharedModule } from '../mcp-shared/mcp-shared.module';
 import { PermissionsModule } from '../permissions/permissions.module';
@@ -17,6 +18,7 @@ import { Module } from '@nestjs/common';
   imports: [
     AddonsModule,
     AssignmentsDomainModule,
+    DayNotesModule,
     DaysModule,
     McpSharedModule,
     PermissionsModule,

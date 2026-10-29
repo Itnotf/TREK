@@ -11,6 +11,7 @@ import { decodeJsonResult, encodeJson } from '../../utils/json-column';
 import { AssignmentsService } from '../assignments/assignments.service';
 import { DomainError } from '../common/domain-error';
 import { UnitOfWork } from '../database/unit-of-work';
+import { DayNotesService } from '../day-notes/day-notes.service';
 import { DaysService } from '../days/days.service';
 import { isGooglePlaceId, OSM_PLACE_ID } from '../maps/maps.service';
 import { McpToolGuardsService } from '../mcp-shared/mcp-tool-guards.service';
@@ -22,6 +23,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import {
   addIsoDays,
+  dayNoteCreateRequestSchema,
   itineraryApplyRequestSchema,
   itinerarySaveRequestSchema,
   tripSchema,
@@ -40,6 +42,7 @@ export class AssistantItineraryService {
     private readonly uow: UnitOfWork,
     private readonly trips: TripsService,
     private readonly days: DaysService,
+    private readonly dayNotes: DayNotesService,
     private readonly places: PlacesService,
     private readonly assignments: AssignmentsService,
     private readonly permissions: PermissionsService,
@@ -115,10 +118,11 @@ export class AssistantItineraryService {
         const day = days[index];
         await this.days.update(day.id, day, {
           title: dayPlan.title,
-          notes: [dayPlan.notes, dayPlan.overnight_city ? `Overnight / 住宿城市: ${dayPlan.overnight_city}` : '']
-            .filter(Boolean)
-            .join('\n\n'),
         });
+        await itineraryNotes(dayPlan).reduce<Promise<void>>(async (previousNote, text, order) => {
+          await previousNote;
+          await this.dayNotes.create(day.id, tripId, text, undefined, undefined, order);
+        }, Promise.resolve());
         await this.days.setDefaultTransportMode(day.id, plan.transport_mode);
         await dayPlan.stops.reduce<Promise<void>>(async (previousStop, stop) => {
           await previousStop;
@@ -179,6 +183,24 @@ export class AssistantItineraryService {
     );
     if (allowed.includes(false)) throw new DomainError(403, 'No permission to create this itinerary');
   }
+}
+
+function itineraryNotes(day: ItineraryPlan['days'][number]): string[] {
+  const maxLength = dayNoteCreateRequestSchema.shape.text.maxLength ?? 500;
+  return [day.notes, day.overnight_city ? `Overnight / 住宿城市: ${day.overnight_city}` : ''].flatMap((text) => {
+    const chunks: string[] = [];
+    let chunk = '';
+    // Saved notes must fit the same editable limit as notes entered by a user.
+    for (const character of text.trim()) {
+      if (chunk.length + character.length > maxLength) {
+        if (chunk.trim()) chunks.push(chunk);
+        chunk = '';
+      }
+      chunk += character;
+    }
+    if (chunk.trim()) chunks.push(chunk);
+    return chunks;
+  });
 }
 
 function tripDescription(plan: ItineraryPlan): string {

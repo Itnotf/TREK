@@ -151,7 +151,7 @@ function PlanDraft({ card }: { card: TripPlanCard }) {
           onClick={() => {
             void state.confirm();
           }}
-          className="mt-3 min-h-11 w-full rounded-xl bg-accent px-4 py-2 text-body font-semibold text-accent-on disabled:opacity-50"
+          className="mt-3 min-h-11 w-full rounded-xl bg-accent px-4 py-2 text-body font-semibold text-accent-text disabled:opacity-50"
         >
           {t(state.applying ? 'common.saving' : created ? 'assistant.card.common.open' : 'assistant.plan.confirm')}
         </button>

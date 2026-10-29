@@ -1,6 +1,6 @@
 import { OPEN_TRIP_CHAT_TOOL, phaseOf } from '../../assistant-home';
 import { OPEN_JOURNEY_CHAT_TOOL } from '../../assistant-home-journeys';
-import { GET_ITINERARY_TOOL, SAVE_ITINERARY_TOOL } from '../../assistant-planning-tools';
+import { SAVE_ITINERARY_TOOL } from '../../assistant-planning-tools';
 import type { AnswerInput, DomainCards } from '../card-types';
 import { itineraryDraftResponseSchema, journalChatCardSchema, tripChatCardSchema, type TrekCard } from '@trek/shared';
 
@@ -55,7 +55,6 @@ export const HOME_CARDS: DomainCards = {
     [OPEN_TRIP_CHAT_TOOL]: { answer: tripChatAnswer },
     [OPEN_JOURNEY_CHAT_TOOL]: { answer: journalChatAnswer },
     [SAVE_ITINERARY_TOOL]: { answer: tripPlanAnswer },
-    [GET_ITINERARY_TOOL]: { answer: tripPlanAnswer },
   },
 };
 
