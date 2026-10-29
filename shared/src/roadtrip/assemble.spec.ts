@@ -15,7 +15,7 @@
 import { assembleRoadtrip } from './assemble';
 import type { DayWindow } from './dayWindow';
 import { oneNightPerStay, seatNightBookends } from './nightBookends';
-import type { PlanDay, RoadtripStop, RoutedLeg, SnappedWaypoint } from './planning-types';
+import type { PlanDay, RoadtripStop, RoutedLeg, SnappedWaypoint, UnlocatedActivity } from './planning-types';
 import { standsAsDay } from './roadtripModel';
 
 import { describe, it, expect } from 'vitest';
@@ -58,13 +58,19 @@ const stopKey = (s: RoadtripStop): string =>
   `${s.lat.toFixed(5)},${s.lng.toFixed(5)},${s.legMode ?? ''},${s.incomingLegMode ?? ''}`;
 const legKey = (from: RoadtripStop, to: RoadtripStop): string => `${stopKey(from)}>${stopKey(to)}`;
 
-function assemble(stops: RoadtripStop[], legs: number[], window: DayWindow | null = null) {
+function assemble(
+  stops: RoadtripStop[],
+  legs: number[],
+  window: DayWindow | null = null,
+  unlocatedActivities: UnlocatedActivity[] = [],
+) {
   const day: PlanDay = { dayId: 1, dayNumber: 1, date: '2026-06-01', title: null, stops };
   const allLegs: Record<string, RoutedLeg> = {};
   legs.forEach((km, i) => {
     allLegs[legKey(stops[i]!, stops[i + 1]!)] = leg(km);
   });
   return assembleRoadtrip({
+    unlocatedActivities,
     plan: [day],
     quietDays: [],
     window,
@@ -81,6 +87,41 @@ function assemble(stops: RoadtripStop[], legs: number[], window: DayWindow | nul
     labels: { start: 'start', end: 'end' },
   });
 }
+
+describe('unlocated daily activities', () => {
+  const lunch: UnlocatedActivity = {
+    assignmentId: 500,
+    dayId: 1,
+    dayNumber: 1,
+    name: 'Lunch, restaurant to choose',
+    time: '12:00',
+    leaveAt: '12:50',
+    dwellMinutes: 50,
+  };
+
+  it('retains the meal occupancy and refuses a route that would skip it', () => {
+    const stops = [stop({ ownerIndex: 0 }), stop({ ownerIndex: 1 })];
+    const routes = assemble(stops, [30], { start: 480, end: 1080 }, [lunch]);
+    expect(routes.unlocatedActivities).toEqual([lunch]);
+    expect(routes.unlocatedDwellMinutes).toBe(50);
+    expect(routes.dayWindowIssue).toBe('incomplete');
+    expect(routes.validateBoundaries([])).toBe('incomplete');
+    expect(routes.lines).toEqual([]);
+    expect(routes.totalDistance).toBe(0);
+    expect(routes.totalStops).toBe(3);
+  });
+
+  it('retains a day consisting entirely of unlocated activities as unresolved work', () => {
+    const routes = assemble([], [], null, [
+      lunch,
+      { ...lunch, assignmentId: 501, name: 'Seated rest', dwellMinutes: 40 },
+    ]);
+    expect(routes.unlocatedActivities).toHaveLength(2);
+    expect(routes.unlocatedDwellMinutes).toBe(90);
+    expect(routes.dayWindowIssue).toBe('incomplete');
+    expect(routes.totalStops).toBe(2);
+  });
+});
 
 const rangeWarnings = (routes: ReturnType<typeof assemble>) =>
   routes.days[0]!.driveWarnings.filter((w) => w.code === 'range');
