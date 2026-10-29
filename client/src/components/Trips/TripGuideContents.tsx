@@ -40,6 +40,18 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
   if (!guide) return <PlanContents plan={plan} />;
   return (
     <div className="min-w-0 text-content">
+      <nav aria-label={t('trip.guide.days')} className="flex flex-wrap gap-2 border-y border-edge-faint py-3">
+        {plan.days.map((day, index) => (
+          <a
+            key={index}
+            href={`#${prefix}-day-${index}`}
+            title={day.title}
+            className="inline-flex min-h-11 items-center rounded-lg bg-surface-secondary px-3 text-body font-medium hover:bg-surface-tertiary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            {t('planner.dayN', { n: index + 1 })}
+          </a>
+        ))}
+      </nav>
       <section className="py-5" aria-label={t('trip.guide.route')}>
         <h2 className="text-lg font-semibold">{t('trip.guide.route')}</h2>
         <p className="mt-2 text-body font-medium leading-relaxed [overflow-wrap:anywhere]">{guide.route}</p>
@@ -54,70 +66,61 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
         </ul>
       </section>
 
-      <nav aria-label={t('trip.guide.days')} className="flex flex-wrap gap-2 border-y border-edge-faint py-3">
-        {plan.days.map((day, index) => (
-          <a
-            key={index}
-            href={`#${prefix}-day-${index}`}
-            title={day.title}
-            className="inline-flex min-h-11 items-center rounded-lg bg-surface-secondary px-3 text-body font-medium hover:bg-surface-tertiary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            {t('planner.dayN', { n: index + 1 })}
-          </a>
-        ))}
-      </nav>
-
-      {plan.days.map((day, index) => (
-        <section key={index} id={`${prefix}-day-${index}`} className="scroll-mt-24 border-b border-edge-faint py-6">
-          <h2 className="text-lg font-semibold leading-snug [overflow-wrap:anywhere]">
-            {t('planner.dayN', { n: index + 1 })} · {day.title}
-          </h2>
-          {day.guide && <p className={`mt-3 ${prose}`}>{day.guide.overview}</p>}
-          <ul className="mt-2 divide-y divide-edge-faint">
-            {day.stops
-              .filter((stop) => !stop.kind || stop.kind === 'visit' || stop.kind === 'activity')
-              .map((stop, i) => (
-                <GuidePlace key={stop.id ?? i} stop={stop} />
-              ))}
-          </ul>
-          {day.guide && (
-            <div className="space-y-4 py-3">
-              <div>
-                <h3 className="mb-2 text-body font-semibold">{t('trip.guide.dining')}</h3>
-                <p className={prose}>{day.guide.dining}</p>
-              </div>
-              {(day.guide.accommodation || day.stay) && (
+      {plan.days.map((day, index) => {
+        const title = day.title.replace(/^(?:第[0-9一二三四五六七八九十]+天|day\s*\d+)\s*[·|｜:：\-–—]?\s*/i, '');
+        return (
+          <section key={index} id={`${prefix}-day-${index}`} className="scroll-mt-24 border-b border-edge-faint py-6">
+            <h2 className="text-lg font-semibold leading-snug [overflow-wrap:anywhere]">
+              {t('planner.dayN', { n: index + 1 })}
+              {title && ` · ${title}`}
+            </h2>
+            {day.guide && <p className={`mt-3 ${prose}`}>{day.guide.overview}</p>}
+            <ul className="mt-2 divide-y divide-edge-faint">
+              {day.stops
+                .filter((stop) => !stop.kind || stop.kind === 'visit' || stop.kind === 'activity')
+                .map((stop, i) => (
+                  <GuidePlace key={stop.id ?? i} stop={stop} />
+                ))}
+            </ul>
+            {day.guide && (
+              <div className="space-y-4 py-3">
                 <div>
-                  <h3 className="mb-2 text-body font-semibold">{t('trip.guide.stay')}</h3>
-                  {day.stay && (
-                    <p className="mb-2 text-body font-medium [overflow-wrap:anywhere]">
-                      {[day.stay.area, day.stay.name].filter(Boolean).join(' · ')}
-                    </p>
-                  )}
-                  <p className={prose}>{day.guide.accommodation}</p>
-                  {day.stay && (
-                    <p className="mt-2 text-caption text-content-muted">{t('assistant.plan.stayPending')}</p>
-                  )}
+                  <h3 className="mb-2 text-body font-semibold">{t('trip.guide.dining')}</h3>
+                  <p className={prose}>{day.guide.dining}</p>
                 </div>
-              )}
-              <div>
-                <h3 className="mb-2 text-body font-semibold">{t('trip.guide.alternative')}</h3>
-                <p className={prose}>{day.guide.alternative}</p>
+                {(day.guide.accommodation || day.stay) && (
+                  <div>
+                    <h3 className="mb-2 text-body font-semibold">{t('trip.guide.stay')}</h3>
+                    {day.stay && (
+                      <p className="mb-2 text-body font-medium [overflow-wrap:anywhere]">
+                        {[day.stay.area, day.stay.name].filter(Boolean).join(' · ')}
+                      </p>
+                    )}
+                    <p className={prose}>{day.guide.accommodation}</p>
+                    {day.stay && (
+                      <p className="mt-2 text-caption text-content-muted">{t('assistant.plan.stayPending')}</p>
+                    )}
+                  </div>
+                )}
+                <div>
+                  <h3 className="mb-2 text-body font-semibold">{t('trip.guide.alternative')}</h3>
+                  <p className={prose}>{day.guide.alternative}</p>
+                </div>
               </div>
-            </div>
-          )}
-          <details className="mt-3 border-t border-edge-faint pt-1">
-            <summary className={disclosure}>{t('trip.guide.schedule')}</summary>
-            <ol className="divide-y divide-edge-faint">
-              {day.stops.map((stop, i) => (
-                <PlanStop key={stop.id ?? i} stop={stop} />
-              ))}
-            </ol>
-            <PlanStay day={day} />
-            {day.notes && <p className={`py-3 ${prose}`}>{day.notes}</p>}
-          </details>
-        </section>
-      ))}
+            )}
+            <details className="mt-3 border-t border-edge-faint pt-1">
+              <summary className={disclosure}>{t('trip.guide.schedule')}</summary>
+              <ol className="divide-y divide-edge-faint">
+                {day.stops.map((stop, i) => (
+                  <PlanStop key={stop.id ?? i} stop={stop} />
+                ))}
+              </ol>
+              <PlanStay day={day} />
+              {day.notes && <p className={`py-3 ${prose}`}>{day.notes}</p>}
+            </details>
+          </section>
+        );
+      })}
 
       <section className="border-b border-edge-faint py-6" aria-label={t('trip.guide.budget')}>
         <h2 className="text-lg font-semibold">{t('trip.guide.budget')}</h2>
