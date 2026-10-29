@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} gearchiveerd',
   'dashboard.newTrip': 'Nieuwe reis',
   'dashboard.newTripSub': 'Plan een nieuwe reis vanaf nul',
+  'dashboard.roadtrip.enable': 'Een autorondreis langs meerdere steden plannen',
+  'dashboard.roadtrip.hint':
+    'Sla je steden en rijlimieten op bij de reis. Na het aanmaken kun je AI om hulp bij de planning vragen. Je wensen worden ook zonder AI-verbinding opgeslagen.',
+  'dashboard.roadtrip.origin': 'Vertrekstad',
+  'dashboard.roadtrip.viaCities': 'Te bezoeken steden (optioneel)',
+  'dashboard.roadtrip.viaHint': 'Scheid steden met komma’s of nieuwe regels. AI kan de volgorde voorstellen.',
+  'dashboard.roadtrip.roundTrip': 'Terugkeren naar de vertrekstad',
+  'dashboard.roadtrip.destination': 'Aankomststad',
+  'dashboard.roadtrip.dailyHours': 'Maximale dagelijkse rijtijd (uren)',
+  'dashboard.roadtrip.vehicle': 'Voertuigtype',
+  'dashboard.roadtrip.combustion': 'Brandstofauto',
+  'dashboard.roadtrip.electric': 'Elektrische auto',
+  'dashboard.roadtrip.rangeKm': 'Realistische actieradius met een volle tank of accu (km)',
+  'dashboard.roadtrip.originRequired': 'Voer een vertrekstad in voor je autorondreis.',
+  'dashboard.roadtrip.destinationRequired': 'Voer een aankomststad in of kies om terug te keren naar de vertrekstad.',
+  'dashboard.roadtrip.invalidHours': 'Voer een dagelijkse rijlimiet tussen 1 en 12 uur in.',
+  'dashboard.roadtrip.invalidRange': 'Voer een realistische actieradius tussen 1 en 2.000 km in.',
+  'dashboard.roadtrip.summaryTitle': 'Wensen voor de autorondreis langs meerdere steden',
+  'dashboard.roadtrip.planningInstruction':
+    'Stel eerst de volgorde van de steden en de overnachtingssteden voor, daarna de dagelijkse activiteiten. Houd rekening met vaste datums, geboekte verblijven en de rijlimiet. Controleer werkelijke wegroutes en markeer onbekende informatie. Vraag om bevestiging van het voorstel voordat je de reis wijzigt.',
+  'dashboard.roadtrip.planPrompt':
+    'Help me een autorondreis langs meerdere steden te plannen met de wensen in deze reisbeschrijving en de opgeslagen rijinstellingen. Stel eerst de volgorde van de steden en concrete overnachtingssteden voor en plan de dagelijkse activiteiten pas na mijn bevestiging. Houd rekening met vaste datums, geboekte verblijven en de dagelijkse rijlimiet. Controleer werkelijke wegroutes en markeer niet-geverifieerde informatie duidelijk. Wijzig de reis pas nadat ik het voorstel heb bevestigd.',
   'dashboard.subscribeAllTrips': 'Abonneren op alle reizen',
   'dashboard.subscribeAllTripsDesc':
     'Eén agenda-feed voor al je actieve reizen, automatisch synchroon gehouden. Gearchiveerde reizen en reizen die meer dan 90 dagen geleden zijn geëindigd, worden uitgesloten.',

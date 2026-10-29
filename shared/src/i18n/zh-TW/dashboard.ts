@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · {count} 個已歸檔',
   'dashboard.newTrip': '新建旅行',
   'dashboard.newTripSub': '從零開始規劃新旅行',
+  'dashboard.roadtrip.enable': '規劃多城市自駕行程',
+  'dashboard.roadtrip.hint':
+    '將途經城市與駕駛限制一併儲存至行程。建立後，可請 AI 協助規劃；即使未連接 AI，需求也會保留。',
+  'dashboard.roadtrip.origin': '出發城市',
+  'dashboard.roadtrip.viaCities': '想去的城市（選填）',
+  'dashboard.roadtrip.viaHint': '請用逗號或換行分隔城市，AI 可以協助安排順序。',
+  'dashboard.roadtrip.roundTrip': '返回出發城市',
+  'dashboard.roadtrip.destination': '抵達城市',
+  'dashboard.roadtrip.dailyHours': '每日駕駛上限（小時）',
+  'dashboard.roadtrip.vehicle': '車輛類型',
+  'dashboard.roadtrip.combustion': '燃油車',
+  'dashboard.roadtrip.electric': '電動車',
+  'dashboard.roadtrip.rangeKm': '加滿油或充滿電後的實際續航里程（公里）',
+  'dashboard.roadtrip.originRequired': '請輸入自駕行程的出發城市。',
+  'dashboard.roadtrip.destinationRequired': '請輸入抵達城市，或選擇返回出發城市。',
+  'dashboard.roadtrip.invalidHours': '請輸入 1 至 12 小時的每日駕駛上限。',
+  'dashboard.roadtrip.invalidRange': '請輸入 1 至 2,000 公里的實際續航里程。',
+  'dashboard.roadtrip.summaryTitle': '多城市自駕需求',
+  'dashboard.roadtrip.planningInstruction':
+    '先提出城市順序與過夜城市，再安排每日遊玩內容。遵守固定日期、已訂住宿與駕駛上限。核對實際道路路線，並標示未知資訊。修改行程前，先取得使用者對方案的確認。',
+  'dashboard.roadtrip.planPrompt':
+    '請根據行程說明中的需求與已儲存的駕駛設定，協助規劃多城市自駕行程。先提出城市順序與真實的過夜城市，待我確認後再安排每日遊玩內容。遵守固定日期、已訂住宿與每日駕駛上限。核對實際道路路線，並清楚標示尚未驗證的資訊。在我確認方案前，請勿修改行程。',
   'dashboard.subscribeAllTrips': '訂閱所有旅行',
   'dashboard.subscribeAllTripsDesc':
     '一個涵蓋你所有進行中旅行的行事曆訂閱源，會自動保持同步。不包含已歸檔的旅行，以及結束超過 90 天的旅行。',

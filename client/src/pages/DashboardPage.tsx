@@ -107,7 +107,7 @@ function DashboardPageDesktop(): React.ReactElement {
     tripFilter, setTripFilter, viewMode, toggleViewMode,
     showForm, setShowForm, editingTrip, setEditingTrip,
     deleteTrip, setDeleteTrip, copyTrip, setCopyTrip, applyCoverUpdate,
-    handleCreate, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
     allSubOpen, setAllSubOpen, search,
   } = useDashboard()
 
@@ -299,6 +299,7 @@ function DashboardPageDesktop(): React.ReactElement {
           trip={editingTrip}
           onClose={() => { setShowForm(false); setEditingTrip(null) }}
           onSave={editingTrip ? handleUpdate : handleCreate}
+          onCreated={handleCreated}
           onCoverUpdate={applyCoverUpdate}
         />
       )}

@@ -26,12 +26,14 @@ import { BudgetItemMembers } from '../../src/db/entities/BudgetItemMembers.entit
 import { Days } from '../../src/db/entities/Days.entity';
 import { JourneyEntries } from '../../src/db/entities/JourneyEntries.entity';
 import { Journeys } from '../../src/db/entities/Journeys.entity';
+import { RoadtripPreferences } from '../../src/db/entities/RoadtripPreferences.entity';
 import { Settings } from '../../src/db/entities/Settings.entity';
 import { TripMembers } from '../../src/db/entities/TripMembers.entity';
 import { Trips } from '../../src/db/entities/Trips.entity';
 import { Users } from '../../src/db/entities/Users.entity';
 import { VacayEntries } from '../../src/db/entities/VacayEntries.entity';
 import { VacayPlans } from '../../src/db/entities/VacayPlans.entity';
+import { RoadtripPreferencesRepository } from '../../src/db/repositories/RoadtripPreferences.repository';
 // TripsService itself is real since the trip fold — no tripService mock; the
 // real migrated trips/trip_members/days tables serve its SQL.
 // bundle()'s days + accommodations now run DaysService's real SQL (DI-injected,
@@ -169,6 +171,7 @@ describe('Trips e2e (real auth guard + temp SQLite)', () => {
     expect(ok.body.trip).toMatchObject({ title: 'T', currency: 'EUR', day_count: 7, is_owner: 1 });
     const dayRows = await countRows(orm, Days, { trip: ok.body.trip.id });
     expect(dayRows).toBe(7);
+    expect(await countRows(orm, RoadtripPreferences)).toBe(0);
     // The DI-native AuditService wrote the real row (audit_log DDL above).
     const audit = await findRow(orm, AuditLog, { action: 'trip.create' });
     expect({ user_id: audit?.user_id }).toEqual({ user_id: 1 });
@@ -191,6 +194,68 @@ describe('Trips e2e (real auth guard + temp SQLite)', () => {
       .send({ title: 'Tokyo', currency: 'JPY' });
     expect(explicit.status).toBe(201);
     expect(explicit.body.trip).toMatchObject({ title: 'Tokyo', currency: 'JPY' });
+  });
+
+  it('creates a road trip with its days and typed driving preferences', async () => {
+    const preferences = {
+      roadtrip_day_minutes: 240,
+      roadtrip_vehicle: 'electric',
+      roadtrip_range_km: 400,
+      roadtrip_connect_days: true,
+      roadtrip_hotel_bookends: true,
+    };
+    const res = await request(server).post('/api/trips').set('Cookie', sessionCookie(1)).send({
+      title: 'Yunnan loop',
+      description: 'Kunming → Dali → Lijiang → Kunming',
+      start_date: '2026-11-01',
+      end_date: '2026-11-07',
+      roadtrip_preferences: preferences,
+    });
+    expect(res.status).toBe(201);
+    expect(res.body.trip).toMatchObject({ title: 'Yunnan loop', day_count: 7 });
+    const rows = await findRows(orm, RoadtripPreferences, { trip: res.body.trip.id });
+    expect(Object.fromEntries(rows.map((row) => [row.key, JSON.parse(row.value)]))).toEqual(preferences);
+  });
+
+  it.each([
+    {},
+    { roadtrip_day_minutes: -1 },
+    { roadtrip_vehicle: 'plane' },
+    { roadtrip_connect_days: 'true' },
+    { unknown_preference: true },
+    { roadtrip_day_start: '18:00', roadtrip_day_end: '08:00' },
+  ])('refuses invalid driving preferences before creating a trip: %j', async (roadtrip_preferences) => {
+    const res = await request(server).post('/api/trips').set('Cookie', sessionCookie(1)).send({
+      title: 'Invalid road trip',
+      roadtrip_preferences,
+    });
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ error: 'Invalid driving preferences' });
+    expect(await countRows(orm, Trips)).toBe(0);
+    expect(await countRows(orm, Days)).toBe(0);
+    expect(await countRows(orm, RoadtripPreferences)).toBe(0);
+  });
+
+  it('rolls back the trip and days if the preference write fails', async () => {
+    const write = vi
+      .spyOn(RoadtripPreferencesRepository.prototype, 'insertMany')
+      .mockRejectedValueOnce(new Error('preference write failed'));
+    try {
+      const res = await request(server)
+        .post('/api/trips')
+        .set('Cookie', sessionCookie(1))
+        .send({
+          title: 'Interrupted road trip',
+          roadtrip_preferences: { roadtrip_day_minutes: 240, roadtrip_connect_days: true },
+        });
+      expect(res.status).toBe(500);
+      expect(write).toHaveBeenCalledOnce();
+      expect(await countRows(orm, Trips)).toBe(0);
+      expect(await countRows(orm, Days)).toBe(0);
+      expect(await countRows(orm, RoadtripPreferences)).toBe(0);
+    } finally {
+      write.mockRestore();
+    }
   });
 
   it('201 create keeps every day of a trip longer than a year (#2403)', async () => {

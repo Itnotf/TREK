@@ -1,3 +1,5 @@
+import { roadtripPreferencesUpdateSchema } from '../roadtrip/preferences.schema';
+
 import { z } from 'zod';
 
 /**
@@ -98,6 +100,13 @@ export const tripCreateRequestSchema = z.object({
   currency: z.string().optional(),
   reminder_days: z.number().optional(),
   day_count: z.number().optional(),
+  roadtrip_preferences: roadtripPreferencesUpdateSchema
+    .refine(
+      (value) =>
+        !value.roadtrip_day_start || !value.roadtrip_day_end || value.roadtrip_day_end > value.roadtrip_day_start,
+      'Driving day end must be after its start',
+    )
+    .optional(),
 });
 export type TripCreateRequest = z.infer<typeof tripCreateRequestSchema>;
 

@@ -10,6 +10,31 @@ import {
 import { describe, it, expect } from 'vitest';
 
 describe('tripCreateRequestSchema', () => {
+  it('accepts optional driving preferences without dropping them', () => {
+    const roadtrip_preferences = {
+      roadtrip_day_minutes: 240,
+      roadtrip_vehicle: 'electric',
+      roadtrip_range_km: 400,
+      roadtrip_connect_days: true,
+      roadtrip_hotel_bookends: true,
+    };
+    expect(tripCreateRequestSchema.parse({ title: 'Yunnan', roadtrip_preferences }).roadtrip_preferences).toEqual(
+      roadtrip_preferences,
+    );
+  });
+
+  it.each([
+    {},
+    { roadtrip_day_minutes: -1 },
+    { roadtrip_vehicle: 'plane' },
+    { roadtrip_range_km: '400' },
+    { roadtrip_connect_days: 'true' },
+    { unknown_preference: true },
+    { roadtrip_day_start: '18:00', roadtrip_day_end: '08:00' },
+  ])('rejects invalid driving preferences: %j', (roadtrip_preferences) => {
+    expect(tripCreateRequestSchema.safeParse({ title: 'Yunnan', roadtrip_preferences }).success).toBe(false);
+  });
+
   it('requires a title; dates/currency/reminder optional', () => {
     expect(tripCreateRequestSchema.safeParse({ title: 'Japan' }).success).toBe(true);
     expect(

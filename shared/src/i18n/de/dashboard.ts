@@ -12,6 +12,29 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} archiviert',
   'dashboard.newTrip': 'Neue Reise',
   'dashboard.newTripSub': 'Eine neue Reise von Grund auf planen',
+  'dashboard.roadtrip.enable': 'Eine Autoreise durch mehrere Städte planen',
+  'dashboard.roadtrip.hint':
+    'Speichere Städte und Fahrzeitlimits mit der Reise. Danach kannst du die KI um Hilfe bei der Planung bitten. Deine Vorgaben werden auch ohne KI-Verbindung gespeichert.',
+  'dashboard.roadtrip.origin': 'Abfahrtsstadt',
+  'dashboard.roadtrip.viaCities': 'Zu besuchende Städte (optional)',
+  'dashboard.roadtrip.viaHint':
+    'Trenne Städte durch Kommas oder Zeilenumbrüche. Die KI kann eine Reihenfolge vorschlagen.',
+  'dashboard.roadtrip.roundTrip': 'Zur Abfahrtsstadt zurückkehren',
+  'dashboard.roadtrip.destination': 'Ankunftsstadt',
+  'dashboard.roadtrip.dailyHours': 'Maximale tägliche Fahrzeit (Stunden)',
+  'dashboard.roadtrip.vehicle': 'Fahrzeugtyp',
+  'dashboard.roadtrip.combustion': 'Verbrenner',
+  'dashboard.roadtrip.electric': 'Elektrofahrzeug',
+  'dashboard.roadtrip.rangeKm': 'Realistische Reichweite mit vollem Tank oder Akku (km)',
+  'dashboard.roadtrip.originRequired': 'Gib eine Abfahrtsstadt für deine Autoreise ein.',
+  'dashboard.roadtrip.destinationRequired': 'Gib eine Ankunftsstadt ein oder wähle die Rückkehr zur Abfahrtsstadt.',
+  'dashboard.roadtrip.invalidHours': 'Gib ein tägliches Fahrzeitlimit zwischen 1 und 12 Stunden ein.',
+  'dashboard.roadtrip.invalidRange': 'Gib eine realistische Reichweite zwischen 1 und 2.000 km ein.',
+  'dashboard.roadtrip.summaryTitle': 'Vorgaben für die Autoreise durch mehrere Städte',
+  'dashboard.roadtrip.planningInstruction':
+    'Schlage zuerst die Reihenfolge der Städte und die Übernachtungsorte vor, danach die Tagesaktivitäten. Berücksichtige feste Termine, gebuchte Unterkünfte und das Fahrzeitlimit. Prüfe tatsächliche Straßenrouten und kennzeichne unbekannte Angaben. Lass den Vorschlag bestätigen, bevor du die Reise änderst.',
+  'dashboard.roadtrip.planPrompt':
+    'Hilf mir, anhand der Vorgaben in dieser Reisebeschreibung und der gespeicherten Fahreinstellungen eine Autoreise durch mehrere Städte zu planen. Schlage zuerst die Reihenfolge der Städte und konkrete Übernachtungsorte vor und plane erst nach meiner Bestätigung die Tagesaktivitäten. Berücksichtige feste Termine, gebuchte Unterkünfte und das tägliche Fahrzeitlimit. Prüfe tatsächliche Straßenrouten und kennzeichne ungeprüfte Angaben deutlich. Ändere die Reise erst, wenn ich den Vorschlag bestätigt habe.',
   'dashboard.subscribeAllTrips': 'Alle Reisen abonnieren',
   'dashboard.subscribeAllTripsDesc':
     'Ein Kalender-Feed für alle deine aktiven Reisen, automatisch synchron gehalten. Archivierte Reisen und Reisen, die vor mehr als 90 Tagen endeten, sind ausgeschlossen.',

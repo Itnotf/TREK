@@ -48,7 +48,7 @@ export default function MDashboard(): React.ReactElement {
     tripFilter, setTripFilter, viewMode, toggleViewMode,
     showForm, setShowForm, editingTrip, setEditingTrip,
     deleteTrip, setDeleteTrip, copyTrip, setCopyTrip, applyCoverUpdate,
-    handleCreate, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
   } = useDashboard()
 
   const user = useAuthStore(s => s.user)
@@ -289,6 +289,7 @@ export default function MDashboard(): React.ReactElement {
         trip={editingTrip}
         onClose={() => { setShowForm(false); setEditingTrip(null) }}
         onSave={editingTrip ? handleUpdate : handleCreate}
+        onCreated={handleCreated}
         onCoverUpdate={applyCoverUpdate}
         onArchive={editingTrip
           ? () => (editingTrip.is_archived ? handleUnarchive(editingTrip.id) : handleArchive(editingTrip.id))

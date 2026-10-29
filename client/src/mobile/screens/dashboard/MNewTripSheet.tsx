@@ -3,6 +3,7 @@ import { Archive, ArchiveRestore, Bell, Camera, Search, X } from 'lucide-react'
 import { useTranslation } from '../../../i18n'
 import { useCanDo } from '../../../store/permissionsStore'
 import { useSettingsStore } from '../../../store/settingsStore'
+import { useAddonStore } from '../../../store/addonStore'
 import { useAuthStore } from '../../../store/authStore'
 import MChip from '../../components/MChip'
 import { CustomDatePicker } from '../../../components/shared/CustomDateTimePicker'
@@ -19,6 +20,8 @@ import { useTripRangeGuard, type RangeRemoval } from '../../../hooks/useTripRang
 import { dayChips, shrinkTripLines } from '../../../utils/dayImpactLines'
 import { useTripCoverPicker } from '../../../components/Trips/useTripCoverPicker'
 import { endDateForNewStart, tripFormError } from '../../../components/Trips/tripFormModel'
+import RoadtripSetupFields from '../../../components/Trips/RoadtripSetupFields'
+import { initialRoadtripSetup, roadtripSetupError, roadtripSetupPayload } from '../../../components/Trips/roadtripSetup'
 
 interface MNewTripSheetProps {
   open: boolean
@@ -26,6 +29,7 @@ interface MNewTripSheetProps {
   trip: DashboardTrip | null | undefined
   onClose: () => void
   onSave: (data: TripCreateRequest) => Promise<{ trip?: Trip } | void> | void
+  onCreated?: (trip: Trip, data: TripCreateRequest) => Promise<void> | void
   onCoverUpdate?: (tripId: number, coverUrl: string | null) => void
   /** Edit mode only: archives (or restores) the trip — the grid cards have no archive button. */
   onArchive?: () => void
@@ -50,12 +54,14 @@ function FieldLabel({ children }: { children: React.ReactNode }): React.ReactEle
  * opens it for editing too. Archiving
  * lives here in edit mode, as decided for the grid cards.
  */
-export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, onCoverUpdate, onArchive }: MNewTripSheetProps): React.ReactElement {
+export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, onCreated, onCoverUpdate, onArchive }: MNewTripSheetProps): React.ReactElement {
   const trip = tripProp ?? null
   const isEditing = !!trip
   const { t } = useTranslation()
   const can = useCanDo()
   const defaultCurrency = useSettingsStore(s => s.settings.default_currency) || 'EUR'
+  const roadtripAvailable = useAddonStore(s => s.addons.some(addon => addon.id === 'roadtrip' && addon.enabled))
+  const saveInFlight = useRef(false)
   const canEditTrip = !isEditing || can('trip_edit', trip)
   const canUploadCover = !isEditing || can('trip_cover_upload', trip)
   const currentUser = useAuthStore(s => s.user)
@@ -71,6 +77,7 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
   const [dayCount, setDayCount] = useState<number | ''>(7)
   const [reminderDays, setReminderDays] = useState(0)
   const [customReminder, setCustomReminder] = useState(false)
+  const [roadtripSetup, setRoadtripSetup] = useState(initialRoadtripSetup)
   const [error, setError] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const cover = useTripCoverPicker({ trip, title, onCoverUpdate, releasePreviewOnChange: true })
@@ -91,6 +98,7 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
     const reminder = trip ? (trip.reminder_days ?? 3) : (remindersEnabled ? 3 : 0)
     setReminderDays(reminder)
     setCustomReminder(!REMINDER_PRESETS.includes(reminder))
+    setRoadtripSetup(initialRoadtripSetup())
     cover.resetCover(trip?.cover_image || null)
     setError('')
     setPendingRemoval(null)
@@ -113,6 +121,11 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
     if (dateless && (dayCount === '' || dayCount < 1 || dayCount > MAX_TRIP_DAYS)) {
       setError(t('dashboard.dayCountRequired')); return null
     }
+    const configureRoadtrip = !isEditing && roadtripAvailable && roadtripSetup.enabled
+    if (configureRoadtrip) {
+      const setupError = roadtripSetupError(roadtripSetup, t)
+      if (setupError) { setError(setupError); return null }
+    }
     // The count goes along only when it says something new: the trip's own one
     // goes stale in the planner, and sending it back would trim a day just added.
     const sendDayCount = dateless && (!isEditing || dayCount !== trip?.day_count)
@@ -124,10 +137,12 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
       currency,
       ...(showReminder ? { reminder_days: reminderDays } : {}),
       ...(sendDayCount ? { day_count: Number(dayCount) } : {}),
+      ...(configureRoadtrip ? roadtripSetupPayload(roadtripSetup, description, t) : {}),
     }
   }
 
   const handleSave = async () => {
+    if (busy || saveInFlight.current) return
     const payload = validPayload()
     if (!payload) return
     // New dates that remove days with something on them ask first, the same
@@ -138,15 +153,19 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
   }
 
   const save = async (payload: TripCreateRequest) => {
+    if (saveInFlight.current) return
+    saveInFlight.current = true
     setIsSaving(true)
     try {
       const result = await onSave(payload)
       const created = result ? result.trip : undefined
       await cover.applyToCreatedTrip(created?.id)
+      if (!isEditing && created) await onCreated?.(created, payload)
       onClose()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('places.saveError'))
     } finally {
+      saveInFlight.current = false
       setIsSaving(false)
     }
   }
@@ -170,7 +189,7 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
 
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
         {error && (
-          <div className="mb-3 rounded-[14px] bg-[color:var(--m-ic)] p-[11px_12px] text-[0.75rem] font-semibold text-[color:var(--m-st-danger)]">
+          <div role="alert" className="mb-3 rounded-[14px] bg-[color:var(--m-ic)] p-[11px_12px] text-[0.75rem] font-semibold text-[color:var(--m-st-danger)]">
             {error}
           </div>
         )}
@@ -197,6 +216,13 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
             className={`${inputCls} resize-none text-[0.8125rem] font-medium`}
           />
         </div>
+
+        {!isEditing && roadtripAvailable && (
+          <div className="mt-2">
+            <RoadtripSetupFields value={roadtripSetup} disabled={busy}
+              onChange={value => { setError(''); setRoadtripSetup(value) }} />
+          </div>
+        )}
 
         <div className="mt-2 flex gap-2">
           <div className={`${boxCls} min-w-0 flex-1`}>

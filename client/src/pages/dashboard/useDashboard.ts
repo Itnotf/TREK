@@ -5,12 +5,13 @@ import { tripRepo } from '../../repo/tripRepo'
 import { isEffectivelyOffline } from '../../sync/networkMode'
 import { useServerPing } from '../../sync/useServerPing'
 import { useAuthStore } from '../../store/authStore'
+import { useAssistantStore } from '../../store/assistantStore'
 import { useTranslation } from '../../i18n'
 import { useToast } from '../../components/shared/Toast'
 import { getApiErrorMessage } from '../../types'
 import { localIsoToday } from './dashboardModel'
 import { useTripSearch } from './useTripSearch'
-import type { TripCreateRequest } from '@trek/shared'
+import type { Trip, TripCreateRequest } from '@trek/shared'
 import {
   type DashboardTrip,
   type TravelStats,
@@ -140,14 +141,36 @@ export function useDashboard() {
   }, [spotlight?.id])
 
   const handleCreate = async (tripData: TripCreateRequest) => {
+    let data: Awaited<ReturnType<typeof tripsApi.create>>
     try {
-      const data = await tripsApi.create(tripData)
-      setTrips(prev => sortTrips([data.trip, ...prev]))
-      toast.success(t('dashboard.toast.created'))
-      loadSideData()
-      return data
+      data = await tripsApi.create(tripData)
     } catch (err: unknown) {
       throw new Error(getApiErrorMessage(err, t('dashboard.toast.createError')))
+    }
+    setTrips(prev => sortTrips([data.trip, ...prev]))
+    toast.success(t('dashboard.toast.created'))
+    loadSideData()
+    return data
+  }
+
+  // Forms finish adding members and uploading the cover before opening the planner.
+  const handleCreated = async (trip: Trip, tripData: TripCreateRequest) => {
+    if (tripData.roadtrip_preferences) {
+      let openAssistant = false
+      try {
+        if (!useAssistantStore.getState().status) await useAssistantStore.getState().loadStatus()
+        const assistant = useAssistantStore.getState()
+        if (assistant.status?.available) {
+          assistant.setDraft(trip.id, t('dashboard.roadtrip.planPrompt'))
+          openAssistant = true
+        }
+      } catch {
+        // The trip is already saved. A missing assistant must not turn this into
+        // a failed create that the user might retry and duplicate.
+      }
+      // Open only after the planner mounts, on both desktop and mobile. The
+      // draft stays unsent and the assistant keeps its existing privacy check.
+      void navigate(`/trips/${trip.id}${openAssistant ? '?assistant=1' : ''}`)
     }
   }
 
@@ -247,6 +270,6 @@ export function useDashboard() {
     allSubOpen, setAllSubOpen,
     search,
     // actions
-    handleCreate, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
   }
 }

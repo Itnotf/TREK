@@ -12,6 +12,29 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} arhiveeritud',
   'dashboard.newTrip': 'Uus reis',
   'dashboard.newTripSub': 'Planeeri uus reis algusest peale',
+  'dashboard.roadtrip.enable': 'Planeeri autoreis läbi mitme linna',
+  'dashboard.roadtrip.hint':
+    'Salvesta linnad ja sõidupiirangud koos reisiga. Pärast reisi loomist saad tehisintellektilt planeerimisabi küsida. Sinu nõuded salvestatakse ka ilma tehisintellekti ühenduseta.',
+  'dashboard.roadtrip.origin': 'Lähtelinn',
+  'dashboard.roadtrip.viaCities': 'Külastatavad linnad (valikuline)',
+  'dashboard.roadtrip.viaHint':
+    'Eralda linnad komade või reavahetustega. Tehisintellekt võib järjekorra välja pakkuda.',
+  'dashboard.roadtrip.roundTrip': 'Tagasi lähtelinna',
+  'dashboard.roadtrip.destination': 'Sihtlinn',
+  'dashboard.roadtrip.dailyHours': 'Päevane maksimaalne sõiduaeg (tundides)',
+  'dashboard.roadtrip.vehicle': 'Sõiduki tüüp',
+  'dashboard.roadtrip.combustion': 'Sisepõlemismootoriga sõiduk',
+  'dashboard.roadtrip.electric': 'Elektrisõiduk',
+  'dashboard.roadtrip.rangeKm': 'Tegelik sõiduulatus täis paagi või akuga (km)',
+  'dashboard.roadtrip.originRequired': 'Sisesta autoreisi lähtelinn.',
+  'dashboard.roadtrip.destinationRequired': 'Sisesta sihtlinn või vali lähtelinna naasmine.',
+  'dashboard.roadtrip.invalidHours': 'Sisesta päevane sõiduaja piirang vahemikus 1–12 tundi.',
+  'dashboard.roadtrip.invalidRange': 'Sisesta tegelik sõiduulatus vahemikus 1–2000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Mitut linna läbiva autoreisi nõuded',
+  'dashboard.roadtrip.planningInstruction':
+    'Paku enne päevaseid tegevusi välja linnade järjekord ja ööbimislinnad. Arvesta kindlate kuupäevade, broneeritud majutuste ja sõiduaja piiranguga. Kontrolli tegelikke maanteemarsruute ja märgi teadmata teave. Küsi enne reisi muutmist ettepanekule kinnitust.',
+  'dashboard.roadtrip.planPrompt':
+    'Aita mul planeerida mitut linna läbiv autoreis, kasutades reisikirjelduses olevaid nõudeid ja salvestatud sõiduseadeid. Paku esmalt välja linnade järjekord ja tegelikud ööbimislinnad ning planeeri päevased tegevused pärast minu kinnitust. Arvesta kindlate kuupäevade, broneeritud majutuste ja päevase sõiduaja piiranguga. Kontrolli tegelikke maanteemarsruute ja märgi kontrollimata teave selgelt. Ära muuda reisi enne, kui olen ettepaneku kinnitanud.',
   'dashboard.subscribeAllTrips': 'Telli kõigi reiside kalender',
   'dashboard.subscribeAllTripsDesc':
     'Üks automaatselt sünkroonitav kalendrivoog kõigi aktiivsete reisidega. Ei sisalda arhiveeritud ega üle 90 päeva tagasi lõppenud reise.',

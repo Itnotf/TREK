@@ -30,11 +30,13 @@ import {
   addIsoDays,
   planDayGrid,
   resolveDayGridRange,
+  tripCreateRequestSchema,
   type ActiveTrip,
   type DayGridPlan,
   type DayGridRemoval,
   type TrekWsPayload,
   type TrekWsTripEventName,
+  type TripCreateRequest,
 } from '@trek/shared';
 import { RealtimeService } from '../realtime/realtime.service';
 import { PermissionsService } from '../permissions/permissions.service';
@@ -52,16 +54,6 @@ import { UnitOfWork } from '../database/unit-of-work';
 import { legacyBoundIntegerText } from '../common/row-id';
 import { appClock } from '../common/timezoneService';
 import { assertTripSpan } from './trips.helpers';
-
-interface CreateTripData {
-  title: string;
-  description?: string | null;
-  start_date?: string | null;
-  end_date?: string | null;
-  currency?: string;
-  reminder_days?: number;
-  day_count?: number;
-}
 
 // Nullable where the wire contract (tripUpdateRequestSchema) is nullable — the
 // legacy route accepted arbitrary JSON, so null always reached these fields.
@@ -377,7 +369,9 @@ export class TripsService {
     return this.tripsRepo.listForUser(userId, archived);
   }
 
-  async create(userId: number, data: CreateTripData) {
+  async create(userId: number, data: TripCreateRequest) {
+    const preferences = tripCreateRequestSchema.shape.roadtrip_preferences.safeParse(data.roadtrip_preferences);
+    if (!preferences.success) throw new ValidationError('Invalid driving preferences');
     // One given date makes a week, on REST and MCP alike. Calendar arithmetic
     // in UTC: a local-time Date shifted across a DST change lost or gained a day.
     let startDate = data.start_date || null;
@@ -390,8 +384,7 @@ export class TripsService {
       : 3;
     const currency = data.currency || (await this.defaultCurrencyFor(userId));
 
-    // The trip and its days commit together: a failure in between used to leave
-    // a dated trip without a single day.
+    // The trip, its days and optional driving preferences commit together.
     const tripId = await this.uow.transactional(async () => {
       const id = await this.tripsRepo.insertTrip({ // TP18
         user_id: userId,
@@ -403,6 +396,10 @@ export class TripsService {
         reminder_days: rd,
       });
       await this.generateDays(id, startDate, endDate, data.day_count);
+      const rows = Object.entries(preferences.data ?? {})
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => ({ trip: id, key, value: JSON.stringify(value) }));
+      if (rows.length) await this.roadtripPreferencesRepo.insertMany(rows);
       return id;
     });
 

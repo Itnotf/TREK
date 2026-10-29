@@ -142,7 +142,16 @@ export class TripsController {
     const parsedDayCount = day_count ? Math.min(Math.max(Number(day_count) || 7, 1), MAX_TRIP_DAYS) : undefined;
     try {
       const { trip, tripId, reminderDays } = await this.tripWrites.create(
-        { title, description, start_date, end_date, currency, reminder_days, day_count: parsedDayCount },
+        {
+          title,
+          description,
+          start_date,
+          end_date,
+          currency,
+          reminder_days,
+          day_count: parsedDayCount,
+          ...(body.roadtrip_preferences !== undefined ? { roadtrip_preferences: body.roadtrip_preferences } : {}),
+        },
         { userId: user.id, role: user.role, socketId },
       );
       await this.audit.writeAudit({

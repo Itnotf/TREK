@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · {count} đã lưu trữ',
   'dashboard.newTrip': 'Chuyến đi mới',
   'dashboard.newTripSub': 'Lên kế hoạch cho một chuyến đi mới từ đầu',
+  'dashboard.roadtrip.enable': 'Lập kế hoạch tự lái qua nhiều thành phố',
+  'dashboard.roadtrip.hint':
+    'Lưu các thành phố và giới hạn lái xe cùng chuyến đi. Sau khi tạo, bạn có thể nhờ AI hỗ trợ lập kế hoạch. Yêu cầu của bạn vẫn được lưu ngay cả khi không có kết nối AI.',
+  'dashboard.roadtrip.origin': 'Thành phố khởi hành',
+  'dashboard.roadtrip.viaCities': 'Các thành phố muốn ghé thăm (không bắt buộc)',
+  'dashboard.roadtrip.viaHint': 'Ngăn cách các thành phố bằng dấu phẩy hoặc xuống dòng. AI có thể gợi ý thứ tự.',
+  'dashboard.roadtrip.roundTrip': 'Quay về thành phố khởi hành',
+  'dashboard.roadtrip.destination': 'Thành phố đến',
+  'dashboard.roadtrip.dailyHours': 'Thời gian lái xe tối đa mỗi ngày (giờ)',
+  'dashboard.roadtrip.vehicle': 'Loại xe',
+  'dashboard.roadtrip.combustion': 'Xe dùng nhiên liệu',
+  'dashboard.roadtrip.electric': 'Xe điện',
+  'dashboard.roadtrip.rangeKm': 'Quãng đường thực tế khi đầy bình hoặc sạc đầy (km)',
+  'dashboard.roadtrip.originRequired': 'Nhập thành phố khởi hành cho chuyến tự lái của bạn.',
+  'dashboard.roadtrip.destinationRequired': 'Nhập thành phố đến hoặc chọn quay về thành phố khởi hành.',
+  'dashboard.roadtrip.invalidHours': 'Nhập giới hạn lái xe mỗi ngày từ 1 đến 12 giờ.',
+  'dashboard.roadtrip.invalidRange': 'Nhập quãng đường thực tế có thể đi từ 1 đến 2.000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Yêu cầu cho chuyến tự lái qua nhiều thành phố',
+  'dashboard.roadtrip.planningInstruction':
+    'Đề xuất thứ tự các thành phố và thành phố nghỉ đêm trước các hoạt động hằng ngày. Tuân thủ ngày đã ấn định, chỗ nghỉ đã đặt và giới hạn lái xe. Kiểm tra các tuyến đường bộ thực tế và đánh dấu thông tin chưa biết. Yêu cầu xác nhận đề xuất trước khi thay đổi chuyến đi.',
+  'dashboard.roadtrip.planPrompt':
+    'Hãy giúp tôi lập kế hoạch tự lái qua nhiều thành phố dựa trên yêu cầu trong mô tả chuyến đi và cài đặt lái xe đã lưu. Trước tiên, đề xuất thứ tự các thành phố và các thành phố có thật để nghỉ đêm, sau đó lên hoạt động hằng ngày khi tôi xác nhận. Tuân thủ ngày đã ấn định, chỗ nghỉ đã đặt và giới hạn lái xe mỗi ngày. Kiểm tra các tuyến đường bộ thực tế và đánh dấu rõ mọi thông tin chưa được xác minh. Không thay đổi chuyến đi cho đến khi tôi xác nhận đề xuất.',
   'dashboard.subscribeAllTrips': 'Đăng ký tất cả chuyến đi',
   'dashboard.subscribeAllTripsDesc':
     'Một nguồn cấp lịch cho tất cả các chuyến đi đang hoạt động của bạn, được tự động giữ đồng bộ. Không bao gồm các chuyến đi đã lưu trữ và các chuyến đi đã kết thúc hơn 90 ngày trước.',

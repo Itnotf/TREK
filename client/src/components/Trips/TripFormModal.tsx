@@ -5,6 +5,7 @@ import { tripsApi, authApi } from '../../api/client'
 import CustomSelect from '../shared/CustomSelect'
 import { useAuthStore } from '../../store/authStore'
 import { useSettingsStore } from '../../store/settingsStore'
+import { useAddonStore } from '../../store/addonStore'
 import { useCanDo } from '../../store/permissionsStore'
 import { useToast } from '../shared/Toast'
 import { useTranslation } from '../../i18n'
@@ -20,6 +21,8 @@ import { useTripCoverPicker } from './useTripCoverPicker'
 import { tripFormError } from './tripFormModel'
 import { isEffectivelyOffline } from '../../sync/networkMode'
 import { tripChangeNeedsConnection } from '../../repo/tripRepo'
+import RoadtripSetupFields from './RoadtripSetupFields'
+import { initialRoadtripSetup, roadtripSetupError, roadtripSetupPayload } from './roadtripSetup'
 
 type DateShiftMode = ShiftMode
 type TripPayload = TripCreateRequest & { date_shift_mode?: DateShiftMode }
@@ -41,17 +44,20 @@ interface TripFormModalProps {
   // Create returns the new trip (so we can attach members / upload the cover);
   // update resolves without a payload.
   onSave: (data: TripCreateRequest & { date_shift_mode?: DateShiftMode }) => Promise<{ trip?: Trip } | void> | void
+  onCreated?: (trip: Trip, data: TripCreateRequest) => Promise<void> | void
   trip: Trip | null
   onCoverUpdate?: (tripId: number, coverUrl: string | null) => void
 }
 
-export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUpdate }: TripFormModalProps) {
+export default function TripFormModal({ isOpen, onClose, onSave, onCreated, trip, onCoverUpdate }: TripFormModalProps) {
   const isEditing = !!trip
   const fileRef = useRef<HTMLInputElement>(null)
+  const saveInFlight = useRef(false)
   const toast = useToast()
   const { t } = useTranslation()
   const currentUser = useAuthStore(s => s.user)
   const defaultCurrency = useSettingsStore(s => s.settings.default_currency) || 'EUR'
+  const roadtripAvailable = useAddonStore(s => s.addons.some(addon => addon.id === 'roadtrip' && addon.enabled))
   const tripRemindersEnabled = useAuthStore(s => s.tripRemindersEnabled)
   const setTripRemindersEnabled = useAuthStore(s => s.setTripRemindersEnabled)
   const can = useCanDo()
@@ -68,6 +74,7 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
     day_count: 7 as number | '',
   })
   const [customReminder, setCustomReminder] = useState(false)
+  const [roadtripSetup, setRoadtripSetup] = useState(initialRoadtripSetup)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const cover = useTripCoverPicker({ trip, title: formData.title, onCoverUpdate, releasePreviewOnChange: false })
@@ -108,6 +115,7 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
       cover.resetCover(null)
     }
     setSelectedMembers([])
+    setRoadtripSetup(initialRoadtripSetup())
     setPendingReview(null)
     setDateShiftMode('keep_bookings')
     setError('')
@@ -133,6 +141,7 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (busy || saveInFlight.current) return
     setError('')
     const formError = tripFormError({ title: formData.title, startDate: formData.start_date, endDate: formData.end_date }, trip, t)
     if (formError) { setError(formError); return }
@@ -141,6 +150,11 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
       if (formData.day_count === '' || !Number.isInteger(dc) || dc < 1 || dc > MAX_TRIP_DAYS) {
         setError(t('dashboard.dayCountRequired')); return
       }
+    }
+    const configureRoadtrip = !isEditing && roadtripAvailable && roadtripSetup.enabled
+    if (configureRoadtrip) {
+      const setupError = roadtripSetupError(roadtripSetup, t)
+      if (setupError) { setError(setupError); return }
     }
     // The day count goes along only when it says something new. The trip's own
     // count goes stale in the planner (adding a day does not reload the trip),
@@ -156,6 +170,7 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
       currency: formData.currency,
       reminder_days: formData.reminder_days,
       ...(sendDayCount ? { day_count: dayCount } : {}),
+      ...(configureRoadtrip ? roadtripSetupPayload(roadtripSetup, formData.description, t) : {}),
     }
     // Moving the start of a dated trip shifts the whole day grid, so let the user
     // choose how bookings follow before anything is saved (#1288). End-date-only
@@ -183,7 +198,8 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
   }
 
   const performSave = async (payload: TripPayload) => {
-    if (refusedOffline(payload)) return
+    if (saveInFlight.current || refusedOffline(payload)) return
+    saveInFlight.current = true
     setIsLoading(true)
     try {
       const result = await onSave(payload)
@@ -201,10 +217,12 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
       }
       // Upload pending cover for newly created trips
       await cover.applyToCreatedTrip(createdTrip?.id)
+      if (!isEditing && createdTrip) await onCreated?.(createdTrip, payload)
       onClose()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('places.saveError'))
     } finally {
+      saveInFlight.current = false
       setIsLoading(false)
     }
   }
@@ -323,7 +341,7 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
       )}
       <form onSubmit={handleSubmit} className={pendingReview ? 'hidden' : 'space-y-4'} onPaste={handlePaste}>
         {error && (
-          <div className="p-3 bg-danger-soft border border-danger/30 rounded-xl text-body text-danger">{error}</div>
+          <div role="alert" className="p-3 bg-danger-soft border border-danger/30 rounded-xl text-body text-danger">{error}</div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 items-start">
@@ -418,6 +436,11 @@ export default function TripFormModal({ isOpen, onClose, onSave, trip, onCoverUp
               className={`${inputCls} resize-none`} />
           </div>
         </div>
+
+        {!isEditing && roadtripAvailable && (
+          <RoadtripSetupFields value={roadtripSetup} disabled={busy}
+            onChange={value => { setError(''); setRoadtripSetup(value) }} />
+        )}
 
         </div>{/* /left column */}
 
