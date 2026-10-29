@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Guia de viagem',
+  'trip.guide.shortTitle': 'Guia',
+  'trip.guide.route': 'O roteiro',
+  'trip.guide.highlights': 'Experiências para aproveitar',
+  'trip.guide.days': 'Ir para um dia',
+  'trip.guide.dining': 'Onde e o que comer',
+  'trip.guide.stay': 'Onde se hospedar',
+  'trip.guide.alternative': 'Se os planos mudarem',
+  'trip.guide.schedule': 'Horários e detalhes do transporte',
+  'trip.guide.budget': 'Orçamento estimado',
+  'trip.guide.preparation': 'Antes de partir',
+  'trip.guide.notes': 'Suas preferências, suposições e fontes',
+  'trip.guide.openPlan': 'Abrir roteiro diário',
+  'trip.guide.snapshot': 'Este é o guia que você confirmou. Para alterações posteriores, consulte o roteiro diário.',
+  'trip.guide.empty':
+    'Esta viagem ainda não tem um guia salvo. Você pode visualizar e editar o roteiro diário. Novas viagens criadas a partir de um guia com IA terão o guia completo salvo aqui.',
+  'trip.guide.loadFailed': 'Não foi possível carregar o guia. Verifique sua conexão e tente novamente.',
+  'trip.guide.unavailable': 'Esta viagem está indisponível ou você não tem permissão para acessá-la.',
   'trip.tabs.plan': 'Plano',
   'trip.tabs.transports': 'Transportes',
   'trip.tabs.reservations': 'Reservas',

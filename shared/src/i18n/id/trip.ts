@@ -1,6 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Panduan perjalanan',
+  'trip.guide.shortTitle': 'Panduan',
+  'trip.guide.route': 'Rute perjalanan',
+  'trip.guide.highlights': 'Pengalaman yang dinantikan',
+  'trip.guide.days': 'Lompat ke hari tertentu',
+  'trip.guide.dining': 'Tempat dan pilihan makanan',
+  'trip.guide.stay': 'Tempat menginap',
+  'trip.guide.alternative': 'Jika rencana berubah',
+  'trip.guide.schedule': 'Jadwal dan rincian transportasi',
+  'trip.guide.budget': 'Perkiraan anggaran',
+  'trip.guide.preparation': 'Sebelum berangkat',
+  'trip.guide.notes': 'Preferensi, asumsi, dan sumber Anda',
+  'trip.guide.openPlan': 'Buka rencana perjalanan harian',
+  'trip.guide.snapshot':
+    'Ini adalah panduan yang Anda konfirmasi. Untuk perubahan berikutnya, periksa rencana perjalanan harian.',
+  'trip.guide.empty':
+    'Perjalanan ini belum memiliki panduan tersimpan. Anda tetap dapat melihat dan mengedit rencana hariannya. Perjalanan baru yang dibuat dari panduan AI akan menyimpan panduan lengkap di sini.',
+  'trip.guide.loadFailed': 'Panduan tidak dapat dimuat. Periksa koneksi Anda dan coba lagi.',
+  'trip.guide.unavailable': 'Perjalanan ini tidak tersedia atau Anda tidak memiliki akses.',
   'trip.tabs.plan': 'Rencana',
   'trip.tabs.transports': 'Transportasi',
   'trip.tabs.reservations': 'Pemesanan',

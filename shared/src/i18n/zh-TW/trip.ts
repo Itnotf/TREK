@@ -1,7 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
-  'trip.tabs.plan': '計劃',
+  'trip.guide.title': '攻略總覽',
+  'trip.guide.shortTitle': '攻略',
+  'trip.guide.route': '路線與推薦理由',
+  'trip.guide.highlights': '值得期待的體驗',
+  'trip.guide.days': '按天查看',
+  'trip.guide.dining': '吃什麼、在哪裡吃',
+  'trip.guide.stay': '住哪裡、怎麼選',
+  'trip.guide.alternative': '天氣變化與備選玩法',
+  'trip.guide.schedule': '查看當天時間與交通安排',
+  'trip.guide.budget': '預算參考',
+  'trip.guide.preparation': '出發前準備',
+  'trip.guide.notes': '旅行偏好、待核實事項與來源',
+  'trip.guide.openPlan': '查看每日行程',
+  'trip.guide.snapshot': '這是確認時儲存的攻略；後續調整的安排請以每日行程為準。',
+  'trip.guide.empty':
+    '這趟旅行還沒有儲存完整攻略，你仍可查看和編輯每日行程。從新版 AI 攻略確認建立的旅行，會在這裡保留完整內容。',
+  'trip.guide.loadFailed': '攻略暫時載入失敗，請檢查網路後重試。',
+  'trip.guide.unavailable': '這趟旅行不存在，或你沒有查看權限。',
+  'trip.tabs.plan': '每日行程',
   'trip.tabs.transports': '交通',
   'trip.tabs.reservations': '預訂',
   'trip.tabs.reservationsShort': '預訂',

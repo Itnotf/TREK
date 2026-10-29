@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Reseguide',
+  'trip.guide.shortTitle': 'Guide', // same-as-en
+  'trip.guide.route': 'Rutten',
+  'trip.guide.highlights': 'Upplevelser att se fram emot',
+  'trip.guide.days': 'Gå till en dag',
+  'trip.guide.dining': 'Var och vad du kan äta',
+  'trip.guide.stay': 'Var du kan bo',
+  'trip.guide.alternative': 'Om planerna ändras',
+  'trip.guide.schedule': 'Tider och transportdetaljer',
+  'trip.guide.budget': 'Uppskattad budget',
+  'trip.guide.preparation': 'Före avresan',
+  'trip.guide.notes': 'Dina önskemål, antaganden och källor',
+  'trip.guide.openPlan': 'Öppna dagsplanen',
+  'trip.guide.snapshot': 'Det här är guiden du bekräftade. Senare ändringar hittar du i dagsplanen.',
+  'trip.guide.empty':
+    'Den här resan har ingen sparad guide ännu. Du kan fortfarande visa och redigera dagsplanen. Nya resor som skapas från en AI-reseguide får hela guiden sparad här.',
+  'trip.guide.loadFailed': 'Guiden kunde inte laddas. Kontrollera anslutningen och försök igen.',
+  'trip.guide.unavailable': 'Den här resan är inte tillgänglig eller så saknar du åtkomst.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Transporter',
   'trip.tabs.reservations': 'Bokningar',

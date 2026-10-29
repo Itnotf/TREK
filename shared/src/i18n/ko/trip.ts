@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': '여행 가이드',
+  'trip.guide.shortTitle': '가이드',
+  'trip.guide.route': '여행 경로',
+  'trip.guide.highlights': '기대되는 체험',
+  'trip.guide.days': '날짜로 이동',
+  'trip.guide.dining': '어디서 무엇을 먹을까',
+  'trip.guide.stay': '어디서 머물까',
+  'trip.guide.alternative': '계획이 바뀐다면',
+  'trip.guide.schedule': '시간 및 교통 정보',
+  'trip.guide.budget': '예상 예산',
+  'trip.guide.preparation': '출발 전 준비',
+  'trip.guide.notes': '선호 사항, 가정 및 출처',
+  'trip.guide.openPlan': '일별 일정 열기',
+  'trip.guide.snapshot': '확정할 때 저장한 가이드입니다. 이후 변경 사항은 일별 일정에서 확인하세요.',
+  'trip.guide.empty':
+    '이 여행에는 아직 저장된 가이드가 없습니다. 일별 일정은 계속 보고 수정할 수 있습니다. AI 여행 가이드로 새로 만든 여행의 전체 가이드는 여기에 저장됩니다.',
+  'trip.guide.loadFailed': '가이드를 불러올 수 없습니다. 연결을 확인하고 다시 시도하세요.',
+  'trip.guide.unavailable': '이 여행을 이용할 수 없거나 접근 권한이 없습니다.',
   'trip.tabs.plan': '계획',
   'trip.tabs.transports': '교통',
   'trip.tabs.reservations': '예약',

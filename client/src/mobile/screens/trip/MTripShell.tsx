@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { findFocusDayId, findTodayDayId } from '../../../components/Planner/today'
 import { takeResumeDay } from '../../../utils/resumeRoute'
@@ -573,6 +574,9 @@ export default function MTripShell({
 
         {trTab === 'plan' && (
           <GlassSegment>
+            <Link to={`/trips/${planner.tripId}/guide`} aria-label={t('trip.guide.title')} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 text-[0.8125rem] font-semibold text-m-ink">
+              {t('trip.guide.shortTitle')}
+            </Link>
             {([
               { value: 'go' as const, label: t('mobileTrip.travel') },
               { value: 'edit' as const, label: t('trip.mobilePlan') },
@@ -582,7 +586,7 @@ export default function MTripShell({
                 key={seg.value}
                 type="button"
                 onClick={() => setTravelMode(seg.value)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-[0.8125rem] ${
+                className={`whitespace-nowrap rounded-full px-2 py-2 text-[0.8125rem] ${
                   mode === seg.value && view !== 'map' ? 'bg-m-act font-semibold text-m-actfg' : 'font-medium text-m-ink'
                 }`}
               >

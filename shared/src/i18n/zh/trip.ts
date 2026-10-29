@@ -1,7 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
-  'trip.tabs.plan': '计划',
+  'trip.guide.title': '攻略总览',
+  'trip.guide.shortTitle': '攻略',
+  'trip.guide.route': '路线与推荐理由',
+  'trip.guide.highlights': '值得期待的体验',
+  'trip.guide.days': '按天查看',
+  'trip.guide.dining': '吃什么、在哪里吃',
+  'trip.guide.stay': '住哪里、怎么选',
+  'trip.guide.alternative': '天气变化与备选玩法',
+  'trip.guide.schedule': '查看当天时间与交通安排',
+  'trip.guide.budget': '预算参考',
+  'trip.guide.preparation': '出发前准备',
+  'trip.guide.notes': '旅行偏好、待核实事项与来源',
+  'trip.guide.openPlan': '查看每日行程',
+  'trip.guide.snapshot': '这是确认时保存的攻略；后续调整的安排请以每日行程为准。',
+  'trip.guide.empty':
+    '这趟旅行还没有保存完整攻略，你仍可查看和编辑每日行程。从新版 AI 攻略确认创建的旅行，会在这里保留完整内容。',
+  'trip.guide.loadFailed': '攻略暂时加载失败，请检查网络后重试。',
+  'trip.guide.unavailable': '这趟旅行不存在，或你没有查看权限。',
+  'trip.tabs.plan': '每日行程',
   'trip.tabs.transports': '交通',
   'trip.tabs.reservations': '预订',
   'trip.tabs.reservationsShort': '预订',

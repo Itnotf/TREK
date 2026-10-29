@@ -139,6 +139,7 @@
   "TripDocumentLinks": "doc-sync",
   "TripFiles": "files",
   "TripInviteTokens": "trip-invite",
+  "TripItineraryGuides": "trips",
   "TripJournalLinkMembers": "journey",
   "TripJournalLinks": "journey",
   "TripMemberRemovals": "trip-membership",

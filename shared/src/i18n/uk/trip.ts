@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Путівник',
+  'trip.guide.shortTitle': 'Путівник',
+  'trip.guide.route': 'Маршрут',
+  'trip.guide.highlights': 'Враження, на які варто чекати',
+  'trip.guide.days': 'Перейти до дня',
+  'trip.guide.dining': 'Де і що поїсти',
+  'trip.guide.stay': 'Де зупинитися',
+  'trip.guide.alternative': 'Якщо плани зміняться',
+  'trip.guide.schedule': 'Час і транспорт',
+  'trip.guide.budget': 'Орієнтовний бюджет',
+  'trip.guide.preparation': 'Перед поїздкою',
+  'trip.guide.notes': 'Ваші побажання, припущення та джерела',
+  'trip.guide.openPlan': 'Відкрити план за днями',
+  'trip.guide.snapshot': 'Це путівник, збережений під час підтвердження. Подальші зміни дивіться в плані за днями.',
+  'trip.guide.empty':
+    'Ця поїздка ще не має збереженого путівника. Ви можете переглядати й редагувати план за днями. Для нових поїздок, створених із путівника ШІ, тут зберігатиметься повний путівник.',
+  'trip.guide.loadFailed': 'Не вдалося завантажити путівник. Перевірте з’єднання та спробуйте ще раз.',
+  'trip.guide.unavailable': 'Ця поїздка недоступна або ви не маєте до неї доступу.',
   'trip.tabs.plan': 'План',
   'trip.tabs.transports': 'Транспорт',
   'trip.tabs.reservations': 'Бронювання',

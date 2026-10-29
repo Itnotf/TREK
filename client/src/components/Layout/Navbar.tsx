@@ -176,6 +176,12 @@ export default function Navbar({ tripTitle, tripId, onBack, showBack, onSettings
           </span>
         ))}
 
+        {onSettings && tripId && (
+          <Link to={`/trips/${tripId}/guide`} className="inline-flex min-h-11 flex-none items-center gap-1.5 rounded-lg px-2 text-caption font-semibold text-content hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+            <BookOpen size={16} aria-hidden="true" />{t('trip.guide.title')}
+          </Link>
+        )}
+
         {/* The trip's Settings sit with the trip, beside its pill: they are about this
             trip, not about the app the right side of the bar belongs to. */}
         {onSettings && (

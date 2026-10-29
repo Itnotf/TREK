@@ -2,7 +2,7 @@ import type { AssistantMessage, TripPlanCard } from '@trek/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildTrip } from '../../../../../tests/helpers/factories';
-import { buildItineraryDraft } from '../../../../../tests/helpers/itinerary';
+import { buildGuideDraft, buildItineraryDraft } from '../../../../../tests/helpers/itinerary';
 import { act, fireEvent, render, screen, waitFor } from '../../../../../tests/helpers/render';
 import { seedStore } from '../../../../../tests/helpers/store';
 import { tripPlanRepo } from '../../../../repo/tripPlanRepo';
@@ -42,6 +42,18 @@ afterEach(() => {
 });
 
 describe('TripPlanBlock', () => {
+  it('opens the full guide after confirmation and keeps its descriptions visible', async () => {
+    const draft = buildGuideDraft();
+    if (!draft.plan.guide) throw new Error('Guide fixture missing');
+    vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(draft);
+    vi.spyOn(tripPlanRepo, 'apply').mockResolvedValue(buildTrip({ id: 31 }));
+    const onOpen = show();
+    expect(await screen.findByText(draft.plan.guide.rationale)).toBeVisible();
+    expect(screen.getAllByText(draft.plan.days[0].stops[0].description)[0]).toBeVisible();
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm and create trip' }));
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith({ kind: 'page', path: '/trips/31/guide' }));
+  });
+
   it('shows a full draft, its assumptions, source and unverified locations before any creation', async () => {
     const draft = buildItineraryDraft();
     draft.plan.sources = [{ title: 'Travel guide', url: 'https://example.com/guide', extraction: 'article' }];

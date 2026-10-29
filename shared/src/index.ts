@@ -233,6 +233,7 @@ export * from './admin/admin.schema';
 export * from './ai/ai-connections.schema';
 export * from './assistant/assistant.schema';
 export * from './assistant/itinerary.schema';
+export * from './trip/trip-guide.schema';
 export * from './assistant/assistant-attachments.schema';
 export * from './assistant/cards';
 export * from './assistant/assistant-share.schema';

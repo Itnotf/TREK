@@ -35,3 +35,27 @@ export function buildItineraryDraft(overrides: Partial<ItineraryDraft> = {}): It
     ...overrides,
   };
 }
+
+export function buildGuideDraft(): ItineraryDraft {
+  const draft = buildItineraryDraft();
+  draft.plan.guide = {
+    route: 'Chengdu → Kangding old town → Chengdu',
+    rationale: 'Keep the first afternoon easy and stay close to the riverside.',
+    highlights: ['Explore the old streets and their tea houses'],
+    budget: {
+      scope: 'Two people, one night; estimate only',
+      estimate: 'CNY 800–1,100, excluding transport',
+      breakdown: [
+        { category: 'Accommodation', estimate: 'CNY 300–500', notes: 'A planning allowance, not a live hotel quote.' },
+      ],
+    },
+    preparation: ['Check road conditions before leaving'],
+  };
+  draft.plan.days[0].guide = {
+    overview: 'Spend the afternoon discovering the riverside streets at an unhurried pace.',
+    dining: 'Try local noodles near the river; choose a quieter restaurant away from the main square.',
+    accommodation: 'Stay near the river for an easy walk back; ask for a quiet room.',
+    alternative: 'If it rains, spend the afternoon in a tea house instead.',
+  };
+  return draft;
+}

@@ -66,7 +66,7 @@ export function useTripPlan(card: TripPlanCard) {
     !applying &&
     error !== 'load' &&
     error !== 'unavailable';
-  const openTrip = (id: number) => onOpen?.({ kind: 'page', path: `/trips/${id}` });
+  const openTrip = (id: number) => onOpen?.({ kind: 'page', path: `/trips/${id}${draft?.plan.guide ? '/guide' : ''}` });
   const confirm = async () => {
     if (!draft || !canApply || busy.current) return;
     if (draft.created_trip_id) {

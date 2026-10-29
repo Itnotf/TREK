@@ -105,7 +105,7 @@ describe('unlocated daily activities', () => {
     expect(routes.unlocatedActivities).toEqual([lunch]);
     expect(routes.unlocatedDwellMinutes).toBe(50);
     expect(routes.dayWindowIssue).toBe('incomplete');
-    expect(routes.validateBoundaries([])).toBe('incomplete');
+    expect(routes.validateBoundaries?.([])).toBe('incomplete');
     expect(routes.lines).toEqual([]);
     expect(routes.totalDistance).toBe(0);
     expect(routes.totalStops).toBe(3);

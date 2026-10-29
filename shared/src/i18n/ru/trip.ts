@@ -1,6 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Путеводитель',
+  'trip.guide.shortTitle': 'Путеводитель',
+  'trip.guide.route': 'Маршрут',
+  'trip.guide.highlights': 'Впечатления, которых стоит ждать',
+  'trip.guide.days': 'Перейти к дню',
+  'trip.guide.dining': 'Где и что поесть',
+  'trip.guide.stay': 'Где остановиться',
+  'trip.guide.alternative': 'Если планы изменятся',
+  'trip.guide.schedule': 'Время и транспорт',
+  'trip.guide.budget': 'Примерный бюджет',
+  'trip.guide.preparation': 'Перед поездкой',
+  'trip.guide.notes': 'Ваши пожелания, допущения и источники',
+  'trip.guide.openPlan': 'Открыть план по дням',
+  'trip.guide.snapshot':
+    'Это путеводитель, сохранённый при подтверждении. Последующие изменения смотрите в плане по дням.',
+  'trip.guide.empty':
+    'У этой поездки пока нет сохранённого путеводителя. Вы можете просматривать и редактировать план по дням. Для новых поездок, созданных из путеводителя ИИ, здесь будет сохранён полный путеводитель.',
+  'trip.guide.loadFailed': 'Не удалось загрузить путеводитель. Проверьте подключение и попробуйте ещё раз.',
+  'trip.guide.unavailable': 'Эта поездка недоступна или у вас нет к ней доступа.',
   'trip.tabs.plan': 'План',
   'trip.tabs.transports': 'Транспорт',
   'trip.tabs.reservations': 'Бронирования',

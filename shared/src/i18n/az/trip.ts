@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Səyahət bələdçisi',
+  'trip.guide.shortTitle': 'Bələdçi',
+  'trip.guide.route': 'Marşrut',
+  'trip.guide.highlights': 'Sizi gözləyən təəssüratlar',
+  'trip.guide.days': 'Günə keçin',
+  'trip.guide.dining': 'Harada və nə yeməli',
+  'trip.guide.stay': 'Harada qalmalı',
+  'trip.guide.alternative': 'Planlar dəyişərsə',
+  'trip.guide.schedule': 'Vaxt və nəqliyyat təfərrüatları',
+  'trip.guide.budget': 'Təxmini büdcə',
+  'trip.guide.preparation': 'Yola çıxmazdan əvvəl',
+  'trip.guide.notes': 'İstəkləriniz, fərziyyələr və mənbələr',
+  'trip.guide.openPlan': 'Gündəlik səyahət planını açın',
+  'trip.guide.snapshot': 'Bu, təsdiqlədiyiniz bələdçidir. Sonrakı dəyişikliklər üçün gündəlik səyahət planına baxın.',
+  'trip.guide.empty':
+    'Bu səyahətin hələ saxlanmış bələdçisi yoxdur. Gündəlik planı görə və dəyişə bilərsiniz. Süni intellekt bələdçisindən yaradılan yeni səyahətlərin tam bələdçisi burada saxlanacaq.',
+  'trip.guide.loadFailed': 'Bələdçini yükləmək mümkün olmadı. Bağlantınızı yoxlayın və yenidən cəhd edin.',
+  'trip.guide.unavailable': 'Bu səyahət mövcud deyil və ya ona giriş icazəniz yoxdur.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Nəqliyyat',
   'trip.tabs.reservations': 'Rezervasiyalar',

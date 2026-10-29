@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Seyahat rehberi',
+  'trip.guide.shortTitle': 'Rehber',
+  'trip.guide.route': 'Güzergâh',
+  'trip.guide.highlights': 'Sizi bekleyen deneyimler',
+  'trip.guide.days': 'Bir güne git',
+  'trip.guide.dining': 'Nerede ve ne yenir',
+  'trip.guide.stay': 'Nerede kalınır',
+  'trip.guide.alternative': 'Planlar değişirse',
+  'trip.guide.schedule': 'Saatler ve ulaşım ayrıntıları',
+  'trip.guide.budget': 'Tahmini bütçe',
+  'trip.guide.preparation': 'Yola çıkmadan önce',
+  'trip.guide.notes': 'Tercihleriniz, varsayımlar ve kaynaklar',
+  'trip.guide.openPlan': 'Günlük gezi planını aç',
+  'trip.guide.snapshot': 'Bu, onayladığınız rehberdir. Sonraki değişiklikler için günlük gezi planına bakın.',
+  'trip.guide.empty':
+    'Bu seyahatin henüz kayıtlı bir rehberi yok. Günlük planını görüntüleyebilir ve düzenleyebilirsiniz. Yapay zekâ rehberinden oluşturulan yeni seyahatlerin tam rehberi burada saklanır.',
+  'trip.guide.loadFailed': 'Rehber yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.',
+  'trip.guide.unavailable': 'Bu seyahat kullanılamıyor veya erişim izniniz yok.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Ulaşım',
   'trip.tabs.reservations': 'Rezervasyonlar',

@@ -144,6 +144,7 @@ import type { TripAlbumLinksTable } from './TripAlbumLinks.table';
 import type { TripDocumentLinksTable } from './TripDocumentLinks.table';
 import type { TripFilesTable } from './TripFiles.table';
 import type { TripInviteTokensTable } from './TripInviteTokens.table';
+import type { TripItineraryGuidesTable } from './TripItineraryGuides.table';
 import type { TripJournalLinkMembersTable } from './TripJournalLinkMembers.table';
 import type { TripJournalLinksTable } from './TripJournalLinks.table';
 import type { TripMemberRemovalsTable } from './TripMemberRemovals.table';
@@ -315,6 +316,7 @@ export interface DB {
   trip_document_links: TripDocumentLinksTable;
   trip_files: TripFilesTable;
   trip_invite_tokens: TripInviteTokensTable;
+  trip_itinerary_guides: TripItineraryGuidesTable;
   trip_journal_link_members: TripJournalLinkMembersTable;
   trip_journal_links: TripJournalLinksTable;
   trip_member_removals: TripMemberRemovalsTable;

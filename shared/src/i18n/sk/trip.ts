@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Sprievodca cestou',
+  'trip.guide.shortTitle': 'Sprievodca',
+  'trip.guide.route': 'Trasa',
+  'trip.guide.highlights': 'Zážitky, na ktoré sa tešiť',
+  'trip.guide.days': 'Prejsť na deň',
+  'trip.guide.dining': 'Kde a čo jesť',
+  'trip.guide.stay': 'Kde sa ubytovať',
+  'trip.guide.alternative': 'Keď sa plány zmenia',
+  'trip.guide.schedule': 'Časy a podrobnosti dopravy',
+  'trip.guide.budget': 'Odhadovaný rozpočet',
+  'trip.guide.preparation': 'Pred odchodom',
+  'trip.guide.notes': 'Vaše preferencie, predpoklady a zdroje',
+  'trip.guide.openPlan': 'Otvoriť denný itinerár',
+  'trip.guide.snapshot': 'Toto je sprievodca, ktorého ste potvrdili. Neskoršie zmeny nájdete v dennom itinerári.',
+  'trip.guide.empty':
+    'Táto cesta zatiaľ nemá uloženého sprievodcu. Denný itinerár si môžete prezerať a upravovať. Nové cesty vytvorené zo sprievodcu s AI tu budú mať uloženého úplného sprievodcu.',
+  'trip.guide.loadFailed': 'Sprievodcu sa nepodarilo načítať. Skontrolujte pripojenie a skúste to znova.',
+  'trip.guide.unavailable': 'Táto cesta nie je dostupná alebo k nej nemáte prístup.',
   'trip.tabs.plan': 'Plán',
   'trip.tabs.transports': 'Doprava',
   'trip.tabs.reservations': 'Rezervácie',

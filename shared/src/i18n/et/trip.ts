@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Reisijuht',
+  'trip.guide.shortTitle': 'Reisijuht',
+  'trip.guide.route': 'Teekond',
+  'trip.guide.highlights': 'Elamused, mida oodata',
+  'trip.guide.days': 'Liigu päeva juurde',
+  'trip.guide.dining': 'Kus ja mida süüa',
+  'trip.guide.stay': 'Kus ööbida',
+  'trip.guide.alternative': 'Kui plaanid muutuvad',
+  'trip.guide.schedule': 'Ajad ja transpordi üksikasjad',
+  'trip.guide.budget': 'Hinnanguline eelarve',
+  'trip.guide.preparation': 'Enne teele asumist',
+  'trip.guide.notes': 'Sinu eelistused, eeldused ja allikad',
+  'trip.guide.openPlan': 'Ava päevakava',
+  'trip.guide.snapshot': 'See on sinu kinnitatud reisijuht. Hilisemaid muudatusi vaata päevakavast.',
+  'trip.guide.empty':
+    'Sellel reisil pole veel salvestatud reisijuhti. Päevakava saad endiselt vaadata ja muuta. Tehisintellekti reisijuhist loodud uute reiside täielik reisijuht säilitatakse siin.',
+  'trip.guide.loadFailed': 'Reisijuhti ei õnnestunud laadida. Kontrolli ühendust ja proovi uuesti.',
+  'trip.guide.unavailable': 'See reis pole saadaval või sul puudub sellele juurdepääs.',
   'trip.tabs.plan': 'Plaan',
   'trip.tabs.transports': 'Transport',
   'trip.tabs.reservations': 'Broneeringud',

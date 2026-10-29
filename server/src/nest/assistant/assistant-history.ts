@@ -242,6 +242,10 @@ function replayedOutput(
   if (part.toolName === KEEP_ATTACHED_FILE_TOOL) return keptFileLine(part);
   if (part.toolName === READ_ATTACHED_FILE_TOOL) return attachedReadLine(part, texts, told, earlier);
   if (part.result === undefined) return NOT_APPLIED;
+  if (earlier && !part.isError && (part.toolName === 'get_itinerary_draft' || part.toolName === 'save_itinerary_draft'))
+    return outputText({
+      note: 'This is an earlier itinerary version. Call get_itinerary_draft to read the complete latest plan before revising; do not reconstruct it from earlier messages.',
+    });
   return outputText(earlier ? fitToSize(part.result, EARLIER_TOOL_OUTPUT_CHARS) : part.result);
 }
 

@@ -23,7 +23,7 @@ const SPECS: AiToolSpec[] = [
   {
     name: SAVE_ITINERARY_TOOL,
     description:
-      'Save a complete schedule_version: 2 new-trip draft for preview and chat revision. Send the entire plan with base_revision from get_itinerary_draft (0 initially). Keep requirements and stable activity ids across revisions. Every day needs separate visits, meals and rest in stops (id, kind, time_kind, arrival_time, duration_minutes, travel_from_previous), plus stay (area, name or null, check_in, check_out, notes; null on the final/return day). Transfers are estimates: provide mode, duration_minutes or null when unknown, and notes. Use zero for adjacent activities at the same location. Times must allow both activities and transfers. Search places and hotels; copy provider ids to place_ref, never coordinates or photo URLs. Keep notes brief. Up to 20 activities per day, 30 days, 120 activities and 32000 characters total. This saves only a draft; only the user can create the trip using the card button.',
+      'Save a complete travel guide with its executable schedule_version: 2 itinerary. Send the entire plan with base_revision from get_itinerary_draft (0 initially). Include guide: route, rationale, highlights, budget (scope, estimate, breakdown with category/estimate/notes), preparation. Every day also needs guide: overview of experiences and route choices, dining recommendations, accommodation advice (empty only when no stay), and a practical alternative. Describe what is worth experiencing at each visit in stop.description. Give useful food/stay choices and reasons, not just "pending". Search real places; never invent hotel availability, current prices, coordinates or photo URLs. Budget values are explicitly qualified estimates with a basis; unknown costs remain unknown. Keep guide and schedule consistent across revisions, preserving unrelated content and activity ids. Stops include significant visits, meals, rest and transfers with stable id, kind, time_kind, arrival_time, duration_minutes and travel_from_previous (mode, estimated duration_minutes or null, notes; zero for the same location). Include stay (area, name or null, check_in/check_out, notes; null on the final day). Search provider ids go in place_ref. Do not fill free time with car waiting or tiny walking/rest entries. Up to 20 activities/day, 30 days, 120 activities and 60000 characters. Only the user can create the trip with the card button.',
     parameters: z.toJSONSchema(itineraryModelSaveSchema, { unrepresentable: 'any' }),
   },
   {
@@ -214,6 +214,15 @@ export function planningPort(
         ok: false,
         value:
           'Use schedule_version: 2. Split visits, meals and rest into separate activities with stable ids, kind, time_kind and travel_from_previous; supply a stay plan or null per day. Do not put the daily schedule into notes.',
+      };
+    if (
+      !parsed.data.plan.guide ||
+      parsed.data.plan.days.some((day) => !day.guide || (day.stay && !day.guide.accommodation))
+    )
+      return {
+        ok: false,
+        value:
+          'Include a complete plan.guide (route, rationale, highlights, budget with scope/estimate/breakdown, preparation) and every day.guide (overview, dining, accommodation, alternative). Accommodation advice is required when the day has a stay. Explain experiences and useful choices; a list of times or "pending" alone is not a travel guide. Keep guide content consistent with the activities and stays.',
       };
     if (parsed.data.plan.transport_mode === 'driving' && !parsed.data.plan.roadtrip_preferences?.roadtrip_day_minutes)
       return {

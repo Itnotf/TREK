@@ -19,6 +19,7 @@ import { McpToolGuardsService } from '../mcp-shared/mcp-tool-guards.service';
 import { PermissionsService } from '../permissions/permissions.service';
 import { PlacesService } from '../places/places.service';
 import { RealtimeService } from '../realtime/realtime.service';
+import { TripGuideService } from '../trips/trip-guide.service';
 import { TripsService } from '../trips/trips.service';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -50,6 +51,7 @@ export class AssistantItineraryService {
     private readonly permissions: PermissionsService,
     private readonly guards: McpToolGuardsService,
     private readonly realtime: RealtimeService,
+    private readonly guides: TripGuideService,
   ) {}
 
   async get(userId: number, id: number): Promise<ItineraryDraft> {
@@ -234,6 +236,7 @@ export class AssistantItineraryService {
           }
         }
       }, Promise.resolve());
+      await this.guides.saveConfirmed(tripId, plan);
       await this.drafts.markApplied(id, tripId, dbNow());
       return { trip: tripSchema.parse(await this.trips.get(tripId, userId)), created: true };
     });

@@ -1,6 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Reiseführer',
+  'trip.guide.shortTitle': 'Tipps',
+  'trip.guide.route': 'Die Route',
+  'trip.guide.highlights': 'Erlebnisse, auf die du dich freuen kannst',
+  'trip.guide.days': 'Zu einem Tag springen',
+  'trip.guide.dining': 'Wo und was essen',
+  'trip.guide.stay': 'Wo übernachten',
+  'trip.guide.alternative': 'Wenn sich Pläne ändern',
+  'trip.guide.schedule': 'Zeiten und Verkehrsverbindungen',
+  'trip.guide.budget': 'Geschätztes Budget',
+  'trip.guide.preparation': 'Vor der Abreise',
+  'trip.guide.notes': 'Deine Wünsche, Annahmen und Quellen',
+  'trip.guide.openPlan': 'Tagesplan öffnen',
+  'trip.guide.snapshot': 'Dies ist der Reiseführer, den du bestätigt hast. Spätere Änderungen findest du im Tagesplan.',
+  'trip.guide.empty':
+    'Für diese Reise ist noch kein Reiseführer gespeichert. Du kannst den Tagesplan weiterhin ansehen und bearbeiten. Bei neuen Reisen aus einem KI-Reiseführer bleibt der vollständige Reiseführer hier erhalten.',
+  'trip.guide.loadFailed':
+    'Der Reiseführer konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.',
+  'trip.guide.unavailable': 'Diese Reise ist nicht verfügbar oder du hast keinen Zugriff darauf.',
   'trip.tabs.plan': 'Karte',
   'trip.tabs.transports': 'Transport',
   'trip.tabs.reservations': 'Buchungen',

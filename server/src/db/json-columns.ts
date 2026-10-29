@@ -49,6 +49,13 @@ export const ASSISTANT_ITINERARY_PLAN: JsonColumn<ItineraryPlan | null> = {
   fallback: () => null,
 };
 
+/** The confirmed guide survives its chat and is shared through the trip's membership. */
+export const TRIP_ITINERARY_GUIDE: JsonColumn<ItineraryPlan | null> = {
+  column: 'trip_itinerary_guides.plan',
+  schema: itineraryPlanSchema.nullable(),
+  fallback: () => null,
+};
+
 /**
  * The JSON-in-TEXT columns the services decode, one declaration each: the shape
  * the column holds and what a reader gets when a row is empty or broken. Read

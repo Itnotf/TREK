@@ -55,11 +55,40 @@ export const itineraryStaySchema = z
   })
   .strict();
 
+const itineraryGuideSchema = z
+  .object({
+    route: text(500),
+    rationale: text(1200),
+    highlights: z.array(text(250)).min(1).max(6),
+    budget: z
+      .object({
+        scope: text(200),
+        estimate: text(300),
+        breakdown: z
+          .array(z.object({ category: text(80), estimate: text(200), notes: text(400) }).strict())
+          .min(1)
+          .max(8),
+      })
+      .strict(),
+    preparation: z.array(text(500)).min(1).max(8),
+  })
+  .strict();
+
+const itineraryDayGuideSchema = z
+  .object({
+    overview: text(1200),
+    dining: text(1000),
+    accommodation: z.string().trim().max(1000),
+    alternative: text(600),
+  })
+  .strict();
+
 export const itineraryDaySchema = z
   .object({
     title: text(200),
     overnight_city: z.string().max(120),
     notes: z.string().max(2000),
+    guide: itineraryDayGuideSchema.optional(),
     stay: itineraryStaySchema.nullable().optional(),
     stops: z.array(itineraryStopSchema).max(20),
   })
@@ -70,6 +99,8 @@ export const itineraryPlanSchema = z
     schedule_version: z.literal(2).optional(),
     title: text(200),
     summary: text(2000),
+    // Optional when reading earlier drafts; new model saves require the complete guide.
+    guide: itineraryGuideSchema.optional(),
     start_date: date.nullable(),
     currency: z.string().regex(/^[A-Z]{3}$/),
     transport_mode: transportMode,
@@ -95,7 +126,7 @@ export const itineraryPlanSchema = z
     (plan) => plan.days.reduce((sum, day) => sum + day.stops.length, 0) <= 120,
     'A draft can contain at most 120 stops',
   )
-  .refine((plan) => JSON.stringify(plan).length <= 32000, 'Keep the full draft under 32000 characters')
+  .refine((plan) => JSON.stringify(plan).length <= 60000, 'Keep the full draft under 60000 characters')
   .superRefine(checkDailySchedule);
 export type ItineraryPlan = z.infer<typeof itineraryPlanSchema>;
 
@@ -225,7 +256,7 @@ export const itineraryModelPlanSchema = z
     (plan) => plan.days.reduce((sum, day) => sum + day.stops.length, 0) <= 120,
     'A draft can contain at most 120 stops',
   )
-  .refine((plan) => JSON.stringify(plan).length <= 32000, 'Keep the full draft under 32000 characters')
+  .refine((plan) => JSON.stringify(plan).length <= 60000, 'Keep the full draft under 60000 characters')
   .superRefine(checkDailySchedule);
 export const itineraryModelSaveSchema = itinerarySaveRequestSchema.extend({ plan: itineraryModelPlanSchema });
 

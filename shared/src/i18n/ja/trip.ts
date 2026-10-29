@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': '旅行ガイド',
+  'trip.guide.shortTitle': 'ガイド',
+  'trip.guide.route': '旅行ルート',
+  'trip.guide.highlights': '楽しみにしたい体験',
+  'trip.guide.days': '日を選んで移動',
+  'trip.guide.dining': '食事の場所とおすすめ',
+  'trip.guide.stay': '宿泊先の選び方',
+  'trip.guide.alternative': '予定を変更する場合',
+  'trip.guide.schedule': '時間と交通の詳細',
+  'trip.guide.budget': '予算の目安',
+  'trip.guide.preparation': '出発前の準備',
+  'trip.guide.notes': '希望条件・想定・参考情報',
+  'trip.guide.openPlan': '日別の旅程を開く',
+  'trip.guide.snapshot': 'これは確定時に保存したガイドです。その後の変更は日別の旅程で確認してください。',
+  'trip.guide.empty':
+    'この旅行にはまだガイドが保存されていません。日別の旅程は引き続き閲覧・編集できます。AI の旅行ガイドから新しく作成した旅行では、ガイド全体がここに保存されます。',
+  'trip.guide.loadFailed': 'ガイドを読み込めませんでした。接続を確認して、もう一度お試しください。',
+  'trip.guide.unavailable': 'この旅行は利用できないか、閲覧権限がありません。',
   'trip.tabs.plan': '計画',
   'trip.tabs.transports': '移動',
   'trip.tabs.reservations': '予約',

@@ -47,6 +47,24 @@ function plan(overrides: Partial<ItineraryPlan> = {}): ItineraryPlan {
   };
 }
 
+const guide: NonNullable<ItineraryPlan['guide']> = {
+  route: 'Chengdu → People’s Park → Chengdu',
+  rationale: 'A short city route leaves time for tea and suits the requested relaxed pace.',
+  highlights: ['Tea and local life in People’s Park'],
+  budget: {
+    scope: 'Per person, excluding travel to Chengdu',
+    estimate: 'CNY 100–150 planning estimate, not a current quote',
+    breakdown: [{ category: 'Food and tea', estimate: 'CNY 100–150', notes: 'One ordinary meal and tea.' }],
+  },
+  preparation: ['Check weather and reserve a suitable indoor rest option if needed.'],
+};
+const dayGuide: NonNullable<ItineraryPlan['days'][number]['guide']> = {
+  overview: 'Explore the park and sit in a teahouse to experience local life without a long walk.',
+  dining: 'Choose a nearby Sichuan restaurant with indoor seating; current venues need checking.',
+  accommodation: '',
+  alternative: 'In rain, shorten the park walk and spend more time at the teahouse.',
+};
+
 const location = {
   lat: 30.657,
   lng: 104.055,
@@ -115,14 +133,43 @@ describe.each([
   it('caps the complete serialized plan, including text spread across individually valid days', () => {
     const firstDay = day(0);
     const candidate = plan({
-      days: [firstDay, ...Array.from({ length: 19 }, () => ({ ...day(0), notes: 'x'.repeat(1500) }))],
+      days: [firstDay, ...Array.from({ length: 29 }, () => ({ ...day(0), notes: 'x'.repeat(1910) }))],
     });
-    firstDay.notes = 'x'.repeat(32000 - JSON.stringify(candidate).length);
+    firstDay.notes = 'x'.repeat(60000 - JSON.stringify(candidate).length);
     expect(firstDay.notes.length).toBeLessThanOrEqual(2000);
-    expect(JSON.stringify(candidate)).toHaveLength(32000);
+    expect(JSON.stringify(candidate)).toHaveLength(60000);
     expect(schema.safeParse(candidate).success).toBe(true);
     firstDay.notes += 'x';
     expect(schema.safeParse(candidate).success).toBe(false);
+  });
+
+  it('retains complete guide content and reads earlier drafts without it', () => {
+    const candidate = plan({ guide, days: [{ ...day(), guide: dayGuide }] });
+    expect(schema.parse(candidate)).toEqual(candidate);
+    expect(schema.parse(plan()).guide).toBeUndefined();
+  });
+
+  it('rejects empty or unbounded guide content and fabricated structured photo fields', () => {
+    const candidate = plan({ guide, days: [{ ...day(), guide: dayGuide }] });
+    for (const invalidGuide of [
+      { ...guide, rationale: ' ' },
+      { ...guide, highlights: [] },
+      { ...guide, preparation: Array.from({ length: 9 }, () => 'Reserve ahead') },
+      { ...guide, budget: { ...guide.budget, scope: '' } },
+      { ...guide, budget: { ...guide.budget, breakdown: [] } },
+      { ...guide, budget: { ...guide.budget, breakdown: [{ ...guide.budget.breakdown[0], notes: '' }] } },
+      { ...guide, image_url: 'https://invented.example/image.jpg' },
+    ]) {
+      expect(schema.safeParse({ ...candidate, guide: invalidGuide }).success).toBe(false);
+    }
+    for (const invalidDayGuide of [
+      { ...dayGuide, overview: '' },
+      { ...dayGuide, dining: 'x'.repeat(1001) },
+      { ...dayGuide, alternative: ' ' },
+      { ...dayGuide, image_url: 'https://invented.example/image.jpg' },
+    ]) {
+      expect(schema.safeParse({ ...candidate, days: [{ ...day(), guide: invalidDayGuide }] }).success).toBe(false);
+    }
   });
 
   it('uses the trip creation rules for the driving day window', () => {

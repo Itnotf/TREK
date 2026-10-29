@@ -1,6 +1,9 @@
 import { buildApp } from '../../src/bootstrap';
+import { TripMembers } from '../../src/db/entities/TripMembers.entity';
+import { createRow, deleteRows } from '../helpers/factories/rows';
 import { setAddonEnabled } from '../helpers/factories/settings';
 import { makeUser } from '../helpers/factories/users';
+import { itineraryDayGuideFixture, itineraryGuideFixture } from '../helpers/itinerary-guide';
 import { resetRateLimits } from '../helpers/test-db';
 import { sessionCookie } from './harness';
 import { MikroORM } from '@mikro-orm/core';
@@ -9,6 +12,7 @@ import {
   assistantThreadResponseSchema,
   itineraryApplyResponseSchema,
   itineraryDraftResponseSchema,
+  tripGuideResponseSchema,
   tripPlanCardSchema,
   uiStreamChunkSchema,
   type ItineraryPlan,
@@ -137,6 +141,7 @@ function savedCard(chunks: UiStreamChunk[], toolCallId: string) {
 function plan(): ItineraryPlan {
   return {
     schedule_version: 2,
+    guide: itineraryGuideFixture(),
     title: '成都到乐山两日自驾',
     summary: '先逛成都，再去乐山慢游。',
     start_date: '2026-12-31',
@@ -148,6 +153,7 @@ function plan(): ItineraryPlan {
     days: [
       {
         title: '成都慢游',
+        guide: itineraryDayGuideFixture(),
         overnight_city: '成都',
         notes: '午后休息。',
         stay: { area: '成都', name: null, check_in: '15:00', check_out: '10:00', notes: '酒店待选。' },
@@ -189,6 +195,7 @@ function plan(): ItineraryPlan {
       },
       {
         title: '成都到乐山',
+        guide: itineraryDayGuideFixture(),
         overnight_city: '乐山',
         notes: '上午出发。',
         stay: null,
@@ -376,5 +383,27 @@ describe('assistant itinerary over HTTP', () => {
     expect(itineraryDraftResponseSchema.parse((await get(latestPath, user.id)).body).draft.created_trip_id).toBe(
       trip.id,
     );
+
+    const guidePath = `/api/trips/${trip.id}/guide`;
+    expect((await request(app.getHttpServer()).get(guidePath)).status).toBe(401);
+    expect((await get(guidePath, other.id)).status).toBe(404);
+    const guide = await get(guidePath, user.id);
+    expect(guide.status).toBe(200);
+    expect(tripGuideResponseSchema.parse(guide.body).plan).toMatchObject(revisedPlan);
+    await createRow(orm, TripMembers, { trip: trip.id, user: other.id });
+    expect((await get(guidePath, other.id)).body).toEqual(guide.body);
+    await deleteRows(orm, TripMembers, { trip_id: trip.id, user_id: other.id });
+    expect((await get(guidePath, other.id)).status).toBe(404);
+
+    const deletedChat = await request(app.getHttpServer())
+      .delete(`${BASE}/threads/${threadId}`)
+      .set('Cookie', sessionCookie(user.id));
+    expect(deletedChat.status).toBe(200);
+    await setAddonEnabled(orm, 'ai_assistant', false);
+    try {
+      expect((await get(guidePath, user.id)).body).toEqual(guide.body);
+    } finally {
+      await setAddonEnabled(orm, 'ai_assistant', true);
+    }
   });
 });

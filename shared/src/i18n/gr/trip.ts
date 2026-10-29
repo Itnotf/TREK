@@ -1,6 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Ταξιδιωτικός οδηγός',
+  'trip.guide.shortTitle': 'Οδηγός',
+  'trip.guide.route': 'Η διαδρομή',
+  'trip.guide.highlights': 'Εμπειρίες που σας περιμένουν',
+  'trip.guide.days': 'Μετάβαση σε ημέρα',
+  'trip.guide.dining': 'Πού και τι να φάτε',
+  'trip.guide.stay': 'Πού να μείνετε',
+  'trip.guide.alternative': 'Αν αλλάξουν τα σχέδια',
+  'trip.guide.schedule': 'Ώρες και λεπτομέρειες μετακίνησης',
+  'trip.guide.budget': 'Εκτιμώμενος προϋπολογισμός',
+  'trip.guide.preparation': 'Πριν ξεκινήσετε',
+  'trip.guide.notes': 'Οι προτιμήσεις σας, οι παραδοχές και οι πηγές',
+  'trip.guide.openPlan': 'Άνοιγμα ημερήσιου προγράμματος',
+  'trip.guide.snapshot':
+    'Αυτός είναι ο οδηγός που επιβεβαιώσατε. Για μεταγενέστερες αλλαγές, δείτε το ημερήσιο πρόγραμμα.',
+  'trip.guide.empty':
+    'Αυτό το ταξίδι δεν έχει ακόμη αποθηκευμένο οδηγό. Μπορείτε να δείτε και να επεξεργαστείτε το ημερήσιο πρόγραμμά του. Τα νέα ταξίδια που δημιουργούνται από οδηγό τεχνητής νοημοσύνης θα διατηρούν εδώ τον πλήρη οδηγό.',
+  'trip.guide.loadFailed': 'Δεν ήταν δυνατή η φόρτωση του οδηγού. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.',
+  'trip.guide.unavailable': 'Αυτό το ταξίδι δεν είναι διαθέσιμο ή δεν έχετε πρόσβαση σε αυτό.',
   'trip.tabs.plan': 'Πλάνο',
   'trip.tabs.transports': 'Μεταφορές',
   'trip.tabs.reservations': 'Κρατήσεις',

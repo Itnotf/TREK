@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'คู่มือการเดินทาง',
+  'trip.guide.shortTitle': 'คู่มือ',
+  'trip.guide.route': 'เส้นทาง',
+  'trip.guide.highlights': 'ประสบการณ์ที่น่าตั้งตารอ',
+  'trip.guide.days': 'ไปยังวันที่ต้องการ',
+  'trip.guide.dining': 'กินอะไรและที่ไหนดี',
+  'trip.guide.stay': 'พักที่ไหนดี',
+  'trip.guide.alternative': 'เมื่อแผนเปลี่ยน',
+  'trip.guide.schedule': 'เวลาและรายละเอียดการเดินทาง',
+  'trip.guide.budget': 'งบประมาณโดยประมาณ',
+  'trip.guide.preparation': 'เตรียมตัวก่อนออกเดินทาง',
+  'trip.guide.notes': 'ความต้องการ ข้อสมมติ และแหล่งข้อมูลของคุณ',
+  'trip.guide.openPlan': 'เปิดแผนการเดินทางรายวัน',
+  'trip.guide.snapshot': 'นี่คือคู่มือที่บันทึกไว้ตอนคุณยืนยัน หากมีการเปลี่ยนแปลงภายหลัง โปรดดูแผนการเดินทางรายวัน',
+  'trip.guide.empty':
+    'ทริปนี้ยังไม่มีคู่มือที่บันทึกไว้ คุณยังดูและแก้ไขแผนรายวันได้ ทริปใหม่ที่สร้างจากคู่มือการเดินทางด้วย AI จะเก็บคู่มือฉบับเต็มไว้ที่นี่',
+  'trip.guide.loadFailed': 'โหลดคู่มือไม่ได้ โปรดตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง',
+  'trip.guide.unavailable': 'ทริปนี้ไม่พร้อมใช้งาน หรือคุณไม่มีสิทธิ์เข้าถึง',
   'trip.tabs.plan': 'แผน',
   'trip.tabs.transports': 'การขนส่ง',
   'trip.tabs.reservations': 'การจอง',

@@ -7,6 +7,8 @@ import { Days } from '../../../../src/db/entities/Days.entity';
 import { Places } from '../../../../src/db/entities/Places.entity';
 import { Reservations } from '../../../../src/db/entities/Reservations.entity';
 import { RoadtripPreferences } from '../../../../src/db/entities/RoadtripPreferences.entity';
+import { TripItineraryGuides } from '../../../../src/db/entities/TripItineraryGuides.entity';
+import { TripMembers } from '../../../../src/db/entities/TripMembers.entity';
 import { Trips } from '../../../../src/db/entities/Trips.entity';
 import { AccommodationsService } from '../../../../src/nest/accommodations/accommodations.service';
 import { AssignmentsService } from '../../../../src/nest/assignments/assignments.service';
@@ -16,9 +18,11 @@ import { planningPort } from '../../../../src/nest/assistant/assistant-planning-
 import { DaysService } from '../../../../src/nest/days/days.service';
 import { GooglePlacesClient } from '../../../../src/nest/maps/providers/google-places.provider';
 import { PermissionsService } from '../../../../src/nest/permissions/permissions.service';
+import { TripGuideService } from '../../../../src/nest/trips/trip-guide.service';
 import { createSnapshotTestDb } from '../../../helpers/db-mock';
 import { createRow, deleteRows, findRows, updateRows } from '../../../helpers/factories/rows';
 import { makeUser } from '../../../helpers/factories/users';
+import { itineraryDayGuideFixture, itineraryGuideFixture } from '../../../helpers/itinerary-guide';
 import { resetTestDb } from '../../../helpers/test-db';
 import { createTestModule, type TestModule } from '../../../helpers/test-module';
 import { MikroORM } from '@mikro-orm/core';
@@ -422,9 +426,11 @@ describe('AssistantItineraryService', () => {
     await tools.call('search_place', { query: 'Downing Street' });
     const { sources: _sources, ...modelPlan } = plan();
     modelPlan.schedule_version = 2;
+    modelPlan.guide = itineraryGuideFixture();
     modelPlan.days = [
       {
         title: 'London',
+        guide: itineraryDayGuideFixture(),
         overnight_city: 'London',
         notes: '',
         stay: null,
@@ -511,6 +517,7 @@ describe('AssistantItineraryService', () => {
     const c = await draft();
     const { trip } = await service.apply(c.userId, c.draft.id, { revision: 1 });
     await deleteRows(t.get(MikroORM), Trips, { id: trip.id });
+    expect(await findRows(t.get(MikroORM), TripItineraryGuides, {})).toHaveLength(0);
     const [row] = await findRows(t.get(MikroORM), AssistantItineraryDrafts, { id: c.draft.id });
     expect(row.applied_trip_id).toBeNull();
     expect(row.applied_at).toBeTruthy();
@@ -555,6 +562,7 @@ describe('AssistantItineraryService', () => {
     expect(await findRows(orm, Places, {})).toHaveLength(0);
     expect(await findRows(orm, DayAssignments, {})).toHaveLength(0);
     expect(await findRows(orm, RoadtripPreferences, {})).toHaveLength(0);
+    expect(await findRows(orm, TripItineraryGuides, {})).toHaveLength(0);
     expect((await findRows(orm, AssistantItineraryDrafts, { id: c.draft.id }))[0]).toMatchObject({
       applied_at: null,
       applied_trip_id: null,
@@ -569,6 +577,56 @@ describe('AssistantItineraryService', () => {
     await expect(service.apply(c.userId, c.draft.id, { revision: 1 })).rejects.toMatchObject({ status: 403 });
     expect(await findRows(t.get(MikroORM), Trips, {})).toHaveLength(0);
     expect(t.realtime.broadcastToUserMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps the complete confirmed guide after chat deletion and shares it only with current trip members', async () => {
+    const c = await conversation();
+    const itinerary = dailyPlan();
+    itinerary.guide = itineraryGuideFixture();
+    for (const day of itinerary.days) day.guide = itineraryDayGuideFixture();
+    const saved = await service.save(c.userId, c.threadId, { base_revision: 0, plan: itinerary });
+    const { trip } = await service.apply(c.userId, saved.id, { revision: 1 });
+    const orm = t.get(MikroORM);
+    const guides = t.get(TripGuideService);
+    expect(await guides.get(c.userId, trip.id)).toEqual(saved.plan);
+    await service.apply(c.userId, saved.id, { revision: 1 });
+    expect(await findRows(orm, TripItineraryGuides, { trip_id: trip.id })).toHaveLength(1);
+    await deleteRows(orm, AssistantThreads, { id: c.threadId });
+    expect(await findRows(orm, AssistantItineraryDrafts, { id: saved.id })).toHaveLength(0);
+    expect(await guides.get(c.userId, trip.id)).toEqual(saved.plan);
+
+    const { user: other } = await makeUser(orm);
+    await expect(guides.get(other.id, trip.id)).rejects.toMatchObject({ status: 404 });
+    await createRow(orm, TripMembers, { trip: trip.id, user: other.id });
+    expect(await guides.get(other.id, trip.id)).toEqual(saved.plan);
+    await deleteRows(orm, TripMembers, { trip_id: trip.id, user_id: other.id });
+    await expect(guides.get(other.id, trip.id)).rejects.toMatchObject({ status: 404 });
+  });
+
+  it('returns no guide for an existing manual trip and refuses corrupt saved content', async () => {
+    const c = await conversation();
+    const orm = t.get(MikroORM);
+    const guides = t.get(TripGuideService);
+    const trip = await createRow(orm, Trips, { user: c.userId, title: 'Manual trip' });
+    expect(await guides.get(c.userId, trip.id)).toBeNull();
+    await expect(guides.get(c.userId, 'invalid')).rejects.toMatchObject({ status: 404 });
+    await createRow(orm, TripItineraryGuides, { trip: trip.id, plan: '{"broken":true}' });
+    await expect(guides.get(c.userId, trip.id)).rejects.toMatchObject({ status: 500 });
+  });
+
+  it('rolls back the guide, trip and receipt together if confirmation fails after saving the guide', async () => {
+    const c = await draft();
+    const orm = t.get(MikroORM);
+    vi.spyOn(orm.em.getRepository(AssistantItineraryDrafts), 'markApplied').mockRejectedValueOnce(
+      new Error('receipt storage failed'),
+    );
+    await expect(service.apply(c.userId, c.draft.id, { revision: 1 })).rejects.toThrow('receipt storage failed');
+    expect(await findRows(orm, Trips, {})).toHaveLength(0);
+    expect(await findRows(orm, TripItineraryGuides, {})).toHaveLength(0);
+    expect(await findRows(orm, DayAssignments, {})).toHaveLength(0);
+    expect(await service.get(c.userId, c.draft.id)).toMatchObject({ created_trip_id: null });
+    const { trip } = await service.apply(c.userId, c.draft.id, { revision: 1 });
+    expect(await t.get(TripGuideService).get(c.userId, trip.id)).toEqual(c.draft.plan);
   });
 
   it('validates the stored plan again and fails closed if it is corrupted', async () => {

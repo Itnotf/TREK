@@ -1,6 +1,25 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Cẩm nang du lịch',
+  'trip.guide.shortTitle': 'Cẩm nang',
+  'trip.guide.route': 'Tuyến đường',
+  'trip.guide.highlights': 'Những trải nghiệm đáng mong đợi',
+  'trip.guide.days': 'Chuyển đến một ngày',
+  'trip.guide.dining': 'Ăn gì và ở đâu',
+  'trip.guide.stay': 'Nên lưu trú ở đâu',
+  'trip.guide.alternative': 'Khi kế hoạch thay đổi',
+  'trip.guide.schedule': 'Thời gian và thông tin di chuyển',
+  'trip.guide.budget': 'Ngân sách dự kiến',
+  'trip.guide.preparation': 'Chuẩn bị trước chuyến đi',
+  'trip.guide.notes': 'Sở thích, giả định và nguồn tham khảo của bạn',
+  'trip.guide.openPlan': 'Mở lịch trình từng ngày',
+  'trip.guide.snapshot':
+    'Đây là cẩm nang được lưu khi bạn xác nhận. Hãy xem lịch trình từng ngày để biết các thay đổi sau đó.',
+  'trip.guide.empty':
+    'Chuyến đi này chưa có cẩm nang được lưu. Bạn vẫn có thể xem và sửa lịch trình từng ngày. Các chuyến đi mới được tạo từ cẩm nang AI sẽ lưu toàn bộ cẩm nang tại đây.',
+  'trip.guide.loadFailed': 'Không thể tải cẩm nang. Hãy kiểm tra kết nối và thử lại.',
+  'trip.guide.unavailable': 'Chuyến đi này không khả dụng hoặc bạn không có quyền truy cập.',
   'trip.tabs.plan': 'Kế hoạch',
   'trip.tabs.transports': 'Di chuyển',
   'trip.tabs.reservations': 'Đặt chỗ',

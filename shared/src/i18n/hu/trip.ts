@@ -1,6 +1,24 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.title': 'Útikalauz',
+  'trip.guide.shortTitle': 'Útikalauz',
+  'trip.guide.route': 'Az útvonal',
+  'trip.guide.highlights': 'Élmények, amelyekre érdemes készülni',
+  'trip.guide.days': 'Ugrás egy napra',
+  'trip.guide.dining': 'Hol és mit együnk',
+  'trip.guide.stay': 'Hol szálljunk meg',
+  'trip.guide.alternative': 'Ha változnak a tervek',
+  'trip.guide.schedule': 'Időpontok és közlekedési részletek',
+  'trip.guide.budget': 'Becsült költségvetés',
+  'trip.guide.preparation': 'Indulás előtt',
+  'trip.guide.notes': 'Igényeid, feltételezések és források',
+  'trip.guide.openPlan': 'Napi útiterv megnyitása',
+  'trip.guide.snapshot': 'Ez az általad jóváhagyott útikalauz. A későbbi módosításokat a napi útitervben találod.',
+  'trip.guide.empty':
+    'Ehhez az utazáshoz még nincs mentett útikalauz. A napi útitervet továbbra is megtekintheted és szerkesztheted. Az MI-útikalauzból létrehozott új utazások teljes útikalauza itt marad meg.',
+  'trip.guide.loadFailed': 'Az útikalauz nem tölthető be. Ellenőrizd a kapcsolatot, és próbáld újra.',
+  'trip.guide.unavailable': 'Ez az utazás nem érhető el, vagy nincs hozzáférésed.',
   'trip.tabs.plan': 'Terv',
   'trip.tabs.transports': 'Közlekedés',
   'trip.tabs.reservations': 'Foglalások',

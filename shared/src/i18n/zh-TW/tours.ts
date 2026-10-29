@@ -1,7 +1,7 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
-  'trip.tabs.tourPlanner': '遊程',
+  'trip.tabs.tourPlanner': '活動路線',
   'tours.mode.places': '地點',
   'tours.mode.tours': '遊程',
   'tours.mode.label': '新增檢視',

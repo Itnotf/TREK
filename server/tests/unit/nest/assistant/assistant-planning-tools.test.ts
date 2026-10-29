@@ -11,6 +11,7 @@ import {
 import type { TravelSourceResult } from '../../../../src/nest/assistant/assistant-travel-source';
 import { UiStreamWriter } from '../../../../src/nest/assistant/ui-stream.writer';
 import { DomainError } from '../../../../src/nest/common/domain-error';
+import { itineraryDayGuideFixture, itineraryGuideFixture } from '../../../helpers/itinerary-guide';
 import type { ItineraryDraft, ItineraryPlan, ItinerarySaveRequest } from '@trek/shared';
 
 import { describe, expect, it, vi } from 'vitest';
@@ -21,6 +22,7 @@ function plan(): ItineraryPlan {
     title: '云南自驾',
     schedule_version: 2,
     summary: '昆明到大理，带老人慢慢玩',
+    guide: itineraryGuideFixture(),
     start_date: null,
     currency: 'CNY',
     transport_mode: 'driving',
@@ -30,6 +32,7 @@ function plan(): ItineraryPlan {
     days: [
       {
         title: '大理古城',
+        guide: itineraryDayGuideFixture(),
         overnight_city: '',
         stay: null,
         notes: '驾驶耗时待核实',
@@ -109,6 +112,47 @@ describe('conversational itinerary tools', () => {
       value: expect.stringContaining('schedule_version: 2'),
     });
     expect(t.callbacks.save).not.toHaveBeenCalled();
+  });
+
+  it('requires complete guide sections for new saves without overwriting a valid draft', async () => {
+    const t = setup();
+    const candidate = plan();
+    expect((await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate })).ok).toBe(true);
+    delete candidate.guide;
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate })).toMatchObject({
+      ok: false,
+      value: expect.stringContaining('plan.guide'),
+    });
+    candidate.guide = itineraryGuideFixture();
+    delete candidate.days[0].guide;
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate })).toMatchObject({
+      ok: false,
+      value: expect.stringContaining('day.guide'),
+    });
+    expect(t.callbacks.save).toHaveBeenCalledTimes(1);
+    expect((await t.callbacks.current())?.plan.guide).toEqual(itineraryGuideFixture());
+  });
+
+  it('requires stay advice only when the day includes an overnight stay', async () => {
+    const t = setup();
+    const candidate = plan();
+    candidate.days[0].guide = { ...itineraryDayGuideFixture(), accommodation: '' };
+    expect((await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 0, plan: candidate })).ok).toBe(true);
+    candidate.days[0].stay = {
+      area: '大理古城外围',
+      name: null,
+      check_in: null,
+      check_out: null,
+      notes: '酒店待选',
+    };
+    candidate.days.push({ ...plan().days[0], stops: [{ ...plan().days[0].stops[0], id: 'return' }] });
+    expect(await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate })).toMatchObject({
+      ok: false,
+      value: expect.stringContaining('Accommodation advice'),
+    });
+    candidate.days[0].guide = itineraryDayGuideFixture();
+    expect((await t.tools.call(SAVE_ITINERARY_TOOL, { base_revision: 1, plan: candidate })).ok).toBe(true);
+    expect((await t.callbacks.current())?.plan.days[0].guide?.accommodation).toContain('电梯');
   });
 
   it('requires the driving limit as a setting rather than only a sentence', async () => {
