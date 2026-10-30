@@ -6,7 +6,7 @@ import { buildAssignment, buildDay, buildPlace, buildReservation } from '../../t
 import { buildGuideDraft, buildSavedGuide } from '../../tests/helpers/itinerary';
 import { server } from '../../tests/helpers/msw/server';
 import { fireEvent, render, screen } from '../../tests/helpers/render';
-import { addListener } from '../api/websocket';
+import { addListener, subscribeTripRefetch } from '../api/websocket';
 import { _resetNetworkMode, setForcedOffline } from '../sync/networkMode';
 import TripGuidePage from './TripGuidePage';
 
@@ -16,6 +16,7 @@ vi.mock('../api/websocket', () => ({
   leaveTrip: vi.fn(),
   addListener: vi.fn(),
   removeListener: vi.fn(),
+  subscribeTripRefetch: vi.fn(() => vi.fn()),
   getSocketId: () => null,
 }));
 
@@ -111,10 +112,15 @@ describe('saved trip guide', () => {
     response = { ...response, current: { ...response.current, title: 'After returning to the page' } };
     fireEvent(window, new Event('focus'));
     expect(await screen.findByRole('heading', { level: 1, name: 'After returning to the page' })).toBeVisible();
+    response = { ...response, current: { ...response.current, title: 'After reconnecting' } };
+    const refetch = vi.mocked(subscribeTripRefetch).mock.calls.slice(-1)[0]?.[0];
+    if (!refetch) throw new Error('Missing reconnect subscription');
+    refetch('31');
+    expect(await screen.findByRole('heading', { level: 1, name: 'After reconnecting' })).toBeVisible();
     denied = true;
-    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }));
+    listener({ type: 'member:removed', tripId: 31 });
     expect(await screen.findByRole('alert')).toHaveTextContent('This trip is unavailable');
-    expect(screen.queryByText('After returning to the page')).not.toBeInTheDocument();
+    expect(screen.queryByText('After reconnecting')).not.toBeInTheDocument();
   });
 
   it('loads the saved guide on a direct visit and exposes experiences before detailed times', async () => {
