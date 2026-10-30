@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Seções da viagem',
+  'tours.navigation.help':
+    'Rotas de caminhada, ciclismo e outras atividades ao ar livre podem ser adicionadas ao roteiro diário.',
   'trip.tabs.tourPlanner': 'Passeios',
   'tours.mode.places': 'Lugares',
   'tours.mode.tours': 'Passeios',

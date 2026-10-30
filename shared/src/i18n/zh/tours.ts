@@ -1,11 +1,13 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
-  'trip.tabs.tourPlanner': '活动路线',
+  'trip.navigation.label': '旅行导航',
+  'tours.navigation.help': '这里管理步行、骑行等活动的具体路线，可加入某一天的行程。',
+  'trip.tabs.tourPlanner': '步行与户外路线',
   'tours.mode.places': '地点',
-  'tours.mode.tours': '游览',
+  'tours.mode.tours': '户外路线',
   'tours.mode.label': '添加视图',
-  'tours.title': '游览',
+  'tours.title': '户外路线',
   'tours.empty.title': '暂无游览活动',
   'tours.empty.body': '规划游览路线或导入 GPX 或 KML 文件，即可开始。',
   'tours.addToDay': '添加到某天',

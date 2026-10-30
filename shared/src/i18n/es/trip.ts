@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Itinerario actual',
+  'trip.guide.currentHelp': 'Los lugares, horarios y alojamientos siguen tu itinerario diario.',
+  'trip.guide.original': 'Guía inicial · referencia',
+  'trip.guide.originalHelp':
+    'El itinerario ha cambiado o esta guía anterior no se puede verificar. La ruta, los consejos y el presupuesto son de la versión inicial.',
+  'trip.guide.refresh': 'Actualizar',
   'trip.guide.title': 'Guía de viaje',
   'trip.guide.shortTitle': 'Guía',
   'trip.guide.route': 'La ruta',
@@ -14,10 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Antes de salir',
   'trip.guide.notes': 'Tus preferencias, suposiciones y fuentes',
   'trip.guide.openPlan': 'Abrir itinerario diario',
-  'trip.guide.snapshot':
-    'Esta es la guía que confirmaste. Para consultar cambios posteriores, revisa el itinerario diario.',
-  'trip.guide.empty':
-    'Este viaje aún no tiene una guía guardada. Puedes ver y editar su itinerario diario. Los viajes nuevos creados a partir de una guía con IA conservarán aquí la guía completa.',
   'trip.guide.loadFailed': 'No se pudo cargar la guía. Comprueba tu conexión e inténtalo de nuevo.',
   'trip.guide.unavailable': 'Este viaje no está disponible o no tienes acceso a él.',
   'trip.tabs.plan': 'Plan', // same-as-en

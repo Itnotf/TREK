@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Current itinerary',
+  'trip.guide.currentHelp': 'Places, times and stays follow your daily itinerary.',
+  'trip.guide.original': 'Initial guide · reference',
+  'trip.guide.originalHelp':
+    'The itinerary has changed, or this older guide cannot be checked against it. Its route, advice and budget are the initial version.',
+  'trip.guide.refresh': 'Refresh',
   'trip.guide.title': 'Travel guide',
   'trip.guide.shortTitle': 'Guide',
   'trip.guide.route': 'The route',
@@ -14,12 +20,9 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Before you go',
   'trip.guide.notes': 'Your preferences, assumptions and sources',
   'trip.guide.openPlan': 'Open daily itinerary',
-  'trip.guide.snapshot': 'This is the guide you confirmed. For later schedule changes, check the daily itinerary.',
-  'trip.guide.empty':
-    'This trip has no saved guide yet. You can still view and edit its daily itinerary. New trips created from an AI travel guide will keep the full guide here.',
   'trip.guide.loadFailed': 'The guide could not be loaded. Check your connection and try again.',
   'trip.guide.unavailable': 'This trip is unavailable or you do not have access to it.',
-  'trip.tabs.plan': 'Plan',
+  'trip.tabs.plan': 'Daily itinerary',
   'trip.tabs.transports': 'Transports',
   'trip.tabs.reservations': 'Bookings',
   'trip.tabs.reservationsShort': 'Book',

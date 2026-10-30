@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Aktueller Reiseplan',
+  'trip.guide.currentHelp': 'Orte, Zeiten und Unterkünfte entsprechen deinem Tagesplan.',
+  'trip.guide.original': 'Ursprünglicher Reiseführer · Referenz',
+  'trip.guide.originalHelp':
+    'Der Plan wurde geändert oder dieser ältere Reiseführer lässt sich nicht abgleichen. Route, Tipps und Budget zeigen die ursprüngliche Version.',
+  'trip.guide.refresh': 'Aktualisieren',
   'trip.guide.title': 'Reiseführer',
   'trip.guide.shortTitle': 'Tipps',
   'trip.guide.route': 'Die Route',
@@ -14,9 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Vor der Abreise',
   'trip.guide.notes': 'Deine Wünsche, Annahmen und Quellen',
   'trip.guide.openPlan': 'Tagesplan öffnen',
-  'trip.guide.snapshot': 'Dies ist der Reiseführer, den du bestätigt hast. Spätere Änderungen findest du im Tagesplan.',
-  'trip.guide.empty':
-    'Für diese Reise ist noch kein Reiseführer gespeichert. Du kannst den Tagesplan weiterhin ansehen und bearbeiten. Bei neuen Reisen aus einem KI-Reiseführer bleibt der vollständige Reiseführer hier erhalten.',
   'trip.guide.loadFailed':
     'Der Reiseführer konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.',
   'trip.guide.unavailable': 'Diese Reise ist nicht verfügbar oder du hast keinen Zugriff darauf.',

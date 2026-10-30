@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'برنامج الرحلة الحالي',
+  'trip.guide.currentHelp': 'تتبع الأماكن والأوقات والإقامة برنامجك اليومي.',
+  'trip.guide.original': 'الدليل الأولي · للرجوع إليه',
+  'trip.guide.originalHelp':
+    'تغير البرنامج أو تعذر التحقق من هذا الدليل القديم. المسار والنصائح والميزانية تخص النسخة الأولية.',
+  'trip.guide.refresh': 'تحديث',
   'trip.guide.title': 'دليل الرحلة',
   'trip.guide.shortTitle': 'الدليل',
   'trip.guide.route': 'المسار',
@@ -14,9 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'قبل الانطلاق',
   'trip.guide.notes': 'تفضيلاتك والافتراضات والمصادر',
   'trip.guide.openPlan': 'عرض برنامج الرحلة اليومي',
-  'trip.guide.snapshot': 'هذا هو الدليل الذي أكدته. للاطلاع على التغييرات اللاحقة، راجع برنامج الرحلة اليومي.',
-  'trip.guide.empty':
-    'لا يوجد دليل محفوظ لهذه الرحلة بعد. يمكنك عرض برنامجها اليومي وتعديله. ستُحفظ هنا الأدلة الكاملة للرحلات الجديدة التي تنشئها من دليل سفر بالذكاء الاصطناعي.',
   'trip.guide.loadFailed': 'تعذر تحميل الدليل. تحقق من اتصالك وحاول مرة أخرى.',
   'trip.guide.unavailable': 'هذه الرحلة غير متاحة أو ليس لديك إذن بالوصول إليها.',
   'trip.tabs.plan': 'الخطة',

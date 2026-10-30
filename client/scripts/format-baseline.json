@@ -416,8 +416,6 @@
   "src/components/Layout/Navbar.tsx",
   "src/components/Layout/NewVersionNotice.test.tsx",
   "src/components/Layout/NewVersionNotice.tsx",
-  "src/components/Layout/OfflineBanner.test.tsx",
-  "src/components/Layout/OfflineBanner.tsx",
   "src/components/Layout/PageShell.test.tsx",
   "src/components/Layout/PageShell.tsx",
   "src/components/Layout/PageSidebar.test.tsx",

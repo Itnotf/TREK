@@ -8,6 +8,7 @@ export class TripItineraryGuides {
   trip!: Ref<Trips>;
   trip_id!: number;
   plan!: string;
+  baseline_hash?: string | null;
 }
 
 export const TripItineraryGuidesSchema = defineEntity({
@@ -19,5 +20,6 @@ export const TripItineraryGuidesSchema = defineEntity({
     trip: () => p.manyToOne(Trips).ref().deleteRule('cascade').hidden(),
     trip_id: p.integer().persist(false),
     plan: p.text(),
+    baseline_hash: p.text().nullable(),
   },
 });

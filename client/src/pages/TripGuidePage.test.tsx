@@ -2,13 +2,22 @@ import { http, HttpResponse } from 'msw';
 import { Route, Routes } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { buildGuideDraft } from '../../tests/helpers/itinerary';
+import { buildAssignment, buildDay, buildPlace, buildReservation } from '../../tests/helpers/factories';
+import { buildGuideDraft, buildSavedGuide } from '../../tests/helpers/itinerary';
 import { server } from '../../tests/helpers/msw/server';
 import { fireEvent, render, screen } from '../../tests/helpers/render';
+import { addListener } from '../api/websocket';
 import { _resetNetworkMode, setForcedOffline } from '../sync/networkMode';
 import TripGuidePage from './TripGuidePage';
 
 vi.mock('../components/Layout/Navbar', () => ({ default: () => null }));
+vi.mock('../api/websocket', () => ({
+  joinTrip: vi.fn(),
+  leaveTrip: vi.fn(),
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  getSocketId: () => null,
+}));
 
 function show(id = '31') {
   return render(
@@ -28,6 +37,86 @@ afterEach(() => {
 });
 
 describe('saved trip guide', () => {
+  it('shows current moved activities, actual time and bookings while keeping outdated prose folded', async () => {
+    const response = buildSavedGuide();
+    response.status = 'changed';
+    response.current.title = 'Updated trip';
+    response.current.days = [
+      buildDay({ id: 1, trip_id: 31, title: 'Free morning', assignments: [] }),
+      buildDay({
+        id: 2,
+        trip_id: 31,
+        day_number: 2,
+        title: 'Afternoon visit',
+        assignments: [
+          buildAssignment({
+            id: 9,
+            day_id: 2,
+            assignment_time: '13:30',
+            assignment_end_time: '14:30',
+            place: buildPlace({
+              name: 'New museum',
+              description: 'See the local history collection.',
+              place_time: '09:00',
+            }),
+          }),
+        ],
+      }),
+    ];
+    response.current.reservations = [
+      buildReservation({
+        id: 10,
+        trip_id: 31,
+        day_id: 2,
+        title: 'Return train',
+        type: 'train',
+        status: 'confirmed',
+        reservation_time: '18:00',
+      }),
+    ];
+    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json(response)));
+    show();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Updated trip' })).toBeVisible();
+    expect(screen.getAllByText(/13:30 – 14:30/)[0]).toBeVisible();
+    expect(screen.getAllByText('See the local history collection.')[0]).toBeVisible();
+    expect(screen.getAllByRole('heading', { name: 'Return train' }).slice(-1)[0]).toBeVisible();
+    const original = screen.getByText('Initial guide · reference').closest('details');
+    expect(original).not.toHaveAttribute('open');
+    const route = response.plan?.guide?.route;
+    if (!route) throw new Error('Guide fixture missing');
+    expect(screen.getByText(route)).not.toBeVisible();
+    fireEvent.click(screen.getByText('Initial guide · reference'));
+    expect(screen.getByText(route)).toBeVisible();
+  });
+
+  it('reloads current data when returning to the page and clears it after access is revoked', async () => {
+    let response = buildSavedGuide();
+    let denied = false;
+    server.use(
+      http.get('/api/trips/31/guide', () =>
+        denied ? new HttpResponse(null, { status: 403 }) : HttpResponse.json(response)
+      )
+    );
+    show();
+    await screen.findByRole('heading', { level: 1, name: 'Western Sichuan' });
+    response = {
+      ...response,
+      status: 'changed',
+      current: { ...response.current, title: 'After another traveller edited' },
+    };
+    const listener = vi.mocked(addListener).mock.calls.slice(-1)[0]?.[0];
+    if (!listener) throw new Error('Missing trip subscription');
+    listener({ type: 'assignment:moved', tripId: 31 });
+    expect(await screen.findByRole('heading', { level: 1, name: 'After another traveller edited' })).toBeVisible();
+    response = { ...response, current: { ...response.current, title: 'After returning to the page' } };
+    fireEvent(window, new Event('focus'));
+    expect(await screen.findByRole('heading', { level: 1, name: 'After returning to the page' })).toBeVisible();
+    denied = true;
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('This trip is unavailable');
+    expect(screen.queryByText('After returning to the page')).not.toBeInTheDocument();
+  });
+
   it('loads the saved guide on a direct visit and exposes experiences before detailed times', async () => {
     const plan = buildGuideDraft().plan;
     plan.days[0].stay = {
@@ -40,7 +129,7 @@ describe('saved trip guide', () => {
     const guide = plan.guide;
     const dayGuide = plan.days[0].guide;
     if (!guide || !dayGuide) throw new Error('Guide fixture missing');
-    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json({ plan })));
+    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json(buildSavedGuide(plan))));
     show();
     expect(screen.getByRole('status')).toHaveTextContent('Loading');
     expect(await screen.findByRole('heading', { level: 1, name: plan.title })).toBeInTheDocument();
@@ -55,9 +144,7 @@ describe('saved trip guide', () => {
     expect(screen.getByText('Your preferences, assumptions and sources').closest('details')).not.toHaveAttribute(
       'open'
     );
-    expect(
-      screen.getByText('This is the guide you confirmed. For later schedule changes, check the daily itinerary.')
-    ).toBeVisible();
+    expect(screen.getByText('Places, times and stays follow your daily itinerary.')).toBeVisible();
     for (const link of screen.getAllByRole('link', { name: 'Open daily itinerary' }))
       expect(link).toHaveAttribute('href', '/trips/31');
     fireEvent.click(screen.getByText('Times and transport details'));
@@ -67,10 +154,11 @@ describe('saved trip guide', () => {
   });
 
   it('keeps old trips usable without inventing a guide', async () => {
-    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json({ plan: null })));
+    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json(buildSavedGuide(null))));
     show();
-    expect(await screen.findByText(/This trip has no saved guide yet/)).toBeVisible();
-    expect(screen.getByRole('link', { name: 'Open daily itinerary' })).toHaveAttribute('href', '/trips/31');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Manual trip' })).toBeVisible();
+    expect(screen.getByText('No places for this day yet')).toBeVisible();
+    expect(screen.getAllByRole('link', { name: 'Open daily itinerary' })[0]).toHaveAttribute('href', '/trips/31');
     expect(screen.queryByText('Estimated budget')).not.toBeInTheDocument();
   });
 
@@ -84,7 +172,7 @@ describe('saved trip guide', () => {
 
   it('recovers from an offline visit without showing a fabricated empty guide', async () => {
     setForcedOffline(true);
-    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json({ plan: buildGuideDraft().plan })));
+    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json(buildSavedGuide())));
     show();
     expect(await screen.findByRole('alert')).toHaveTextContent('Check your connection');
     setForcedOffline(false);

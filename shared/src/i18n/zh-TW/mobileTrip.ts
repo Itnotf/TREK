@@ -46,7 +46,7 @@ const mobileTrip: TranslationStrings = {
   'mobileTrip.stay': '停留',
   'mobileTrip.tapAgainToDelete': '再次點擊以刪除',
   'mobileTrip.todoOpenCount': '{count} 項未完成',
-  'mobileTrip.travel': '旅行',
+  'mobileTrip.travel': '日程',
   'mobileTrip.upNext': '接下來',
   'mobileTrip.viewDetails': '查看詳情',
   'mobileTrip.transportsEmpty': '暫無交通安排',

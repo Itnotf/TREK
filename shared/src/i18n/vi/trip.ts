@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Lịch trình hiện tại',
+  'trip.guide.currentHelp': 'Địa điểm, thời gian và chỗ ở theo lịch trình từng ngày.',
+  'trip.guide.original': 'Cẩm nang ban đầu · tham khảo',
+  'trip.guide.originalHelp':
+    'Lịch trình đã thay đổi hoặc không thể đối chiếu cẩm nang cũ này. Tuyến đường, gợi ý và ngân sách thuộc phiên bản ban đầu.',
+  'trip.guide.refresh': 'Làm mới',
   'trip.guide.title': 'Cẩm nang du lịch',
   'trip.guide.shortTitle': 'Cẩm nang',
   'trip.guide.route': 'Tuyến đường',
@@ -14,10 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Chuẩn bị trước chuyến đi',
   'trip.guide.notes': 'Sở thích, giả định và nguồn tham khảo của bạn',
   'trip.guide.openPlan': 'Mở lịch trình từng ngày',
-  'trip.guide.snapshot':
-    'Đây là cẩm nang được lưu khi bạn xác nhận. Hãy xem lịch trình từng ngày để biết các thay đổi sau đó.',
-  'trip.guide.empty':
-    'Chuyến đi này chưa có cẩm nang được lưu. Bạn vẫn có thể xem và sửa lịch trình từng ngày. Các chuyến đi mới được tạo từ cẩm nang AI sẽ lưu toàn bộ cẩm nang tại đây.',
   'trip.guide.loadFailed': 'Không thể tải cẩm nang. Hãy kiểm tra kết nối và thử lại.',
   'trip.guide.unavailable': 'Chuyến đi này không khả dụng hoặc bạn không có quyền truy cập.',
   'trip.tabs.plan': 'Kế hoạch',

@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Huidige reisplanning',
+  'trip.guide.currentHelp': 'Plaatsen, tijden en overnachtingen volgen je dagplanning.',
+  'trip.guide.original': 'Oorspronkelijke gids · referentie',
+  'trip.guide.originalHelp':
+    'De planning is gewijzigd of deze oudere gids kan niet worden gecontroleerd. Route, advies en budget zijn de oorspronkelijke versie.',
+  'trip.guide.refresh': 'Vernieuwen',
   'trip.guide.title': 'Reisgids',
   'trip.guide.shortTitle': 'Reisgids',
   'trip.guide.route': 'De route',
@@ -14,9 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Voor vertrek',
   'trip.guide.notes': 'Je voorkeuren, aannames en bronnen',
   'trip.guide.openPlan': 'Dagplanning openen',
-  'trip.guide.snapshot': 'Dit is de reisgids die je hebt bevestigd. Bekijk de dagplanning voor latere wijzigingen.',
-  'trip.guide.empty':
-    'Deze reis heeft nog geen opgeslagen reisgids. Je kunt de dagplanning nog steeds bekijken en bewerken. Nieuwe reizen die vanuit een AI-reisgids worden aangemaakt, bewaren hier de volledige gids.',
   'trip.guide.loadFailed': 'De reisgids kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.',
   'trip.guide.unavailable': 'Deze reis is niet beschikbaar of je hebt er geen toegang toe.',
   'trip.tabs.plan': 'Planning',

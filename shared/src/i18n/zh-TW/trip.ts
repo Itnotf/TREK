@@ -1,6 +1,11 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': '目前旅行安排',
+  'trip.guide.currentHelp': '地點、時間和住宿與每日行程保持一致。',
+  'trip.guide.original': '最初的攻略 · 參考',
+  'trip.guide.originalHelp': '行程已調整，或這份舊攻略無法核對。以下路線說明、建議和預算保留最初版本，僅供參考。',
+  'trip.guide.refresh': '重新整理安排',
   'trip.guide.title': '攻略總覽',
   'trip.guide.shortTitle': '攻略',
   'trip.guide.route': '路線與推薦理由',
@@ -14,9 +19,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': '出發前準備',
   'trip.guide.notes': '旅行偏好、待核實事項與來源',
   'trip.guide.openPlan': '查看每日行程',
-  'trip.guide.snapshot': '這是確認時儲存的攻略；後續調整的安排請以每日行程為準。',
-  'trip.guide.empty':
-    '這趟旅行還沒有儲存完整攻略，你仍可查看和編輯每日行程。從新版 AI 攻略確認建立的旅行，會在這裡保留完整內容。',
   'trip.guide.loadFailed': '攻略暫時載入失敗，請檢查網路後重試。',
   'trip.guide.unavailable': '這趟旅行不存在，或你沒有查看權限。',
   'trip.tabs.plan': '每日行程',

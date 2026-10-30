@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Aktualny plan podróży',
+  'trip.guide.currentHelp': 'Miejsca, godziny i noclegi odpowiadają planowi dziennemu.',
+  'trip.guide.original': 'Pierwotny przewodnik · odniesienie',
+  'trip.guide.originalHelp':
+    'Plan się zmienił lub nie można zweryfikować tego starszego przewodnika. Trasa, porady i budżet pochodzą z wersji początkowej.',
+  'trip.guide.refresh': 'Odśwież',
   'trip.guide.title': 'Przewodnik po podróży',
   'trip.guide.shortTitle': 'Przewodnik',
   'trip.guide.route': 'Trasa',
@@ -14,10 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Przed wyjazdem',
   'trip.guide.notes': 'Twoje preferencje, założenia i źródła',
   'trip.guide.openPlan': 'Otwórz plan dzienny',
-  'trip.guide.snapshot':
-    'To przewodnik zapisany po Twoim zatwierdzeniu. Późniejsze zmiany znajdziesz w planie dziennym.',
-  'trip.guide.empty':
-    'Ta podróż nie ma jeszcze zapisanego przewodnika. Nadal możesz przeglądać i edytować plan dzienny. Nowe podróże utworzone na podstawie przewodnika AI zachowają tutaj pełny przewodnik.',
   'trip.guide.loadFailed': 'Nie udało się wczytać przewodnika. Sprawdź połączenie i spróbuj ponownie.',
   'trip.guide.unavailable': 'Ta podróż jest niedostępna lub nie masz do niej dostępu.',
   'trip.tabs.plan': 'Plan', // same-as-en

@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'แผนการเดินทางปัจจุบัน',
+  'trip.guide.currentHelp': 'สถานที่ เวลา และที่พักตรงกับแผนรายวันของคุณ',
+  'trip.guide.original': 'คู่มือฉบับแรก · ใช้อ้างอิง',
+  'trip.guide.originalHelp':
+    'แผนเปลี่ยนไปหรือไม่สามารถตรวจสอบคู่มือเก่านี้ได้ เส้นทาง คำแนะนำ และงบประมาณเป็นข้อมูลจากฉบับแรก',
+  'trip.guide.refresh': 'รีเฟรชแผน',
   'trip.guide.title': 'คู่มือการเดินทาง',
   'trip.guide.shortTitle': 'คู่มือ',
   'trip.guide.route': 'เส้นทาง',
@@ -14,9 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'เตรียมตัวก่อนออกเดินทาง',
   'trip.guide.notes': 'ความต้องการ ข้อสมมติ และแหล่งข้อมูลของคุณ',
   'trip.guide.openPlan': 'เปิดแผนการเดินทางรายวัน',
-  'trip.guide.snapshot': 'นี่คือคู่มือที่บันทึกไว้ตอนคุณยืนยัน หากมีการเปลี่ยนแปลงภายหลัง โปรดดูแผนการเดินทางรายวัน',
-  'trip.guide.empty':
-    'ทริปนี้ยังไม่มีคู่มือที่บันทึกไว้ คุณยังดูและแก้ไขแผนรายวันได้ ทริปใหม่ที่สร้างจากคู่มือการเดินทางด้วย AI จะเก็บคู่มือฉบับเต็มไว้ที่นี่',
   'trip.guide.loadFailed': 'โหลดคู่มือไม่ได้ โปรดตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง',
   'trip.guide.unavailable': 'ทริปนี้ไม่พร้อมใช้งาน หรือคุณไม่มีสิทธิ์เข้าถึง',
   'trip.tabs.plan': 'แผน',

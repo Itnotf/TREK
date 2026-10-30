@@ -389,7 +389,13 @@ describe('assistant itinerary over HTTP', () => {
     expect((await get(guidePath, other.id)).status).toBe(404);
     const guide = await get(guidePath, user.id);
     expect(guide.status).toBe(200);
-    expect(tripGuideResponseSchema.parse(guide.body).plan).toMatchObject(revisedPlan);
+    const savedGuide = tripGuideResponseSchema.parse(guide.body);
+    expect(savedGuide.plan).toMatchObject(revisedPlan);
+    expect(savedGuide.status).toBe('unchanged');
+    expect(savedGuide.current.days).toHaveLength(revisedPlan.days.length);
+    expect(savedGuide.current.days[0].assignments?.map((item) => item.place.name)).toEqual(
+      revisedPlan.days[0].stops.map((stop) => stop.name),
+    );
     await createRow(orm, TripMembers, { trip: trip.id, user: other.id });
     expect((await get(guidePath, other.id)).body).toEqual(guide.body);
     await deleteRows(orm, TripMembers, { trip_id: trip.id, user_id: other.id });

@@ -1,11 +1,13 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
-  'trip.tabs.tourPlanner': '活動路線',
+  'trip.navigation.label': '旅行導覽',
+  'tours.navigation.help': '這裡管理步行、騎行等活動的具體路線，可加入某一天的行程。',
+  'trip.tabs.tourPlanner': '步行與戶外路線',
   'tours.mode.places': '地點',
-  'tours.mode.tours': '遊程',
+  'tours.mode.tours': '戶外路線',
   'tours.mode.label': '新增檢視',
-  'tours.title': '遊程',
+  'tours.title': '戶外路線',
   'tours.empty.title': '尚無遊程',
   'tours.empty.body': '規劃遊程或匯入 GPX 或 KML 檔案，即可開始。',
   'tours.addToDay': '加入某一天',

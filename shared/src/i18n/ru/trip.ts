@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Текущий маршрут',
+  'trip.guide.currentHelp': 'Места, время и проживание соответствуют плану по дням.',
+  'trip.guide.original': 'Первоначальный путеводитель · справка',
+  'trip.guide.originalHelp':
+    'План изменён или эту старую версию нельзя сверить. Маршрут, советы и бюджет относятся к первоначальной версии.',
+  'trip.guide.refresh': 'Обновить',
   'trip.guide.title': 'Путеводитель',
   'trip.guide.shortTitle': 'Путеводитель',
   'trip.guide.route': 'Маршрут',
@@ -14,10 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Перед поездкой',
   'trip.guide.notes': 'Ваши пожелания, допущения и источники',
   'trip.guide.openPlan': 'Открыть план по дням',
-  'trip.guide.snapshot':
-    'Это путеводитель, сохранённый при подтверждении. Последующие изменения смотрите в плане по дням.',
-  'trip.guide.empty':
-    'У этой поездки пока нет сохранённого путеводителя. Вы можете просматривать и редактировать план по дням. Для новых поездок, созданных из путеводителя ИИ, здесь будет сохранён полный путеводитель.',
   'trip.guide.loadFailed': 'Не удалось загрузить путеводитель. Проверьте подключение и попробуйте ещё раз.',
   'trip.guide.unavailable': 'Эта поездка недоступна или у вас нет к ней доступа.',
   'trip.tabs.plan': 'План',

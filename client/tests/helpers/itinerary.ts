@@ -1,4 +1,43 @@
-import type { ItineraryDraft } from '@trek/shared';
+import type { ItineraryDraft, ItineraryPlan, TripGuideResponse } from '@trek/shared';
+import { buildAssignment, buildDay, buildPlace } from './factories';
+
+export function buildSavedGuide(plan: ItineraryPlan | null = buildGuideDraft().plan): TripGuideResponse {
+  return {
+    plan,
+    status: plan ? 'unchanged' : 'unverified',
+    current: {
+      title: plan?.title ?? 'Manual trip',
+      start_date: plan?.start_date ?? null,
+      end_date: null,
+      currency: 'CNY',
+      accommodations: [],
+      reservations: [],
+      days: (plan?.days ?? [{ title: 'Free day', stops: [] }]).map((day, index) =>
+        buildDay({
+          id: index + 1,
+          trip_id: 31,
+          day_number: index + 1,
+          title: day.title,
+          notes_items: [],
+          assignments: day.stops.map((stop, i) =>
+            buildAssignment({
+              id: i + 1,
+              day_id: index + 1,
+              order_index: i,
+              place: buildPlace({
+                name: stop.name,
+                description: stop.description,
+                place_time: stop.arrival_time,
+                duration_minutes: stop.duration_minutes,
+                end_time: '17:30',
+              }),
+            })
+          ),
+        })
+      ),
+    },
+  };
+}
 
 export function buildItineraryDraft(overrides: Partial<ItineraryDraft> = {}): ItineraryDraft {
   return {

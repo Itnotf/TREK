@@ -6,7 +6,7 @@ import { useSettingsStore } from '../../store/settingsStore'
 import { useAddonStore } from '../../store/addonStore'
 import { usePluginStore } from '../../store/pluginStore'
 import { useTranslation } from '../../i18n'
-import { Plane, LogOut, Settings, ChevronDown, Shield, ArrowLeft, ChevronLeft, Moon, Sun, Monitor, CalendarDays, Briefcase, Globe, Compass, BookOpen, Bookmark } from 'lucide-react'
+import { Plane, LogOut, Settings, ChevronDown, Shield, ArrowLeft, ChevronLeft, Moon, Sun, Monitor, CalendarDays, Briefcase, Globe, Compass, Bookmark, BookOpen } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import InAppNotificationBell from './InAppNotificationBell.tsx'
 import HelpButton from '../Help/HelpButton'
@@ -175,12 +175,6 @@ export default function Navbar({ tripTitle, tripId, onBack, showBack, onSettings
             <span className="truncate text-caption font-semibold text-content">{tripTitle}</span>
           </span>
         ))}
-
-        {onSettings && tripId && (
-          <Link to={`/trips/${tripId}/guide`} className="inline-flex min-h-11 flex-none items-center gap-1.5 rounded-lg px-2 text-caption font-semibold text-content hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
-            <BookOpen size={16} aria-hidden="true" />{t('trip.guide.title')}
-          </Link>
-        )}
 
         {/* The trip's Settings sit with the trip, beside its pill: they are about this
             trip, not about the app the right side of the bar belongs to. */}

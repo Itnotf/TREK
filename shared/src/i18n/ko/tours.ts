@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': '여행 메뉴',
+  'tours.navigation.help': '걷기, 자전거 등 야외 활동 경로를 하루 일정에 활동으로 추가할 수 있습니다.',
   'trip.tabs.tourPlanner': '투어',
   'tours.mode.places': '장소',
   'tours.mode.tours': '투어',

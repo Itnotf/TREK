@@ -14,7 +14,7 @@ import PlaceInspector from '../components/Planner/PlaceInspector'
 import DayDetailPanel from '../components/Planner/DayDetailPanel'
 import PlaceFormModal from '../components/Planner/PlaceFormModal'
 import TripFormModal from '../components/Trips/TripFormModal'
-import SlidingTabs, { TabLabel } from '../components/shared/SlidingTabs'
+import TripNavigation from '../components/Trips/TripNavigation'
 import TripMembersModal from '../components/Trips/TripMembersModal'
 import { ReservationModal } from '../components/Planner/ReservationModal'
 import TransitJourneyModal from '../components/Planner/TransitJourneyModal'
@@ -243,14 +243,9 @@ function TripPlannerPageDesktop(): React.ReactElement | null {
         WebkitBackdropFilter: 'blur(16px)',
         height: 44,
       }}>
-        <SlidingTabs
-          tabs={TRIP_TABS.map(tab => ({
-            id: tab.id,
-            label: <TabLabel label={tab.label} short={tab.shortLabel} />,
-            // An abbreviated label gives its full name to assistive tech, not to a tooltip under the cursor.
-            ariaLabel: tab.label,
-            icon: tab.icon,
-          }))}
+        <TripNavigation
+          tripId={tripId}
+          tabs={TRIP_TABS}
           activeTab={activeTab}
           onChange={handleTabChange}
         />

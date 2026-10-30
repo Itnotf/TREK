@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Resans delar',
+  'tours.navigation.help':
+    'Promenader, cykelturer och andra utomhusrutter kan läggas till som aktiviteter i dagsplanen.',
   'trip.tabs.tourPlanner': 'Turer',
   'tours.mode.places': 'Platser',
   'tours.mode.tours': 'Turer',

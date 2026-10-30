@@ -1,6 +1,11 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': '当前旅行安排',
+  'trip.guide.currentHelp': '地点、时间和住宿与每日行程保持一致。',
+  'trip.guide.original': '最初的攻略 · 参考',
+  'trip.guide.originalHelp': '日程已调整，或这份旧攻略无法核对。以下路线说明、建议和预算保留最初版本，仅供参考。',
+  'trip.guide.refresh': '刷新安排',
   'trip.guide.title': '攻略总览',
   'trip.guide.shortTitle': '攻略',
   'trip.guide.route': '路线与推荐理由',
@@ -14,9 +19,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': '出发前准备',
   'trip.guide.notes': '旅行偏好、待核实事项与来源',
   'trip.guide.openPlan': '查看每日行程',
-  'trip.guide.snapshot': '这是确认时保存的攻略；后续调整的安排请以每日行程为准。',
-  'trip.guide.empty':
-    '这趟旅行还没有保存完整攻略，你仍可查看和编辑每日行程。从新版 AI 攻略确认创建的旅行，会在这里保留完整内容。',
   'trip.guide.loadFailed': '攻略暂时加载失败，请检查网络后重试。',
   'trip.guide.unavailable': '这趟旅行不存在，或你没有查看权限。',
   'trip.tabs.plan': '每日行程',
@@ -34,7 +36,7 @@ const trip: TranslationStrings = {
   'trip.loadingSteps.pack': '打包行李中...',
   'trip.loadingSteps.road': '出发上路啦...',
   'trip.loadingSteps.arrive': '就快到啦...',
-  'trip.mobilePlan': '计划',
+  'trip.mobilePlan': '调整',
   'trip.mobilePlaces': '地点',
   'trip.panelWidth': '面板宽度',
   'trip.toast.placeUpdated': '地点已更新',

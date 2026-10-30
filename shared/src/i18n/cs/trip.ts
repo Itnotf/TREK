@@ -1,6 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.guide.current': 'Aktuální itinerář',
+  'trip.guide.currentHelp': 'Místa, časy a ubytování odpovídají dennímu plánu.',
+  'trip.guide.original': 'Původní průvodce · reference',
+  'trip.guide.originalHelp':
+    'Plán se změnil nebo tohoto staršího průvodce nelze ověřit. Trasa, rady a rozpočet pocházejí z původní verze.',
+  'trip.guide.refresh': 'Obnovit',
   'trip.guide.title': 'Průvodce cestou',
   'trip.guide.shortTitle': 'Průvodce',
   'trip.guide.route': 'Trasa',
@@ -14,9 +20,6 @@ const trip: TranslationStrings = {
   'trip.guide.preparation': 'Před odjezdem',
   'trip.guide.notes': 'Vaše preference, předpoklady a zdroje',
   'trip.guide.openPlan': 'Otevřít denní itinerář',
-  'trip.guide.snapshot': 'Toto je průvodce, který jste potvrdili. Pozdější změny najdete v denním itineráři.',
-  'trip.guide.empty':
-    'Tato cesta zatím nemá uloženého průvodce. Denní itinerář můžete prohlížet a upravovat. Nové cesty vytvořené z průvodce s AI zde budou mít uloženého úplného průvodce.',
   'trip.guide.loadFailed': 'Průvodce se nepodařilo načíst. Zkontrolujte připojení a zkuste to znovu.',
   'trip.guide.unavailable': 'Tato cesta není dostupná nebo k ní nemáte přístup.',
   'trip.tabs.plan': 'Plán',

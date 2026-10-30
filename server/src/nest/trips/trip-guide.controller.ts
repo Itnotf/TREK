@@ -14,6 +14,6 @@ export class TripGuideController {
   @Get()
   @ResponseContract(tripGuideResponseSchema)
   async get(@CurrentUser() user: User, @Param('tripId') tripId: string) {
-    return { plan: await this.guides.get(user.id, tripId) };
+    return this.guides.read(user.id, tripId);
   }
 }

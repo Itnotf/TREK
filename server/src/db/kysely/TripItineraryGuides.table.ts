@@ -6,4 +6,5 @@ export interface TripItineraryGuidesTable {
   id: InsertOptional<number>;
   trip_id: number;
   plan: string;
+  baseline_hash: InsertOptional<string | null>;
 }
