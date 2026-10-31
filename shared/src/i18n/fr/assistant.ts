@@ -355,6 +355,7 @@ const assistant: TranslationStrings = {
     "Votre connexion IA : l'assistant l'utilise, et elle lit les réservations que vous importez.",
   'assistant.connect.descriptionParsingOnly': 'Votre connexion IA : elle lit les réservations que vous importez.',
   'assistant.error.emptyAnswer': "L'assistant n'a renvoyé aucune réponse. Je réessaie ?",
+  'assistant.error.interrupted': 'La réponse a été interrompue. Vous pouvez reprendre ici.',
   'assistant.followUp.title': 'Ensuite',
   'assistant.followUp.cheaper': 'Seulement moins cher',
   'assistant.followUp.closer': 'Plus près de mon hébergement',

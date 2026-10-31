@@ -331,6 +331,7 @@ const assistant: TranslationStrings = {
     'Kết nối AI của bạn: trợ lý chạy trên kết nối này và nó đọc các đặt chỗ bạn nhập.',
   'assistant.connect.descriptionParsingOnly': 'Kết nối AI của bạn: nó đọc các đặt chỗ bạn nhập.',
   'assistant.error.emptyAnswer': 'Trợ lý không trả lời. Thử lại nhé?',
+  'assistant.error.interrupted': 'Câu trả lời bị gián đoạn. Bạn có thể tiếp tục từ đây.',
   'assistant.followUp.title': 'Hỏi tiếp',
   'assistant.followUp.cheaper': 'Chỉ chỗ rẻ hơn',
   'assistant.followUp.closer': 'Gần chỗ ở hơn',

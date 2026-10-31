@@ -355,6 +355,7 @@ const assistant: TranslationStrings = {
     'Η σύνδεσή σας ΤΝ: σε αυτήν τρέχει ο βοηθός και διαβάζει τις κρατήσεις που εισάγετε.',
   'assistant.connect.descriptionParsingOnly': 'Η σύνδεσή σας ΤΝ: διαβάζει τις κρατήσεις που εισάγετε.',
   'assistant.error.emptyAnswer': 'Ο βοηθός επέστρεψε χωρίς απάντηση. Να δοκιμάσω ξανά;',
+  'assistant.error.interrupted': 'Η απάντηση διακόπηκε. Μπορείτε να συνεχίσετε από εδώ.',
   'assistant.followUp.title': 'Συνέχεια',
   'assistant.followUp.cheaper': 'Μόνο φθηνότερα',
   'assistant.followUp.closer': 'Πιο κοντά στο κατάλυμα',

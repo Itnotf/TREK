@@ -356,6 +356,7 @@ const assistant: TranslationStrings = {
     "La tua connessione IA: l'assistente la usa e legge le prenotazioni che importi.",
   'assistant.connect.descriptionParsingOnly': 'La tua connessione IA: legge le prenotazioni che importi.',
   'assistant.error.emptyAnswer': "L'assistente non ha dato alcuna risposta. Riprovo?",
+  'assistant.error.interrupted': 'La risposta è stata interrotta. Puoi riprendere da qui.',
   'assistant.followUp.title': 'Continua con',
   'assistant.followUp.cheaper': 'Solo più economici',
   'assistant.followUp.closer': "Più vicino all'alloggio",

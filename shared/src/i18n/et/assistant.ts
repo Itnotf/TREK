@@ -352,6 +352,7 @@ const assistant: TranslationStrings = {
     'Sinu TI-ühendus: sellel töötab assistent ja see loeb imporditud broneeringuid.',
   'assistant.connect.descriptionParsingOnly': 'Sinu TI-ühendus: see loeb imporditud broneeringuid.',
   'assistant.error.emptyAnswer': 'Assistent tuli tagasi ilma vastuseta. Kas proovin uuesti?',
+  'assistant.error.interrupted': 'Vastamine katkes. Saad siit jätkata.',
   'assistant.followUp.title': 'Edasi',
   'assistant.followUp.cheaper': 'Ainult odavamad',
   'assistant.followUp.closer': 'Majutusele lähemal',

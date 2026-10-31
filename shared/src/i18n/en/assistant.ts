@@ -347,6 +347,7 @@ const assistant: TranslationStrings = {
     'Your AI connection: the assistant runs on it, and it reads the bookings you import.',
   'assistant.connect.descriptionParsingOnly': 'Your AI connection: it reads the bookings you import.',
   'assistant.error.emptyAnswer': 'The assistant came back without an answer. Shall I try again?',
+  'assistant.error.interrupted': 'The reply was interrupted. You can continue from here.',
   'assistant.followUp.title': 'Ask next',
   'assistant.followUp.cheaper': 'Only cheaper ones',
   'assistant.followUp.closer': "Closer to where I'm staying",

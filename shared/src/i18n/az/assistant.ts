@@ -351,6 +351,7 @@ const assistant: TranslationStrings = {
     'Süni intellekt bağlantınız: assistent onunla işləyir və idxal etdiyiniz rezervasiyaları oxuyur.',
   'assistant.connect.descriptionParsingOnly': 'Süni intellekt bağlantınız: idxal etdiyiniz rezervasiyaları oxuyur.',
   'assistant.error.emptyAnswer': 'Assistent cavabsız qayıtdı. Yenidən cəhd edim?',
+  'assistant.error.interrupted': 'Cavab yarımçıq qaldı. Buradan davam edə bilərsiniz.',
   'assistant.followUp.title': 'Sonra',
   'assistant.followUp.cheaper': 'Yalnız daha ucuzlar',
   'assistant.followUp.closer': 'Qaldığım yerə daha yaxın',

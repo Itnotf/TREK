@@ -354,6 +354,7 @@ const assistant: TranslationStrings = {
     "La teva connexió d'IA: l'assistent la fa servir i llegeix les reserves que importes.",
   'assistant.connect.descriptionParsingOnly': "La teva connexió d'IA: llegeix les reserves que importes.",
   'assistant.error.emptyAnswer': "L'assistent no ha donat cap resposta. Ho torno a provar?",
+  'assistant.error.interrupted': 'La resposta s’ha interromput. Pots continuar des d’aquí.',
   'assistant.followUp.title': 'Continua amb',
   'assistant.followUp.cheaper': 'Només més econòmics',
   'assistant.followUp.closer': "Més a prop de l'allotjament",

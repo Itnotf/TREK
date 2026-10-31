@@ -18,22 +18,31 @@ export default function AssistantError({ tripId }: { tripId: number }) {
   const navigate = useNavigate();
   const { offline } = useNetworkMode();
   const error = useAssistantStore((s) => chatOf(s, tripId).error);
+  const interrupted = useAssistantStore((s) => {
+    const chat = chatOf(s, tripId);
+    const last = chat.messages[chat.messages.length - 1];
+    return !chat.loading && !chat.isRunning && last?.role === 'assistant' && last.status === 'aborted';
+  });
   const status = useAssistantStore((s) => s.status);
   const retry = useAssistantStore((s) => s.retry);
   const continueHere = useAssistantStore((s) => s.continueHere);
   const send = useAssistantStore((s) => s.send);
 
   const code = offline ? 'offline' : (error ?? connectionErrorOf(status));
-  if (!code) return null;
+  if (!code && !interrupted) return null;
 
   const effective = status?.effective;
   const provider = effective ? providerLabel(effective.kind, effective.host) : '';
-  const view = errorView(code, { canConnectOwn: status?.canConnectOwn ?? false, provider });
+  const view = code
+    ? errorView(code, { canConnectOwn: status?.canConnectOwn ?? false, provider })
+    : {
+        messageKey: 'assistant.error.interrupted',
+        action: { kind: 'continue' as const, labelKey: 'assistant.errorAction.continue' },
+      };
 
   const run = (kind: AssistantErrorActionKind) => {
     if (kind === 'retry') void retry(tripId);
     else if (kind === 'continueHere') void continueHere(tripId);
-    // The model asked whether to go on; the answer is the button's own word.
     else if (kind === 'continue') void send(tripId, t('assistant.errorAction.continue'));
     else if (kind === 'openSettings') void navigate(AI_SETTINGS_PATH);
     else window.open(CHATGPT_USAGE_URL, '_blank', 'noopener,noreferrer');
@@ -52,7 +61,7 @@ export default function AssistantError({ tripId }: { tripId: number }) {
         <button
           type="button"
           onClick={() => run(action.kind)}
-          className="flex-shrink-0 rounded-md px-2 py-1 text-caption font-medium text-accent-on hover:bg-surface-hover"
+          className="min-h-11 min-w-11 flex-shrink-0 rounded-md px-2 py-1 text-caption font-medium text-accent-on hover:bg-surface-hover"
         >
           {t(action.labelKey)}
         </button>

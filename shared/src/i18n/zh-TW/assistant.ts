@@ -323,6 +323,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionWithParsing': '你的 AI 連線：助理透過它運作，它也讀取你匯入的預訂。',
   'assistant.connect.descriptionParsingOnly': '你的 AI 連線：它讀取你匯入的預訂。',
   'assistant.error.emptyAnswer': '助理沒有給出回答。要再試一次嗎？',
+  'assistant.error.interrupted': '本次回覆已中斷，可以繼續產生。',
   'assistant.followUp.title': '繼續問',
   'assistant.followUp.cheaper': '只要更便宜的',
   'assistant.followUp.closer': '離住處更近',

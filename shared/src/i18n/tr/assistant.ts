@@ -351,6 +351,7 @@ const assistant: TranslationStrings = {
     'Yapay zekâ bağlantınız: asistan bununla çalışır ve içe aktardığınız rezervasyonları okur.',
   'assistant.connect.descriptionParsingOnly': 'Yapay zekâ bağlantınız: içe aktardığınız rezervasyonları okur.',
   'assistant.error.emptyAnswer': 'Asistan yanıt vermeden döndü. Tekrar deneyeyim mi?',
+  'assistant.error.interrupted': 'Yanıt kesintiye uğradı. Buradan devam edebilirsiniz.',
   'assistant.followUp.title': 'Sonraki',
   'assistant.followUp.cheaper': 'Yalnızca daha ucuzlar',
   'assistant.followUp.closer': 'Konaklamama daha yakın',
