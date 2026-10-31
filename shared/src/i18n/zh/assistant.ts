@@ -324,6 +324,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': '你的 AI 连接：它读取你导入的预订。',
   'assistant.error.emptyAnswer': '助手没有给出回答。要再试一次吗？',
   'assistant.error.interrupted': '本次回复已中断，可以继续生成。',
+  'assistant.backgroundRunning': '正在生成行程，离开页面也会继续。',
   'assistant.followUp.title': '继续问',
   'assistant.followUp.cheaper': '只要更便宜的',
   'assistant.followUp.closer': '离住处更近',

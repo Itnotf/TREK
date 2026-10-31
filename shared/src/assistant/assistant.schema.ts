@@ -747,6 +747,7 @@ export type AssistantMessage = z.infer<typeof assistantMessageSchema>;
 export const assistantThreadResponseSchema = z.object({
   thread: assistantThreadSummarySchema,
   messages: z.array(assistantMessageSchema),
+  running: z.boolean().optional(),
 });
 export type AssistantThreadResponse = z.infer<typeof assistantThreadResponseSchema>;
 

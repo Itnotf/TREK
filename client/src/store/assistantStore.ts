@@ -37,6 +37,7 @@ import {
   type WindowRect,
 } from './assistantMapModel';
 import { applyChunk, closeUndo, markDecisions } from './assistantMessages';
+import { assistantThreadActions } from './assistantThreadActions';
 import { useAuthStore } from './authStore';
 import { useSettingsStore } from './settingsStore';
 import { useTripStore } from './tripStore';
@@ -60,7 +61,7 @@ import { useTripStore } from './tripStore';
  * thread.
  */
 
-interface AssistantTripChat {
+export interface AssistantTripChat {
   /** The open thread; null for a new one the first message creates. */
   threadId: number | null;
   /** An explicitly new chat must not resume the previous one when its view mounts. */
@@ -194,6 +195,8 @@ interface AssistantState {
   resume: (key: AssistantChatKey) => Promise<void>;
   loadThreads: (key: AssistantChatKey) => Promise<void>;
   openThread: (key: AssistantChatKey, threadId: number) => Promise<void>;
+  /** Refreshes a home conversation that may still be running after its stream disconnected. */
+  refreshThread: (key: AssistantChatKey) => Promise<void>;
   newThread: (key: AssistantChatKey) => void;
   deleteThread: (key: AssistantChatKey, threadId: number) => Promise<void>;
 
@@ -449,6 +452,7 @@ async function runTurn(ctx: Ctx, tripId: number, turn: Turn): Promise<void> {
   const live = () => chat(ctx, tripId).abort === abort;
   let current = turn.messages;
   let error: AssistantErrorCode | null = null;
+  let disconnected = false;
   const commit = frameBatcher(() => {
     if (live()) patch(ctx, tripId, { messages: current });
   });
@@ -474,10 +478,15 @@ async function runTurn(ctx: Ctx, tripId: number, turn: Turn): Promise<void> {
   } catch (err) {
     // The stream broke off: stopped here, or the connection dropped.
     current = applyChunk(current, { type: 'abort' });
+    disconnected = !abort.signal.aborted;
     if (!abort.signal.aborted) error = errorCodeOf(err);
   } finally {
     commit.cancel();
-    if (live()) patch(ctx, tripId, { messages: current, isRunning: false, error, abort: null, live: NO_LIVE });
+    if (live()) {
+      const background = assistantScopeOf(tripId).kind === 'home' && disconnected;
+      patch(ctx, tripId, { messages: current, isRunning: background, error, abort: null, live: NO_LIVE });
+      if (background) await ctx.get().refreshThread(tripId);
+    }
   }
 }
 
@@ -492,7 +501,7 @@ function focusWithView(ctx: Ctx, tripId: number, focus: AssistantFocus | null): 
 async function sendMessage(ctx: Ctx, tripId: number, text: string): Promise<void> {
   const c = chat(ctx, tripId);
   const trimmed = text.trim();
-  if (c.isRunning || !trimmed) return;
+  if (c.isRunning || c.loading || !trimmed) return;
   const mentions = sentMentions(c.mentions, trimmed, c.focus);
   const parts: AssistantMessagePart[] = [{ type: 'text', text: trimmed }];
   if (mentions.length > 0) parts.push({ type: 'data-trek-mentions', data: { items: mentions } });
@@ -650,77 +659,6 @@ function shellActions(ctx: Ctx) {
     },
     setFocus: (tripId: number, focus: AssistantFocus | null) => patch(ctx, tripId, { focus }),
     setDraft: (tripId: number, draft: string) => patch(ctx, tripId, { draft }),
-  };
-}
-
-function threadActions(ctx: Ctx) {
-  const loadThreads = async (tripId: number) => {
-    try {
-      patch(ctx, tripId, { threads: await assistantRepo.threads(assistantTargetOf(tripId)) });
-    } catch (err) {
-      patch(ctx, tripId, { error: errorCodeOf(err) });
-    }
-  };
-
-  const openThread = async (tripId: number, threadId: number) => {
-    if (chat(ctx, tripId).isRunning) return;
-    ctx.set(NO_ROUTE);
-    patch(ctx, tripId, { threadId, fresh: false, loading: true, error: null, unsent: null });
-    try {
-      const { messages } = await assistantRepo.thread(assistantTargetOf(tripId), threadId);
-      // Another thread may have been opened while this one loaded.
-      if (chat(ctx, tripId).threadId === threadId) patch(ctx, tripId, { messages, loading: false });
-    } catch (err) {
-      if (httpStatus(err) !== 404) {
-        patch(ctx, tripId, { loading: false, error: errorCodeOf(err) });
-        return;
-      }
-      // Deleted elsewhere: start fresh and forget it.
-      const threads = chat(ctx, tripId).threads;
-      patch(ctx, tripId, {
-        threadId: null,
-        messages: [],
-        loading: false,
-        threads: threads ? threads.filter((t) => t.id !== threadId) : null,
-      });
-    }
-  };
-
-  const newThread = (tripId: number) => {
-    chat(ctx, tripId).abort?.abort();
-    ctx.set(NO_ROUTE);
-    // The block a comparison belonged to leaves the screen with its thread.
-    patch(ctx, tripId, {
-      threadId: null,
-      fresh: true,
-      loading: false,
-      messages: [],
-      isRunning: false,
-      error: null,
-      unsent: null,
-      abort: null,
-      live: NO_LIVE,
-      compare: null,
-    });
-  };
-
-  return {
-    loadThreads,
-    openThread,
-    newThread,
-    resume: async (tripId: number) => {
-      await loadThreads(tripId);
-      const c = chat(ctx, tripId);
-      const latest = c.threads?.[0];
-      if (latest && !c.fresh && c.threadId === null && c.messages.length === 0 && !c.isRunning)
-        await openThread(tripId, latest.id);
-    },
-    deleteThread: async (tripId: number, threadId: number) => {
-      await assistantRepo.deleteThread(assistantTargetOf(tripId), threadId);
-      const c = chat(ctx, tripId);
-      patch(ctx, tripId, { threads: c.threads ? c.threads.filter((t) => t.id !== threadId) : null });
-      if (c.threadId === threadId) newThread(tripId);
-    },
   };
 }
 
@@ -911,6 +849,10 @@ function routeActions(ctx: Ctx) {
 function turnActions(ctx: Ctx) {
   const retry = async (tripId: number) => {
     const c = chat(ctx, tripId);
+    if (assistantScopeOf(tripId).kind === 'home' && c.isRunning && !c.abort) {
+      await ctx.get().refreshThread(tripId);
+      return;
+    }
     if (c.isRunning) return;
     if (c.unsent === null) {
       // The server has the question but the answer broke off: ask it again.
@@ -951,7 +893,26 @@ function turnActions(ctx: Ctx) {
       if (chat(ctx, tripId).error) patch(ctx, tripId, { compare: null });
     },
     undo: (tripId: number, toolCallId: string) => undoOne(ctx, tripId, toolCallId),
-    cancel: (tripId: number) => chat(ctx, tripId).abort?.abort(),
+    cancel: (tripId: number) => {
+      const c = chat(ctx, tripId);
+      if (assistantScopeOf(tripId).kind !== 'home') {
+        c.abort?.abort();
+        return;
+      }
+      void assistantRepo.stop(assistantTargetOf(tripId)).then(
+        () => {
+          const now = chat(ctx, tripId);
+          if (now.threadId !== c.threadId || now.abort !== c.abort) return;
+          c.abort?.abort();
+          patch(ctx, tripId, { messages: applyChunk(now.messages, { type: 'abort' }), isRunning: false, error: null });
+        },
+        (err: unknown) => {
+          const now = chat(ctx, tripId);
+          if (now.threadId === c.threadId && now.abort === c.abort && now.isRunning)
+            patch(ctx, tripId, { error: errorCodeOf(err) });
+        }
+      );
+    },
     retry,
     continueHere: async (tripId: number) => {
       try {
@@ -983,7 +944,13 @@ export const useAssistantStore = create<AssistantState>((set, get) => {
     decisionHolds: {},
     ...NO_ROUTE,
     ...shellActions(ctx),
-    ...threadActions(ctx),
+    ...assistantThreadActions({
+      chat: (key) => chat(ctx, key),
+      patch: (key, next) => patch(ctx, key, next),
+      clearRoute: () => ctx.set(NO_ROUTE),
+      errorCodeOf,
+      httpStatus,
+    }),
     ...turnActions(ctx),
     ...compareActions(ctx),
     ...mapActions(ctx),

@@ -329,6 +329,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': '내 AI 연결: 가져온 예약을 이 연결로 읽습니다.',
   'assistant.error.emptyAnswer': '어시스턴트가 답을 주지 않았습니다. 다시 시도할까요?',
   'assistant.error.interrupted': '답변이 중단되었습니다. 여기서 계속할 수 있습니다.',
+  'assistant.backgroundRunning': '여행 일정을 생성하고 있습니다. 이 페이지를 나갔다가 나중에 돌아와도 됩니다.',
   'assistant.followUp.title': '이어서 묻기',
   'assistant.followUp.cheaper': '더 저렴한 곳만',
   'assistant.followUp.closer': '숙소에서 더 가까운 곳',

@@ -352,6 +352,8 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Deine KI-Verbindung: Sie liest die Buchungen, die du importierst.',
   'assistant.error.emptyAnswer': 'Der Assistent kam ohne Antwort zurück. Soll ich es noch mal versuchen?',
   'assistant.error.interrupted': 'Die Antwort wurde unterbrochen. Du kannst hier fortfahren.',
+  'assistant.backgroundRunning':
+    'Dein Reiseplan wird erstellt. Du kannst diese Seite verlassen und später zurückkehren.',
   'assistant.followUp.title': 'Weiter mit',
   'assistant.followUp.cheaper': 'Nur günstigere',
   'assistant.followUp.closer': 'Näher an meiner Unterkunft',

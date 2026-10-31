@@ -1,8 +1,9 @@
-import { CircleAlert, WifiOff } from 'lucide-react';
+import { CircleAlert, Info, WifiOff } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 import { useNetworkMode } from '../../hooks/useNetworkMode';
 import { useTranslation } from '../../i18n';
+import { assistantScopeOf } from '../../store/assistantChatKey';
 import { chatOf, useAssistantStore } from '../../store/assistantStore';
 import { type AssistantErrorActionKind, connectionErrorOf, errorView } from './assistantModel';
 import { AI_SETTINGS_PATH } from './assistantParts';
@@ -18,27 +19,32 @@ export default function AssistantError({ tripId }: { tripId: number }) {
   const navigate = useNavigate();
   const { offline } = useNetworkMode();
   const error = useAssistantStore((s) => chatOf(s, tripId).error);
-  const interrupted = useAssistantStore((s) => {
+  const isRunning = useAssistantStore((s) => chatOf(s, tripId).isRunning);
+  const planning = assistantScopeOf(tripId).kind === 'home' && isRunning;
+  const ended = useAssistantStore((s) => {
     const chat = chatOf(s, tripId);
     const last = chat.messages[chat.messages.length - 1];
-    return !chat.loading && !chat.isRunning && last?.role === 'assistant' && last.status === 'aborted';
+    return !chat.loading && !chat.isRunning && last?.role === 'assistant' ? last.status : null;
   });
+  const interrupted = ended === 'aborted';
   const status = useAssistantStore((s) => s.status);
   const retry = useAssistantStore((s) => s.retry);
   const continueHere = useAssistantStore((s) => s.continueHere);
   const send = useAssistantStore((s) => s.send);
 
-  const code = offline ? 'offline' : (error ?? connectionErrorOf(status));
-  if (!code && !interrupted) return null;
+  const code = offline ? 'offline' : (error ?? connectionErrorOf(status) ?? (ended === 'error' ? 'generic' : null));
+  if (!code && !interrupted && !planning) return null;
 
   const effective = status?.effective;
   const provider = effective ? providerLabel(effective.kind, effective.host) : '';
   const view = code
     ? errorView(code, { canConnectOwn: status?.canConnectOwn ?? false, provider })
-    : {
-        messageKey: 'assistant.error.interrupted',
-        action: { kind: 'continue' as const, labelKey: 'assistant.errorAction.continue' },
-      };
+    : planning
+      ? { messageKey: 'assistant.backgroundRunning', action: null }
+      : {
+          messageKey: 'assistant.error.interrupted',
+          action: { kind: 'continue' as const, labelKey: 'assistant.errorAction.continue' },
+        };
 
   const run = (kind: AssistantErrorActionKind) => {
     if (kind === 'retry') void retry(tripId);
@@ -49,13 +55,18 @@ export default function AssistantError({ tripId }: { tripId: number }) {
   };
 
   const { action } = view;
-  const Icon = code === 'offline' ? WifiOff : CircleAlert;
+  const information = planning && !code;
+  const Icon = code === 'offline' ? WifiOff : information ? Info : CircleAlert;
   return (
     <div
       role="status"
       className="trek-assistant-enter flex items-center gap-2.5 rounded-lg bg-surface-secondary px-3 py-2 text-caption text-content-secondary"
     >
-      <Icon size={14} aria-hidden="true" className="flex-shrink-0 text-warning" />
+      <Icon
+        size={14}
+        aria-hidden="true"
+        className={`flex-shrink-0 ${information ? 'text-content-secondary' : 'text-warning'}`}
+      />
       <span className="min-w-0 flex-1">{t(view.messageKey, { provider })}</span>
       {action && (
         <button

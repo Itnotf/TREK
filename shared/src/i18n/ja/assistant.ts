@@ -332,6 +332,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'あなたの AI 接続：取り込んだ予約をこの接続で読み取ります。',
   'assistant.error.emptyAnswer': 'アシスタントから回答がありませんでした。もう一度試しますか？',
   'assistant.error.interrupted': '回答が中断されました。ここから続けられます。',
+  'assistant.backgroundRunning': '旅程を作成しています。このページを離れて、後で戻ることができます。',
   'assistant.followUp.title': '次に聞く',
   'assistant.followUp.cheaper': 'もっと安いものだけ',
   'assistant.followUp.closer': '宿に近いところ',

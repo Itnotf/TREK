@@ -352,6 +352,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Yapay zekâ bağlantınız: içe aktardığınız rezervasyonları okur.',
   'assistant.error.emptyAnswer': 'Asistan yanıt vermeden döndü. Tekrar deneyeyim mi?',
   'assistant.error.interrupted': 'Yanıt kesintiye uğradı. Buradan devam edebilirsiniz.',
+  'assistant.backgroundRunning': 'Seyahat planınız hazırlanıyor. Bu sayfadan ayrılıp daha sonra geri dönebilirsiniz.',
   'assistant.followUp.title': 'Sonraki',
   'assistant.followUp.cheaper': 'Yalnızca daha ucuzlar',
   'assistant.followUp.closer': 'Konaklamama daha yakın',

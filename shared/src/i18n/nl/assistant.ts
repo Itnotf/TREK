@@ -354,6 +354,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Je AI-verbinding: ze leest de boekingen die je importeert.',
   'assistant.error.emptyAnswer': 'De assistent kwam terug zonder antwoord. Zal ik het opnieuw proberen?',
   'assistant.error.interrupted': 'Het antwoord werd onderbroken. Je kunt hier verdergaan.',
+  'assistant.backgroundRunning': 'Je reisplan wordt gemaakt. Je kunt deze pagina verlaten en later terugkomen.',
   'assistant.followUp.title': 'Verder met',
   'assistant.followUp.cheaper': 'Alleen goedkopere',
   'assistant.followUp.closer': 'Dichter bij mijn verblijf',

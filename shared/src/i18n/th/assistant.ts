@@ -329,6 +329,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'การเชื่อมต่อ AI ของคุณ: ใช้อ่านการจองที่คุณนำเข้า',
   'assistant.error.emptyAnswer': 'ผู้ช่วยไม่ได้ให้คำตอบ ลองอีกครั้งไหม',
   'assistant.error.interrupted': 'คำตอบถูกขัดจังหวะ คุณสามารถดำเนินการต่อจากตรงนี้ได้',
+  'assistant.backgroundRunning': 'กำลังสร้างแผนการเดินทาง คุณสามารถออกจากหน้านี้แล้วกลับมาได้ภายหลัง',
   'assistant.followUp.title': 'ถามต่อ',
   'assistant.followUp.cheaper': 'เฉพาะที่ถูกกว่า',
   'assistant.followUp.closer': 'ใกล้ที่พักมากขึ้น',

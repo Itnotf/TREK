@@ -353,6 +353,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Din AI-anslutning: den läser bokningarna du importerar.',
   'assistant.error.emptyAnswer': 'Assistenten kom tillbaka utan svar. Ska jag försöka igen?',
   'assistant.error.interrupted': 'Svaret avbröts. Du kan fortsätta härifrån.',
+  'assistant.backgroundRunning': 'Din resplan skapas. Du kan lämna sidan och komma tillbaka senare.',
   'assistant.followUp.title': 'Fortsätt med',
   'assistant.followUp.cheaper': 'Bara billigare',
   'assistant.followUp.closer': 'Närmare mitt boende',

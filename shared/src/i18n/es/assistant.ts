@@ -351,6 +351,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Tu conexión de IA: lee las reservas que importas.',
   'assistant.error.emptyAnswer': 'El asistente volvió sin respuesta. ¿Lo intento de nuevo?',
   'assistant.error.interrupted': 'La respuesta se interrumpió. Puedes continuar desde aquí.',
+  'assistant.backgroundRunning': 'Generando tu itinerario. Puedes salir de esta página y volver más tarde.',
   'assistant.followUp.title': 'Seguir con',
   'assistant.followUp.cheaper': 'Solo más baratos',
   'assistant.followUp.closer': 'Más cerca de mi alojamiento',

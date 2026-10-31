@@ -335,6 +335,8 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Koneksi AI Anda: membaca pemesanan yang Anda impor.',
   'assistant.error.emptyAnswer': 'Asisten kembali tanpa jawaban. Coba lagi?',
   'assistant.error.interrupted': 'Jawaban terhenti. Anda dapat melanjutkan dari sini.',
+  'assistant.backgroundRunning':
+    'Rencana perjalanan sedang dibuat. Anda dapat meninggalkan halaman ini dan kembali nanti.',
   'assistant.followUp.title': 'Lanjut dengan',
   'assistant.followUp.cheaper': 'Hanya yang lebih murah',
   'assistant.followUp.closer': 'Lebih dekat ke penginapan',

@@ -353,6 +353,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Sinu TI-ühendus: see loeb imporditud broneeringuid.',
   'assistant.error.emptyAnswer': 'Assistent tuli tagasi ilma vastuseta. Kas proovin uuesti?',
   'assistant.error.interrupted': 'Vastamine katkes. Saad siit jätkata.',
+  'assistant.backgroundRunning': 'Sinu reisikava koostatakse. Võid sellelt lehelt lahkuda ja hiljem tagasi tulla.',
   'assistant.followUp.title': 'Edasi',
   'assistant.followUp.cheaper': 'Ainult odavamad',
   'assistant.followUp.closer': 'Majutusele lähemal',

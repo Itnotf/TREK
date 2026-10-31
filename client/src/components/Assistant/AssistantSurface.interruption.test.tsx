@@ -50,6 +50,39 @@ afterEach(() => {
 });
 
 describe('a resumed home planning conversation', () => {
+  it('shows a failed background reply after its history is restored', () => {
+    useAssistantStore.setState({ status: STATUS, byTrip: {} });
+    useAssistantStore.setState({
+      byTrip: {
+        [HOME_CHAT_KEY]: {
+          ...chatOf(useAssistantStore.getState(), HOME_CHAT_KEY),
+          messages: [{ id: '88', role: 'assistant', status: 'error', createdAt: AT, parts: [] }],
+        },
+      },
+    });
+    render(<AssistantSurface tripId={HOME_CHAT_KEY} tripTitle="Travel planning" variant="fullscreen" />);
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
+  });
+
+  it('shows that home planning continues in the background and keeps a single Stop action', () => {
+    const cancel = vi.fn();
+    useAssistantStore.setState({ status: STATUS, cancel, byTrip: {} });
+    useAssistantStore.setState({
+      byTrip: {
+        [HOME_CHAT_KEY]: { ...chatOf(useAssistantStore.getState(), HOME_CHAT_KEY), isRunning: true },
+      },
+    });
+    render(<AssistantSurface tripId={HOME_CHAT_KEY} tripTitle="Travel planning" variant="fullscreen" />);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Generating your plan. You can leave this page and return later.'
+    );
+    expect(screen.getAllByRole('button', { name: 'Stop' })).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: 'Continue' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
+    expect(cancel).toHaveBeenCalledWith(HOME_CHAT_KEY);
+  });
+
   it.each([
     { error: null, action: 'Continue', notice: 'The reply was interrupted.' },
     { error: 'provider_unavailable', action: 'Try again', notice: 'OpenAI isn’t responding right now.' },

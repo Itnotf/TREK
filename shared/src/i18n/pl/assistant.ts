@@ -387,6 +387,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Twoje połączenie AI: czyta importowane rezerwacje.',
   'assistant.error.emptyAnswer': 'Asystent wrócił bez odpowiedzi. Spróbować ponownie?',
   'assistant.error.interrupted': 'Odpowiedź została przerwana. Możesz kontynuować od tego miejsca.',
+  'assistant.backgroundRunning': 'Tworzymy Twój plan podróży. Możesz opuścić tę stronę i wrócić później.',
   'assistant.followUp.title': 'Dalej',
   'assistant.followUp.cheaper': 'Tylko tańsze',
   'assistant.followUp.closer': 'Bliżej mojego noclegu',

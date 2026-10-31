@@ -416,6 +416,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'اتصال الذكاء الاصطناعي الخاص بك: يقرأ الحجوزات التي تستوردها.',
   'assistant.error.emptyAnswer': 'عاد المساعد دون إجابة. هل أحاول مرة أخرى؟',
   'assistant.error.interrupted': 'انقطعت الإجابة. يمكنك المتابعة من هنا.',
+  'assistant.backgroundRunning': 'جارٍ إعداد خطتك. يمكنك مغادرة هذه الصفحة والعودة لاحقًا.',
   'assistant.followUp.title': 'تابع مع',
   'assistant.followUp.cheaper': 'الأرخص فقط',
   'assistant.followUp.closer': 'أقرب إلى مكان إقامتي',

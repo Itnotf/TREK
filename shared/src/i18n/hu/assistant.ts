@@ -356,6 +356,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Az MI-kapcsolatod: ez olvassa be az importált foglalásokat.',
   'assistant.error.emptyAnswer': 'Az asszisztens válasz nélkül tért vissza. Próbáljam újra?',
   'assistant.error.interrupted': 'A válasz megszakadt. Innen folytathatod.',
+  'assistant.backgroundRunning': 'Az útiterved készül. Elhagyhatod az oldalt, és később visszatérhetsz.',
   'assistant.followUp.title': 'Folytatás',
   'assistant.followUp.cheaper': 'Csak olcsóbbak',
   'assistant.followUp.closer': 'Közelebb a szállásomhoz',

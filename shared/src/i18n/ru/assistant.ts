@@ -387,6 +387,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Ваше ИИ-подключение: оно читает импортированные бронирования.',
   'assistant.error.emptyAnswer': 'Ассистент вернулся без ответа. Попробовать ещё раз?',
   'assistant.error.interrupted': 'Ответ прерван. Можно продолжить с этого места.',
+  'assistant.backgroundRunning': 'Создаём ваш маршрут. Можно покинуть эту страницу и вернуться позже.',
   'assistant.followUp.title': 'Дальше',
   'assistant.followUp.cheaper': 'Только дешевле',
   'assistant.followUp.closer': 'Ближе к моему жилью',

@@ -368,6 +368,7 @@ const assistant: TranslationStrings = {
   'assistant.connect.descriptionParsingOnly': 'Vaše AI pripojenie: číta rezervácie, ktoré importujete.',
   'assistant.error.emptyAnswer': 'Asistent sa vrátil bez odpovede. Mám to skúsiť znova?',
   'assistant.error.interrupted': 'Odpoveď bola prerušená. Môžete pokračovať odtiaľto.',
+  'assistant.backgroundRunning': 'Váš plán cesty sa vytvára. Môžete opustiť túto stránku a vrátiť sa neskôr.',
   'assistant.followUp.title': 'Ďalej',
   'assistant.followUp.cheaper': 'Len lacnejšie',
   'assistant.followUp.closer': 'Bližšie k môjmu ubytovaniu',
