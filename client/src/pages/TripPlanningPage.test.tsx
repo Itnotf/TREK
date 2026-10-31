@@ -1,6 +1,7 @@
 import { itineraryPlanSchema, type TripPlanningRevision, type TripPlanningState } from '@trek/shared';
+import en from '@trek/shared/i18n/en';
 import { http, HttpResponse } from 'msw';
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildUser } from '../../tests/helpers/factories';
@@ -81,15 +82,32 @@ function state(overrides: Partial<TripPlanningState> = {}): TripPlanningState {
   };
 }
 
+function ItineraryDestination() {
+  const { search } = useLocation();
+  return (
+    <>
+      <h1>Daily itinerary</h1>
+      <output>{search}</output>
+    </>
+  );
+}
+
 function show(id = '31') {
   return render(
     <Routes>
       <Route path="/trips/:id/planning" element={<TripPlanningPage />} />
+      <Route path="/trips/:id" element={<ItineraryDestination />} />
     </Routes>,
     {
       initialEntries: [`/trips/${id}/planning`],
     }
   );
+}
+
+const t = (key: string) => en[key] ?? key;
+
+function openAdjustment() {
+  fireEvent.click(screen.getByText(t('tripPlanning.adjust'), { selector: 'summary' }));
 }
 
 beforeEach(() => {
@@ -98,14 +116,14 @@ beforeEach(() => {
 
 describe('shared trip planning', () => {
   it('lets a solo organiser generate without a member vote and confirms only after a separate action', async () => {
-    let current = state();
+    let current = state({ members: [{ id: 1, username: 'Organiser' }] });
     const generated: unknown[] = [];
     const confirmed: unknown[] = [];
     server.use(
       http.get('/api/trips/31/planning', () => HttpResponse.json(current)),
       http.post('/api/trips/31/planning/generate', async ({ request }) => {
         generated.push(await request.json());
-        current = state({ revision: 1, phase: 'detailed', latest: revision() });
+        current = { ...current, revision: 1, phase: 'detailed', latest: revision() };
         return HttpResponse.json(current);
       }),
       http.post('/api/trips/31/planning/confirm', async ({ request }) => {
@@ -125,11 +143,63 @@ describe('shared trip planning', () => {
     await screen.findByText('A shared plan, version 1');
     expect(generated).toEqual([{ mode: 'detailed', base_revision: 0, instruction: 'Keep walks short' }]);
     expect(confirmed).toHaveLength(0);
+    expect(screen.getByText(t('tripPlanning.adjust'), { selector: 'summary' }).closest('details')).not.toHaveAttribute(
+      'open'
+    );
+    openAdjustment();
     expect(screen.getByLabelText('Anything to add or change? (optional)')).toHaveValue('');
-    fireEvent.click(screen.getByRole('button', { name: 'Confirm and update itinerary' }));
-    await screen.findByText('Confirmed itinerary');
+    fireEvent.click(screen.getByRole('button', { name: t('tripPlanning.confirm') }));
+    expect(await screen.findByRole('heading', { name: 'Daily itinerary' })).toBeVisible();
+    expect(screen.getByRole('status')).toHaveTextContent('?tab=plan');
     expect(confirmed).toEqual([{ revision: 1 }]);
-    expect(screen.getByRole('button', { name: 'Revise detailed plan' })).toBeEnabled();
+  });
+
+  it('opens an existing proposal first and keeps adjustments and outline-only generation optional', async () => {
+    server.use(
+      http.get('/api/trips/31/planning', () =>
+        HttpResponse.json(state({ revision: 1, phase: 'detailed', latest: revision() }))
+      )
+    );
+    show();
+    expect(await screen.findByText('A shared plan, version 1')).toBeVisible();
+    expect(screen.getByRole('button', { name: t('tripPlanning.proposal') })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: t('tripPlanning.chat') })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button', { name: t('tripPlanning.confirm') })).toBeVisible();
+    const adjustment = screen.getByText(t('tripPlanning.adjust'), { selector: 'summary' }).closest('details');
+    expect(adjustment).not.toHaveAttribute('open');
+    expect(screen.getByLabelText('Anything to add or change? (optional)')).not.toBeVisible();
+    openAdjustment();
+    expect(screen.getByRole('button', { name: t('tripPlanning.revise') })).toBeVisible();
+    expect(screen.getByRole('button', { name: t('tripPlanning.discuss') })).not.toBeVisible();
+    fireEvent.click(screen.getByText(t('tripPlanning.outlineOptions'), { selector: 'summary' }));
+    expect(screen.getByRole('button', { name: t('tripPlanning.discuss') })).toBeVisible();
+  });
+
+  it('waits for a successful confirmation and blocks repeated confirmation while saving', async () => {
+    const current = state({ revision: 1, phase: 'detailed', latest: revision() });
+    let requests = 0;
+    let finish = () => {};
+    const pending = new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+    server.use(
+      http.get('/api/trips/31/planning', () => HttpResponse.json(current)),
+      http.post('/api/trips/31/planning/confirm', async () => {
+        requests++;
+        await pending;
+        return HttpResponse.json({ ...current, phase: 'confirmed', confirmed_revision: 1 });
+      })
+    );
+    show();
+    const confirm = await screen.findByRole('button', { name: t('tripPlanning.confirm') });
+    fireEvent.click(confirm);
+    fireEvent.click(confirm);
+    await waitFor(() => expect(requests).toBe(1));
+    expect(confirm).toBeDisabled();
+    expect(screen.queryByRole('heading', { name: 'Daily itinerary' })).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Updating the itinerary');
+    finish();
+    expect(await screen.findByRole('heading', { name: 'Daily itinerary' })).toBeVisible();
   });
 
   it('shows the same plan to ordinary members without confirmation or collaborator controls', async () => {
@@ -148,10 +218,11 @@ describe('shared trip planning', () => {
     );
     show();
     await screen.findByText('A shared plan, version 1');
-    expect(screen.queryByRole('button', { name: 'Confirm and update itinerary' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: t('tripPlanning.confirm') })).not.toBeInTheDocument();
     expect(screen.queryByText('Who can confirm the itinerary')).not.toBeInTheDocument();
     expect(screen.getByText(/The organiser or a collaborator confirms/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Revise detailed plan' })).toBeEnabled();
+    openAdjustment();
+    expect(screen.getByRole('button', { name: t('tripPlanning.revise') })).toBeEnabled();
   });
 
   it('shows the confirmed state and keeps draft-only claims inside a folded discussion record', async () => {
@@ -188,10 +259,13 @@ describe('shared trip planning', () => {
       })
     );
     show();
-    fireEvent.click(await screen.findByRole('button', { name: 'Confirm and update itinerary' }));
+    fireEvent.click(await screen.findByRole('button', { name: t('tripPlanning.confirm') }));
     await screen.findByText(/The itinerary changed after this proposal was prepared/);
-    expect(screen.getByRole('button', { name: 'Confirm and update itinerary' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Revise detailed plan' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: t('tripPlanning.confirm') })).toBeDisabled();
+    expect(screen.getByRole('alert')).toBeVisible();
+    expect(screen.queryByRole('heading', { name: 'Daily itinerary' })).not.toBeInTheDocument();
+    openAdjustment();
+    expect(screen.getByRole('button', { name: t('tripPlanning.revise') })).toBeEnabled();
   });
 
   it('reloads shared revisions on another member’s update and clears all content after access is revoked', async () => {
@@ -227,13 +301,14 @@ describe('shared trip planning', () => {
     );
     show();
     fireEvent.click(await screen.findByRole('button', { name: 'View version history' }));
+    openAdjustment();
     fireEvent.click(await screen.findByRole('button', { name: /Version 1/ }));
     await screen.findByText('A shared plan, version 1');
-    expect(screen.queryByRole('button', { name: 'Confirm and update itinerary' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Revise detailed plan' })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: t('tripPlanning.confirm') })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: t('tripPlanning.revise') })).toBeDisabled();
     fireEvent.click(screen.getByRole('button', { name: 'Return to current plan' }));
     expect(screen.getByText('A shared plan, version 2')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Confirm and update itinerary' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: t('tripPlanning.confirm') })).toBeEnabled();
   });
 
   it('lets the organiser explicitly choose joined collaborators', async () => {

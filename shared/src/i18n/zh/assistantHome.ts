@@ -1,8 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
-  'assistant.home.title': '你的旅行',
-  'assistant.home.welcome': '有什么可以帮你？',
+  'assistant.home.title': 'AI 旅行规划',
+  'assistant.home.welcome': '想去哪儿，准备玩几天？',
   'assistant.home.placeholder': '说说你的旅行想法，或粘贴一条旅行攻略链接',
   'assistant.home.switch': '聊聊某一次旅行',
   'assistant.home.back': '返回全部旅行',
@@ -34,15 +34,19 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.requirements': '你的旅行需求',
   'assistant.plan.assumptions': '这些安排请你确认',
   'assistant.plan.overnight': '当晚住在{city}',
-  'assistant.plan.editHint': '想调整哪里，直接在聊天里告诉我，我会更新一版。满意后再确认创建旅行。',
+  'assistant.plan.editHint': '想调整就继续在聊天里说；满意后点“采用这版行程”，即可按天查看。',
   'assistant.plan.stale': '下方已有新版行程，请确认最新一版来创建旅行。',
-  'assistant.plan.confirm': '确认这版，创建旅行',
-  'assistant.plan.created': '这版方案已关联旅行，可进入一起规划继续讨论和调整。',
-  'assistant.plan.share': '转为共同规划，邀请同行人讨论',
-  'assistant.plan.shareHint': '先建立共同规划空间，确认后再写入正式日程。只共享行程方案，不公开你的私人聊天。',
+  'assistant.plan.confirm': '采用这版行程',
+  'assistant.plan.created': '这份初稿已保存为旅行，后续请在旅行里继续调整。',
+  'assistant.plan.share': '打开讨论，邀请同行人',
+  'assistant.plan.shareHint':
+    '先保存一份待确认的旅行方案，可以自己继续规划，也可以邀请朋友商量。只共享方案，私人聊天不会公开。',
   'assistant.plan.unverified': '具体位置尚未核实',
   'assistant.plan.loadFailed': '行程草稿加载失败，请重试。',
-  'assistant.plan.applyFailed': '暂时无法创建旅行，请检查最新一版行程后重试。',
+  'assistant.plan.applyFailed': '暂时无法采用或打开这份行程，请检查网络后重试。',
+  'assistant.plan.openItinerary': '打开这趟旅行',
+  'assistant.plan.shareOptions': '先和同行人商量（可选）',
+  'assistant.plan.preview': '展开完整行程预览',
 };
 
 export default assistantHome;

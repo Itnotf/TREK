@@ -1,5 +1,6 @@
-import { ChevronRight, FileDown, Mountain, Settings, Settings2, Sparkles } from 'lucide-react'
+import { ChevronRight, FileDown, MessagesSquare, Mountain, Settings, Settings2, Sparkles } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { useNavigate } from 'react-router'
 import MSheet from '../../../components/MSheet'
 import type { MTripSheetsProps } from '../MTripShell'
 import { dockTabIds } from '../dockTabs'
@@ -26,6 +27,7 @@ const TILE_COLORS: Record<string, string> = {
  */
 export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const open = shell.sheet?.id === 'mehr'
   const canEditTrip = planner.can('trip_edit', planner.trip)
   const assistant = useAssistantAsk(planner.tripId)
@@ -54,6 +56,7 @@ export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
   }
 
   const actions: { id: string; icon: LucideIcon; label: string; hint?: string; go: () => void }[] = [
+    { id: 'planning', icon: MessagesSquare, label: t('trip.planning.title'), go: () => { shell.closeSheet(); void navigate(`/trips/${planner.tripId}/planning`) } },
     ...(planner.toursEnabled ? [{
       id: 'outdoor-routes', icon: Mountain, label: t('trip.tabs.tourPlanner'), hint: t('tours.navigation.help'),
       go: () => { planner.setToursMode(true); shell.setTravelMode('browse'); shell.closeSheet() },

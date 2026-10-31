@@ -15,7 +15,7 @@ export default function TripGuidePage() {
   const navigate = useNavigate();
   const state = useTripGuide(tripId);
   const { plan, current, status } = state.data ?? {};
-  const tripPath = Number.isSafeInteger(tripId) && tripId > 0 ? `/trips/${tripId}` : '/dashboard';
+  const tripPath = Number.isSafeInteger(tripId) && tripId > 0 ? `/trips/${tripId}?tab=plan` : '/dashboard';
   return (
     <PageShell
       className="bg-surface"

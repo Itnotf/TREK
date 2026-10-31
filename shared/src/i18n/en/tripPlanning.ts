@@ -1,12 +1,13 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
-  'tripPlanning.title': 'Plan together',
-  'tripPlanning.intro': 'Talk it through together. Ask AI to turn your ideas into a trip you can take.',
-  'tripPlanning.chat': 'Trip discussion',
-  'tripPlanning.proposal': 'Shared plan',
+  'tripPlanning.title': 'Review and adjust',
+  'tripPlanning.intro':
+    'Review the plan, request changes, then confirm your daily itinerary. Inviting others is optional.',
+  'tripPlanning.chat': 'Discuss together',
+  'tripPlanning.proposal': 'Itinerary draft',
   'tripPlanning.chatHelp': 'Share preferences, links and changes here. Everyone on this trip can read this discussion.',
-  'tripPlanning.chatNext': 'Ready? Ask AI to organise the plan',
+  'tripPlanning.chatNext': 'Review and adjust the itinerary',
   'tripPlanning.chatReadOnly':
     'You can read the discussion. Sending messages is disabled for your account on this trip.',
   'tripPlanning.members': 'Members and invitations',
@@ -28,7 +29,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.instructionHelp': 'Your request is shared with the group. AI runs only when you press a button below.',
   'tripPlanning.discuss': 'Organise our ideas',
   'tripPlanning.generate': 'Create detailed plan',
-  'tripPlanning.revise': 'Revise detailed plan',
+  'tripPlanning.revise': 'Update itinerary',
   'tripPlanning.generating': 'AI is reviewing the discussion and preparing a plan. This can take a few minutes.',
   'tripPlanning.confirming': 'Updating the itinerary…',
   'tripPlanning.discussionStatus': 'Direction for discussion',
@@ -42,7 +43,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.outline': 'The trip, day by day',
   'tripPlanning.day': 'Day {day}',
   'tripPlanning.changes': 'What changed in this version',
-  'tripPlanning.confirm': 'Confirm and update itinerary',
+  'tripPlanning.confirm': 'Use this itinerary',
   'tripPlanning.confirmHelp': 'Review the plan above. Confirming updates this trip’s daily itinerary and guide.',
   'tripPlanning.memberConfirmHelp':
     'You can suggest changes in the discussion. The organiser or a collaborator confirms the itinerary.',
@@ -80,5 +81,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.error.ai_failed':
     'AI could not prepare a valid proposal. Your current plan is safe. Try again with a shorter request.',
   'tripPlanning.discussionRecord': 'Discussion when this proposal was generated (for reference)',
+  'tripPlanning.adjust': 'Request changes',
+  'tripPlanning.outlineOptions': 'Start with a rough outline (optional)',
 };
 export default tripPlanning;

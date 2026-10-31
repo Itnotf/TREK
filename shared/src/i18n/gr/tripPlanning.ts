@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Ζητήστε αλλαγές',
+  'tripPlanning.outlineOptions': 'Ξεκινήστε με ένα γενικό πλάνο (προαιρετικό)',
   'tripPlanning.title': 'Σχεδιάστε μαζί',
   'tripPlanning.intro':
     'Συζητήστε τις ιδέες σας και ζητήστε από την ΤΝ να τις μετατρέψει σε ένα ταξίδι που μπορείτε να πραγματοποιήσετε.',

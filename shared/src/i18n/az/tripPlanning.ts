@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Dəyişiklik istə',
+  'tripPlanning.outlineOptions': 'Ümumi plandan başla (istəyə bağlı)',
   'tripPlanning.title': 'Birlikdə planlaşdırın',
   'tripPlanning.intro':
     'Fikirlərinizi birlikdə müzakirə edin. Süni intellektdən onları həyata keçirilə bilən səyahət planına çevirməsini istəyin.',

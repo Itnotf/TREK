@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Požiadať o zmeny',
+  'tripPlanning.outlineOptions': 'Začať hrubým plánom (voliteľné)',
   'tripPlanning.title': 'Plánujte spoločne',
   'tripPlanning.intro':
     'Preberte svoje nápady spoločne. Požiadajte AI, aby z nich zostavila cestu, na ktorú môžete vyraziť.',

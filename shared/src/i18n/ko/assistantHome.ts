@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': '이 여행 열기',
+  'assistant.plan.shareOptions': '먼저 다른 사람들과 상의하기 (선택)',
+  'assistant.plan.preview': '여행 일정 미리보기',
   'assistant.home.title': '나의 여행',
   'assistant.home.welcome': '무엇을 도와드릴까요?',
   'assistant.home.placeholder': '여행 계획을 이야기하거나 여행 가이드 링크를 붙여 넣으세요',

@@ -574,9 +574,6 @@ export default function MTripShell({
 
         {trTab === 'plan' && (
           <GlassSegment>
-            <Link to={`/trips/${planner.tripId}/planning`} aria-label={t('trip.planning.title')} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-2 text-caption font-semibold text-content">
-              {t('trip.planning.shortTitle')}
-            </Link>
             <Link to={`/trips/${planner.tripId}/guide`} aria-label={t('trip.guide.title')} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 text-caption font-semibold text-m-ink">
               {t('trip.guide.shortTitle')}
             </Link>

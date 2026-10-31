@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Buka perjalanan ini',
+  'assistant.plan.shareOptions': 'Diskusikan dengan yang lain dulu (opsional)',
+  'assistant.plan.preview': 'Pratinjau rencana perjalanan',
   'assistant.home.title': 'Perjalananmu',
   'assistant.home.welcome': 'Ada yang bisa saya bantu?',
   'assistant.home.placeholder': 'Ceritakan rencana perjalananmu atau tempel tautan panduan wisata',

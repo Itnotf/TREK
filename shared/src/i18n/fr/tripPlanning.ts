@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Demander des modifications',
+  'tripPlanning.outlineOptions': 'Commencer par une ébauche (facultatif)',
   'tripPlanning.title': 'Planifier ensemble',
   'tripPlanning.intro': 'Discutez de vos envies, puis demandez à l’IA d’en faire un voyage prêt à partir.',
   'tripPlanning.chat': 'Discussion du voyage',

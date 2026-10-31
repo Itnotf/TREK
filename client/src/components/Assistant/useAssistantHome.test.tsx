@@ -62,7 +62,7 @@ function Suggestions() {
 describe('useAssistantHome', () => {
   it('FE-AI-HOME-001: names the home chat and keeps it under its own key', () => {
     render(<Home switchTo={vi.fn()} />);
-    expect(screen.getByText('chat 0 Your travels')).toBeInTheDocument();
+    expect(screen.getByText('chat 0 AI trip planner')).toBeInTheDocument();
   });
 
   it("FE-AI-HOME-002: goes on in a trip's chat with the question waiting, and never over one typed there", () => {

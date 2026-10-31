@@ -1,8 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
-  'assistant.home.title': 'Your travels',
-  'assistant.home.welcome': 'What can I help you with?',
+  'assistant.home.title': 'AI trip planner',
+  'assistant.home.welcome': 'Where would you like to go?',
   'assistant.home.placeholder': 'Describe your trip, or paste a travel guide link',
   'assistant.home.switch': 'Chat about one trip',
   'assistant.home.back': 'Back to all trips',
@@ -37,14 +37,17 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.editHint':
     'Want changes? Tell me in the chat and I will update the draft. Confirm when you are happy with it.',
   'assistant.plan.stale': 'A newer version is available below. Confirm the latest version to create your trip.',
-  'assistant.plan.confirm': 'Confirm and create trip',
-  'assistant.plan.created': 'This draft is linked to a trip. Open it to discuss and revise the shared plan.',
-  'assistant.plan.share': 'Discuss this plan together',
+  'assistant.plan.confirm': 'Use this itinerary',
+  'assistant.plan.created': 'This draft is saved as a trip. Continue making changes there.',
+  'assistant.plan.share': 'Open a shared discussion',
   'assistant.plan.shareHint':
-    'Share this itinerary in a trip space before confirming it. Your private conversation stays private.',
+    'Save a shared draft, invite others if you like, then confirm it together. Your private conversation stays private.',
   'assistant.plan.unverified': 'Location not verified yet',
   'assistant.plan.loadFailed': 'Could not load this draft. Please try again.',
-  'assistant.plan.applyFailed': 'Could not create the trip. Check the latest draft and try again.',
+  'assistant.plan.applyFailed': 'Could not use or open this itinerary. Check your connection and try again.',
+  'assistant.plan.openItinerary': 'Open this trip',
+  'assistant.plan.shareOptions': 'Discuss with others first (optional)',
+  'assistant.plan.preview': 'Preview the itinerary',
 };
 
 export default assistantHome;

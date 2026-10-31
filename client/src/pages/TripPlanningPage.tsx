@@ -9,6 +9,7 @@ import { TripPlanningMembers } from './tripPlanner/TripPlanningMembers';
 import {
   TripPlanningChat,
   TripPlanningComposer,
+  TripPlanningFeedback,
   TripPlanningHistory,
   TripPlanningPlan,
 } from './tripPlanner/TripPlanningPanels';
@@ -104,7 +105,7 @@ function TripPlanningWorkspace({ tripId }: { tripId: number }) {
               role="group"
               aria-label={t('tripPlanning.title')}
             >
-              {(['chat', 'proposal'] as const).map((tab) => (
+              {(['proposal', 'chat'] as const).map((tab) => (
                 <button
                   key={tab}
                   type="button"
@@ -116,9 +117,8 @@ function TripPlanningWorkspace({ tripId }: { tripId: number }) {
                 </button>
               ))}
             </div>
-            <div className="grid min-w-0 gap-7 lg:grid-cols-[minmax(20rem,0.8fr)_minmax(0,1.4fr)] lg:items-start">
-              <TripPlanningChat workspace={workspace} tripId={tripId} />
-
+            <TripPlanningFeedback workspace={workspace} />
+            <div className="grid min-w-0 gap-7 lg:grid-cols-[minmax(0,1.4fr)_minmax(20rem,0.8fr)] lg:items-start">
               <section
                 aria-labelledby="planning-proposal-heading"
                 className={`${mobileTab === 'proposal' ? 'block' : 'hidden'} min-w-0 lg:block`}
@@ -139,15 +139,23 @@ function TripPlanningWorkspace({ tripId }: { tripId: number }) {
                     <RefreshCw size={17} aria-hidden="true" />
                   </button>
                 </div>
-                <div className="mb-5">
-                  <TripPlanningMembers state={data} disabled={busy} save={saveCollaborators} />
-                </div>
-                <TripPlanningComposer workspace={workspace} />
+                {workspace.latest && (
+                  <details key={workspace.latest.revision} className="mb-5 border-b border-edge-faint pb-3">
+                    <summary className="min-h-11 cursor-pointer content-center rounded text-body font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+                      {t('tripPlanning.adjust')}
+                    </summary>
+                    <TripPlanningComposer workspace={workspace} />
+                  </details>
+                )}
 
                 <TripPlanningPlan workspace={workspace} />
 
+                {!workspace.latest && <TripPlanningComposer workspace={workspace} />}
+
                 <TripPlanningHistory workspace={workspace} />
+                <TripPlanningMembers state={data} disabled={busy} save={saveCollaborators} />
               </section>
+              <TripPlanningChat workspace={workspace} tripId={tripId} />
             </div>
             <TripMembersModal
               isOpen={inviteOpen}

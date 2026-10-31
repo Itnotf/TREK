@@ -8,6 +8,12 @@ import CardFrame from '../parts/CardFrame';
 import CardHeader from '../parts/CardHeader';
 import { useTripPlan } from './useTripPlan';
 
+const errorMessages = {
+  load: 'assistant.plan.loadFailed',
+  unavailable: 'assistant.change.expired',
+  apply: 'assistant.plan.applyFailed',
+};
+
 function PlanDraft({ card }: { card: TripPlanCard }) {
   const { t } = useTranslation();
   const state = useTripPlan(card);
@@ -22,7 +28,18 @@ function PlanDraft({ card }: { card: TripPlanCard }) {
         meta={t('assistant.plan.version', { version: card.revision })}
       />
       <p className="whitespace-pre-wrap text-body text-content-secondary">{plan?.summary ?? card.summary}</p>
-      {plan && <TripGuideContents plan={plan} />}
+      {plan && (
+        <ol className="mt-3 space-y-2 text-body text-content-secondary">
+          {plan.days.map((day, index) => (
+            <li key={index} className="flex items-baseline gap-2 [overflow-wrap:anywhere]">
+              <span className="shrink-0 text-caption font-semibold text-content">
+                {t('planner.dayN', { n: index + 1 })}
+              </span>
+              <span>{day.title.replace(/^(?:第[0-9一二三四五六七八九十]+天|day\s*\d+)\s*[·|｜:：\-–—]?\s*/i, '')}</span>
+            </li>
+          ))}
+        </ol>
+      )}
       {state.loading && (
         <p role="status" className="mt-3 text-caption text-content-muted">
           {t('common.loading')}
@@ -30,15 +47,7 @@ function PlanDraft({ card }: { card: TripPlanCard }) {
       )}
       {state.error && (
         <div role="alert" className="mt-3 text-caption text-danger">
-          <p>
-            {t(
-              state.error === 'load'
-                ? 'assistant.plan.loadFailed'
-                : state.error === 'unavailable'
-                  ? 'assistant.change.expired'
-                  : 'assistant.plan.applyFailed'
-            )}
-          </p>
+          <p>{t(errorMessages[state.error])}</p>
           {state.error === 'load' && (
             <button type="button" className="mt-2 underline" onClick={state.retry}>
               {t('assistant.errorAction.retry')}
@@ -52,32 +61,41 @@ function PlanDraft({ card }: { card: TripPlanCard }) {
       </p>
       {plan && !state.stale && (
         <>
-          {!created && (
-            <>
-              <button
-                type="button"
-                disabled={!state.canApply}
-                onClick={() => {
-                  void state.share();
-                }}
-                className="mt-3 min-h-11 w-full rounded-xl bg-accent px-4 py-2 text-body font-semibold text-accent-text disabled:opacity-50"
-              >
-                {t(state.applying ? 'common.saving' : 'assistant.plan.share')}
-              </button>
-              <p className="mt-2 text-caption leading-relaxed text-content-muted">{t('assistant.plan.shareHint')}</p>
-            </>
-          )}
           <button
             type="button"
             disabled={!state.canApply}
             onClick={() => {
               void state.confirm();
             }}
-            className={`mt-3 min-h-11 w-full rounded-xl px-4 py-2 text-body font-semibold disabled:opacity-50 ${created ? 'bg-accent text-accent-text' : 'border border-edge text-content hover:bg-surface-secondary'}`}
+            className="mt-3 min-h-11 w-full rounded-xl bg-accent px-4 py-2 text-body font-semibold text-accent-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
           >
-            {t(state.applying ? 'common.saving' : created ? 'assistant.card.common.open' : 'assistant.plan.confirm')}
+            {t(state.applying ? 'common.saving' : created ? 'assistant.plan.openItinerary' : 'assistant.plan.confirm')}
           </button>
+          <details className="mt-3 border-t border-edge-faint pt-1">
+            <summary className="min-h-11 cursor-pointer content-center rounded text-caption text-content-secondary underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+              {t('assistant.plan.shareOptions')}
+            </summary>
+            <p className="mt-1 text-caption leading-relaxed text-content-secondary">{t('assistant.plan.shareHint')}</p>
+            <button
+              type="button"
+              disabled={!state.canApply}
+              onClick={() => {
+                void state.share();
+              }}
+              className="mt-3 min-h-11 w-full rounded-xl border border-edge px-4 py-2 text-body font-medium text-content hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-50"
+            >
+              {t(state.applying ? 'common.saving' : 'assistant.plan.share')}
+            </button>
+          </details>
         </>
+      )}
+      {plan && (
+        <details className="mt-3 border-t border-edge-faint pt-1">
+          <summary className="min-h-11 cursor-pointer content-center rounded text-body font-medium text-content underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+            {t('assistant.plan.preview')}
+          </summary>
+          <TripGuideContents plan={plan} />
+        </details>
       )}
     </CardFrame>
   );

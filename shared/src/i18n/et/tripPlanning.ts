@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Soovi muudatusi',
+  'tripPlanning.outlineOptions': 'Alusta üldisest kavast (valikuline)',
   'tripPlanning.title': 'Planeerige koos',
   'tripPlanning.intro':
     'Arutage oma ideid koos. Paluge tehisintellektil koostada neist reis, millele saate päriselt minna.',

@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Módosítások kérése',
+  'tripPlanning.outlineOptions': 'Kezdj egy vázlatos tervvel (opcionális)',
   'tripPlanning.title': 'Tervezzetek együtt',
   'tripPlanning.intro':
     'Beszéljétek át az ötleteiteket. Kérjétek meg az MI-t, hogy készítsen belőlük megvalósítható utazást.',

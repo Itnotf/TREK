@@ -29,33 +29,19 @@ export default function TripNavigation({
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const tools = usePopoverList(0, { estimatedHeight: 150 });
   const routeTab = tabs?.find((tab) => tab.id === 'tour-planner');
-  const primaryTabs: TripNavigationTab[] = (tabs ?? [{ id: 'plan', label: t('trip.tabs.plan') }]).filter(
-    (tab) => tab.id !== 'tour-planner'
-  );
+  const primaryTabs = tabs?.filter((tab) => tab.id === 'plan') ?? [{ id: 'plan', label: t('trip.tabs.plan') }];
+  const otherTabs = tabs?.filter((tab) => tab.id !== 'plan') ?? [];
+  const currentTool = otherTabs.find((tab) => tab.id === activeTab);
+  const currentToolIndex = otherTabs.findIndex((tab) => tab.id === activeTab);
+  const tools = usePopoverList(currentToolIndex, { estimatedHeight: 350 });
+  const { triggerRef, toggle, open, listId } = tools;
   const change = (id: string) => {
     if (onChange) onChange(id);
-    else void navigate(`/trips/${tripId}${id === 'plan' ? '' : `?tab=${encodeURIComponent(id)}`}`);
+    else void navigate(`/trips/${tripId}?tab=${encodeURIComponent(id)}`);
   };
   return (
     <nav aria-label={t('trip.navigation.label')} className="flex min-w-0 items-center gap-1">
-      <Link
-        to={`/trips/${tripId}/planning`}
-        aria-current={activeTab === 'planning' ? 'page' : undefined}
-        className={`inline-flex min-h-9 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === 'planning' ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
-      >
-        <MessagesSquare size={15} aria-hidden="true" />
-        {t('trip.planning.title')}
-      </Link>
-      <Link
-        to={`/trips/${tripId}/guide`}
-        aria-current={activeTab === 'guide' ? 'page' : undefined}
-        className={`inline-flex min-h-9 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === 'guide' ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
-      >
-        <BookOpen size={15} aria-hidden="true" />
-        {t('trip.guide.title')}
-      </Link>
       <SlidingTabs
         tabs={primaryTabs.map((tab) => ({
           id: tab.id,
@@ -65,35 +51,64 @@ export default function TripNavigation({
         }))}
         activeTab={activeTab}
         onChange={change}
-        indicatorColor={primaryTabs.some((tab) => tab.id === activeTab) ? undefined : 'transparent'}
+        indicatorColor={activeTab === 'plan' ? undefined : 'transparent'}
         className="min-w-0"
       />
-      {routeTab && (
+      <Link
+        to={`/trips/${tripId}/guide`}
+        aria-label={t('trip.guide.title')}
+        aria-current={activeTab === 'guide' ? 'page' : undefined}
+        className={`inline-flex min-h-9 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === 'guide' ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
+      >
+        <BookOpen size={15} aria-hidden="true" />
+        <span className="hidden sm:inline">{t('trip.guide.title')}</span>
+        <span className="sm:hidden">{t('trip.guide.shortTitle')}</span>
+      </Link>
+      <Link
+        to={`/trips/${tripId}/planning`}
+        aria-label={t('trip.planning.title')}
+        aria-current={activeTab === 'planning' ? 'page' : undefined}
+        className={`inline-flex min-h-9 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === 'planning' ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
+      >
+        <MessagesSquare size={15} aria-hidden="true" />
+        <span className="hidden sm:inline">{t('trip.planning.title')}</span>
+        <span className="sm:hidden">{t('trip.planning.shortTitle')}</span>
+      </Link>
+      {otherTabs.length > 0 && (
         <>
           <button
-            ref={tools.triggerRef}
+            ref={triggerRef}
             type="button"
-            onClick={tools.toggle}
-            aria-expanded={tools.open}
-            aria-controls={tools.listId}
-            className={`inline-flex min-h-9 flex-none items-center gap-1 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === routeTab.id ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
+            onClick={toggle}
+            aria-expanded={open}
+            aria-controls={listId}
+            className={`inline-flex min-h-9 flex-none items-center gap-1 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${currentTool ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
           >
-            {activeTab === routeTab.id ? routeTab.label : t('mobileTrip.more')}
+            {currentTool?.label ?? t('mobileTrip.more')}
             <ChevronDown size={14} aria-hidden="true" />
           </button>
-          <PopoverListPanel list={tools} label={t('mobileTrip.more')} className="w-72 max-w-[calc(100vw-16px)]">
-            <p className="px-3 py-2 text-caption leading-relaxed text-content-secondary">
-              {t('tours.navigation.help')}
-            </p>
-            <PopoverItem
-              icon={routeTab.icon ? <routeTab.icon size={16} /> : null}
-              label={routeTab.label}
-              active={activeTab === routeTab.id}
-              onClick={() => {
-                tools.close();
-                change(routeTab.id);
-              }}
-            />
+          <PopoverListPanel
+            list={tools}
+            label={t('mobileTrip.more')}
+            className="max-h-[65dvh] w-72 max-w-[calc(100vw-16px)] overflow-y-auto"
+          >
+            {otherTabs.map((tab) => (
+              <PopoverItem
+                key={tab.id}
+                icon={tab.icon ? <tab.icon size={16} /> : null}
+                label={tab.label}
+                active={activeTab === tab.id}
+                onClick={() => {
+                  tools.close();
+                  change(tab.id);
+                }}
+              />
+            ))}
+            {routeTab && (
+              <p className="px-3 py-2 text-caption leading-relaxed text-content-secondary">
+                {t('tours.navigation.help')}
+              </p>
+            )}
           </PopoverListPanel>
         </>
       )}

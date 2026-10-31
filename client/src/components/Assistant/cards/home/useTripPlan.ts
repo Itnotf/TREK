@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useNetworkMode } from '../../../../hooks/useNetworkMode';
 import { tripPlanRepo } from '../../../../repo/tripPlanRepo';
+import { tripPlanningRepo } from '../../../../repo/tripPlanningRepo';
 import { useAssistantStore } from '../../../../store/assistantStore';
 import { useAssistantView } from '../../assistantViewContext';
 
@@ -66,17 +67,20 @@ export function useTripPlan(card: TripPlanCard) {
     !applying &&
     error !== 'load' &&
     error !== 'unavailable';
-  const openTrip = (id: number) => onOpen?.({ kind: 'page', path: `/trips/${id}${draft?.plan.guide ? '/guide' : ''}` });
+  const openTrip = (id: number) => onOpen?.({ kind: 'page', path: `/trips/${id}?tab=plan` });
   const confirm = async () => {
     if (!draft || !canApply || busy.current) return;
-    if (draft.created_trip_id) {
-      onOpen?.({ kind: 'page', path: `/trips/${draft.created_trip_id}/planning` });
-      return;
-    }
     busy.current = true;
     setApplying(true);
     setFailure(null);
     try {
+      if (draft.created_trip_id) {
+        const planning = await tripPlanningRepo.get(draft.created_trip_id);
+        const pending =
+          planning.latest && (planning.confirmed_revision !== planning.latest.revision || planning.baseline_changed);
+        onOpen?.({ kind: 'page', path: `/trips/${draft.created_trip_id}${pending ? '/planning' : '?tab=plan'}` });
+        return;
+      }
       const trip = await tripPlanRepo.apply(draft.id, draft.revision);
       setDraft((current) => (current ? { ...current, created_trip_id: trip.id } : current));
       openTrip(trip.id);
@@ -105,6 +109,11 @@ export function useTripPlan(card: TripPlanCard) {
       onOpen?.({ kind: 'page', path: `/trips/${id}/planning` });
     } catch (err) {
       setFailure({ request, kind: isAxiosError(err) && err.response?.status === 410 ? 'unavailable' : 'apply' });
+      try {
+        setDraft(await tripPlanRepo.get(card.draftId));
+      } catch {
+        /* Keep the readable draft. */
+      }
     } finally {
       busy.current = false;
       setApplying(false);

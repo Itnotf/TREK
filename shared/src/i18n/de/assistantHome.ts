@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Diese Reise öffnen',
+  'assistant.plan.shareOptions': 'Zuerst mit anderen besprechen (optional)',
+  'assistant.plan.preview': 'Reiseplan ansehen',
   'assistant.plan.share': 'Diesen Plan gemeinsam besprechen',
   'assistant.plan.shareHint':
     'Teile den Reisevorschlag vor der Bestätigung in einem gemeinsamen Reisebereich. Dein privater Chat bleibt privat.',

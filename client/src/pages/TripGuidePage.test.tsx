@@ -152,7 +152,7 @@ describe('saved trip guide', () => {
     );
     expect(screen.getByText('Places, times and stays follow your daily itinerary.')).toBeVisible();
     for (const link of screen.getAllByRole('link', { name: 'Open daily itinerary' }))
-      expect(link).toHaveAttribute('href', '/trips/31');
+      expect(link).toHaveAttribute('href', '/trips/31?tab=plan');
     fireEvent.click(screen.getByText('Times and transport details'));
     expect(screen.getByText('16:00 – 17:30')).toBeVisible();
     expect(screen.getByText(/17:45.*10:00/)).toBeVisible();
@@ -164,7 +164,10 @@ describe('saved trip guide', () => {
     show();
     expect(await screen.findByRole('heading', { level: 1, name: 'Manual trip' })).toBeVisible();
     expect(screen.getByText('No places for this day yet')).toBeVisible();
-    expect(screen.getAllByRole('link', { name: 'Open daily itinerary' })[0]).toHaveAttribute('href', '/trips/31');
+    expect(screen.getAllByRole('link', { name: 'Open daily itinerary' })[0]).toHaveAttribute(
+      'href',
+      '/trips/31?tab=plan'
+    );
     expect(screen.queryByText('Estimated budget')).not.toBeInTheDocument();
   });
 

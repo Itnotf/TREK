@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'เปิดทริปนี้',
+  'assistant.plan.shareOptions': 'พูดคุยกับคนอื่นก่อน (ไม่บังคับ)',
+  'assistant.plan.preview': 'ดูตัวอย่างแผนการเดินทาง',
   'assistant.home.title': 'ทริปของคุณ',
   'assistant.home.welcome': 'ให้ช่วยอะไรดี?',
   'assistant.home.placeholder': 'เล่าทริปที่ต้องการ หรือวางลิงก์คู่มือท่องเที่ยว',

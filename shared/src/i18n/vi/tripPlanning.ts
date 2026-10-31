@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': 'Yêu cầu thay đổi',
+  'tripPlanning.outlineOptions': 'Bắt đầu bằng kế hoạch sơ bộ (không bắt buộc)',
   'tripPlanning.title': 'Cùng lên kế hoạch',
   'tripPlanning.intro': 'Cùng nhau thảo luận. Nhờ AI biến ý tưởng của mọi người thành một chuyến đi có thể thực hiện.',
   'tripPlanning.chat': 'Thảo luận chuyến đi',

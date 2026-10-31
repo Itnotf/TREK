@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
+  'tripPlanning.adjust': '提出調整',
+  'tripPlanning.outlineOptions': '先整理大致方向（可選）',
   'tripPlanning.title': '一起規劃',
   'tripPlanning.intro': '一起聊聊旅行想法，讓 AI 整理成能實際出發的行程。',
   'tripPlanning.chat': '旅行討論',

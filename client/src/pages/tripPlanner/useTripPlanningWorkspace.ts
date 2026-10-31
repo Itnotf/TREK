@@ -1,16 +1,18 @@
 import type { TripPlanningRevision } from '@trek/shared';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { tripPlanningRepo } from '../../repo/tripPlanningRepo';
 import { useAuthStore } from '../../store/authStore';
 import { useTripPlanning } from './useTripPlanning';
 
 export function useTripPlanningWorkspace(tripId: number) {
+  const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const planning = useTripPlanning(tripId);
   const { data, working } = planning;
   const [instruction, setInstruction] = useState('');
-  const [mobileTab, setMobileTab] = useState<'chat' | 'proposal'>('chat');
+  const [mobileTab, setMobileTab] = useState<'chat' | 'proposal'>('proposal');
   const [inviteOpen, setInviteOpen] = useState(false);
   const [history, setHistory] = useState<TripPlanningRevision[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -84,9 +86,10 @@ export function useTripPlanningWorkspace(tripId: number) {
     generate,
     openHistory,
     acknowledgeAI,
-    confirm: () => {
-      if (shown && !viewingHistory)
-        return planning.run('confirm', () => tripPlanningRepo.confirm(tripId, shown.revision));
+    confirm: async () => {
+      if (!shown?.plan || viewingHistory || !data?.can_confirm || data.baseline_changed || busy) return;
+      const success = await planning.run('confirm', () => tripPlanningRepo.confirm(tripId, shown.revision));
+      if (success) void navigate(`${tripPath}?tab=plan`);
     },
     saveCollaborators: (ids: number[]) =>
       planning.run('collaborators', () => tripPlanningRepo.collaborators(tripId, ids)),

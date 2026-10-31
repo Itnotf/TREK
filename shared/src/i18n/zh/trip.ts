@@ -1,8 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
-  'trip.planning.title': '一起规划',
-  'trip.planning.shortTitle': '规划',
+  'trip.planning.title': '查看与调整',
+  'trip.planning.shortTitle': '调整',
   'trip.guide.current': '当前旅行安排',
   'trip.guide.currentHelp': '地点、时间和住宿与每日行程保持一致。',
   'trip.guide.original': '最初的攻略 · 参考',
@@ -38,7 +38,7 @@ const trip: TranslationStrings = {
   'trip.loadingSteps.pack': '打包行李中...',
   'trip.loadingSteps.road': '出发上路啦...',
   'trip.loadingSteps.arrive': '就快到啦...',
-  'trip.mobilePlan': '调整',
+  'trip.mobilePlan': '手动',
   'trip.mobilePlaces': '地点',
   'trip.panelWidth': '面板宽度',
   'trip.toast.placeUpdated': '地点已更新',

@@ -1,12 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const tripPlanning: TranslationStrings = {
-  'tripPlanning.title': '一起规划',
-  'tripPlanning.intro': '大家先聊想法，再请 AI 整理成一份可以出发的旅行计划。',
-  'tripPlanning.chat': '旅行讨论',
-  'tripPlanning.proposal': '共同方案',
+  'tripPlanning.title': '查看与调整',
+  'tripPlanning.intro': '先看行程，需要修改就告诉 AI，满意后确认。邀请同行人一起讨论是可选的。',
+  'tripPlanning.chat': '同行人讨论',
+  'tripPlanning.proposal': '行程方案',
   'tripPlanning.chatHelp': '在这里聊偏好、发攻略链接、提修改意见。这趟旅行的成员都能看到。',
-  'tripPlanning.chatNext': '聊好后，请 AI 整理方案',
+  'tripPlanning.chatNext': '查看与调整行程',
   'tripPlanning.chatReadOnly': '你可以查看讨论；这趟旅行暂未开放你的发言权限。',
   'tripPlanning.members': '成员与邀请',
   'tripPlanning.memberCount': '{count} 位同行人',
@@ -23,7 +23,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.instructionHelp': '补充要求会共享给同行人。只有点击下面的按钮，AI 才会开始整理。',
   'tripPlanning.discuss': '整理讨论方向',
   'tripPlanning.generate': '生成详细行程',
-  'tripPlanning.revise': '修改详细行程',
+  'tripPlanning.revise': '按要求调整行程',
   'tripPlanning.generating': 'AI 正在整理大家的讨论并准备方案，可能需要几分钟。',
   'tripPlanning.confirming': '正在更新正式行程……',
   'tripPlanning.discussionStatus': '方向讨论版',
@@ -37,7 +37,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.outline': '每天怎么玩',
   'tripPlanning.day': '第 {day} 天',
   'tripPlanning.changes': '这一版调整了什么',
-  'tripPlanning.confirm': '确认并更新正式行程',
+  'tripPlanning.confirm': '采用这版行程',
   'tripPlanning.confirmHelp': '先检查上面的方案。确认后，会更新这趟旅行的每日行程与攻略。',
   'tripPlanning.memberConfirmHelp': '你可以在讨论区提出修改意见，由发起人或协作者确认正式行程。',
   'tripPlanning.confirmedHelp': '这一版已写入正式行程。后续有变化，继续讨论并生成新方案即可。',
@@ -66,5 +66,7 @@ const tripPlanning: TranslationStrings = {
   'tripPlanning.error.busy': 'AI 正在为这趟旅行准备方案，请稍后刷新。',
   'tripPlanning.error.ai_failed': 'AI 暂时未能生成有效方案，当前行程已保留。请缩短要求后重试。',
   'tripPlanning.discussionRecord': '生成时的讨论记录（仅供回顾）',
+  'tripPlanning.adjust': '告诉 AI，哪里需要调整',
+  'tripPlanning.outlineOptions': '先讨论大致方向（可选）',
 };
 export default tripPlanning;

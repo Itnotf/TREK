@@ -107,7 +107,7 @@ describe('MAssistantHomeScreen', () => {
   it('FE-MOB-ASSIST-HOME-002: opens full screen on the home chat, named after all trips, without trip notes', () => {
     renderAt('/vacay');
     expect(screen.getByRole('dialog', { name: 'Assistant' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Your travels' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'AI trip planner' })).toBeInTheDocument();
     expect(surface.tripId).toBe(0);
     expect(surface.onFocusDay).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'More options' }));

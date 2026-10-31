@@ -44,22 +44,11 @@ export function TripPlanningChat({ workspace, tripId }: Props & { tripId: number
 
 export function TripPlanningComposer({ workspace }: Props) {
   const { t } = useTranslation();
-  const {
-    data,
-    instruction,
-    setInstruction,
-    busy,
-    viewingHistory,
-    acknowledgeAI,
-    generate,
-    latest,
-    working,
-    planning,
-  } = workspace;
+  const { data, instruction, setInstruction, busy, viewingHistory, acknowledgeAI, generate, latest } = workspace;
   if (!data) return null;
   const cannotGenerate = busy || viewingHistory || !data.can_discuss || !data.ai_available || data.ai_privacy_required;
   return (
-    <div className="mb-6 border-b border-edge-faint pb-6">
+    <div className="py-4">
       <label htmlFor="planning-instruction" className="mb-2 block text-body font-medium">
         {t('tripPlanning.instruction')}
       </label>
@@ -100,17 +89,6 @@ export function TripPlanningComposer({ workspace }: Props) {
           type="button"
           disabled={cannotGenerate}
           onClick={() => {
-            void generate('discussion');
-          }}
-          className={button}
-        >
-          <MessageCircle size={17} aria-hidden="true" />
-          {t('tripPlanning.discuss')}
-        </button>
-        <button
-          type="button"
-          disabled={cannotGenerate}
-          onClick={() => {
             void generate('detailed');
           }}
           className={primary}
@@ -119,18 +97,43 @@ export function TripPlanningComposer({ workspace }: Props) {
           {t(latest?.plan ? 'tripPlanning.revise' : 'tripPlanning.generate')}
         </button>
       </div>
+      <details className="mt-3">
+        <summary className="min-h-11 cursor-pointer content-center rounded text-caption text-content-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+          {t('tripPlanning.outlineOptions')}
+        </summary>
+        <button
+          type="button"
+          disabled={cannotGenerate}
+          onClick={() => {
+            void generate('discussion');
+          }}
+          className={`${button} mt-2`}
+        >
+          <MessageCircle size={17} aria-hidden="true" />
+          {t('tripPlanning.discuss')}
+        </button>
+      </details>
+    </div>
+  );
+}
+
+export function TripPlanningFeedback({ workspace }: Props) {
+  const { t } = useTranslation();
+  const { working, planning } = workspace;
+  return (
+    <>
       {(working === 'discussion' || working === 'detailed' || working === 'confirm') && (
-        <p role="status" className="mt-3 flex items-start gap-2 text-body leading-relaxed text-content-secondary">
+        <p role="status" className="mb-4 flex items-start gap-2 text-body leading-relaxed text-content-secondary">
           <Loader2 size={17} aria-hidden="true" className="mt-1 shrink-0 animate-spin motion-reduce:animate-none" />
           {t(working === 'confirm' ? 'tripPlanning.confirming' : 'tripPlanning.generating')}
         </p>
       )}
       {planning.actionError && (
-        <p role="alert" className="mt-3 text-body leading-relaxed text-content-secondary">
+        <p role="alert" className="mb-4 text-body leading-relaxed text-content-secondary">
           {t(`tripPlanning.error.${planning.actionError}`)}
         </p>
       )}
-    </div>
+    </>
   );
 }
 
@@ -156,7 +159,7 @@ export function TripPlanningPlan({ workspace }: Props) {
             </span>
             {!viewingHistory &&
               (confirmed ? (
-                <Link to={tripPath} className={button}>
+                <Link to={`${tripPath}?tab=plan`} className={button}>
                   {t('trip.guide.openPlan')}
                 </Link>
               ) : (

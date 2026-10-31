@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Открыть эту поездку',
+  'assistant.plan.shareOptions': 'Сначала обсудить с другими (необязательно)',
+  'assistant.plan.preview': 'Предпросмотр маршрута',
   'assistant.home.title': 'Ваши поездки',
   'assistant.home.welcome': 'Чем могу помочь?',
   'assistant.home.placeholder': 'Опишите поездку или вставьте ссылку на путеводитель',

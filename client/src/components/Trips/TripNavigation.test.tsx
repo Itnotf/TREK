@@ -19,11 +19,13 @@ describe('TripNavigation', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<TripNavigation tripId={5} tabs={tabs} activeTab="plan" onChange={onChange} />);
-    expect(screen.getByRole('link', { name: 'Plan together' })).toHaveAttribute('href', '/trips/5/planning');
+    expect(screen.getByRole('link', { name: 'Review and adjust' })).toHaveAttribute('href', '/trips/5/planning');
     expect(screen.getByRole('link', { name: 'Travel guide' })).toHaveAttribute('href', '/trips/5/guide');
     expect(screen.getByRole('button', { name: 'Daily itinerary' })).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Walking & outdoor routes' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Transports' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'More' }));
+    expect(screen.getByRole('button', { name: 'Transports' })).toBeVisible();
     expect(screen.getByText(/can be added as activities in the daily itinerary/)).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Walking & outdoor routes' }));
     expect(onChange).toHaveBeenCalledWith('tour-planner');
@@ -39,9 +41,11 @@ describe('TripNavigation', () => {
     expect(onChange).toHaveBeenCalledWith('plan');
   });
 
-  it('omits the outdoor tool when it is not enabled or has been replaced', () => {
+  it('keeps transport available under More when outdoor routes are disabled', async () => {
     render(<TripNavigation tripId={5} tabs={tabs.filter((tab) => tab.id !== 'tour-planner')} activeTab="plan" />);
-    expect(screen.queryByRole('button', { name: 'More' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'More' }));
+    expect(screen.getByRole('button', { name: 'Transports' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Walking & outdoor routes' })).not.toBeInTheDocument();
   });
 
   it('closes the tools on Escape and restores keyboard focus', async () => {
@@ -56,7 +60,13 @@ describe('TripNavigation', () => {
 
   it('provides a working daily itinerary link from the guide even without planner tabs', async () => {
     function Location() {
-      return <output>{useLocation().pathname}</output>;
+      const location = useLocation();
+      return (
+        <output>
+          {location.pathname}
+          {location.search}
+        </output>
+      );
     }
     const user = userEvent.setup();
     render(
@@ -68,6 +78,6 @@ describe('TripNavigation', () => {
     );
     expect(screen.getByRole('link', { name: 'Travel guide' })).toHaveAttribute('aria-current', 'page');
     await user.click(screen.getByRole('button', { name: 'Daily itinerary' }));
-    expect(screen.getByRole('status')).toHaveTextContent('/trips/5');
+    expect(screen.getByRole('status')).toHaveTextContent('/trips/5?tab=plan');
   });
 });

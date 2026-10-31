@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Ava see reis',
+  'assistant.plan.shareOptions': 'Aruta esmalt teistega (valikuline)',
+  'assistant.plan.preview': 'Reisikava eelvaade',
   'assistant.home.title': 'Sinu reisid',
   'assistant.home.welcome': 'Millega saan aidata?',
   'assistant.home.placeholder': 'Kirjelda oma reisi või kleebi reisijuhi link',

@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Utazás megnyitása',
+  'assistant.plan.shareOptions': 'Előbb egyeztess másokkal (opcionális)',
+  'assistant.plan.preview': 'Útiterv előnézete',
   'assistant.home.title': 'Az utazásaid',
   'assistant.home.welcome': 'Miben segíthetek?',
   'assistant.home.placeholder': 'Írd le az utazási tervedet, vagy illessz be egy útikalauzra mutató hivatkozást',
