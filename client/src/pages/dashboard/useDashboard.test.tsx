@@ -1,14 +1,19 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useLocation } from 'react-router';
 import { http, HttpResponse } from 'msw';
+import type { AiStatusResponse, TripCreateRequest } from '@trek/shared';
 import { server } from '../../../tests/helpers/msw/server';
 import { resetAllStores, seedStore } from '../../../tests/helpers/store';
 import { buildUser, buildTrip } from '../../../tests/helpers/factories';
 import { addListener } from '../../api/websocket';
 import { TranslationProvider } from '../../i18n/TranslationContext';
 import { useAuthStore } from '../../store/authStore';
+import { useAddonStore } from '../../store/addonStore';
+import { chatOf, useAssistantStore } from '../../store/assistantStore';
+import { useSettingsStore } from '../../store/settingsStore';
+import { assistantRepo } from '../../repo/assistantRepo';
 import { useDashboard } from './useDashboard';
 import type { DashboardTrip } from './dashboardModel';
 
@@ -23,6 +28,24 @@ vi.mock('../../sync/syncTriggers', () => ({ registerSyncTriggers: vi.fn(), unreg
 const PARIS = buildTrip({ id: 101, title: 'Paris Adventure', start_date: '2026-07-01', end_date: '2026-07-10' });
 const TOKYO = buildTrip({ id: 102, title: 'Tokyo Trip', start_date: '2027-09-01', end_date: '2027-09-15' });
 const ROME = buildTrip({ id: 103, title: 'Old Rome', start_date: '2024-01-01', end_date: '2024-01-07', is_archived: 1 });
+const INITIAL_ASSISTANT = useAssistantStore.getState();
+const ASSISTANT_STATUS: AiStatusResponse = {
+  available: true,
+  policy: 'instance',
+  canConnectOwn: false,
+  effective: { source: 'instance', kind: 'openai', model: 'gpt', host: 'api.openai.com', paidBy: 'instance' },
+  own: null,
+  instance: { kind: 'openai', model: 'gpt', host: 'api.openai.com' },
+  quota: { used: 0, limit: 10 },
+  privacyAcked: false,
+  retention: { mode: 'days', days: 90 },
+  openrouterOAuth: false,
+};
+const ROADTRIP_REQUEST: TripCreateRequest = {
+  title: 'Chengdu to Dali',
+  description: 'Start in Chengdu, visit Kunming, finish in Dali. Drive at most 4 hours a day.',
+  roadtrip_preferences: { roadtrip_day_minutes: 240, roadtrip_hotel_bookends: true },
+};
 
 let toastCalls: Array<[string, string | undefined]>;
 
@@ -54,13 +77,14 @@ function createWrapper(entry: string) {
 }
 
 async function mountLoaded(entry = '/dashboard') {
-  const view = renderHook(() => useDashboard(), { wrapper: entry === '/dashboard' ? wrapper : createWrapper(entry) });
+  const view = renderHook(() => ({ ...useDashboard(), location: useLocation() }), { wrapper: entry === '/dashboard' ? wrapper : createWrapper(entry) });
   await waitFor(() => expect(view.result.current.isLoading).toBe(false));
   return view;
 }
 
 beforeEach(() => {
   resetAllStores();
+  useAssistantStore.setState(INITIAL_ASSISTANT, true);
   seedStore(useAuthStore, { isAuthenticated: true, user: buildUser() });
   toastCalls = [];
   window.__addToast = ((message: string, type?: string) => {
@@ -77,6 +101,8 @@ beforeEach(() => {
 
 afterEach(() => {
   delete window.__addToast;
+  useAssistantStore.setState(INITIAL_ASSISTANT, true);
+  vi.restoreAllMocks();
 });
 
 describe('useDashboard', () => {
@@ -102,10 +128,19 @@ describe('useDashboard', () => {
     expect(result.current.gridTrips.map(t => t.title)).toEqual(['Old Rome']);
   });
 
-  it('FE-HOOK-DASH-003: ?create=1 opens the form and clears the query', async () => {
+  it('FE-HOOK-DASH-003: ?create=1 falls back to the manual form when AI is unavailable', async () => {
     const { result } = await mountLoaded('/dashboard?create=1');
 
     await waitFor(() => expect(result.current.showForm).toBe(true));
+  });
+
+  it('the mobile create shortcut starts a fresh AI conversation when available', async () => {
+    useAssistantStore.setState({ status: ASSISTANT_STATUS });
+    const { result } = await mountLoaded('/dashboard?create=1');
+    expect(result.current.showForm).toBe(false);
+    expect(result.current.location.search).toBe('');
+    expect(useAssistantStore.getState().window.open).toBe(true);
+    expect(chatOf(useAssistantStore.getState(), 0)).toMatchObject({ fresh: true, threadId: null, messages: [], draft: '' });
   });
 
   it('FE-HOOK-DASH-004: a failing trip load raises the error banner and toasts', async () => {
@@ -145,6 +180,8 @@ describe('useDashboard', () => {
     await act(async () => { payload = await result.current.handleCreate({ title: 'Iceland' }); });
 
     expect(payload).toEqual({ trip: created });
+    expect(result.current.location.pathname).toBe('/dashboard');
+    expect(useAssistantStore.getState().byTrip[created.id]).toBeUndefined();
     expect(toastCalls).toContainEqual(['Trip created successfully!', 'success']);
     act(() => result.current.setTripFilter('planned'));
     expect(result.current.gridTrips.some(t => t.title === 'Iceland')).toBe(true);
@@ -155,6 +192,111 @@ describe('useDashboard', () => {
     const { result } = await mountLoaded();
 
     await expect(result.current.handleCreate({ title: 'Iceland' })).rejects.toThrow('Title taken');
+  });
+
+  it.each(['en', 'zh'])('opens a saved roadtrip with an unsent %s planning draft that survives assistant resume', async (language) => {
+    const created = buildTrip({ id: 200, ...ROADTRIP_REQUEST });
+    server.use(
+      http.post('/api/trips', () => HttpResponse.json({ trip: created })),
+      http.get('/api/trips/200/assistant/threads', () => HttpResponse.json({ threads: [] })),
+    );
+    seedStore(useSettingsStore, { settings: { language } });
+    useAssistantStore.setState({ status: ASSISTANT_STATUS });
+    const send = vi.spyOn(assistantRepo, 'send');
+    const { result } = await mountLoaded();
+    await waitFor(() => expect(result.current.t('dashboard.title')).toBe(language === 'zh' ? '我的旅行' : 'My Trips'));
+
+    await act(async () => { await result.current.handleCreate(ROADTRIP_REQUEST); });
+    expect(result.current.location.pathname).not.toBe('/trips/200');
+    await act(async () => { await result.current.handleCreated(created, ROADTRIP_REQUEST); });
+
+    expect(result.current.location.pathname).toBe('/trips/200');
+    expect(result.current.location.search).toBe('?assistant=1');
+    const draft = chatOf(useAssistantStore.getState(), 200).draft;
+    expect(draft).toBe(result.current.t('dashboard.roadtrip.planPrompt'));
+    expect(draft).not.toBe('dashboard.roadtrip.planPrompt');
+    await act(async () => { await useAssistantStore.getState().resume(200); });
+    expect(chatOf(useAssistantStore.getState(), 200).draft).toBe(draft);
+    expect(chatOf(useAssistantStore.getState(), 200).messages).toEqual([]);
+    expect(useAssistantStore.getState().status?.privacyAcked).toBe(false);
+    expect(useAssistantStore.getState().status?.quota?.used).toBe(0);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('loads assistant availability when creating a roadtrip before the status has loaded', async () => {
+    const created = buildTrip({ id: 200, ...ROADTRIP_REQUEST });
+    seedStore(useAddonStore, { loaded: true, addons: [{ id: 'ai_assistant', enabled: true }] });
+    let statusRequests = 0;
+    server.use(
+      http.post('/api/trips', () => HttpResponse.json({ trip: created })),
+      http.get('/api/ai/status', () => {
+        statusRequests += 1;
+        return HttpResponse.json(ASSISTANT_STATUS);
+      }),
+    );
+    const { result } = await mountLoaded();
+
+    await act(async () => { await result.current.handleCreate(ROADTRIP_REQUEST); });
+    expect(result.current.location.pathname).not.toBe('/trips/200');
+    await act(async () => { await result.current.handleCreated(created, ROADTRIP_REQUEST); });
+
+    expect(statusRequests).toBe(1);
+    expect(result.current.location.pathname).toBe('/trips/200');
+    expect(result.current.location.search).toBe('?assistant=1');
+    expect(chatOf(useAssistantStore.getState(), 200).draft).not.toBe('');
+  });
+
+  it('opens a saved roadtrip normally when no assistant is available', async () => {
+    const created = buildTrip({ id: 200, ...ROADTRIP_REQUEST });
+    server.use(http.post('/api/trips', () => HttpResponse.json({ trip: created })));
+    useAssistantStore.setState({ status: { ...ASSISTANT_STATUS, available: false, effective: null } });
+    const { result } = await mountLoaded();
+
+    await act(async () => { await result.current.handleCreate(ROADTRIP_REQUEST); });
+    expect(result.current.location.pathname).not.toBe('/trips/200');
+    await act(async () => { await result.current.handleCreated(created, ROADTRIP_REQUEST); });
+
+    expect(result.current.location.pathname).toBe('/trips/200');
+    expect(result.current.location.search).toBe('');
+    expect(useAssistantStore.getState().byTrip[200]).toBeUndefined();
+  });
+
+  it('still returns and opens the saved roadtrip after the status endpoint fails', async () => {
+    const created = buildTrip({ id: 200, ...ROADTRIP_REQUEST });
+    seedStore(useAddonStore, { loaded: true, addons: [{ id: 'ai_assistant', enabled: true }] });
+    let createRequests = 0;
+    server.use(
+      http.post('/api/trips', () => {
+        createRequests += 1;
+        return HttpResponse.json({ trip: created });
+      }),
+      http.get('/api/ai/status', () => HttpResponse.json({ error: 'Unavailable' }, { status: 503 })),
+    );
+    const { result } = await mountLoaded();
+
+    let payload: unknown;
+    await act(async () => { payload = await result.current.handleCreate(ROADTRIP_REQUEST); });
+    await act(async () => { await result.current.handleCreated(created, ROADTRIP_REQUEST); });
+
+    expect(payload).toEqual({ trip: created });
+    expect(createRequests).toBe(1);
+    expect(result.current.location.pathname).toBe('/trips/200');
+    expect(result.current.location.search).toBe('');
+    expect(toastCalls).toContainEqual(['Trip created successfully!', 'success']);
+    expect(toastCalls.filter(([, type]) => type === 'error')).toEqual([]);
+  });
+
+  it('does not reject a saved roadtrip if the optional assistant handoff throws', async () => {
+    const created = buildTrip({ id: 200, ...ROADTRIP_REQUEST });
+    server.use(http.post('/api/trips', () => HttpResponse.json({ trip: created })));
+    useAssistantStore.setState({ loadStatus: vi.fn().mockRejectedValue(new Error('Status failed')) });
+    const { result } = await mountLoaded();
+
+    await act(async () => { await expect(result.current.handleCreate(ROADTRIP_REQUEST)).resolves.toEqual({ trip: created }); });
+    await act(async () => { await result.current.handleCreated(created, ROADTRIP_REQUEST); });
+
+    expect(result.current.location.pathname).toBe('/trips/200');
+    expect(result.current.location.search).toBe('');
   });
 
   it('FE-HOOK-DASH-009: updating replaces the edited trip', async () => {

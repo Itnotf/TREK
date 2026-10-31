@@ -6,6 +6,7 @@
  */
 import { fitToSize, toolOutputForProvider } from '../../../../src/nest/assistant/assistant-output';
 import { redactForProvider } from '../../../../src/nest/assistant/assistant-redact';
+import { itineraryPlanSchema } from '@trek/shared';
 
 import { describe, expect, it } from 'vitest';
 
@@ -80,6 +81,44 @@ describe('fitToSize', () => {
 });
 
 describe('toolOutputForProvider', () => {
+  it('keeps every day of a large validated itinerary for revision, with redaction and normal tool limits intact', () => {
+    const plan = itineraryPlanSchema.parse({
+      title: 'A long journey',
+      summary: 'Each day has useful guide content.',
+      start_date: null,
+      currency: 'CNY',
+      transport_mode: 'transit',
+      requirements: ['Contact guest@example.test'],
+      assumptions: [],
+      days: Array.from({ length: 20 }, (_, index) => ({
+        title: `Day ${index + 1}`,
+        overnight_city: 'Chengdu',
+        notes: 'a'.repeat(1950),
+        stops: [
+          {
+            name: `Place ${index + 1}`,
+            city: 'Chengdu',
+            description: 'b'.repeat(700),
+            arrival_time: null,
+            duration_minutes: 60,
+          },
+        ],
+      })),
+    });
+    const answer = { draft: { id: 1, thread_id: 2, revision: 1, latest_revision: 1, created_trip_id: null, plan } };
+    expect(JSON.stringify(answer).length).toBeGreaterThan(40_000);
+    for (const tool of ['get_itinerary_draft', 'save_itinerary_draft']) {
+      const output = toolOutputForProvider(tool, answer);
+      expect(output).toEqual(redactForProvider(answer));
+      expect(JSON.stringify(output)).toContain('Place 20');
+      expect(JSON.stringify(output)).not.toContain('guest@example.test');
+      expect(JSON.stringify(output).length).toBeLessThanOrEqual(64_000);
+    }
+    const ordinary = toolOutputForProvider('list_places', answer);
+    expect(ordinary).toMatchObject({ truncated: true });
+    expect(JSON.stringify(ordinary).length).toBeLessThanOrEqual(40_000);
+  });
+
   it('ASTRED-020: the trip summary keeps the plan and leaves out members contacts, budget and shared notes', () => {
     const output = toolOutputForProvider('get_trip_summary', {
       trip: { id: 1, title: 'Kyoto', feed_token: 'secret', cover_image: '/uploads/c.jpg' },

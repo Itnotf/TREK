@@ -103,6 +103,19 @@ describe('assistantStore: the home chat', () => {
     expect(remove).toHaveBeenCalledWith(HOME, 21);
   });
 
+  it('a fresh home planning thread stays empty when the view resumes, until history is explicitly opened', async () => {
+    const summary = { id: 21, title: 'Previous trip', lastMessageAt: '2026-10-23T08:00:00.000Z' };
+    vi.spyOn(assistantRepo, 'threads').mockResolvedValue([summary]);
+    const open = vi.spyOn(assistantRepo, 'thread').mockResolvedValue({ thread: summary, messages: [] });
+    store().newThread(HOME_CHAT_KEY);
+    await store().resume(HOME_CHAT_KEY);
+    expect(open).not.toHaveBeenCalled();
+    expect(chat()).toMatchObject({ threadId: null, messages: [], fresh: true });
+    await store().openThread(HOME_CHAT_KEY, 21);
+    expect(open).toHaveBeenCalledWith(HOME, 21);
+    expect(chat()).toMatchObject({ threadId: 21, fresh: false });
+  });
+
   it('FE-AI-STORE-HOME-004: a decision goes to the home thread; an applied change makes no planner jump', async () => {
     vi.spyOn(assistantRepo, 'send').mockResolvedValueOnce(streamOf(HELD_TURN));
     await store().send(HOME_CHAT_KEY, 'I was in Japan');

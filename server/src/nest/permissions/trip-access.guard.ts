@@ -86,7 +86,7 @@ export class TripAccessGuard implements CanActivate {
     ]);
     if (action) {
       const shared = trip.user_id !== user.id;
-      if (!(await this.permissions.checkPermission(action, user.role, trip.user_id, user.id, shared))) {
+      if (!(await this.permissions.checkPermission(action, user.role, trip.user_id, user.id, shared, trip.id))) {
         throw new HttpException({ error: 'No permission' }, 403);
       }
     }

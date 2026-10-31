@@ -97,6 +97,7 @@ import { TodoModule } from './todo/todo.module';
 import { ToursModule } from './tours/tours.module';
 import { TransitModule } from './transit/transit.module';
 import { TripInviteModule } from './trip-invite/trip-invite.module';
+import { TripPlanningModule } from './trip-planning/trip-planning.module';
 import { TripsModule } from './trips/trips.module';
 import { VacayModule } from './vacay/vacay.module';
 import { WandererModule } from './wanderer/wanderer.module';
@@ -199,6 +200,7 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
     LlmParseModule,
     AiConnectionsModule,
     AssistantModule,
+    TripPlanningModule,
     ManagedExtModule,
     // registerRequestContext off: bootstrap.ts mounts the per-request fork as a
     // pathless middleware instead, because the module's own '{*all}' route

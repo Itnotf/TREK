@@ -89,7 +89,14 @@ export class PluginGuards {
     // old defensive gap.
     const role = await this.users.getRole(userId);
     if (role === null) return false;
-    return this.permissions.checkPermission(action, role ?? 'user', trip.user_id, userId, trip.user_id !== userId);
+    return this.permissions.checkPermission(
+      action,
+      role ?? 'user',
+      trip.user_id,
+      userId,
+      trip.user_id !== userId,
+      tripId,
+    );
   }
 
   /**

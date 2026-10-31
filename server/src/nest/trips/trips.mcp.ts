@@ -29,7 +29,7 @@ import { TripReadModelService } from '../trip-read-model/trip-read-model.service
 import { TripWritesService, type TripListWriter } from './trip-writes.service';
 import { tripUpdatePermissions } from './trips.helpers';
 import { TripsService, NotFoundError, ValidationError } from './trips.service';
-import { idSchema, MAX_TRIP_DAYS } from '@trek/shared';
+import { idSchema, MAX_TRIP_DAYS, tripCreateRequestSchema, type TripCreateRequest } from '@trek/shared';
 
 import { z } from 'zod';
 
@@ -147,6 +147,7 @@ export class TripsMcp {
         .max(30)
         .optional()
         .describe('How many days before departure the pre-trip reminder fires (default 3). 0 turns the reminder off.'),
+      roadtrip_preferences: tripCreateRequestSchema.shape.roadtrip_preferences,
     },
     annotations: TOOL_ANNOTATIONS_NON_IDEMPOTENT,
     access: { group: 'trips', mode: 'write' },
@@ -160,6 +161,7 @@ export class TripsMcp {
       currency,
       day_count,
       reminder_days,
+      roadtrip_preferences,
     }: {
       title: string;
       description?: string;
@@ -168,6 +170,7 @@ export class TripsMcp {
       currency?: string;
       day_count?: number;
       reminder_days?: number;
+      roadtrip_preferences?: TripCreateRequest['roadtrip_preferences'];
     },
     ctx: McpContext,
   ) {
@@ -189,7 +192,16 @@ export class TripsMcp {
     }
     try {
       const { trip } = await this.tripWrites.create(
-        { title, description, start_date, end_date, currency, day_count, reminder_days },
+        {
+          title,
+          description,
+          start_date,
+          end_date,
+          currency,
+          day_count,
+          reminder_days,
+          ...(roadtrip_preferences !== undefined ? { roadtrip_preferences } : {}),
+        },
         await this.listWriter(ctx.userId),
       );
       return ok({ trip });

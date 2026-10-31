@@ -1,12 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.share': 'Bu planı birlikte konuşun',
+  'assistant.plan.shareHint':
+    'Onaylamadan önce gezi planını ortak gezi alanında paylaşın. Özel sohbetiniz gizli kalır.',
   'assistant.home.title': 'Seyahatlerin',
   'assistant.home.welcome': 'Sana nasıl yardımcı olabilirim?',
-  'assistant.home.placeholder': 'Seyahatlerin hakkında her şeyi sor',
+  'assistant.home.placeholder': 'Seyahatinizi anlatın veya bir gezi rehberi bağlantısı yapıştırın',
   'assistant.home.switch': 'Tek bir seyahat hakkında sohbet et',
   'assistant.home.back': 'Tüm seyahatlere dön',
-  'assistant.suggest.homeNext': 'Sıradaki seyahat hangisi ve neler eksik?',
+  'assistant.suggest.homeNext': 'Chengdu’dan Batı Siçuan’a sakin tempolu, 5 günlük bir araba gezisi planla',
   'assistant.suggest.homeCompare': 'Yaklaşan seyahatlerimi karşılaştır',
   'assistant.suggest.homeAtlas': 'Kaç ülke ziyaret ettim?',
   'assistant.suggest.homeVacay': 'Bu yıl kaç izin günüm kaldı?',
@@ -26,6 +29,23 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Günlük',
   'assistant.card.journalChat.open': 'Bu günlüğün sohbetinde devam et',
   'assistant.step.openJournalChat': 'Günlüğü buluyorum',
+  'assistant.plan.start': 'Yapay zekâyla planla',
+  'assistant.plan.manual': 'Elle oluştur',
+  'assistant.plan.unavailable':
+    'Yapay zekâyla planlama şu anda kullanılamıyor. Seyahatinizi yine de elle oluşturabilirsiniz.',
+  'assistant.plan.label': 'Seyahat taslağı',
+  'assistant.plan.version': 'Sürüm {version}',
+  'assistant.plan.requirements': 'Seyahat tercihleriniz',
+  'assistant.plan.assumptions': 'Bu varsayımları kontrol edin',
+  'assistant.plan.overnight': 'Geceleme: {city}',
+  'assistant.plan.editHint':
+    'Bir değişiklik ister misiniz? Sohbette söyleyin, taslağı güncelleyeyim. Memnun kaldığınızda onaylayın.',
+  'assistant.plan.stale': 'Aşağıda daha yeni bir sürüm var. Seyahatinizi oluşturmak için en son sürümü onaylayın.',
+  'assistant.plan.confirm': 'Onayla ve seyahati oluştur',
+  'assistant.plan.created': 'Bu taslak seyahat olarak kaydedildi.',
+  'assistant.plan.loadFailed': 'Bu taslak yüklenemedi. Lütfen tekrar deneyin.',
+  'assistant.plan.applyFailed': 'Seyahat oluşturulamadı. En son taslağı kontrol edip tekrar deneyin.',
+  'assistant.plan.unverified': 'Kesin konum henüz doğrulanmadı',
 };
 
 export default assistantHome;

@@ -1,7 +1,8 @@
 import { OPEN_TRIP_CHAT_TOOL, phaseOf } from '../../assistant-home';
 import { OPEN_JOURNEY_CHAT_TOOL } from '../../assistant-home-journeys';
+import { SAVE_ITINERARY_TOOL } from '../../assistant-planning-tools';
 import type { AnswerInput, DomainCards } from '../card-types';
-import { journalChatCardSchema, tripChatCardSchema, type TrekCard } from '@trek/shared';
+import { itineraryDraftResponseSchema, journalChatCardSchema, tripChatCardSchema, type TrekCard } from '@trek/shared';
 
 /**
  * The home chat's own card: the way into a trip's chat its step offers,
@@ -53,5 +54,20 @@ export const HOME_CARDS: DomainCards = {
   tools: {
     [OPEN_TRIP_CHAT_TOOL]: { answer: tripChatAnswer },
     [OPEN_JOURNEY_CHAT_TOOL]: { answer: journalChatAnswer },
+    [SAVE_ITINERARY_TOOL]: { answer: tripPlanAnswer },
   },
 };
+
+function tripPlanAnswer(input: AnswerInput): TrekCard | null {
+  const result = itineraryDraftResponseSchema.safeParse(input.value);
+  if (!result.success) return null;
+  const { id, revision, plan } = result.data.draft;
+  return {
+    kind: 'tripPlan',
+    draftId: id,
+    revision,
+    title: plan.title,
+    summary: plan.summary,
+    dayCount: plan.days.length,
+  };
+}

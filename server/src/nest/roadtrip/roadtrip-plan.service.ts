@@ -146,6 +146,19 @@ export class RoadtripPlanService {
       .map((booking) => carrierSeam(booking))
       .filter((seam): seam is CarrierSeam => seam !== null);
     const dayNumberOf = (dayId: number): number => context.days.find((d) => d.id === dayId)?.day_number ?? 0;
+    const unlocatedActivities = context.visits
+      .filter((v) => v.lat === null || v.lng === null)
+      .map((v) => ({
+        assignmentId: v.id,
+        dayId: v.day_id,
+        dayNumber: dayNumberOf(v.day_id),
+        stopType: v.stop_type,
+        name: v.name,
+        time: v.time,
+        leaveAt: v.end_time,
+        dwellMinutes: v.duration_minutes,
+      }));
+    const incompleteDays = new Set(unlocatedActivities.map((a) => a.dayId));
     const stored: PlanDay[] = context.days.map((day) => {
       const visits = context.visits.filter((v) => v.day_id === day.id && v.lat !== null && v.lng !== null);
       // One night per hotel (oneNightPerStay), the way the browser reads the day.
@@ -158,10 +171,10 @@ export class RoadtripPlanService {
           name: v.name,
           lat: v.lat!,
           lng: v.lng!,
-          time: v.time,
+          time: v.source === 'assistant' ? (v.assignment_time ?? null) : v.time,
           // The visit's end time is when the drive leaves it, the same reading the
           // planner makes in the browser (useRoadtripRoutes).
-          leaveAt: v.end_time,
+          leaveAt: v.source === 'assistant' ? (v.assignment_end_time ?? null) : v.end_time,
           checkInTime: v.check_in,
           night: v.stay_id !== null,
           bookedNightId: v.accommodation_id,
@@ -205,6 +218,7 @@ export class RoadtripPlanService {
     const distanceUnit: DistanceUnit =
       (await this.settings.getUserSettings(userId)).distance_unit === 'imperial' ? 'imperial' : 'metric';
     const fetchRun = async (stops: RoadtripStop[], dayId: number, profile: string) => {
+      if (stops.some((stop) => incompleteDays.has(stop.ownerDayId))) return;
       const pairs = stops.slice(0, -1).map((from, index) => ({ from, to: stops[index + 1] }));
       pairs.forEach(({ from, to }) => asked.add(stopKey(from) + '>' + stopKey(to)));
       // A ride is no road: the leg between its terminals is the booking's minutes, and
@@ -322,6 +336,7 @@ export class RoadtripPlanService {
         preferences.roadtrip_range_km,
       ) || null;
     const calculated = assembleRoadtrip({
+      unlocatedActivities,
       plan: plan.filter((d) => standsAsDay(d.stops)),
       quietDays: plan.filter((d) => !standsAsDay(d.stops)),
       window,

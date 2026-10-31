@@ -46,7 +46,7 @@ export default function MPlacesBrowser({ planner, shell }: MPlacesBrowserProps) 
   const toursEnabled = useAddonStore(s => s.isEnabled('tours'))
   // Top level of the places browser, mirroring the desktop right add-panel's
   // Places <-> Tours switch placement.
-  const [toursMode, setToursMode] = useState(false)
+  const { toursMode, setToursMode } = planner
   const tourFilters = useTourListFilters(planner.tours)
 
   const poolPlaces = useMemo(

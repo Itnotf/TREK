@@ -1,4 +1,4 @@
-import { ChevronRight, FileDown, Settings, Settings2, Sparkles } from 'lucide-react'
+import { ChevronRight, FileDown, Mountain, Settings, Settings2, Sparkles } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import MSheet from '../../../components/MSheet'
 import type { MTripSheetsProps } from '../MTripShell'
@@ -53,7 +53,11 @@ export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
     shell.setTrTab(id)
   }
 
-  const actions: { id: string; icon: LucideIcon; label: string; go: () => void }[] = [
+  const actions: { id: string; icon: LucideIcon; label: string; hint?: string; go: () => void }[] = [
+    ...(planner.toursEnabled ? [{
+      id: 'outdoor-routes', icon: Mountain, label: t('trip.tabs.tourPlanner'), hint: t('tours.navigation.help'),
+      go: () => { planner.setToursMode(true); shell.setTravelMode('browse'); shell.closeSheet() },
+    }] : []),
     { id: 'members', icon: Settings2, label: t('trip.settings.title'), go: () => shell.openSheet('members') },
     { id: 'export', icon: FileDown, label: t('mobileTrip.export'), go: () => shell.openSheet('export') },
     ...(canEditTrip
@@ -127,7 +131,10 @@ export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
               <div className="flex h-[34px] w-[34px] flex-none items-center justify-center rounded-[10px] bg-[color:var(--m-ic)]">
                 <action.icon size={17} strokeWidth={1.9} />
               </div>
-              <span className="min-w-0 flex-1 truncate text-[0.875rem] font-semibold">{action.label}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[0.875rem] font-semibold">{action.label}</span>
+                {action.hint && <span className="mt-1 block text-caption leading-relaxed text-m-muted">{action.hint}</span>}
+              </span>
               <ChevronRight size={16} strokeWidth={2} className="flex-none text-m-faint" />
             </button>
           ))}

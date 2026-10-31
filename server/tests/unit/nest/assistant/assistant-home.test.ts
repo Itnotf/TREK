@@ -131,7 +131,8 @@ describe('a home turn', () => {
     expect(prompt).toContain('in German');
     expect(prompt).not.toContain('{language}');
     expect(prompt).toContain('open_trip_chat');
-    expect(prompt).toContain('You cannot change a trip from here.');
+    expect(prompt).toContain('save_itinerary_draft');
+    expect(prompt).toContain("only the user's confirmation creates the trip");
     expect(prompt).toContain('use_addon_tools');
     expect(OPEN_TRIP_CHAT_SPEC.name).toBe(OPEN_TRIP_CHAT_TOOL);
     expect(OPEN_TRIP_CHAT_SPEC.parameters.required).toEqual(['tripId']);

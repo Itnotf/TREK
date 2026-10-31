@@ -140,7 +140,7 @@ describe('Google route import', () => {
       [3, 'Munich'],
       [3, 'Rome'],
     ]);
-    expect(permissions.checkPermission).toHaveBeenCalledWith('day_edit', 'user', 7, 7, false);
+    expect(permissions.checkPermission).toHaveBeenCalledWith('day_edit', 'user', 7, 7, false, 1);
     expect(assignments.reconcile).toHaveBeenCalledWith(1, undefined);
   });
 

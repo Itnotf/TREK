@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Ενότητες ταξιδιού',
+  'tours.navigation.help':
+    'Διαδρομές πεζοπορίας, ποδηλασίας και άλλων υπαίθριων δραστηριοτήτων μπορούν να προστεθούν στο ημερήσιο πρόγραμμα.',
   'trip.tabs.tourPlanner': 'Εκδρομές',
   'tours.mode.places': 'Μέρη',
   'tours.mode.tours': 'Εκδρομές',

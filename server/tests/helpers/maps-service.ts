@@ -35,14 +35,14 @@ export function buildMapsParts(
   appSettings: AppSettingsRepository,
   users: UsersRepository,
   placeDetailsCache: PlaceDetailsCacheRepository,
-  places: PlacesRepository,
+  _places: PlacesRepository,
   googleQuota: GoogleQuotaService = noGoogleQuota,
 ): MapsParts {
   const google = new GooglePlacesClient(googleQuota);
   const osm = new OsmClient();
   const wiki = new WikimediaClient();
   const selector = new PlacesProviderSelector(appSettings, users, googleQuota);
-  const photos = new PlacePhotoResolver(photoCache, places, google, wiki, selector);
+  const photos = new PlacePhotoResolver(photoCache, google, wiki, selector, osm);
   const links = new MapsUrlResolver(osm);
   const details = new PlaceDetailsResolver(placeDetailsCache, google, osm, selector);
   const along = new PoisAlongResolver(osm);

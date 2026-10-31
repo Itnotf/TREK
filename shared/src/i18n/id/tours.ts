@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Bagian perjalanan',
+  'tours.navigation.help':
+    'Rute jalan kaki, bersepeda, dan aktivitas luar ruang lainnya dapat ditambahkan ke rencana harian.',
   'trip.tabs.tourPlanner': 'Tur',
   'tours.mode.places': 'Tempat',
   'tours.mode.tours': 'Tur',

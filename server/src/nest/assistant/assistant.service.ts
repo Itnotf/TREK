@@ -44,6 +44,7 @@ import { AssistantFileAnswers, type FileAnswerRows } from './assistant-file-answ
 import { messageIdOf, outputText, partsOf, toChatHistory, toThreadMessages } from './assistant-history';
 import { rememberForTrip, rememberingPort } from './assistant-memory';
 import { toolOutputForProvider } from './assistant-output';
+import { AssistantPlanningService } from './assistant-planning.service';
 import { AssistantScopes, findScopedCall, scopedThreads, tripScope } from './assistant-scope';
 import { AssistantStreamRegistry } from './assistant-stream.registry';
 import { titleFrom } from './assistant-title';
@@ -191,6 +192,7 @@ export class AssistantService {
     private readonly cardContext: AssistantCardContext,
     private readonly scopes: AssistantScopes,
     private readonly vision: AssistantVision,
+    private readonly planning: AssistantPlanningService,
   ) {}
 
   async listThreads(userId: number, scope: AssistantScope): Promise<AssistantThreadListResponse> {
@@ -833,11 +835,12 @@ export class AssistantService {
       const { userId, threadId, connection } = spec;
       const seen = { userId, threadId, connection, renders: spec.renders === true, w, signal };
       const seeing = await this.vision.turnTools(spec.scope, session, seen);
+      const planning = await this.planning.forTurn(seeing.tools, spec, history);
       const outcome = await runAgentLoop(
         {
           client: this.chatClients.create(spec.connection),
           tools: attachedPort(
-            rememberingPort(seeing.tools, this.remembering(userId, spec.scope)),
+            rememberingPort(planning.tools, this.remembering(userId, spec.scope)),
             attached?.turn ?? null,
           ),
           store: this.stepStore(spec),
@@ -853,7 +856,7 @@ export class AssistantService {
         },
         {
           system,
-          context,
+          context: [context, planning.context].filter(Boolean).join('\n\n'),
           cacheKey: `trek-thread-${spec.threadId}`,
           history,
           usedCallIds: new Set(

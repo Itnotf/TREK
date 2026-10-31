@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Разделы поездки',
+  'tours.navigation.help': 'Пешие, велосипедные и другие маршруты на природе можно добавить как занятия в план дня.',
   'trip.tabs.tourPlanner': 'Туры',
   'tours.mode.places': 'Места',
   'tours.mode.tours': 'Туры',

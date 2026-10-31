@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} arkiverad',
   'dashboard.newTrip': 'Ny resa',
   'dashboard.newTripSub': 'Planera en ny resa från grunden',
+  'dashboard.roadtrip.enable': 'Planera en bilresa genom flera städer',
+  'dashboard.roadtrip.hint':
+    'Spara städer och körgränser med resan. När den har skapats kan du be AI om hjälp med planeringen. Dina önskemål sparas även utan AI-anslutning.',
+  'dashboard.roadtrip.origin': 'Avresestad',
+  'dashboard.roadtrip.viaCities': 'Städer att besöka (valfritt)',
+  'dashboard.roadtrip.viaHint': 'Separera städer med kommatecken eller radbrytningar. AI kan föreslå ordningen.',
+  'dashboard.roadtrip.roundTrip': 'Återvänd till avresestaden',
+  'dashboard.roadtrip.destination': 'Ankomststad',
+  'dashboard.roadtrip.dailyHours': 'Högsta dagliga körtid (timmar)',
+  'dashboard.roadtrip.vehicle': 'Fordonstyp',
+  'dashboard.roadtrip.combustion': 'Bränsledrivet fordon',
+  'dashboard.roadtrip.electric': 'Elfordon',
+  'dashboard.roadtrip.rangeKm': 'Realistisk räckvidd med full tank eller fulladdat batteri (km)',
+  'dashboard.roadtrip.originRequired': 'Ange en avresestad för bilresan.',
+  'dashboard.roadtrip.destinationRequired': 'Ange en ankomststad eller välj att återvända till avresestaden.',
+  'dashboard.roadtrip.invalidHours': 'Ange en daglig körgräns mellan 1 och 12 timmar.',
+  'dashboard.roadtrip.invalidRange': 'Ange en realistisk räckvidd mellan 1 och 2 000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Önskemål för bilresan genom flera städer',
+  'dashboard.roadtrip.planningInstruction':
+    'Föreslå städernas ordning och övernattningsstäder före de dagliga aktiviteterna. Respektera fasta datum, bokade boenden och körgränsen. Kontrollera faktiska vägsträckor och markera okänd information. Be om bekräftelse på förslaget innan resan ändras.',
+  'dashboard.roadtrip.planPrompt':
+    'Hjälp mig att planera en bilresa genom flera städer utifrån önskemålen i resans beskrivning och de sparade körinställningarna. Föreslå först städernas ordning och faktiska övernattningsstäder, och planera sedan dagliga aktiviteter efter min bekräftelse. Respektera fasta datum, bokade boenden och den dagliga körgränsen. Kontrollera faktiska vägsträckor och markera tydligt information som inte har verifierats. Ändra inte resan förrän jag har bekräftat förslaget.',
   'dashboard.subscribeAllTrips': 'Prenumerera på alla resor',
   'dashboard.subscribeAllTripsDesc':
     'En kalenderfeed för alla dina aktiva resor, som hålls synkroniserad automatiskt. Arkiverade resor och resor som avslutades för mer än 90 dagar sedan är undantagna.',

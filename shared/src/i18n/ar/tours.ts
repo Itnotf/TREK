@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'أقسام الرحلة',
+  'tours.navigation.help': 'يمكن إضافة مسارات المشي وركوب الدراجات وغيرها من الأنشطة الخارجية إلى برنامج اليوم.',
   'trip.tabs.tourPlanner': 'الجولات',
   'tours.mode.places': 'الأماكن',
   'tours.mode.tours': 'الجولات',

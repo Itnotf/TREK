@@ -1,6 +1,29 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.title': 'Birlikte planlayın',
+  'trip.planning.shortTitle': 'Planla',
+  'trip.guide.current': 'Güncel gezi planı',
+  'trip.guide.currentHelp': 'Yerler, saatler ve konaklama günlük planınızı izler.',
+  'trip.guide.original': 'İlk rehber · başvuru',
+  'trip.guide.originalHelp':
+    'Plan değişti veya bu eski rehber doğrulanamıyor. Rota, öneriler ve bütçe ilk sürüme aittir.',
+  'trip.guide.refresh': 'Yenile',
+  'trip.guide.title': 'Seyahat rehberi',
+  'trip.guide.shortTitle': 'Rehber',
+  'trip.guide.route': 'Güzergâh',
+  'trip.guide.highlights': 'Sizi bekleyen deneyimler',
+  'trip.guide.days': 'Bir güne git',
+  'trip.guide.dining': 'Nerede ve ne yenir',
+  'trip.guide.stay': 'Nerede kalınır',
+  'trip.guide.alternative': 'Planlar değişirse',
+  'trip.guide.schedule': 'Saatler ve ulaşım ayrıntıları',
+  'trip.guide.budget': 'Tahmini bütçe',
+  'trip.guide.preparation': 'Yola çıkmadan önce',
+  'trip.guide.notes': 'Tercihleriniz, varsayımlar ve kaynaklar',
+  'trip.guide.openPlan': 'Günlük gezi planını aç',
+  'trip.guide.loadFailed': 'Rehber yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.',
+  'trip.guide.unavailable': 'Bu seyahat kullanılamıyor veya erişim izniniz yok.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Ulaşım',
   'trip.tabs.reservations': 'Rezervasyonlar',

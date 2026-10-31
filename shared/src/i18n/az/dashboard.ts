@@ -12,6 +12,29 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} arxivləşdirilib',
   'dashboard.newTrip': 'Yeni səyahət',
   'dashboard.newTripSub': 'Sıfırdan yeni səyahət planlaşdırın',
+  'dashboard.roadtrip.enable': 'Bir neçə şəhəri əhatə edən avtomobil səfəri planlaşdır',
+  'dashboard.roadtrip.hint':
+    'Şəhərləri və sürmə limitlərini səfərlə birlikdə saxla. Səfəri yaratdıqdan sonra planlaşdırma üçün süni intellektdən kömək istəyə bilərsən. Tələblərin süni intellektə bağlantı olmadan da saxlanılır.',
+  'dashboard.roadtrip.origin': 'Yola düşmə şəhəri',
+  'dashboard.roadtrip.viaCities': 'Ziyarət ediləcək şəhərlər (istəyə bağlı)',
+  'dashboard.roadtrip.viaHint':
+    'Şəhərləri vergüllə və ya yeni sətirlərlə ayır. Süni intellekt ardıcıllığı təklif edə bilər.',
+  'dashboard.roadtrip.roundTrip': 'Yola düşmə şəhərinə qayıt',
+  'dashboard.roadtrip.destination': 'Çatacağın şəhər',
+  'dashboard.roadtrip.dailyHours': 'Maksimum gündəlik sürmə müddəti (saat)',
+  'dashboard.roadtrip.vehicle': 'Nəqliyyat vasitəsinin növü',
+  'dashboard.roadtrip.combustion': 'Daxili yanma mühərrikli avtomobil',
+  'dashboard.roadtrip.electric': 'Elektrik avtomobili',
+  'dashboard.roadtrip.rangeKm': 'Tam çən və ya tam şarjla real yürüş məsafəsi (km)',
+  'dashboard.roadtrip.originRequired': 'Avtomobil səfərin üçün yola düşmə şəhərini daxil et.',
+  'dashboard.roadtrip.destinationRequired': 'Çatacağın şəhəri daxil et və ya yola düşmə şəhərinə qayıtmağı seç.',
+  'dashboard.roadtrip.invalidHours': '1 ilə 12 saat arasında gündəlik sürmə limiti daxil et.',
+  'dashboard.roadtrip.invalidRange': '1 ilə 2 000 km arasında real yürüş məsafəsi daxil et.',
+  'dashboard.roadtrip.summaryTitle': 'Bir neçə şəhər üzrə avtomobil səfərinin tələbləri',
+  'dashboard.roadtrip.planningInstruction':
+    'Gündəlik fəaliyyətlərdən əvvəl şəhərlərin ardıcıllığını və gecələmə şəhərlərini təklif et. Sabit tarixləri, bron edilmiş qalma yerlərini və sürmə limitini nəzərə al. Həqiqi avtomobil yollarını yoxla və məlum olmayan məlumatları işarələ. Səfəri dəyişməzdən əvvəl təklif üçün təsdiq istə.',
+  'dashboard.roadtrip.planPrompt':
+    'Bu səfərin təsvirindəki tələblərdən və saxlanmış sürmə parametrlərindən istifadə edərək bir neçə şəhəri əhatə edən avtomobil səfəri planlaşdırmağıma kömək et. Əvvəlcə şəhərlərin ardıcıllığını və həqiqi gecələmə şəhərlərini təklif et, gündəlik fəaliyyətləri isə təsdiqimdən sonra planlaşdır. Sabit tarixləri, bron edilmiş qalma yerlərini və gündəlik sürmə limitini nəzərə al. Həqiqi avtomobil yollarını yoxla və yoxlanılmamış məlumatları aydın işarələ. Təklifi təsdiqləyənə qədər səfəri dəyişmə.',
   'dashboard.subscribeAllTrips': 'Bütün səyahətlərə abunə ol',
   'dashboard.subscribeAllTripsDesc':
     'Bütün aktiv səyahətləriniz üçün avtomatik sinxronlaşdırılan vahid təqvim lenti. Arxivləşdirilmiş və 90 gündən çox əvvəl başa çatmış səyahətlər daxil edilmir.',

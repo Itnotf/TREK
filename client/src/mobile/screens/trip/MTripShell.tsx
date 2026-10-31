@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { findFocusDayId, findTodayDayId } from '../../../components/Planner/today'
 import { takeResumeDay } from '../../../utils/resumeRoute'
@@ -237,30 +238,32 @@ export default function MTripShell({
   // today while the trip is running, otherwise on the next day that is still
   // ahead — a gap in the dates should not throw you back to day 1 — and fall
   // back to the first day once the whole trip is behind us.
-  const seededDayRef = useRef(false)
+  const seededDayRef = useRef<number | null>(null)
   useEffect(() => {
     // Re-entering the same trip from the dashboard starts with that trip's old
     // selection still in the store. The first render treats it as seeded, then
     // loadTrip clears it. Reset the guard with that load cycle so the freshly
     // loaded days get their normal today/Day 1 selection.
     if (isLoading) {
-      seededDayRef.current = false
+      seededDayRef.current = null
       return
     }
-    if (seededDayRef.current) return
+    // The route can change before its store snapshot does. Never seed from
+    // the previous trip, even if its selected day survived the load effect.
+    if (trip?.id !== tripId || days.length === 0) return
     // A day that is already active counts as seeded: a later deselect is the
     // user's, and re-seeding it here would be exactly the fight this guard
     // exists to avoid.
-    if (planner.selectedDayId != null) { seededDayRef.current = true; return }
-    if (days.length === 0) return
-    seededDayRef.current = true
+    if (days.some(day => day.id === planner.selectedDayId)) { seededDayRef.current = tripId; return }
+    if (seededDayRef.current === tripId && planner.selectedDayId == null) return
+    seededDayRef.current = tripId
     // Off the same helper file as the desktop day plan (#1567), so the two
     // cannot drift on what "today" means.
     // A relaunch after the system closed the app goes back to the day it was on (#666).
     const resumed = takeResumeDay(tripId)
     const resumedDay = resumed != null && days.some(d => d.id === resumed) ? resumed : null
     planner.tripActions.setSelectedDay(resumedDay ?? findFocusDayId(days) ?? days[0].id)
-  }, [isLoading, planner.selectedDayId, days, planner.tripActions, tripId])
+  }, [isLoading, planner.selectedDayId, days, planner.tripActions, tripId, trip?.id])
 
   // Swiping the day panel (#2051) can move the day well past the chips on
   // screen — the rail overflows from roughly six days on — so the active chip
@@ -571,6 +574,12 @@ export default function MTripShell({
 
         {trTab === 'plan' && (
           <GlassSegment>
+            <Link to={`/trips/${planner.tripId}/planning`} aria-label={t('trip.planning.title')} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-2 text-caption font-semibold text-content">
+              {t('trip.planning.shortTitle')}
+            </Link>
+            <Link to={`/trips/${planner.tripId}/guide`} aria-label={t('trip.guide.title')} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full px-3 text-caption font-semibold text-m-ink">
+              {t('trip.guide.shortTitle')}
+            </Link>
             {([
               { value: 'go' as const, label: t('mobileTrip.travel') },
               { value: 'edit' as const, label: t('trip.mobilePlan') },
@@ -580,7 +589,7 @@ export default function MTripShell({
                 key={seg.value}
                 type="button"
                 onClick={() => setTravelMode(seg.value)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-[0.8125rem] ${
+                className={`whitespace-nowrap rounded-full px-2 py-2 text-[0.8125rem] ${
                   mode === seg.value && view !== 'map' ? 'bg-m-act font-semibold text-m-actfg' : 'font-medium text-m-ink'
                 }`}
               >

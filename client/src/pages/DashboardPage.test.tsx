@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { localIsoDate } from '../utils/localDate';
-import { render, screen, waitFor, within } from '../../tests/helpers/render';
+import { cleanup, render, screen, waitFor, within } from '../../tests/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../tests/helpers/msw/server';
@@ -10,6 +10,9 @@ import { useAuthStore } from '../store/authStore';
 import { usePermissionsStore } from '../store/permissionsStore';
 import { useSettingsStore } from '../store/settingsStore';
 import DashboardPage from './DashboardPage';
+import { useAssistantStore } from '../store/assistantStore';
+
+const initialAssistant = useAssistantStore.getState();
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -23,6 +26,7 @@ beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true, toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-07-05T12:00:00Z'));
   resetAllStores();
+  useAssistantStore.setState(initialAssistant, true);
   // Seed auth with authenticated user
   seedStore(useAuthStore, { isAuthenticated: true, user: buildUser() });
   // Grant all permissions so buttons are visible
@@ -41,10 +45,27 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  cleanup();
   vi.useRealTimers();
+  useAssistantStore.setState(initialAssistant, true);
 });
 
 describe('DashboardPage', () => {
+  it('starts with AI and keeps a manual form available beside it', async () => {
+    seedStore(useAssistantStore, { status: { available: true } });
+    server.use(
+      http.get('/api/auth/travel-stats', () => HttpResponse.json({ totalTrips: 0, countries: [] })),
+      http.get('/api/reservations/upcoming', () => HttpResponse.json({ reservations: [] })),
+      http.get('/api/auth/users', () => HttpResponse.json({ users: [] })),
+    );
+    render(<DashboardPage />);
+    const user = userEvent.setup();
+    await user.click(screen.getAllByRole('button', { name: 'Plan with AI' })[0]);
+    expect(useAssistantStore.getState().window.open).toBe(true);
+    expect(screen.queryByText('Create New Trip')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Create manually' }));
+    expect((await screen.findAllByText('Create New Trip')).length).toBeGreaterThan(0);
+  });
   describe('FE-PAGE-DASH-001: Unauthenticated user is redirected', () => {
     it('does not render dashboard content when not authenticated', () => {
       // When the auth store has no user, the page relies on ProtectedRoute (App.tsx) to redirect.

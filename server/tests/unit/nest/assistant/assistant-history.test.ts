@@ -141,6 +141,29 @@ describe('toChatHistory', () => {
     expect(outputText({ a: 1 })).toBe('{"a":1}');
   });
 
+  it('replaces earlier itinerary versions with a reread instruction and keeps the current full draft', () => {
+    const draft = {
+      plan: { days: Array.from({ length: 30 }, (_, i) => ({ title: `Day ${i + 1}`, notes: 'x'.repeat(1800) })) },
+    };
+    const rows = [
+      row('user', [{ type: 'text', text: 'Plan a long trip' }]),
+      row('assistant', [
+        { type: 'tool-call', toolCallId: 'saved', toolName: 'save_itinerary_draft', args: {}, result: { draft } },
+      ]),
+      row('user', [{ type: 'text', text: 'Make the last day easier' }]),
+      row('assistant', [
+        { type: 'tool-call', toolCallId: 'current', toolName: 'get_itinerary_draft', args: {}, result: { draft } },
+      ]),
+    ];
+    const outputs = toChatHistory(rows, new Map()).filter((m) => m.role === 'tool');
+    expect(outputs[0].output).toContain('get_itinerary_draft');
+    expect(outputs[0].output).toContain('complete latest plan');
+    expect(outputs[0].output).not.toContain('days');
+    expect(outputs[1].output.length).toBeGreaterThan(40_000);
+    expect(outputs[1].output).toBe(JSON.stringify({ draft }));
+    expect(outputs[1].output).toContain('Day 30');
+  });
+
   it('ASTHIS-004: an attached file and the bookings read from it are notes, never calls of unknown tools', () => {
     type CallPart = Extract<AssistantMessagePart, { type: 'tool-call' }>;
     type Outcome = Partial<Pick<CallPart, 'result' | 'isError' | 'approval'>>;
@@ -623,6 +646,29 @@ describe('toChatHistory: calls the model made of the server tools (#2845)', () =
 });
 
 describe('toThreadMessages', () => {
+  it('shows each saved itinerary version once when old history contains repeated draft reads', () => {
+    const card = (id: number, toolCallId: string): AssistantMessagePart => ({
+      type: 'data-trek-card',
+      data: {
+        toolCallId,
+        card: { kind: 'tripPlan', draftId: id, revision: id, title: '成都两日游', summary: '轻松自驾', dayCount: 2 },
+      },
+    });
+    const first = card(1, 'save_v1');
+    const latest = card(2, 'save_v2');
+    const text: AssistantMessagePart = { type: 'text', text: 'Updated the second day.' };
+    const rows = [
+      row('assistant', [first]),
+      row('user', [{ type: 'text', text: 'Leave later.' }]),
+      row('assistant', [card(1, 'read_v1'), latest, text]),
+      row('assistant', [card(2, 'read_v2')]),
+    ];
+    const messages = toThreadMessages(rows, new Map(), NOW);
+    expect(messages[0].parts).toEqual([first]);
+    expect(messages[2].parts).toEqual([latest, text]);
+    expect(toThreadMessages(rows, new Map(), NOW)).toEqual(messages);
+  });
+
   it('ASTHIS-010: the steps of one answer are one message under the first row id', () => {
     nextId = 10;
     const rows = [

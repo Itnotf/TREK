@@ -16,6 +16,7 @@ import type {
   SnappedWaypoint,
   RouteAvoidClass,
   DistanceUnit,
+  UnlocatedActivity,
 } from './planning-types';
 import {
   computeSchedule,
@@ -49,7 +50,9 @@ export function assembleRoadtrip({
   connectDays,
   boundaries,
   labels,
+  unlocatedActivities = [],
 }: {
+  unlocatedActivities?: UnlocatedActivity[];
   plan: PlanDay[];
   quietDays: QuietDay[];
   window: DayWindow | null;
@@ -66,25 +69,31 @@ export function assembleRoadtrip({
 }): RoadtripRoutes {
   // A night spent at one hotel is a leg going nowhere, whatever was fetched for the pair:
   // the hotel in the evening and the same hotel the next morning are one spot.
-  const storedLegFor = withStationaryJoins((from, to) => allLegs[legKey(from, to)]);
+  const incompleteDays = new Set(unlocatedActivities.map((activity) => activity.dayId));
+  // A route that skips an unresolved meal or rest is not that day's route.
+  const storedLegFor = (from: RoadtripStop, to: RoadtripStop): RoutedLeg | undefined =>
+    incompleteDays.has(from.ownerDayId) || incompleteDays.has(to.ownerDayId)
+      ? undefined
+      : withStationaryJoins((a, b) => allLegs[legKey(a, b)])(from, to);
   const chains = spillChains(plan, quietDays, storedLegFor);
 
   const allSnaps: Record<string, SnappedWaypoint> = {};
   for (const day of plan) Object.assign(allSnaps, snapByDay[day.dayId] ?? {});
-  const timed = window
-    ? planDayWindow(
-        [...plan, ...quietDays],
-        window,
-        storedLegFor,
-        distanceUnit,
-        { start: labels.start, end: labels.end },
-        boundaries,
-      )
-    : null;
+  const timed =
+    window && !unlocatedActivities.length
+      ? planDayWindow(
+          [...plan, ...quietDays],
+          window,
+          storedLegFor,
+          distanceUnit,
+          { start: labels.start, end: labels.end },
+          boundaries,
+        )
+      : null;
   const automaticSchedule = !!timed && timed.issue === null;
   const displayChains = automaticSchedule
     ? timed.chains
-    : timed?.issue
+    : timed?.issue || unlocatedActivities.length
       ? [...plan, ...quietDays]
           .sort((a, b) => a.dayNumber - b.dayNumber)
           .filter((d) => d.stops.length)
@@ -334,17 +343,21 @@ export function assembleRoadtrip({
   return {
     boundaryPath,
     validateBoundaries: (next: RoadtripDayBoundary[]) =>
-      window
-        ? planDayWindow(
-            [...plan, ...quietDays],
-            window,
-            storedLegFor,
-            distanceUnit,
-            { start: labels.start, end: labels.end },
-            next,
-          ).issue
-        : 'conflict',
-    dayWindowIssue: timed?.issue ?? null,
+      unlocatedActivities.length
+        ? 'incomplete'
+        : window
+          ? planDayWindow(
+              [...plan, ...quietDays],
+              window,
+              storedLegFor,
+              distanceUnit,
+              { start: labels.start, end: labels.end },
+              next,
+            ).issue
+          : 'conflict',
+    unlocatedActivities,
+    unlocatedDwellMinutes: unlocatedActivities.reduce((sum, activity) => sum + (activity.dwellMinutes ?? 0), 0),
+    dayWindowIssue: unlocatedActivities.length ? 'incomplete' : (timed?.issue ?? null),
     days: drives,
     lines,
     lineDays,
@@ -355,10 +368,13 @@ export function assembleRoadtrip({
     totalDistance: drives.reduce((s, d) => s + d.distance, 0),
     totalDuration: drives.reduce((s, d) => s + d.duration, 0),
 
-    totalStops: drives.reduce(
-      (s, d) => s + d.stops.filter((st) => !st.automaticNight && !st.carrier && !isServiceStopType(st.stopType)).length,
-      0,
-    ),
+    totalStops:
+      unlocatedActivities.filter((activity) => !isServiceStopType(activity.stopType)).length +
+      drives.reduce(
+        (s, d) =>
+          s + d.stops.filter((st) => !st.automaticNight && !st.carrier && !isServiceStopType(st.stopType)).length,
+        0,
+      ),
 
     // A quiet day lists what could be moved onto it, and a bookend is nothing anybody moves:
     // it is left behind alone only when every stop after it went on past midnight.

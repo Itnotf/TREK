@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from '../i18n'
 import Navbar from '../components/Layout/Navbar'
 import DemoWelcome from '../components/Demo/DemoWelcome'
 import TripFormModal from '../components/Trips/TripFormModal'
+import { useTripCover } from '../components/Trips/useTripCover'
+import { TripCoverCredit } from '../components/Trips/TripCoverCredit'
 import ConfirmDialog from '../components/shared/ConfirmDialog'
 import CopyTripDialog from '../components/shared/CopyTripDialog'
 import CustomSelect from '../components/shared/CustomSelect'
@@ -107,7 +109,7 @@ function DashboardPageDesktop(): React.ReactElement {
     tripFilter, setTripFilter, viewMode, toggleViewMode,
     showForm, setShowForm, editingTrip, setEditingTrip,
     deleteTrip, setDeleteTrip, copyTrip, setCopyTrip, applyCoverUpdate,
-    handleCreate, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
+    newTrip, handleCreate, handleCreated, handleUpdate, confirmDelete, handleArchive, handleUnarchive, confirmCopy,
     allSubOpen, setAllSubOpen, search,
   } = useDashboard()
 
@@ -236,6 +238,11 @@ function DashboardPageDesktop(): React.ReactElement {
                 </div>
               )}
 
+              {newTrip.available && <div className="mb-3 flex justify-end">
+                <button type="button" className="min-h-11 px-3 text-caption text-content-secondary underline" onClick={newTrip.manual}>
+                  {t('assistant.plan.manual')}
+                </button>
+              </div>}
               <div className={`trips${viewMode === 'list' ? ' list-view' : ''}`}>
                 {gridTrips.map(trip => (
                   <TripCard
@@ -259,10 +266,10 @@ function DashboardPageDesktop(): React.ReactElement {
                   </>
                 )}
                 {tripFilter === 'planned' && !search.active && !isLoading && (
-                  <button type="button" className="add-trip-card" onClick={() => { setEditingTrip(null); setShowForm(true) }}>
+                  <button type="button" className="add-trip-card" onClick={() => { void newTrip.start() }}>
                     <div>
                       <div className="circ"><Plus size={20} /></div>
-                      <div className="ttl">{t('dashboard.newTrip')}</div>
+                      <div className="ttl">{t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}</div>
                       <div className="sub">{t('dashboard.newTripSub')}</div>
                     </div>
                   </button>
@@ -285,12 +292,12 @@ function DashboardPageDesktop(): React.ReactElement {
 
       <button type="button"
         className="fab-new-trip"
-        onClick={() => { setEditingTrip(null); setShowForm(true) }}
-        aria-label={t('dashboard.newTrip')}
-        title={t('dashboard.newTrip')}
+        onClick={() => { void newTrip.start() }}
+        aria-label={t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}
+        title={t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}
       >
         <Plus size={22} strokeWidth={2.4} />
-        <span className="fab-label">{t('dashboard.newTrip')}</span>
+        <span className="fab-label">{t(newTrip.available ? 'assistant.plan.start' : 'dashboard.newTrip')}</span>
       </button>
 
       {showForm && (
@@ -299,6 +306,7 @@ function DashboardPageDesktop(): React.ReactElement {
           trip={editingTrip}
           onClose={() => { setShowForm(false); setEditingTrip(null) }}
           onSave={editingTrip ? handleUpdate : handleCreate}
+          onCreated={handleCreated}
           onCoverUpdate={applyCoverUpdate}
         />
       )}
@@ -331,6 +339,8 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
   trip: DashboardTrip; bundle: HeroBundle | null; locale: string; onOpen: () => void
   onEdit: () => void; onCopy: () => void; onArchive: () => void; onDelete: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   const { t } = useTranslation()
   const heroPlugins = usePluginStore(s => s.plugins).filter(p => p.type === 'widget' && p.slot === 'hero')
   const stop = (e: React.MouseEvent, fn: () => void) => { e.stopPropagation(); fn() }
@@ -425,6 +435,7 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
 
   return (
     <div
+      ref={coverRef}
       className="hero-trip"
       onClick={onOpen}
       role="button"
@@ -434,10 +445,11 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
       tabIndex={0}
       onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpen() } }}
     >
-      {trip.cover_image
-        ? <img className="bg" src={trip.cover_image} alt={trip.title} />
+      {cover.src
+        ? <img className="bg" src={cover.src} alt={trip.title} onError={cover.onError} />
         : <div className="bg" style={{ background: tripGradient(trip.id) }} />}
       <div className="scrim" />
+      <TripCoverCredit attribution={cover.attribution} className="bottom-2 end-3" />
       <div className="hero-content">
         <div className="hero-top">
           <div className="hero-badge">
@@ -590,6 +602,8 @@ function TripCard({ trip, locale, badges, matchedPlaces, onOpen, onEdit, onCopy,
   matchedPlaces?: string[]
   onEdit: () => void; onCopy: () => void; onArchive: () => void; onDelete: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   const { t } = useTranslation()
   const status = getTripStatus(trip)
   const archiveLabel = trip.is_archived ? t('dashboard.restore') : t('dashboard.archive')
@@ -617,10 +631,11 @@ function TripCard({ trip, locale, badges, matchedPlaces, onOpen, onEdit, onCopy,
       tabIndex={0}
       onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpen() } }}
     >
-      <div className="trip-cover">
-        {trip.cover_image
-          ? <img src={trip.cover_image} alt={trip.title} />
+      <div ref={coverRef} className="trip-cover">
+        {cover.src
+          ? <img src={cover.src} alt={trip.title} onError={cover.onError} />
           : <div style={{ width: '100%', height: '100%', background: tripGradient(trip.id) }} />}
+        <TripCoverCredit attribution={cover.attribution} className="trip-cover-credit end-2 top-14" />
         <div className={`trip-status ${statusClass}`}><span className="indicator" /> {statusLabel}</div>
         <div className="trip-actions">
           <button type="button" className="trip-action-btn" aria-label={t('common.edit')} title={t('common.edit')} onClick={(e) => stop(e, onEdit)}><Edit2 size={17} strokeWidth={2.2} /></button>

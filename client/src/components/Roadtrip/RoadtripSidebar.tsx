@@ -1,3 +1,4 @@
+import { UnlocatedActivities } from './UnlocatedActivities'
 import { useElementSize } from '../../hooks/useElementSize'
 import React, { useMemo, useState } from 'react'
 import type { RefuelSearch } from './useRefuelSearch'
@@ -643,7 +644,7 @@ export default function RoadtripSidebar({
   const undated = useMemo(() => undatedRides(reservations ?? []), [reservations])
 
   // Nothing to total up, so nothing pretends to: no "0 km" standing above "No route yet".
-  if (routes.days.length === 0) {
+  if (routes.days.length === 0 && !routes.unlocatedActivities?.length) {
     // Centred in the rail rather than sitting at its top: the state is about the
     // whole column being empty, and a mascot pinned under the header reads as a
     // header decoration.
@@ -670,7 +671,7 @@ export default function RoadtripSidebar({
     <div ref={rail.ref} className="flex min-h-0 flex-1 flex-col gap-3 pt-1">
       <div className="shrink-0">
         <TripSummary routes={routes} narrow={narrow} />
-        {routes.dayWindowIssue ? (
+        {routes.dayWindowIssue && !routes.unlocatedActivities?.length ? (
           <p role="status" className="mx-3.5 mt-2 rounded-xl bg-warning-soft p-3 text-caption text-content">
             {t(`roadtrip.window.${routes.dayWindowIssue}`, { days: MAX_TRIP_DAYS })}
           </p>
@@ -678,6 +679,7 @@ export default function RoadtripSidebar({
         <UndatedRides rides={undated} onOpenBooking={onOpenBooking} />
       </div>
       <div className="roadtrip-rail-scroll flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pb-3.5">
+        <UnlocatedActivities activities={routes.unlocatedActivities} minutes={routes.unlocatedDwellMinutes} />
         {routes.days.map(day => (
           <DaySection
             key={day.dayId}

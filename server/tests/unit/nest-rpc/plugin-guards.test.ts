@@ -118,7 +118,7 @@ describe('PluginGuards — requireTripEdit and canEditAs', () => {
   it('PGUARD-008 passes when the user may access and edit', async () => {
     const { guards, permissions } = build({ allow: true });
     await expect(guards.requireTripEdit(1, 42, 'trip_edit')).resolves.not.toThrow();
-    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'user', 42, 42, false);
+    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'user', 42, 42, false, 1);
   });
 
   it('PGUARD-009 no access wins over no permission, and names the trip', async () => {
@@ -150,7 +150,7 @@ describe('PluginGuards — requireTripEdit and canEditAs', () => {
     // double to return 'admin' and seeing THAT value reach checkPermission
     // proves canEditAs is reading through PluginGuards' own UsersRepository
     // call, not a cached or hard-coded role.
-    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'admin', 42, 42, false);
+    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'admin', 42, 42, false, 1);
   });
 
   it('PGUARD-014 a non-owner member is flagged as shared', async () => {
@@ -161,7 +161,7 @@ describe('PluginGuards — requireTripEdit and canEditAs', () => {
     const permissions = { checkPermission: vi.fn(() => true) } as unknown as PermissionsService;
     const guards = new PluginGuards(db, permissions, {} as AddonsService, users);
     await guards.canEditAs('trip_edit', 1, 42);
-    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'user', 7, 42, true);
+    expect(permissions.checkPermission).toHaveBeenCalledWith('trip_edit', 'user', 7, 42, true, 1);
   });
 });
 

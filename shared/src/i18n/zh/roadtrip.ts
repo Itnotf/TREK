@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': '待选地点的活动',
+  'roadtrip.unlocated.hint': '这些活动需预留 {time}。路线数据尚不完整，选定地点后才能自动安排每天的路书。',
   'roadtrip.stay.portals': '查找住宿',
   'roadtrip.stay.portalHint': '请在平台核对目的地、日期和入住人数。CHECK24需手动搜索。',
   'roadtrip.charging.available': '可用',

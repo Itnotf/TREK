@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · {count} diarsipkan',
   'dashboard.newTrip': 'Perjalanan Baru',
   'dashboard.newTripSub': 'Rencanakan perjalanan baru dari awal',
+  'dashboard.roadtrip.enable': 'Rencanakan perjalanan mobil ke beberapa kota',
+  'dashboard.roadtrip.hint':
+    'Simpan kota dan batas berkendara bersama perjalanan. Setelah dibuat, Anda dapat meminta bantuan AI untuk merencanakannya. Kebutuhan Anda tetap tersimpan meski tanpa koneksi AI.',
+  'dashboard.roadtrip.origin': 'Kota keberangkatan',
+  'dashboard.roadtrip.viaCities': 'Kota yang ingin dikunjungi (opsional)',
+  'dashboard.roadtrip.viaHint': 'Pisahkan kota dengan koma atau baris baru. AI dapat menyarankan urutannya.',
+  'dashboard.roadtrip.roundTrip': 'Kembali ke kota keberangkatan',
+  'dashboard.roadtrip.destination': 'Kota tujuan',
+  'dashboard.roadtrip.dailyHours': 'Waktu berkendara maksimum per hari (jam)',
+  'dashboard.roadtrip.vehicle': 'Jenis kendaraan',
+  'dashboard.roadtrip.combustion': 'Kendaraan berbahan bakar',
+  'dashboard.roadtrip.electric': 'Kendaraan listrik',
+  'dashboard.roadtrip.rangeKm': 'Jarak tempuh realistis dengan tangki atau baterai penuh (km)',
+  'dashboard.roadtrip.originRequired': 'Masukkan kota keberangkatan untuk perjalanan mobil Anda.',
+  'dashboard.roadtrip.destinationRequired': 'Masukkan kota tujuan atau pilih kembali ke kota keberangkatan.',
+  'dashboard.roadtrip.invalidHours': 'Masukkan batas berkendara harian antara 1 dan 12 jam.',
+  'dashboard.roadtrip.invalidRange': 'Masukkan jarak tempuh realistis antara 1 dan 2.000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Kebutuhan perjalanan mobil ke beberapa kota',
+  'dashboard.roadtrip.planningInstruction':
+    'Usulkan urutan kota dan kota tempat menginap sebelum kegiatan harian. Patuhi tanggal tetap, penginapan yang dipesan, dan batas berkendara. Periksa rute jalan yang sebenarnya dan tandai informasi yang belum diketahui. Minta konfirmasi usulan sebelum mengubah perjalanan.',
+  'dashboard.roadtrip.planPrompt':
+    'Bantu saya merencanakan perjalanan mobil ke beberapa kota menggunakan kebutuhan dalam deskripsi perjalanan ini dan pengaturan berkendara yang tersimpan. Usulkan dahulu urutan kota dan kota nyata untuk menginap, lalu rencanakan kegiatan harian setelah saya mengonfirmasi. Patuhi tanggal tetap, penginapan yang dipesan, dan batas berkendara harian. Periksa rute jalan yang sebenarnya dan tandai dengan jelas informasi yang belum diverifikasi. Jangan ubah perjalanan sampai saya mengonfirmasi usulan tersebut.',
   'dashboard.subscribeAllTrips': 'Berlangganan semua perjalanan',
   'dashboard.subscribeAllTripsDesc':
     'Satu umpan kalender untuk semua perjalanan aktifmu, tetap tersinkron secara otomatis. Tidak termasuk perjalanan yang diarsipkan dan perjalanan yang berakhir lebih dari 90 hari lalu.',

@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Seccions del viatge',
+  'tours.navigation.help':
+    'Les rutes a peu, en bicicleta i altres activitats a l’aire lliure es poden afegir a l’itinerari diari.',
   'trip.tabs.tourPlanner': 'Excursions',
   'tours.mode.places': 'Llocs',
   'tours.mode.tours': 'Excursions',

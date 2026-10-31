@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Reisebereiche',
+  'tours.navigation.help':
+    'Routen für Spaziergänge, Radtouren und andere Aktivitäten können dem Tagesplan hinzugefügt werden.',
   'trip.tabs.tourPlanner': 'Touren',
   'tours.mode.places': 'Orte',
   'tours.mode.tours': 'Touren',

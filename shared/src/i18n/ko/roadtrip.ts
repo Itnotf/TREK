@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': '장소를 정할 일정',
+  'roadtrip.unlocated.hint':
+    '이 활동에는 {time}이 필요합니다. 경로 합계가 아직 불완전합니다. 일별 자동 계획 전에 장소를 정하세요.',
   'roadtrip.stay.portals': '숙소 찾기',
   'roadtrip.stay.portalHint': '포털에서 목적지, 날짜, 인원을 확인하세요. CHECK24에서는 직접 검색하세요.',
   'roadtrip.charging.available': '이용 가능',

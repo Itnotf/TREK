@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw'
 import { server } from '../../tests/helpers/msw/server'
 import {
   connect, disconnect, joinTrip, leaveTrip, getActiveTrips,
-  setRefetchCallback, setPreReconnectHook, reconnectNow,
+  setRefetchCallback, setPreReconnectHook, reconnectNow, subscribeTripRefetch,
 } from './websocket'
 
 class MockWebSocket {
@@ -93,6 +93,25 @@ describe('websocket > active trips', () => {
 })
 
 describe('websocket > reconnect refetch hook', () => {
+  it('refreshes independent trip views after pending writes, and stops after unsubscribe', async () => {
+    const order: string[] = []
+    setPreReconnectHook(async () => { order.push('flush') })
+    const unsubscribe = subscribeTripRefetch(tripId => { order.push(`view:${tripId}`) })
+    try {
+      joinTrip(3)
+      const sock = await openSocket()
+      sock.onopen!()
+      await vi.advanceTimersByTimeAsync(0)
+      expect(order).toEqual(['flush', 'view:3'])
+      unsubscribe()
+      sock.onopen!()
+      await vi.advanceTimersByTimeAsync(0)
+      expect(order).toEqual(['flush', 'view:3'])
+    } finally {
+      unsubscribe()
+    }
+  })
+
   it('FE-WSCORE-002: the pre-reconnect hook is awaited before the refetch runs', async () => {
     const order: string[] = []
     setPreReconnectHook(async () => { order.push('flush') })

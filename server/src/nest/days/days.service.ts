@@ -165,7 +165,14 @@ export class DaysService {
   }
 
   async canEdit(trip: Trip, user: User): Promise<boolean> {
-    return this.permissions.checkPermission('day_edit', user.role, trip.user_id, user.id, trip.user_id !== user.id);
+    return this.permissions.checkPermission(
+      'day_edit',
+      user.role,
+      trip.user_id,
+      user.id,
+      trip.user_id !== user.id,
+      trip.id,
+    );
   }
 
   broadcast<E extends TrekWsTripEventName>(
@@ -197,6 +204,8 @@ export class DaysService {
         id: a.id,
         day_id: a.day_id,
         order_index: a.order_index,
+        assignment_time: a.assignment_time,
+        assignment_end_time: a.assignment_end_time,
         end_day: a.end_day === 1,
         route_excluded: a.route_excluded === 1,
         notes: a.notes,
@@ -211,6 +220,7 @@ export class DaysService {
           id: a.place_id,
           name: a.place_name,
           description: a.place_description,
+          source: a.place_source,
           lat: a.lat,
           lng: a.lng,
           address: a.address,

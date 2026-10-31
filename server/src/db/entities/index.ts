@@ -4,6 +4,7 @@ import { AiConnectionsSchema } from './AiConnections.entity';
 import { AppSettingsSchema } from './AppSettings.entity';
 import { AssignmentParticipantsSchema } from './AssignmentParticipants.entity';
 import { AssistantAttachmentsSchema } from './AssistantAttachments.entity';
+import { AssistantItineraryDraftsSchema } from './AssistantItineraryDrafts.entity';
 import { AssistantMessagesSchema } from './AssistantMessages.entity';
 import { AssistantThreadsSchema } from './AssistantThreads.entity';
 import { AssistantToolCallsSchema } from './AssistantToolCalls.entity';
@@ -137,11 +138,15 @@ import { TripAlbumLinksSchema } from './TripAlbumLinks.entity';
 import { TripDocumentLinksSchema } from './TripDocumentLinks.entity';
 import { TripFilesSchema } from './TripFiles.entity';
 import { TripInviteTokensSchema } from './TripInviteTokens.entity';
+import { TripItineraryGuidesSchema } from './TripItineraryGuides.entity';
 import { TripJournalLinkMembersSchema } from './TripJournalLinkMembers.entity';
 import { TripJournalLinksSchema } from './TripJournalLinks.entity';
 import { TripMemberRemovalsSchema } from './TripMemberRemovals.entity';
 import { TripMembersSchema } from './TripMembers.entity';
 import { TripPhotosSchema } from './TripPhotos.entity';
+import { TripPlanPublicationsSchema } from './TripPlanPublications.entity';
+import { TripPlanningCollaboratorsSchema } from './TripPlanningCollaborators.entity';
+import { TripPlanningRevisionsSchema } from './TripPlanningRevisions.entity';
 import { TripsSchema } from './Trips.entity';
 import { UserNoticeDismissalsSchema } from './UserNoticeDismissals.entity';
 import { UserSessionsSchema } from './UserSessions.entity';
@@ -168,6 +173,7 @@ export const ALL_ENTITIES: readonly EntitySchema[] = [
   AppSettingsSchema,
   AssignmentParticipantsSchema,
   AssistantAttachmentsSchema,
+  AssistantItineraryDraftsSchema,
   AssistantMessagesSchema,
   AssistantThreadsSchema,
   AssistantToolCallsSchema,
@@ -301,11 +307,15 @@ export const ALL_ENTITIES: readonly EntitySchema[] = [
   TripDocumentLinksSchema,
   TripFilesSchema,
   TripInviteTokensSchema,
+  TripItineraryGuidesSchema,
   TripJournalLinkMembersSchema,
   TripJournalLinksSchema,
   TripMemberRemovalsSchema,
   TripMembersSchema,
   TripPhotosSchema,
+  TripPlanPublicationsSchema,
+  TripPlanningCollaboratorsSchema,
+  TripPlanningRevisionsSchema,
   TripsSchema,
   UserNoticeDismissalsSchema,
   UserSessionsSchema,

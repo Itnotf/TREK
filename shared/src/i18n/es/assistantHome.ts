@@ -1,12 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.share': 'Comentar esta propuesta juntos',
+  'assistant.plan.shareHint':
+    'Comparte el itinerario en el espacio del viaje antes de confirmarlo. Tu conversación privada seguirá siendo privada.',
   'assistant.home.title': 'Tus viajes',
   'assistant.home.welcome': '¿En qué puedo ayudarte?',
-  'assistant.home.placeholder': 'Pregunta lo que quieras sobre tus viajes',
+  'assistant.home.placeholder': 'Describe tu viaje o pega un enlace a una guía de viaje',
   'assistant.home.switch': 'Chatear sobre un viaje',
   'assistant.home.back': 'Volver a todos los viajes',
-  'assistant.suggest.homeNext': '¿Cuál es mi próximo viaje y qué queda pendiente?',
+  'assistant.suggest.homeNext': 'Planifica una ruta tranquila de 5 días en coche desde Chengdu al oeste de Sichuan',
   'assistant.suggest.homeCompare': 'Compara mis próximos viajes',
   'assistant.suggest.homeAtlas': '¿Cuántos países he visitado?',
   'assistant.suggest.homeVacay': '¿Cuántos días de vacaciones me quedan este año?',
@@ -26,6 +29,23 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Diario',
   'assistant.card.journalChat.open': 'Seguir en el chat de este diario',
   'assistant.step.openJournalChat': 'Buscando el diario',
+  'assistant.plan.start': 'Planificar con IA',
+  'assistant.plan.manual': 'Crear manualmente',
+  'assistant.plan.unavailable':
+    'La planificación con IA no está disponible ahora. Puedes seguir creando tu viaje manualmente.',
+  'assistant.plan.label': 'Borrador del viaje',
+  'assistant.plan.version': 'Versión {version}',
+  'assistant.plan.requirements': 'Tus preferencias de viaje',
+  'assistant.plan.assumptions': 'Revisa estas suposiciones',
+  'assistant.plan.overnight': 'Noche en {city}',
+  'assistant.plan.editHint':
+    '¿Quieres cambiar algo? Dímelo en el chat y actualizaré el borrador. Confírmalo cuando te guste.',
+  'assistant.plan.stale': 'Hay una versión más reciente más abajo. Confirma la última versión para crear tu viaje.',
+  'assistant.plan.confirm': 'Confirmar y crear viaje',
+  'assistant.plan.created': 'Este borrador se ha guardado como viaje.',
+  'assistant.plan.loadFailed': 'No se pudo cargar este borrador. Vuelve a intentarlo.',
+  'assistant.plan.applyFailed': 'No se pudo crear el viaje. Revisa el último borrador y vuelve a intentarlo.',
+  'assistant.plan.unverified': 'La ubicación exacta aún no se ha verificado',
 };
 
 export default assistantHome;

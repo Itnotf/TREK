@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · アーカイブ {count}件',
   'dashboard.newTrip': '新しい旅行',
   'dashboard.newTripSub': '新しい旅行をゼロから計画',
+  'dashboard.roadtrip.enable': '複数都市を巡るドライブ旅行を計画',
+  'dashboard.roadtrip.hint':
+    '訪問都市と運転時間の上限を旅行に保存します。作成後、AIに計画を手伝ってもらえます。AIに接続できなくても、希望条件は保存されます。',
+  'dashboard.roadtrip.origin': '出発都市',
+  'dashboard.roadtrip.viaCities': '訪問したい都市（任意）',
+  'dashboard.roadtrip.viaHint': '都市をカンマまたは改行で区切ってください。訪問順はAIが提案できます。',
+  'dashboard.roadtrip.roundTrip': '出発都市に戻る',
+  'dashboard.roadtrip.destination': '到着都市',
+  'dashboard.roadtrip.dailyHours': '1日の運転時間の上限（時間）',
+  'dashboard.roadtrip.vehicle': '車両の種類',
+  'dashboard.roadtrip.combustion': 'ガソリン・ディーゼル車',
+  'dashboard.roadtrip.electric': '電気自動車',
+  'dashboard.roadtrip.rangeKm': '満タン・満充電時の現実的な航続距離（km）',
+  'dashboard.roadtrip.originRequired': 'ドライブ旅行の出発都市を入力してください。',
+  'dashboard.roadtrip.destinationRequired': '到着都市を入力するか、出発都市に戻る設定を選んでください。',
+  'dashboard.roadtrip.invalidHours': '1日の運転時間の上限を1〜12時間で入力してください。',
+  'dashboard.roadtrip.invalidRange': '現実的な航続距離を1〜2,000 kmで入力してください。',
+  'dashboard.roadtrip.summaryTitle': '複数都市を巡るドライブ旅行の希望条件',
+  'dashboard.roadtrip.planningInstruction':
+    '日ごとの観光内容より先に、都市の訪問順と宿泊する都市を提案してください。確定した日程、予約済みの宿泊先、運転時間の上限を守ってください。実際の道路経路を確認し、不明な情報を明示してください。旅行を変更する前に、提案の確認を求めてください。',
+  'dashboard.roadtrip.planPrompt':
+    'この旅行の説明にある希望条件と保存済みの運転設定を使って、複数都市を巡るドライブ旅行の計画を手伝ってください。まず都市の訪問順と実在する宿泊都市を提案し、私が確認した後に日ごとの観光内容を計画してください。確定した日程、予約済みの宿泊先、1日の運転時間の上限を守ってください。実際の道路経路を確認し、未確認の情報を明示してください。私が提案を承認するまで旅行を変更しないでください。',
   'dashboard.subscribeAllTrips': 'すべての旅行を購読',
   'dashboard.subscribeAllTripsDesc':
     '進行中のすべての旅行をまとめた1つのカレンダーフィードで、自動的に同期されます。アーカイブ済みの旅行や、終了から90日以上経過した旅行は含まれません。',

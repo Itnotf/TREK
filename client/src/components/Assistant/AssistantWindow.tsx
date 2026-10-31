@@ -207,9 +207,20 @@ export default function AssistantWindow({ trip, onOpen, onFocusDay, onRevealMap 
   const [picked, setPicked] = useState<WindowTrip | null>(null);
   const [wasOpen, setWasOpen] = useState(open);
   const home = useAssistantHome(setPicked);
+  const freshHome = useAssistantStore((s) =>
+    s.byTrip[HOME_CHAT_KEY]?.fresh && s.byTrip[HOME_CHAT_KEY]?.threadId === null
+      ? s.byTrip[HOME_CHAT_KEY]?.messages
+      : null
+  );
+  const [previousFreshHome, setPreviousFreshHome] = useState(freshHome);
 
   useAssistantStatus();
   useAssistantHotkey(available, toggle);
+
+  if (freshHome !== previousFreshHome) {
+    setPreviousFreshHome(freshHome);
+    if (freshHome?.length === 0) setPicked(null);
+  }
 
   // A trip picked outside the planner is only for this opening; the next one opens on the home chat again.
   if (open !== wasOpen) {

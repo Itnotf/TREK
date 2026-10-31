@@ -206,10 +206,10 @@ export class DawarichSuggestionsService {
     // owner, a member accepting a stay must be refused exactly as they would be
     // in the planner. Asked here rather than in the controller so the MCP tool
     // cannot take a different route to the same write.
-    await this.requirePermission('place_edit', access.user_id, userId);
+    await this.requirePermission('place_edit', access.user_id, userId, tripId);
 
     if (body.dayId !== undefined) {
-      await this.requirePermission('day_edit', access.user_id, userId);
+      await this.requirePermission('day_edit', access.user_id, userId, tripId);
       if (!(await this.assignments.dayExists(body.dayId, tripId))) {
         throw new AcceptError('day_not_on_trip', 'Day does not belong to this trip', 400);
       }
@@ -385,6 +385,7 @@ export class DawarichSuggestionsService {
     action: 'place_edit' | 'day_edit',
     tripOwnerId: number,
     userId: number,
+    tripId: number,
   ): Promise<void> {
     const role = await this.users.getRole(userId);
     const allowed = await this.permissions.checkPermission(
@@ -393,6 +394,7 @@ export class DawarichSuggestionsService {
       tripOwnerId,
       userId,
       tripOwnerId !== userId,
+      tripId,
     );
     if (!(await allowed)) throw new AcceptError('forbidden', 'No permission', 403);
   }

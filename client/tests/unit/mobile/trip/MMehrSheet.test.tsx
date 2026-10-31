@@ -65,6 +65,21 @@ describe('MMehrSheet', () => {
     expect(screen.getByRole('dialog', { name: 'More' })).toBeInTheDocument()
   })
 
+  it('opens the existing outdoor-route browser from More, with its purpose explained', () => {
+    const setToursMode = vi.fn()
+    const { shell } = renderSheet({ toursEnabled: true, setToursMode })
+    fireEvent.click(screen.getByRole('button', { name: /Walking & outdoor routes/ }))
+    expect(setToursMode).toHaveBeenCalledWith(true)
+    expect(shell.setTravelMode).toHaveBeenCalledWith('browse')
+    expect(shell.closeSheet).toHaveBeenCalledOnce()
+    expect(screen.getByText(/can be added as activities in the daily itinerary/)).toBeVisible()
+  })
+
+  it('keeps the outdoor-route tool hidden when the addon is off', () => {
+    renderSheet({ toursEnabled: false })
+    expect(screen.queryByRole('button', { name: /Walking & outdoor routes/ })).not.toBeInTheDocument()
+  })
+
   it('FE-MOB-MEHR-003: only tiles the sections that are not in the dock', () => {
     renderSheet()
     expect(screen.getByRole('button', { name: /Files/ })).toBeInTheDocument()

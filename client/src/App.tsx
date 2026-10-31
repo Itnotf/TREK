@@ -47,6 +47,8 @@ const PluginPage = lazyWithRetry(() => import('./pages/PluginPage'))
 const ForgotPasswordPage = lazyWithRetry(() => import('./pages/ForgotPasswordPage'))
 const ResetPasswordPage = lazyWithRetry(() => import('./pages/ResetPasswordPage'))
 const DashboardPage = lazyWithRetry(() => import('./pages/DashboardPage'))
+const TripGuidePage = lazyWithRetry(() => import('./pages/TripGuidePage'))
+const TripPlanningPage = lazyWithRetry(() => import('./pages/TripPlanningPage'))
 const TripPlannerPage = lazyWithRetry(() => import('./pages/TripPlannerPage'))
 const FilesPage = lazyWithRetry(() => import('./pages/FilesPage'))
 const AdminPage = lazyWithRetry(() => import('./pages/AdminPage'))
@@ -475,6 +477,14 @@ export default function App() {
                 <ViewportRoute phone={MTripScreen} desktop={TripPlannerPage} />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/trips/:id/guide"
+            element={<ProtectedRoute><TripGuidePage /></ProtectedRoute>}
+          />
+          <Route
+            path="/trips/:id/planning"
+            element={<ProtectedRoute><TripPlanningPage /></ProtectedRoute>}
           />
           <Route
             path="/trips/:id/files"

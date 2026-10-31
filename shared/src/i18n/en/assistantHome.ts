@@ -3,10 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'Your travels',
   'assistant.home.welcome': 'What can I help you with?',
-  'assistant.home.placeholder': 'Ask anything about your trips',
+  'assistant.home.placeholder': 'Describe your trip, or paste a travel guide link',
   'assistant.home.switch': 'Chat about one trip',
   'assistant.home.back': 'Back to all trips',
-  'assistant.suggest.homeNext': 'Which trip is next, and what is still open?',
+  'assistant.suggest.homeNext': 'Plan a relaxed 5-day road trip from Chengdu to western Sichuan',
   'assistant.suggest.homeCompare': 'Compare my upcoming trips',
   'assistant.suggest.homeAtlas': 'How many countries have I visited?',
   'assistant.suggest.homeVacay': 'How many vacation days do I have left this year?',
@@ -26,6 +26,25 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Journal',
   'assistant.card.journalChat.open': "Continue in this journal's chat",
   'assistant.step.openJournalChat': 'Finding the journal',
+  'assistant.plan.start': 'Plan with AI',
+  'assistant.plan.manual': 'Create manually',
+  'assistant.plan.unavailable': 'AI planning is unavailable right now. You can still create your trip manually.',
+  'assistant.plan.label': 'Trip draft',
+  'assistant.plan.version': 'Version {version}',
+  'assistant.plan.requirements': 'Your travel preferences',
+  'assistant.plan.assumptions': 'Please check these assumptions',
+  'assistant.plan.overnight': 'Overnight in {city}',
+  'assistant.plan.editHint':
+    'Want changes? Tell me in the chat and I will update the draft. Confirm when you are happy with it.',
+  'assistant.plan.stale': 'A newer version is available below. Confirm the latest version to create your trip.',
+  'assistant.plan.confirm': 'Confirm and create trip',
+  'assistant.plan.created': 'This draft is linked to a trip. Open it to discuss and revise the shared plan.',
+  'assistant.plan.share': 'Discuss this plan together',
+  'assistant.plan.shareHint':
+    'Share this itinerary in a trip space before confirming it. Your private conversation stays private.',
+  'assistant.plan.unverified': 'Location not verified yet',
+  'assistant.plan.loadFailed': 'Could not load this draft. Please try again.',
+  'assistant.plan.applyFailed': 'Could not create the trip. Check the latest draft and try again.',
 };
 
 export default assistantHome;

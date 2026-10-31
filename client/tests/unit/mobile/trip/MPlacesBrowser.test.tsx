@@ -51,6 +51,8 @@ function makePlanner(overrides: Partial<TripPlanner> = {}): TripPlanner {
     categories: CATEGORIES,
     assignments: ASSIGNMENTS,
     days: DAYS,
+    toursMode: false,
+    setToursMode: vi.fn(),
     ...overrides,
   } as Partial<TripPlanner>)
 }
@@ -375,20 +377,34 @@ describe('MPlacesBrowser', () => {
       tours: [ridge],
       isTourPlace: vi.fn((placeId: number) => placeId === TOUR.id),
     })
-    const { shell } = renderBrowser(planner)
+    const { shell, rerender } = renderBrowser(planner)
 
     await waitFor(() => expect(screen.getByText('places.count:3')).toBeInTheDocument())
     expect(screen.queryByText('Ridge walk')).not.toBeInTheDocument()
     // The planner owns the tour list; the browser does not fetch a second one.
     expect(list).not.toHaveBeenCalled()
 
-    fireEvent.click(screen.getByRole('tab', { name: /^Tours$/i }))
+    fireEvent.click(screen.getByRole('tab', { name: /^Outdoor routes$/i }))
+    expect(planner.setToursMode).toHaveBeenCalledWith(true)
+    rerender(<MPlacesBrowser planner={{ ...planner, toursMode: true }} shell={shell} />)
     expect(screen.getByRole('button', { name: /Ridge walk/ })).toBeInTheDocument()
     expect(screen.queryByText('Louvre')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'mobileTrip.importPlaces' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'common.add' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'common.select' })).not.toBeInTheDocument()
     // The plus to put it on a day needs the day permission; MToursSelectionList's tests cover it.
+  })
+
+  it('opens directly in outdoor routes when selected through the More sheet', () => {
+    seedStore(useAddonStore, { addons: [{ id: 'tours', enabled: true }] })
+    const planner = makePlanner({ toursMode: true })
+    const { shell, rerender } = renderBrowser(planner)
+    expect(screen.getByRole('tab', { name: 'Outdoor routes' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.queryByText('Louvre')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: 'Places' }))
+    expect(planner.setToursMode).toHaveBeenCalledWith(false)
+    rerender(<MPlacesBrowser planner={{ ...planner, toursMode: false }} shell={shell} />)
+    expect(screen.getByText('Louvre')).toBeInTheDocument()
   })
 
   it('FE-MOB-PBROW-020b: a failed bulk delete keeps the selection for a retry', async () => {

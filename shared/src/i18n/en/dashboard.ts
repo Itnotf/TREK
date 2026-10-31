@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} archived',
   'dashboard.newTrip': 'New Trip',
   'dashboard.newTripSub': 'Plan a new trip from scratch',
+  'dashboard.roadtrip.enable': 'Plan a multi-city road trip',
+  'dashboard.roadtrip.hint':
+    'Save your cities and driving limits with the trip. After creating it, you can ask AI to help plan. Your requirements are saved even without an AI connection.',
+  'dashboard.roadtrip.origin': 'Departure city',
+  'dashboard.roadtrip.viaCities': 'Cities to visit (optional)',
+  'dashboard.roadtrip.viaHint': 'Separate cities with commas or new lines. AI can suggest the order.',
+  'dashboard.roadtrip.roundTrip': 'Return to the departure city',
+  'dashboard.roadtrip.destination': 'Arrival city',
+  'dashboard.roadtrip.dailyHours': 'Maximum daily driving (hours)',
+  'dashboard.roadtrip.vehicle': 'Vehicle type',
+  'dashboard.roadtrip.combustion': 'Fuel vehicle',
+  'dashboard.roadtrip.electric': 'Electric vehicle',
+  'dashboard.roadtrip.rangeKm': 'Realistic range on a full tank or charge (km)',
+  'dashboard.roadtrip.originRequired': 'Enter a departure city for your road trip.',
+  'dashboard.roadtrip.destinationRequired': 'Enter an arrival city or choose to return to the departure city.',
+  'dashboard.roadtrip.invalidHours': 'Enter a daily driving limit between 1 and 12 hours.',
+  'dashboard.roadtrip.invalidRange': 'Enter a realistic driving range between 1 and 2,000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Multi-city road trip requirements',
+  'dashboard.roadtrip.planningInstruction':
+    'Propose the city order and overnight cities before daily activities. Respect fixed dates, booked stays and the driving limit. Verify real road routes and flag unknown information. Confirm the proposal before changing the trip.',
+  'dashboard.roadtrip.planPrompt':
+    'Help me plan a multi-city road trip using the requirements in this trip description and the saved driving settings. First propose the city order and real overnight cities, then plan daily activities after I confirm. Respect fixed dates, booked stays and the daily driving limit. Check real road routes and clearly flag any information that has not been verified. Do not change the trip until I confirm the proposal.',
   'dashboard.subscribeAllTrips': 'Subscribe to all trips',
   'dashboard.subscribeAllTripsDesc':
     'One calendar feed for all your active trips, kept in sync automatically. Excludes archived trips and trips that ended more than 90 days ago.',

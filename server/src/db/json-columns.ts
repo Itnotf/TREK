@@ -8,6 +8,7 @@ import {
   assistantStoredPartsSchema,
   ferrataSchema,
   hikingPreferencesSchema,
+  itineraryPlanSchema,
   obstacleSnapshotSchema,
   paddleGeometrySchema,
   paddleLockSchema,
@@ -26,6 +27,7 @@ import {
   type Ferrata,
   type GeometryPoint,
   type HikingPreferences,
+  type ItineraryPlan,
   type ObstacleSnapshot,
   type PaddleGeometry,
   type PaddleLock,
@@ -39,6 +41,20 @@ import {
 } from '@trek/shared';
 
 import { z } from 'zod';
+
+/** A chat's immutable itinerary revision. A broken plan must never become a trip. */
+export const ASSISTANT_ITINERARY_PLAN: JsonColumn<ItineraryPlan | null> = {
+  column: 'assistant_itinerary_drafts.plan',
+  schema: itineraryPlanSchema.nullable(),
+  fallback: () => null,
+};
+
+/** The confirmed guide survives its chat and is shared through the trip's membership. */
+export const TRIP_ITINERARY_GUIDE: JsonColumn<ItineraryPlan | null> = {
+  column: 'trip_itinerary_guides.plan',
+  schema: itineraryPlanSchema.nullable(),
+  fallback: () => null,
+};
 
 /**
  * The JSON-in-TEXT columns the services decode, one declaration each: the shape
