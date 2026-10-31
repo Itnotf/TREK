@@ -1372,10 +1372,7 @@ export class CollectionsService {
     this.realtime.broadcastToUser(targetUserId, { type: 'collections:invite', from: { id: inviterId, username: inviterUsername }, collectionId });
     await this.notifyCollectionUsers(collectionId, socketId); // the inviter's tabs list the pending invite
 
-    // Injected, not a lazy import of the old notifications bridge. The laziness bought
-    // nothing the module graph does not already give — NotificationsModule
-    // reaches nothing in this direction — and it hid the edge while handing the
-    // send a second NotificationsService built outside the container.
+    // Use the injected notification service to preserve the container's single instance.
     this.notifications.send({ event: 'collection_invite', actorId: inviterId, scope: 'user', targetId: targetUserId, params: { actor: inviterUsername, collectionId: String(collectionId) } }).catch(() => {});
   }
 

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from '../i18n'
 import Navbar from '../components/Layout/Navbar'
 import DemoWelcome from '../components/Demo/DemoWelcome'
 import TripFormModal from '../components/Trips/TripFormModal'
+import { useTripCover } from '../components/Trips/useTripCover'
+import { TripCoverCredit } from '../components/Trips/TripCoverCredit'
 import ConfirmDialog from '../components/shared/ConfirmDialog'
 import CopyTripDialog from '../components/shared/CopyTripDialog'
 import CustomSelect from '../components/shared/CustomSelect'
@@ -337,6 +339,8 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
   trip: DashboardTrip; bundle: HeroBundle | null; locale: string; onOpen: () => void
   onEdit: () => void; onCopy: () => void; onArchive: () => void; onDelete: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   const { t } = useTranslation()
   const heroPlugins = usePluginStore(s => s.plugins).filter(p => p.type === 'widget' && p.slot === 'hero')
   const stop = (e: React.MouseEvent, fn: () => void) => { e.stopPropagation(); fn() }
@@ -431,6 +435,7 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
 
   return (
     <div
+      ref={coverRef}
       className="hero-trip"
       onClick={onOpen}
       role="button"
@@ -440,10 +445,11 @@ function BoardingPassHero({ trip, bundle, locale, onOpen, onEdit, onCopy, onArch
       tabIndex={0}
       onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpen() } }}
     >
-      {trip.cover_image
-        ? <img className="bg" src={trip.cover_image} alt={trip.title} />
+      {cover.src
+        ? <img className="bg" src={cover.src} alt={trip.title} onError={cover.onError} />
         : <div className="bg" style={{ background: tripGradient(trip.id) }} />}
       <div className="scrim" />
+      <TripCoverCredit attribution={cover.attribution} className="bottom-2 end-3" />
       <div className="hero-content">
         <div className="hero-top">
           <div className="hero-badge">
@@ -596,6 +602,8 @@ function TripCard({ trip, locale, badges, matchedPlaces, onOpen, onEdit, onCopy,
   matchedPlaces?: string[]
   onEdit: () => void; onCopy: () => void; onArchive: () => void; onDelete: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   const { t } = useTranslation()
   const status = getTripStatus(trip)
   const archiveLabel = trip.is_archived ? t('dashboard.restore') : t('dashboard.archive')
@@ -623,10 +631,11 @@ function TripCard({ trip, locale, badges, matchedPlaces, onOpen, onEdit, onCopy,
       tabIndex={0}
       onKeyDown={(e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onOpen() } }}
     >
-      <div className="trip-cover">
-        {trip.cover_image
-          ? <img src={trip.cover_image} alt={trip.title} />
+      <div ref={coverRef} className="trip-cover">
+        {cover.src
+          ? <img src={cover.src} alt={trip.title} onError={cover.onError} />
           : <div style={{ width: '100%', height: '100%', background: tripGradient(trip.id) }} />}
+        <TripCoverCredit attribution={cover.attribution} className="trip-cover-credit end-2 top-14" />
         <div className={`trip-status ${statusClass}`}><span className="indicator" /> {statusLabel}</div>
         <div className="trip-actions">
           <button type="button" className="trip-action-btn" aria-label={t('common.edit')} title={t('common.edit')} onClick={(e) => stop(e, onEdit)}><Edit2 size={17} strokeWidth={2.2} /></button>

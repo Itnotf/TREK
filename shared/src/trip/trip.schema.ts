@@ -34,6 +34,15 @@ export function tripSpanDays(startDate: string, endDate: string): number {
   return Math.floor((utcDay(endDate) - utcDay(startDate)) / 86400000) + 1;
 }
 
+/** Photo identities from the current itinerary, independent of a manually selected cover. */
+export const tripCoverPlaceSchema = z.object({
+  name: z.string().min(1).max(500),
+  photoKey: z.string().regex(/^(?:[\w-]{1,200}|(?:node|way|relation):\d+)$/i),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+});
+export type TripCoverPlace = z.infer<typeof tripCoverPlaceSchema>;
+
 /**
  * Trip entity as returned by the trip list / get / create / update endpoints
  * (server/src/services/tripService.ts -> TRIP_SELECT). Columns of the `trips`
@@ -49,6 +58,7 @@ export const tripSchema = z.object({
   end_date: z.string().nullable().optional(),
   currency: z.string(),
   cover_image: z.string().nullable().optional(),
+  auto_cover_places: z.array(tripCoverPlaceSchema).max(3).optional(),
   is_archived: z.number(),
   reminder_days: z.number(),
   created_at: z.string().optional(),

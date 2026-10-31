@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '../../../helpers/render';
 import MDashboard from '../../../../src/mobile/screens/dashboard/MDashboard';
 import { tripsApi } from '../../../../src/api/client';
@@ -8,6 +8,9 @@ import { useInAppNotificationStore } from '../../../../src/store/inAppNotificati
 import { usePluginStore } from '../../../../src/store/pluginStore';
 import type { TripCardBadge } from '../../../../src/api/client';
 import type { DashboardTrip } from '../../../../src/pages/dashboard/dashboardModel';
+import { fetchPhoto } from '../../../../src/services/photoService';
+
+vi.mock('../../../../src/services/photoService', () => ({ fetchPhoto: vi.fn(), getCached: vi.fn() }));
 
 // FE-MOB-DASH-001 onwards
 
@@ -92,6 +95,67 @@ describe('MDashboard', () => {
       user: { id: 1, username: 'Maurice', email: 'maurice@trek.app', role: 'user', avatar_url: '' } as never,
     });
     useInAppNotificationStore.setState({ unreadCount: 0, fetchUnreadCount: async () => {} });
+  });
+
+  describe('automatic trip covers', () => {
+    const first = '/api/maps/place-photo/way%3A1/bytes';
+    const second = '/api/maps/place-photo/way%3A2/bytes';
+    const trip = () => buildTrip({ auto_cover_places: [
+      { name: 'Old town', photoKey: 'way:1', lat: 30.7, lng: 103.6 },
+      { name: 'Riverside', photoKey: 'way:2', lat: 30.8, lng: 103.5 },
+    ] });
+    beforeEach(() => {
+      vi.stubGlobal('IntersectionObserver', undefined);
+      useAuthStore.setState({ placesPhotosEnabled: true });
+      vi.mocked(fetchPhoto).mockReset().mockImplementation((key, _id, _lat, _lng, _name, callback) => callback?.({
+        photoUrl: key === 'way:1' ? first : second, thumbDataUrl: null,
+        attribution: 'Photographer · CC BY 3.0 · https://commons.wikimedia.org/wiki/File:Town.jpg',
+      }));
+    });
+    afterEach(() => { vi.unstubAllGlobals(); vi.mocked(fetchPhoto).mockReset(); });
+
+    it.each(['grid', 'list'])('uses real-place photos for spotlight and %s cards', async (viewMode) => {
+      const navigate = vi.fn();
+      mocks.dash = buildDash({ spotlight: trip(), gridTrips: [trip()], viewMode, navigate });
+      const { container } = render(<MDashboard />);
+      await waitFor(() => expect(container.querySelectorAll(`img[src="${first}"]`)).toHaveLength(2));
+      const source = screen.getAllByRole('link', { name: /Photographer · CC BY 3.0/ })[0];
+      fireEvent.click(source);
+      fireEvent.keyDown(source, { key: 'Enter' });
+      expect(navigate).not.toHaveBeenCalled();
+    });
+    it('keeps a manually chosen cover and does not fetch automatic photos', () => {
+      useAuthStore.setState({ placesPhotosEnabled: false });
+      mocks.dash = buildDash({ spotlight: { ...trip(), cover_image: '/uploads/covers/chosen.jpg' } });
+      const { container } = render(<MDashboard />);
+      expect(container.querySelector('img[src="/uploads/covers/chosen.jpg"]')).not.toBeNull();
+      expect(fetchPhoto).not.toHaveBeenCalled();
+    });
+    it('retains photographer attribution when the provider supplies no source link', async () => {
+      vi.mocked(fetchPhoto).mockImplementation((_key, _id, _lat, _lng, _name, callback) => callback?.({
+        photoUrl: first, thumbDataUrl: null, attribution: 'Photo by Jane',
+      }));
+      mocks.dash = buildDash({ spotlight: trip() });
+      render(<MDashboard />);
+      await waitFor(() => expect(screen.getByText('Photo by Jane')).toBeInTheDocument());
+      expect(screen.queryByRole('link', { name: 'Photo by Jane' })).not.toBeInTheDocument();
+    });
+    it('respects disabled place photos', () => {
+      useAuthStore.setState({ placesPhotosEnabled: false });
+      mocks.dash = buildDash({ spotlight: trip(), gridTrips: [trip()] });
+      const { container } = render(<MDashboard />);
+      expect(container.querySelector('img[src^="/api/maps/place-photo/"]')).toBeNull();
+      expect(fetchPhoto).not.toHaveBeenCalled();
+    });
+    it('tries another place when a cover image cannot load, then falls back to the existing background', async () => {
+      mocks.dash = buildDash({ spotlight: trip() });
+      const { container } = render(<MDashboard />);
+      await waitFor(() => expect(container.querySelector(`img[src="${first}"]`)).not.toBeNull());
+      fireEvent.error(screen.getByAltText('Japan 2026'));
+      await waitFor(() => expect(container.querySelector(`img[src="${second}"]`)).not.toBeNull());
+      fireEvent.error(screen.getByAltText('Japan 2026'));
+      expect(container.querySelector('img[src^="/api/maps/place-photo/"]')).toBeNull();
+    });
   });
 
   it('FE-MOB-DASH-001: renders the ongoing spotlight with badge, progress and grid cards', () => {

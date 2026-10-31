@@ -8,8 +8,6 @@
  * failed" (minutes), the in-flight dedupe of concurrent requests for one place
  * and the shared photo-fetch slots. MapsService.getPlacePhoto delegates to it.
  */
-import { Places } from '../../db/entities/Places.entity';
-import type { PlacesRepository } from '../../db/repositories/Places.repository';
 import { PlacePhotoCacheService } from '../place-photos/place-photo-cache.service';
 import { isGooglePlaceId, OSM_PLACE_ID } from './maps.helpers';
 import { withPhotoFetchSlot } from './photo-fetch-slot';
@@ -17,14 +15,12 @@ import { PlacesProviderSelector } from './places-provider.selector';
 import { GooglePlacesClient } from './providers/google-places.provider';
 import { OsmClient } from './providers/osm.client';
 import { WikimediaClient } from './providers/wikimedia.client';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PlacePhotoResolver {
   constructor(
     private readonly photoCache: PlacePhotoCacheService,
-    @InjectRepository(Places) private readonly placesRepo: PlacesRepository,
     private readonly googlePlaces: GooglePlacesClient,
     private readonly wiki: WikimediaClient,
     private readonly selector: PlacesProviderSelector,
@@ -36,8 +32,7 @@ export class PlacePhotoResolver {
    * Google (for a Google id) and Wikimedia, under the shared photo-fetch slots.
    *
    * @txIndependent cache bookkeeping around network fetches: the stored photo,
-   * the negative-cache entry and the image_url backfill are each complete on
-   * their own, and a failed one costs the cache, never the answer.
+   * and negative-cache entry are independent of the confirmed itinerary.
    */
   async resolve(
     userId: number,
@@ -130,14 +125,8 @@ export class PlacePhotoResolver {
           if (outcome.kind === 'failed') providerFailed = true;
           if (outcome.kind !== 'photo') return null;
 
-          const cached = await this.photoCache.put(placeId, outcome.bytes, outcome.attribution);
-
-          // Persist stable proxy URL to database
-          try {
-            await this.placesRepo.setImageUrlIfUnset(placeId, cached.photoUrl);
-          } catch (dbErr) {
-            console.error('Failed to persist photo URL to database:', dbErr);
-          }
+          // Reading a photo must not change the itinerary's image_url or confirmation hash.
+          await this.photoCache.put(placeId, outcome.bytes, outcome.attribution);
 
           return { attribution: outcome.attribution };
         };

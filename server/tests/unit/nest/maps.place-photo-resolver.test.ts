@@ -4,7 +4,6 @@
  * dedupe, Google then Wikimedia) runs through MapsService in
  * maps.service.test.ts; this pins the cases a source answer alone decides.
  */
-import type { PlacesRepository } from '../../../src/db/repositories/Places.repository';
 import { PlacePhotoResolver } from '../../../src/nest/maps/place-photo.resolver';
 import type { PlacesProviderSelector } from '../../../src/nest/maps/places-provider.selector';
 import type { GooglePlacesClient } from '../../../src/nest/maps/providers/google-places.provider';
@@ -36,7 +35,6 @@ function resolver(
   key: string | null = null,
   googleOutcome: unknown = { kind: 'none' },
 ) {
-  const places = { setImageUrlIfUnset: vi.fn(async () => 1) };
   const google = { firstPhoto: vi.fn(async () => googleOutcome) };
   const wiki = { downloadPhoto: vi.fn(async () => wikiOutcome), downloadOsmPhoto: vi.fn(async () => wikiOutcome) };
   const osm = {
@@ -46,19 +44,18 @@ function resolver(
   const selector = { getMapsKey: vi.fn(async () => key) };
   const r = new PlacePhotoResolver(
     c as unknown as PlacePhotoCacheService,
-    places as unknown as PlacesRepository,
     google as unknown as GooglePlacesClient,
     wiki as unknown as WikimediaClient,
     selector as unknown as PlacesProviderSelector,
     osm as unknown as OsmClient,
   );
-  return { r, places, google, wiki, osm };
+  return { r, google, wiki, osm };
 }
 
 describe('PlacePhotoResolver', () => {
   it('retries old OSM misses with verified identity without changing the confirmed itinerary', async () => {
     const c = cache({ getErrored: vi.fn(async (key: string) => key === 'relation:20062385') });
-    const { r, wiki, osm, places } = resolver(c, { kind: 'photo', bytes: Buffer.from([1]), attribution: 'A' });
+    const { r, wiki, osm } = resolver(c, { kind: 'photo', bytes: Buffer.from([1]), attribution: 'A' });
     expect((await r.resolve(1, 'relation:20062385', 30.73, 103.62, 'AI activity label')).photoUrl).toBe(
       '/api/maps/place-photo/relation%3A20062385/bytes',
     );
@@ -70,7 +67,6 @@ describe('PlacePhotoResolver', () => {
     });
     expect(wiki.downloadPhoto).not.toHaveBeenCalled();
     expect(c.put).toHaveBeenCalled();
-    expect(places.setImageUrlIfUnset).not.toHaveBeenCalled();
   });
 
   it('remembers new OSM misses under the versioned negative key', async () => {
@@ -98,9 +94,9 @@ describe('PlacePhotoResolver', () => {
     expect(c.markError).toHaveBeenCalledWith('coords:1,2', 'no-photo');
   });
 
-  it('PHOTO-R-003: a Google photo is stored, its proxy URL persisted, and Wikimedia never asked', async () => {
+  it('PHOTO-R-003: a Google photo only updates the photo cache, and Wikimedia is never asked', async () => {
     const c = cache();
-    const { r, places, wiki } = resolver(c, { kind: 'none' }, 'key', {
+    const { r, wiki } = resolver(c, { kind: 'none' }, 'key', {
       kind: 'photo',
       bytes: Buffer.from([1]),
       attribution: 'G',
@@ -109,7 +105,7 @@ describe('PlacePhotoResolver', () => {
       photoUrl: '/api/maps/place-photo/ChIJabc/bytes',
       attribution: 'G',
     });
-    expect(places.setImageUrlIfUnset).toHaveBeenCalledWith('ChIJabc', '/p/ChIJabc');
+    expect(c.put).toHaveBeenCalledWith('ChIJabc', Buffer.from([1]), 'G');
     expect(wiki.downloadPhoto).not.toHaveBeenCalled();
   });
 

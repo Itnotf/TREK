@@ -1505,8 +1505,7 @@ export class PlacesService {
   // -------------------------------------------------------------------------
 
   async searchImage(tripId: string, placeId: string, userId: number) {
-    // `toRowId` first (Task 3 review H1, absorbed here) — same gate shape
-    // as every other place-id route in this service.
+    // Use the same canonical place-id gate as the other routes in this service.
     const id = toRowId(placeId);
     if (id === null) throw new DomainError(404, 'Place not found');
     // Rule 21 (H1): the trip id gets the same `toRowId` treatment as the

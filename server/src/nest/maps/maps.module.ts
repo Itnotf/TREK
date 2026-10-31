@@ -1,6 +1,5 @@
 import { AppSettings } from '../../db/entities/AppSettings.entity';
 import { PlaceDetailsCache } from '../../db/entities/PlaceDetailsCache.entity';
-import { Places } from '../../db/entities/Places.entity';
 import { Users } from '../../db/entities/Users.entity';
 import { GoogleQuotaModule } from '../google-quota/google-quota.module';
 import { PlacePhotosModule } from '../place-photos/place-photos.module';
@@ -37,15 +36,14 @@ import { Module } from '@nestjs/common';
  * MikroOrmModule.forFeature: AppSettings and Users for the key chain
  * (instance-api-keys.ts's resolveApiKey) and the kill switches,
  * PlaceDetailsCache for the details cache (the entity only, not
- * place-enrichment's module, so there is no new module edge) and Places for the
- * marker photo's `setImageUrlIfUnset`.
+ * place-enrichment's module, so there is no new module edge).
  */
 @Module({
   imports: [
     PlacePhotosModule,
     StorageModule,
     GoogleQuotaModule,
-    MikroOrmModule.forFeature([AppSettings, Users, PlaceDetailsCache, Places]),
+    MikroOrmModule.forFeature([AppSettings, Users, PlaceDetailsCache]),
   ],
   controllers: [MapsController],
   providers: [

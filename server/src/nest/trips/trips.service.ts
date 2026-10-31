@@ -54,6 +54,7 @@ import { UnitOfWork } from '../database/unit-of-work';
 import { legacyBoundIntegerText } from '../common/row-id';
 import { appClock } from '../common/timezoneService';
 import { assertTripSpan } from './trips.helpers';
+import { withTripCoverPlaces } from './trip-cover-places';
 
 // Nullable where the wire contract (tripUpdateRequestSchema) is nullable — the
 // legacy route accepted arbitrary JSON, so null always reached these fields.
@@ -364,9 +365,9 @@ export class TripsService {
 
   // ── Trip CRUD ─────────────────────────────────────────────────────────────
 
-  /** TP16/TP17 — `TripsRepository.listForUser` (`TRIP_SELECT` + the access join, ONE builder, inventory §11a/§11c). */
+  /** TP16/TP17 — Access-scoped TRIP_SELECT plus one batch read for automatic cover candidates. */
   async list(userId: number, archived: number | null) {
-    return this.tripsRepo.listForUser(userId, archived);
+    return withTripCoverPlaces(await this.tripsRepo.listForUser(userId, archived), this.placesRepo);
   }
 
   async create(userId: number, data: TripCreateRequest) {
@@ -409,19 +410,14 @@ export class TripsService {
 
   /** TP20 — `TripsRepository.findForViewer`: `TRIP_SELECT` scoped to one trip AND the access predicate. */
   async get(tripId: string | number, userId: number) {
-    return await this.tripsRepo.findForViewer(tripId, userId) as Trip | undefined;
+    const trip = await this.tripsRepo.findForViewer(tripId, userId);
+    return trip ? (await withTripCoverPlaces([trip], this.placesRepo))[0] : undefined;
   }
 
   /**
-   * The trip a user most likely means by "my trip" right now: the one running
-   * today, else the next one starting, else the one that started most recently.
-   * Archived trips never qualify. Same order the dashboard hero picks its
-   * spotlight with (client sortTrips) — the two must agree, or "open my trip on
-   * startup" would land somewhere other than the trip the dashboard features.
-   *
-   * Kept separate from list() on purpose: this runs on the very first paint of
-   * a startup redirect, so it reads four columns of one row instead of every
-   * trip with its per-trip day/place counts.
+   * Match the dashboard spotlight: running today, else next upcoming, else
+   * most recently started; archived trips never qualify. Startup redirects
+   * need only four columns of one row, avoiding list() and its counts/photos.
    */
   /** TP21 — `TripsRepository.activeTrip`: the triple `CASE WHEN … relevance` projection and the double-`CASE WHEN` `ORDER BY`. */
   async activeTrip(userId: number, today = appClock().date) {
@@ -549,11 +545,8 @@ export class TripsService {
       ownerEmail = (await this.em.getRepository(Users).getEmail(trip.user_id)) ?? undefined; // TP28
     }
 
-    // TP29 — every caller of updateTrip has already passed an access check for
-    // this exact trip (canAccessTrip / requireTripEdit), so the access
-    // predicate `findForViewer` applies is always trivially satisfied here —
-    // same reasoning as `create`'s TP19 re-select above.
-    const updatedTrip = await this.tripsRepo.findForViewer(tripId, userId);
+    // TP29 — Keep the list/get projection after an edit, including a cleared cover.
+    const updatedTrip = await this.get(tripId, userId);
 
     return { updatedTrip, changes, isAdminEdit, ownerEmail, newTitle, newReminder, oldReminder, removedDays };
   }

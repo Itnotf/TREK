@@ -5,9 +5,40 @@ import {
   tripUpdateRequestSchema,
   tripAddMemberRequestSchema,
   activeTripResponseSchema,
+  tripSchema,
+  tripCoverPlaceSchema,
 } from './trip.schema';
 
 import { describe, it, expect } from 'vitest';
+
+describe('automatic trip cover candidates', () => {
+  const place = { name: '元通古镇', photoKey: 'relation:20062385', lat: 30.7, lng: 103.6 };
+
+  it.each(['relation:20062385', 'node:5815555248', 'way:123', 'ChIJ-verified_place'])(
+    'accepts provider identity %s',
+    (photoKey) => {
+      expect(tripCoverPlaceSchema.safeParse({ ...place, photoKey }).success).toBe(true);
+    },
+  );
+
+  it.each([
+    { photoKey: 'https://example.com/photo.jpg' },
+    { photoKey: 'coords:30,103' },
+    { photoKey: 'relation:invalid' },
+    { lat: 91 },
+    { lng: -181 },
+    { name: '' },
+  ])('rejects unusable photo candidates: %j', (invalid) => {
+    expect(tripCoverPlaceSchema.safeParse({ ...place, ...invalid }).success).toBe(false);
+  });
+
+  it('allows older trip responses without candidates, and caps new candidates at three', () => {
+    const candidates = tripSchema.shape.auto_cover_places;
+    expect(candidates.safeParse(undefined).success).toBe(true);
+    expect(candidates.safeParse([place, place, place]).success).toBe(true);
+    expect(candidates.safeParse([place, place, place, place]).success).toBe(false);
+  });
+});
 
 describe('tripCreateRequestSchema', () => {
   it('accepts optional driving preferences without dropping them', () => {

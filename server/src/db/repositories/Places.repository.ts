@@ -2,6 +2,7 @@ import type { Places } from '../entities/Places.entity';
 import { absDifference, coalesceParam, columnRef, currentTimestamp, lowerTrim } from '../dialect/sql-functions';
 import { type AssertRowKeys } from './_shared/rows';
 import { TrekRepository } from './_shared/trek-repository';
+import { listTripCoverPlaces } from './_shared/trip-cover-places';
 import { tourPlaceTextPatch, type TourPlaceWrite } from './tour-place-write';
 // Task 9 fix wave (B-L2): `TagRow` is Tags.repository.ts's own row type,
 // byte-identical to what used to be hand-mirrored here — a second
@@ -1090,24 +1091,17 @@ export class PlacesRepository extends TrekRepository<Places> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Plan 3f Task 1 (`AtlasService`) — additive, append-only per that task's
-  // own file-ownership rule.
-  // ---------------------------------------------------------------------------
-
-  /**
-   * AT2 (`AtlasService#getPlacesForTrips`) — `SELECT * FROM places WHERE
-   * trip_id IN (...)`. Dynamic `IN`, empty-array short-circuit (the
-   * `listAllForTrip`/single-id precedent above, widened to a batch of trip
-   * ids — every atlas read that resolves a user's trips first passes the
-   * whole id list through here in one call rather than one query per trip).
-   */
+  /** AT2 — Atlas passes all resolved trip ids together to avoid one catalog query per trip. */
   async listForTripIds(trip_ids: number[]): Promise<PlaceRow[]> {
     if (trip_ids.length === 0) return [];
     return await this.qb('p')
       .select(['p.*'])
       .where({ trip: { $in: trip_ids } })
       .execute<PlaceRow[]>('all', false);
+  }
+
+  async listCoverPlacesForTrips(tripIds: number[]) {
+    return await listTripCoverPlaces(this.kysely<Pick<DB, 'places' | 'day_assignments' | 'days'>>(), tripIds);
   }
 
   /**

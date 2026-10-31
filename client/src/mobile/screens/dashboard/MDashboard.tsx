@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Archive, ArchiveRestore, ArrowRight, Bell, CalendarDays, CalendarPlus, Copy,
   LayoutGrid, List, MapPin, Pencil, Plus, RefreshCw, Sparkles, Trash2, Users,
@@ -25,6 +25,8 @@ import MSheet from '../../components/MSheet'
 import MUserMenu from './MUserMenu'
 import { useMobileDashOrder, useMobileDashVisibility, MobileDashWidget } from './MDashWidgets'
 import MNewTripSheet from './MNewTripSheet'
+import { useTripCover } from '../../../components/Trips/useTripCover'
+import { TripCoverCredit } from '../../../components/Trips/TripCoverCredit'
 import type { MobileDashToken } from '@trek/shared'
 
 type TripFilter = 'planned' | 'archive' | 'completed'
@@ -340,6 +342,8 @@ function MSpotlightCard({ trip, t, onOpen, actions }: {
   onOpen: () => void
   actions: CardAction[]
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   const status = getTripStatus(trip)
   const ongoing = status === 'ongoing'
   const until = daysUntil(trip.start_date)
@@ -378,11 +382,13 @@ function MSpotlightCard({ trip, t, onOpen, actions }: {
       tabIndex={0}
       onClick={onOpen}
       onKeyDown={e => { if (e.key === 'Enter') onOpen() }}
+      ref={coverRef}
       className="relative h-[300px] cursor-pointer overflow-hidden rounded-[26px] shadow-[0_24px_56px_-22px_rgba(0,0,0,.5)]"
     >
-      {trip.cover_image
-        ? <img src={trip.cover_image} alt={trip.title} className="absolute inset-0 h-full w-full object-cover" />
+      {cover.src
+        ? <img src={cover.src} alt={trip.title} className="absolute inset-0 h-full w-full object-cover" onError={cover.onError} />
         : <div className="absolute inset-0" style={{ backgroundImage: entityGradient(trip.id) }} />}
+      <TripCoverCredit attribution={cover.attribution} className="start-3 top-16" />
       <div className="absolute end-[10px] top-[10px] flex gap-[6px]">
         {actions.map(a => <CoverActionBtn key={a.key} action={a} />)}
       </div>
@@ -440,7 +446,7 @@ function CoverActionBtn({ action }: { action: CardAction }): React.ReactElement 
       type="button"
       aria-label={action.label}
       onClick={e => { e.stopPropagation(); action.onClick() }}
-      className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/30 bg-white/[.22] text-white backdrop-blur-[8px]"
+      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-[rgba(14,14,17,.62)] text-white backdrop-blur-[8px]"
     >
       {action.icon}
     </button>
@@ -450,7 +456,7 @@ function CoverActionBtn({ action }: { action: CardAction }): React.ReactElement 
 function CoverBadge({ label, offset }: { label: string; offset: 8 | 12 }): React.ReactElement {
   return (
     <span
-      className={`absolute box-border inline-flex h-[34px] items-center gap-[6px] rounded-full bg-white/[.22] px-[13px] font-geist text-[0.625rem] font-extrabold uppercase tracking-[.08em] text-white backdrop-blur-[8px] ${
+      className={`absolute box-border inline-flex h-[34px] items-center gap-[6px] rounded-full bg-[rgba(14,14,17,.62)] px-[13px] font-geist text-[0.625rem] font-extrabold uppercase tracking-[.08em] text-white backdrop-blur-[8px] ${
         offset === 8 ? 'start-2 top-2' : 'start-3 top-3'
       }`}
     >
@@ -490,16 +496,12 @@ function MTripBadges({ items }: { items: TripCardBadge[] }): React.ReactElement 
   )
 }
 
-function coverStyle(trip: DashboardTrip): React.CSSProperties {
-  return trip.cover_image
-    ? { backgroundImage: `url(${trip.cover_image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : { backgroundImage: entityGradient(trip.id) }
-}
-
 function MTripGridCard({ trip, locale, badge, pluginBadges, actions, onOpen }: {
   trip: DashboardTrip; locale: string; badge: string; pluginBadges: TripCardBadge[]
   actions: CardAction[]; onOpen: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   return (
     <div
       role="button"
@@ -508,7 +510,9 @@ function MTripGridCard({ trip, locale, badge, pluginBadges, actions, onOpen }: {
       onKeyDown={e => { if (e.key === 'Enter') onOpen() }}
       className="min-w-0 cursor-pointer overflow-hidden rounded-[20px] border border-[color:var(--m-cbr)] bg-[color:var(--m-card)]"
     >
-      <div className="relative h-[96px]" style={coverStyle(trip)}>
+      <div ref={coverRef} className="relative h-[112px]" style={{ backgroundImage: entityGradient(trip.id) }}>
+        {cover.src && <img src={cover.src} alt={trip.title} className="absolute inset-0 h-full w-full object-cover" onError={cover.onError} />}
+        <TripCoverCredit attribution={cover.attribution} className="bottom-1 end-2" />
         <div className="absolute inset-0 bg-[image:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,0)_60%)]" />
         <CoverBadge label={badge} offset={8} />
         <div className="absolute end-2 top-2 flex gap-[6px]">
@@ -535,6 +539,8 @@ function MTripListCard({ trip, locale, t, badge, pluginBadges, actions, onOpen }
   t: (key: string, params?: Record<string, string | number>) => string
   badge: string; pluginBadges: TripCardBadge[]; actions: CardAction[]; onOpen: () => void
 }): React.ReactElement {
+  const coverRef = useRef<HTMLDivElement>(null)
+  const cover = useTripCover(trip, coverRef)
   return (
     <div
       role="button"
@@ -543,7 +549,9 @@ function MTripListCard({ trip, locale, t, badge, pluginBadges, actions, onOpen }
       onKeyDown={e => { if (e.key === 'Enter') onOpen() }}
       className="cursor-pointer overflow-hidden rounded-[22px] border border-[color:var(--m-cbr)] bg-[color:var(--m-card)] shadow-[0_12px_30px_-18px_rgba(0,0,0,.35)]"
     >
-      <div className="relative h-[188px]" style={coverStyle(trip)}>
+      <div ref={coverRef} className="relative h-[188px]" style={{ backgroundImage: entityGradient(trip.id) }}>
+        {cover.src && <img src={cover.src} alt={trip.title} className="absolute inset-0 h-full w-full object-cover" onError={cover.onError} />}
+        <TripCoverCredit attribution={cover.attribution} className="bottom-16 end-2" />
         <div className="absolute inset-0 bg-[image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,0)_42%,rgba(0,0,0,.55))]" />
         <CoverBadge label={badge} offset={12} />
         <div className="absolute end-3 top-3 flex gap-[7px]">

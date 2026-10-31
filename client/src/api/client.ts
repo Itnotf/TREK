@@ -1282,8 +1282,7 @@ export const mapsApi = {
     signal?: AbortSignal,
   ) => apiClient.post('/maps/enrichment', body, { signal, timeout: 25000 })
       .then(r => checkInDev(mapsPlaceEnrichmentResultSchema, r.data, 'maps.placeEnrichment')),
-  // Author + licence for a picture already stored in the photo cache, keyed by
-  // the cache key embedded in its proxy URL. Local read, no provider call.
+  // Author/licence by the cache key in a proxy URL: local read, no provider call.
   placePhotoCredit: (key: string) =>
     apiClient.get(`/maps/enrichment/credit/${encodeURIComponent(key)}`).then(r => r.data as { credit: string | null }),
   // Cold OSM identity and Wikimedia fetches can outlast the shared 8s deadline.
