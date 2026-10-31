@@ -4,6 +4,7 @@ import { mapsApi } from '../api/client'
 interface PhotoEntry {
   photoUrl: string | null
   thumbDataUrl: string | null
+  attribution?: string | null
 }
 
 const cache = new Map<string, PhotoEntry>()
@@ -129,7 +130,7 @@ export function fetchPhoto(
   inFlight.add(cacheKey)
   void acquireRequestSlot().then(() =>
     mapsApi.placePhoto(photoId, lat, lng, name)
-      .then(async (data: { photoUrl?: string }) => {
+      .then(async (data: { photoUrl?: string; attribution?: string | null }) => {
         const photoUrl = data.photoUrl || null
         if (!photoUrl) {
           const entry: PhotoEntry = { photoUrl: null, thumbDataUrl: null }
@@ -140,7 +141,7 @@ export function fetchPhoto(
         }
 
         // Store URL first — sidebar can show immediately
-        const entry: PhotoEntry = { photoUrl, thumbDataUrl: null }
+        const entry: PhotoEntry = { photoUrl, thumbDataUrl: null, attribution: data.attribution ?? null }
         cache.set(cacheKey, entry)
         callback?.(entry)
         notify(cacheKey, entry)

@@ -2367,19 +2367,10 @@ describe('getPlacePhoto (fetch stubbed)', () => {
     'MAPS-044h: skips Google for the OSM id %s even when an API key is configured',
     async (osmId) => {
       mockDbGet.mockReturnValueOnce({ maps_api_key: 'gkey' });
-      const fetchMock = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({ query: { pages: { '1': { thumbnail: { source: 'https://wiki.org/osm.jpg' } } } } }),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          arrayBuffer: async () => new ArrayBuffer(90),
-        });
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ query: { pages: {} } }) });
       vi.stubGlobal('fetch', fetchMock);
       const result = await svc.getPlacePhoto(1, osmId, 36.7617, -3.8448, 'Cueva de Nerja');
-      expect(result.photoUrl).toBe(`/api/maps/place-photo/${encodeURIComponent(osmId)}/bytes`);
+      expect(result.photoUrl).toBeNull();
       const requested = fetchMock.mock.calls.map((call) => String(call[0]));
       expect(requested.some((url) => url.includes('places.googleapis.com'))).toBe(false);
     },

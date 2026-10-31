@@ -1,36 +1,13 @@
 import type { ItineraryPlan } from '@trek/shared';
-import { useId, useRef } from 'react';
+import { useId } from 'react';
 
 import { useTranslation } from '../../i18n';
 import { PlanContents, PlanStay, PlanStop } from '../Assistant/cards/home/TripPlanContents';
-import { useFoundPlacePhoto } from '../Assistant/useFoundPlacePhoto';
+import { TripGuideCover, TripGuidePlace } from './TripGuidePhotos';
 
 const prose = 'whitespace-pre-wrap text-body leading-relaxed text-content-secondary [overflow-wrap:anywhere]';
 const disclosure =
   'min-h-11 cursor-pointer content-center rounded text-body font-medium text-content underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
-
-function GuidePlace({ stop }: { stop: ItineraryPlan['days'][number]['stops'][number] }) {
-  const { t } = useTranslation();
-  const ref = useRef<HTMLLIElement>(null);
-  const photo = useFoundPlacePhoto({ name: stop.name, photoKey: stop.location?.place_id, ...stop.location }, ref);
-  return (
-    <li ref={ref} className="py-4">
-      {photo && (
-        <img src={photo} alt={stop.name} loading="lazy" className="mb-3 max-h-64 w-full rounded-xl object-cover" />
-      )}
-      <h4 className="text-body font-semibold text-content [overflow-wrap:anywhere]">{stop.name}</h4>
-      <p className="mb-2 mt-1 text-caption text-content-muted">
-        {[
-          stop.city,
-          stop.duration_minutes > 0 ? t('dawarich.duration.minutes', { minutes: stop.duration_minutes }) : null,
-        ]
-          .filter(Boolean)
-          .join(' · ')}
-      </p>
-      <p className={prose}>{stop.description}</p>
-    </li>
-  );
-}
 
 /** One confirmed plan supplies both the reading view and its executable daily schedule. */
 export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
@@ -38,8 +15,16 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
   const prefix = useId();
   const guide = plan.guide;
   if (!guide) return <PlanContents plan={plan} />;
+  const coverStops = plan.days
+    .flatMap((day) => day.stops)
+    .filter((stop) => stop.location && (!stop.kind || stop.kind === 'visit' || stop.kind === 'activity'))
+    .slice(0, 3);
   return (
     <div className="min-w-0 text-content">
+      <TripGuideCover
+        key={coverStops.map((stop) => `${stop.location?.place_id}:${stop.name}`).join('|')}
+        stops={coverStops}
+      />
       <nav aria-label={t('trip.guide.days')} className="flex flex-wrap gap-2 border-y border-edge-faint py-3">
         {plan.days.map((day, index) => (
           <a
@@ -79,7 +64,7 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
               {day.stops
                 .filter((stop) => !stop.kind || stop.kind === 'visit' || stop.kind === 'activity')
                 .map((stop, i) => (
-                  <GuidePlace key={stop.id ?? i} stop={stop} />
+                  <TripGuidePlace key={stop.id ?? i} stop={stop} />
                 ))}
             </ul>
             {day.guide && (

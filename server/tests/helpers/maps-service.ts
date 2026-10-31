@@ -42,7 +42,7 @@ export function buildMapsParts(
   const osm = new OsmClient();
   const wiki = new WikimediaClient();
   const selector = new PlacesProviderSelector(appSettings, users, googleQuota);
-  const photos = new PlacePhotoResolver(photoCache, places, google, wiki, selector);
+  const photos = new PlacePhotoResolver(photoCache, places, google, wiki, selector, osm);
   const links = new MapsUrlResolver(osm);
   const details = new PlaceDetailsResolver(placeDetailsCache, google, osm, selector);
   const along = new PoisAlongResolver(osm);

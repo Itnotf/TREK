@@ -8,6 +8,7 @@ import type { PlacesRepository } from '../../../src/db/repositories/Places.repos
 import { PlacePhotoResolver } from '../../../src/nest/maps/place-photo.resolver';
 import type { PlacesProviderSelector } from '../../../src/nest/maps/places-provider.selector';
 import type { GooglePlacesClient } from '../../../src/nest/maps/providers/google-places.provider';
+import type { OsmClient } from '../../../src/nest/maps/providers/osm.client';
 import type { WikimediaClient } from '../../../src/nest/maps/providers/wikimedia.client';
 import type { PlacePhotoCacheService } from '../../../src/nest/place-photos/place-photo-cache.service';
 
@@ -37,7 +38,11 @@ function resolver(
 ) {
   const places = { setImageUrlIfUnset: vi.fn(async () => 1) };
   const google = { firstPhoto: vi.fn(async () => googleOutcome) };
-  const wiki = { downloadPhoto: vi.fn(async () => wikiOutcome) };
+  const wiki = { downloadPhoto: vi.fn(async () => wikiOutcome), downloadOsmPhoto: vi.fn(async () => wikiOutcome) };
+  const osm = {
+    elementDetails: vi.fn(async () => ({ name: '元通古镇', address: '元通古镇, 锦江路, Yuantong' })),
+    lookupNominatim: vi.fn(async () => null),
+  };
   const selector = { getMapsKey: vi.fn(async () => key) };
   const r = new PlacePhotoResolver(
     c as unknown as PlacePhotoCacheService,
@@ -45,11 +50,36 @@ function resolver(
     google as unknown as GooglePlacesClient,
     wiki as unknown as WikimediaClient,
     selector as unknown as PlacesProviderSelector,
+    osm as unknown as OsmClient,
   );
-  return { r, places, google, wiki };
+  return { r, places, google, wiki, osm };
 }
 
 describe('PlacePhotoResolver', () => {
+  it('retries old OSM misses with verified identity without changing the confirmed itinerary', async () => {
+    const c = cache({ getErrored: vi.fn(async (key: string) => key === 'relation:20062385') });
+    const { r, wiki, osm, places } = resolver(c, { kind: 'photo', bytes: Buffer.from([1]), attribution: 'A' });
+    expect((await r.resolve(1, 'relation:20062385', 30.73, 103.62, 'AI activity label')).photoUrl).toBe(
+      '/api/maps/place-photo/relation%3A20062385/bytes',
+    );
+    expect(osm.elementDetails).toHaveBeenCalledWith('relation:20062385', 'en');
+    expect(wiki.downloadOsmPhoto).toHaveBeenCalledWith(30.73, 103.62, {
+      name: '元通古镇',
+      address: '元通古镇, 锦江路, Yuantong',
+      photo_localities: [],
+    });
+    expect(wiki.downloadPhoto).not.toHaveBeenCalled();
+    expect(c.put).toHaveBeenCalled();
+    expect(places.setImageUrlIfUnset).not.toHaveBeenCalled();
+  });
+
+  it('remembers new OSM misses under the versioned negative key', async () => {
+    const c = cache();
+    const { r } = resolver(c, { kind: 'none' });
+    await r.resolve(1, 'node:5815555248', 30.81, 103.55);
+    expect(c.markError).toHaveBeenCalledWith('node:5815555248~osm-photo-v2', 'no-photo');
+  });
+
   it('PHOTO-R-001: a Wikimedia picture the disk cache cannot store counts as a provider failure', async () => {
     const c = cache({
       put: vi.fn(async () => {
