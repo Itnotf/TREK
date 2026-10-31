@@ -41,6 +41,8 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': '行程草稿載入失敗，請重試。',
   'assistant.plan.applyFailed': '暫時無法建立旅行，請檢查最新一版行程後重試。',
   'assistant.plan.unverified': '確切位置尚未核實',
+  'assistant.plan.share': '一起討論這份方案',
+  'assistant.plan.shareHint': '確認前，先把這份行程分享到旅行空間。你的私人對話仍會保密。',
 };
 
 export default assistantHome;

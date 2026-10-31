@@ -165,7 +165,14 @@ export class DaysService {
   }
 
   async canEdit(trip: Trip, user: User): Promise<boolean> {
-    return this.permissions.checkPermission('day_edit', user.role, trip.user_id, user.id, trip.user_id !== user.id);
+    return this.permissions.checkPermission(
+      'day_edit',
+      user.role,
+      trip.user_id,
+      user.id,
+      trip.user_id !== user.id,
+      trip.id,
+    );
   }
 
   broadcast<E extends TrekWsTripEventName>(

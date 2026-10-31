@@ -70,7 +70,7 @@ export function useTripPlan(card: TripPlanCard) {
   const confirm = async () => {
     if (!draft || !canApply || busy.current) return;
     if (draft.created_trip_id) {
-      openTrip(draft.created_trip_id);
+      onOpen?.({ kind: 'page', path: `/trips/${draft.created_trip_id}/planning` });
       return;
     }
     busy.current = true;
@@ -94,5 +94,33 @@ export function useTripPlan(card: TripPlanCard) {
     }
   };
 
-  return { draft, loading, error, applying, stale, offline, canApply, confirm, retry: () => setReload((n) => n + 1) };
+  const share = async () => {
+    if (!draft || !canApply || busy.current) return;
+    busy.current = true;
+    setApplying(true);
+    setFailure(null);
+    try {
+      const id = draft.created_trip_id ?? (await tripPlanRepo.share(draft.id, draft.revision));
+      setDraft((current) => (current ? { ...current, created_trip_id: id } : current));
+      onOpen?.({ kind: 'page', path: `/trips/${id}/planning` });
+    } catch (err) {
+      setFailure({ request, kind: isAxiosError(err) && err.response?.status === 410 ? 'unavailable' : 'apply' });
+    } finally {
+      busy.current = false;
+      setApplying(false);
+    }
+  };
+
+  return {
+    draft,
+    loading,
+    error,
+    applying,
+    stale,
+    offline,
+    canApply,
+    confirm,
+    share,
+    retry: () => setReload((n) => n + 1),
+  };
 }

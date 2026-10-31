@@ -1133,7 +1133,7 @@ export class CollectionsService {
     const trip = await this.trips.findAccessible(body.trip_id, userId);
     if (!trip) httpError(404, 'Trip not found');
     const role = (await this.users.getRole(userId)) ?? 'user';
-    if (!(await this.permissions.checkPermission('place_edit', role, trip.user_id, userId, trip.user_id !== userId))) {
+    if (!(await this.permissions.checkPermission('place_edit', role, trip.user_id, userId, trip.user_id !== userId, body.trip_id))) {
       httpError(403, 'Not allowed to edit this trip');
     }
 

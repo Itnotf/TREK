@@ -41,6 +41,8 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'โหลดร่างนี้ไม่ได้ โปรดลองอีกครั้ง',
   'assistant.plan.applyFailed': 'สร้างทริปไม่ได้ โปรดตรวจสอบร่างล่าสุดแล้วลองอีกครั้ง',
   'assistant.plan.unverified': 'ยังไม่ได้ตรวจสอบตำแหน่งที่แน่นอน',
+  'assistant.plan.share': 'พูดคุยแผนนี้ด้วยกัน',
+  'assistant.plan.shareHint': 'แชร์แผนการเดินทางนี้ในพื้นที่ทริปก่อนยืนยัน บทสนทนาส่วนตัวของคุณจะยังเป็นส่วนตัว',
 };
 
 export default assistantHome;

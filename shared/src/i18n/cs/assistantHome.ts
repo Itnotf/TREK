@@ -38,10 +38,14 @@ const assistantHome: TranslationStrings = {
     'Chcete něco změnit? Napište mi do chatu a návrh upravím. Potvrďte ho, až budete spokojeni.',
   'assistant.plan.stale': 'Níže je k dispozici novější verze. Pro vytvoření cesty potvrďte nejnovější verzi.',
   'assistant.plan.confirm': 'Potvrdit a vytvořit cestu',
-  'assistant.plan.created': 'Tento návrh byl uložen jako cesta.',
+  'assistant.plan.created':
+    'Tento koncept je propojen s cestou. Otevřete ji a diskutujte o společném plánu nebo ho upravte.',
   'assistant.plan.loadFailed': 'Tento návrh se nepodařilo načíst. Zkuste to znovu.',
   'assistant.plan.applyFailed': 'Cestu se nepodařilo vytvořit. Zkontrolujte nejnovější návrh a zkuste to znovu.',
   'assistant.plan.unverified': 'Přesná poloha zatím nebyla ověřena',
+  'assistant.plan.share': 'Probrat tento plán společně',
+  'assistant.plan.shareHint':
+    'Sdílejte itinerář v prostoru cesty ještě před potvrzením. Váš soukromý rozhovor zůstane soukromý.',
 };
 
 export default assistantHome;

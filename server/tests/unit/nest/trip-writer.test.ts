@@ -76,7 +76,7 @@ describe('requireTripWrite', () => {
     ).toBe(trip);
     // The id reaches the lookup as given; the owner is no member of their own trip.
     expect(findAccessible).toHaveBeenCalledWith('5', 1);
-    expect(checkPermission).toHaveBeenCalledWith('day_edit', 'user', 1, 1, false);
+    expect(checkPermission).toHaveBeenCalledWith('day_edit', 'user', 1, 1, false, '5');
   });
 
   it('refuses an invisible trip with 404, before asking about the permission', async () => {

@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.title': 'Cùng lên kế hoạch',
+  'trip.planning.shortTitle': 'Kế hoạch',
   'trip.guide.current': 'Lịch trình hiện tại',
   'trip.guide.currentHelp': 'Địa điểm, thời gian và chỗ ở theo lịch trình từng ngày.',
   'trip.guide.original': 'Cẩm nang ban đầu · tham khảo',

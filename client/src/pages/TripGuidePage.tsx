@@ -46,7 +46,7 @@ export default function TripGuidePage() {
           </Link>
         </div>
         {current && <TripNavigation tripId={tripId} />}
-        <h1 className="text-2xl font-semibold leading-snug text-content [overflow-wrap:anywhere]">
+        <h1 className="text-title font-semibold leading-snug text-content [overflow-wrap:anywhere]">
           {current?.title ?? t('trip.guide.title')}
         </h1>
         {state.loading && (
@@ -94,7 +94,7 @@ export default function TripGuidePage() {
               <TripGuideContents plan={plan} />
             ) : (
               <>
-                <h2 className="mb-3 text-lg font-semibold">{t('trip.guide.current')}</h2>
+                <h2 className="mb-3 text-subtitle font-semibold">{t('trip.guide.current')}</h2>
                 <CurrentTripGuide current={current} original={plan ?? null} />
                 {plan && (
                   <details className="mt-8 border-t border-edge-faint py-3">

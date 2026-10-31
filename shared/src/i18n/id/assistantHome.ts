@@ -44,6 +44,9 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Draf ini tidak dapat dimuat. Silakan coba lagi.',
   'assistant.plan.applyFailed': 'Perjalanan tidak dapat dibuat. Periksa draf terbaru dan coba lagi.',
   'assistant.plan.unverified': 'Lokasi tepatnya belum diverifikasi',
+  'assistant.plan.share': 'Diskusikan rencana ini bersama',
+  'assistant.plan.shareHint':
+    'Bagikan rencana perjalanan ini ke ruang perjalanan sebelum mengonfirmasinya. Percakapan pribadimu tetap bersifat pribadi.',
 };
 
 export default assistantHome;

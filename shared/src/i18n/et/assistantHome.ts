@@ -38,10 +38,13 @@ const assistantHome: TranslationStrings = {
     'Soovid midagi muuta? Kirjuta mulle vestluses ja uuendan kavandit. Kinnita see, kui oled rahul.',
   'assistant.plan.stale': 'Allpool on saadaval uuem versioon. Reisi loomiseks kinnita uusim versioon.',
   'assistant.plan.confirm': 'Kinnita ja loo reis',
-  'assistant.plan.created': 'See kavand on reisina salvestatud.',
+  'assistant.plan.created': 'See mustand on reisiga seotud. Avage reis, et ühist plaani arutada ja muuta.',
   'assistant.plan.loadFailed': 'Seda kavandit ei saanud laadida. Proovi uuesti.',
   'assistant.plan.applyFailed': 'Reisi ei saanud luua. Kontrolli uusimat kavandit ja proovi uuesti.',
   'assistant.plan.unverified': 'Täpset asukohta pole veel kontrollitud',
+  'assistant.plan.share': 'Arutame seda plaani koos',
+  'assistant.plan.shareHint':
+    'Jagage reisikava enne kinnitamist reisi ühises ruumis. Teie privaatne vestlus jääb privaatseks.',
 };
 
 export default assistantHome;

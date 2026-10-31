@@ -39,10 +39,13 @@ const assistantHome: TranslationStrings = {
     'Nəyisə dəyişmək istəyirsiniz? Çatda mənə yazın, qaralamanı yeniləyim. Razı qaldıqda təsdiqləyin.',
   'assistant.plan.stale': 'Aşağıda daha yeni versiya var. Səfərinizi yaratmaq üçün ən son versiyanı təsdiqləyin.',
   'assistant.plan.confirm': 'Təsdiqlə və səfəri yarat',
-  'assistant.plan.created': 'Bu qaralama səfər kimi saxlanıldı.',
+  'assistant.plan.created':
+    'Bu qaralama bir səyahətlə əlaqələndirilib. Ortaq planı müzakirə etmək və yeniləmək üçün onu açın.',
   'assistant.plan.loadFailed': 'Bu qaralamanı yükləmək mümkün olmadı. Yenidən cəhd edin.',
   'assistant.plan.applyFailed': 'Səfəri yaratmaq mümkün olmadı. Son qaralamanı yoxlayıb yenidən cəhd edin.',
   'assistant.plan.unverified': 'Dəqiq məkan hələ yoxlanılmayıb',
+  'assistant.plan.share': 'Bu planı birlikdə müzakirə edin',
+  'assistant.plan.shareHint': 'Təsdiqdən əvvəl bu marşrutu səyahət məkanında paylaşın. Şəxsi söhbətiniz gizli qalır.',
 };
 
 export default assistantHome;

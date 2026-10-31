@@ -53,7 +53,7 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
         ))}
       </nav>
       <section className="py-5" aria-label={t('trip.guide.route')}>
-        <h2 className="text-lg font-semibold">{t('trip.guide.route')}</h2>
+        <h2 className="text-subtitle font-semibold">{t('trip.guide.route')}</h2>
         <p className="mt-2 text-body font-medium leading-relaxed [overflow-wrap:anywhere]">{guide.route}</p>
         <p className={`mt-3 ${prose}`}>{guide.rationale}</p>
         <h3 className="mt-5 text-body font-semibold">{t('trip.guide.highlights')}</h3>
@@ -70,7 +70,7 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
         const title = day.title.replace(/^(?:第[0-9一二三四五六七八九十]+天|day\s*\d+)\s*[·|｜:：\-–—]?\s*/i, '');
         return (
           <section key={index} id={`${prefix}-day-${index}`} className="scroll-mt-24 border-b border-edge-faint py-6">
-            <h2 className="text-lg font-semibold leading-snug [overflow-wrap:anywhere]">
+            <h2 className="text-subtitle font-semibold leading-snug [overflow-wrap:anywhere]">
               {t('planner.dayN', { n: index + 1 })}
               {title && ` · ${title}`}
             </h2>
@@ -123,7 +123,7 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
       })}
 
       <section className="border-b border-edge-faint py-6" aria-label={t('trip.guide.budget')}>
-        <h2 className="text-lg font-semibold">{t('trip.guide.budget')}</h2>
+        <h2 className="text-subtitle font-semibold">{t('trip.guide.budget')}</h2>
         <p className="mt-2 text-caption text-content-muted">
           {guide.budget.scope} · {plan.currency}
         </p>
@@ -139,7 +139,7 @@ export function TripGuideContents({ plan }: { plan: ItineraryPlan }) {
         </dl>
       </section>
       <section className="py-6" aria-label={t('trip.guide.preparation')}>
-        <h2 className="text-lg font-semibold">{t('trip.guide.preparation')}</h2>
+        <h2 className="text-subtitle font-semibold">{t('trip.guide.preparation')}</h2>
         <ul className="mt-3 list-disc space-y-2 ps-5 text-body leading-relaxed text-content-secondary">
           {guide.preparation.map((item, i) => (
             <li key={i} className="[overflow-wrap:anywhere]">

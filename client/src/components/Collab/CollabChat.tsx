@@ -10,10 +10,11 @@ import { ReactionMenu } from './CollabChatReactionMenu'
 interface CollabChatProps {
   tripId: number
   currentUser: User
+  canEdit?: boolean
 }
 
-export default function CollabChat({ tripId, currentUser }: CollabChatProps) {
-  const S = useCollabChat(tripId, currentUser)
+export default function CollabChat({ tripId, currentUser, canEdit: canEditOverride }: CollabChatProps) {
+  const S = useCollabChat(tripId, currentUser, canEditOverride)
   const { t, canEdit, loading, text, replyTo, setReplyTo, sending, showEmoji, setShowEmoji, reactMenu, setReactMenu, containerRef, textareaRef, emojiBtnRef, imageInputRef, imageFiles, imagePreviews, uploadProgress, addImageFiles, removeImage, handlePaste, handleDrop, handleTextChange, handleSend, handleKeyDown, handleReact, handleEmojiSelect } = S
   if (loading) {
     return (
@@ -77,6 +78,7 @@ export default function CollabChat({ tripId, currentUser }: CollabChatProps) {
               opacity: canEdit ? 1 : 0.5,
             }}
             placeholder={t('collab.chat.placeholder')}
+            aria-label={t('collab.chat.placeholder')}
             value={text}
             onChange={handleTextChange}
             onKeyDown={handleKeyDown}
@@ -85,7 +87,7 @@ export default function CollabChat({ tripId, currentUser }: CollabChatProps) {
 
           {/* Send */}
           {canEdit && (
-            <button type="button" onClick={handleSend} disabled={(!text.trim() && !imageFiles.length) || sending} style={{
+            <button type="button" aria-label={t('collab.chat.send')} onClick={handleSend} disabled={(!text.trim() && !imageFiles.length) || sending} style={{
               width: 34, height: 34, borderRadius: '50%', border: 'none',
               background: text.trim() || imageFiles.length ? 'var(--accent)' : 'var(--border-primary)',
               color: text.trim() || imageFiles.length ? 'var(--accent-text)' : 'var(--text-faint)', display: 'flex', alignItems: 'center', justifyContent: 'center',

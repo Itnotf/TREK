@@ -100,8 +100,8 @@ function ownerTrip(overrides: Parameters<typeof createTrip>[2] = {}) {
 
 describe('ReservationsService (DI-native, real SQL)', () => {
   it('RESV-SVC-001: canEdit delegates to checkPermission with reservation_edit', async () => {
-    await svc.canEdit({ user_id: 2 } as never, { id: 1, role: 'user' } as never);
-    expect(checkPermission).toHaveBeenCalledWith('reservation_edit', 'user', 2, 1, true);
+    await svc.canEdit({ id: 5, user_id: 2 } as never, { id: 1, role: 'user' } as never);
+    expect(checkPermission).toHaveBeenCalledWith('reservation_edit', 'user', 2, 1, true, 5);
   });
 
   describe('create', () => {

@@ -1,3 +1,7 @@
+import { TripMembers } from '../entities/TripMembers.entity';
+import { TripPlanningCollaborators } from '../entities/TripPlanningCollaborators.entity';
+import { TripPlanningRevisions } from '../entities/TripPlanningRevisions.entity';
+import { Users } from '../entities/Users.entity';
 import { QueryFlag } from '@mikro-orm/core';
 import type { Trips } from '../entities/Trips.entity';
 import { coalesceParam, currentTimestamp, nowDateOffset } from '../dialect/sql-functions';
@@ -82,6 +86,24 @@ export interface ActiveTripRow {
 type ActiveTripKyselyDB = Pick<DB, 'trips' | 'trip_members'>;
 
 export class TripsRepository extends TrekRepository<Trips> {
+  /** Current account roles for planning, projected here beside the ordinary trip-access projection. */
+  async planningAccess(tripId: number, userId: number) {
+    const trip = await this.findAccessible(tripId, userId);
+    if (!trip) return null;
+    const em = this.getEntityManager();
+    const memberIds = await em.getRepository(TripMembers).rosterUserIds(tripId);
+    const accounts = await em.getRepository(Users).find({ id: { $in: [...memberIds] }, is_guest: 0 });
+    const members = accounts.map((user) => ({ id: user.id, username: user.display_name || user.username }));
+    const designated = await em.getRepository(TripPlanningCollaborators).find({ trip: tripId });
+    const collaborators = designated.map((row) => row.user.id).filter((id) => memberIds.has(id));
+    const managed = !!(await em.getRepository(TripPlanningRevisions).findOne({ trip: tripId }));
+    return { trip, members, collaborators, managed };
+  }
+
+  async hasSharedPlanning(tripId: number): Promise<boolean> {
+    return !!(await this.getEntityManager().getRepository(TripPlanningRevisions).findOne({ trip: tripId }));
+  }
+
   /**
    * The `LEFT JOIN trip_members m ON m.trip_id = t.id AND m.user_id = ?
    * WHERE (t.user_id = ? OR m.user_id IS NOT NULL)` half `findAccessible`

@@ -1,4 +1,8 @@
-import { itineraryApplyResponseSchema, itineraryDraftResponseSchema } from '@trek/shared';
+import {
+  itineraryApplyResponseSchema,
+  itineraryDraftResponseSchema,
+  tripPlanningShareDraftResponseSchema,
+} from '@trek/shared';
 
 import { tripPlanApi } from '../api/tripPlan';
 import { requireOnline } from './onlineOnly';
@@ -12,5 +16,9 @@ export const tripPlanRepo = {
   async apply(id: number, revision: number) {
     requireOnline();
     return itineraryApplyResponseSchema.parse(await tripPlanApi.apply(id, { revision })).trip;
+  },
+  async share(id: number, revision: number) {
+    requireOnline();
+    return tripPlanningShareDraftResponseSchema.parse(await tripPlanApi.share(id, { revision })).trip_id;
   },
 };

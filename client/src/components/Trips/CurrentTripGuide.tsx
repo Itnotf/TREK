@@ -113,7 +113,7 @@ export default function CurrentTripGuide({
         const title = day.title?.replace(/^(?:第[0-9一二三四五六七八九十]+天|day\s*\d+)\s*[·|｜:：\-–—]?\s*/i, '');
         return (
           <section key={day.id} id={`${prefix}-day-${day.id}`} className="scroll-mt-24 border-b border-edge-faint py-6">
-            <h2 className="text-lg font-semibold leading-snug [overflow-wrap:anywhere]">
+            <h2 className="text-subtitle font-semibold leading-snug [overflow-wrap:anywhere]">
               {t('planner.dayN', { n: index + 1 })}
               {title && ` · ${title}`}
             </h2>
@@ -201,7 +201,7 @@ export default function CurrentTripGuide({
       })}
       {!!current.reservations.length && (
         <section className="py-6">
-          <h2 className="text-lg font-semibold">{t('trip.tabs.reservations')}</h2>
+          <h2 className="text-subtitle font-semibold">{t('trip.tabs.reservations')}</h2>
           {current.reservations.map((booking) => (
             <BookingDetails key={booking.id} booking={booking} />
           ))}

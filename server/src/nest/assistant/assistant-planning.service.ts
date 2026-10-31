@@ -39,3 +39,6 @@ export class AssistantPlanningService {
     };
   }
 }
+
+export { readTravelSource } from './assistant-travel-source';
+export { userTravelLinks } from './assistant-planning-tools';

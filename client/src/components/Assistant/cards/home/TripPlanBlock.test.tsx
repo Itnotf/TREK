@@ -42,6 +42,20 @@ afterEach(() => {
 });
 
 describe('TripPlanBlock', () => {
+  it('shares only the displayed itinerary before formal confirmation and opens the same trip space', async () => {
+    vi.spyOn(tripPlanRepo, 'get').mockResolvedValue(buildItineraryDraft());
+    const apply = vi.spyOn(tripPlanRepo, 'apply');
+    const share = vi.spyOn(tripPlanRepo, 'share').mockResolvedValue(31);
+    const onOpen = show();
+    fireEvent.click(await screen.findByRole('button', { name: 'Discuss this plan together' }));
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith({ kind: 'page', path: '/trips/31/planning' }));
+    expect(share).toHaveBeenCalledExactlyOnceWith(7, 1);
+    expect(apply).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(share).toHaveBeenCalledOnce();
+    expect(onOpen).toHaveBeenLastCalledWith({ kind: 'page', path: '/trips/31/planning' });
+  });
+
   it('opens the full guide after confirmation and keeps its descriptions visible', async () => {
     const draft = buildGuideDraft();
     if (!draft.plan.guide) throw new Error('Guide fixture missing');

@@ -144,6 +144,9 @@ import { TripJournalLinksSchema } from './TripJournalLinks.entity';
 import { TripMemberRemovalsSchema } from './TripMemberRemovals.entity';
 import { TripMembersSchema } from './TripMembers.entity';
 import { TripPhotosSchema } from './TripPhotos.entity';
+import { TripPlanPublicationsSchema } from './TripPlanPublications.entity';
+import { TripPlanningCollaboratorsSchema } from './TripPlanningCollaborators.entity';
+import { TripPlanningRevisionsSchema } from './TripPlanningRevisions.entity';
 import { TripsSchema } from './Trips.entity';
 import { UserNoticeDismissalsSchema } from './UserNoticeDismissals.entity';
 import { UserSessionsSchema } from './UserSessions.entity';
@@ -310,6 +313,9 @@ export const ALL_ENTITIES: readonly EntitySchema[] = [
   TripMemberRemovalsSchema,
   TripMembersSchema,
   TripPhotosSchema,
+  TripPlanPublicationsSchema,
+  TripPlanningCollaboratorsSchema,
+  TripPlanningRevisionsSchema,
   TripsSchema,
   UserNoticeDismissalsSchema,
   UserSessionsSchema,

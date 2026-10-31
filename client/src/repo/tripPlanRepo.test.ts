@@ -38,13 +38,30 @@ describe('tripPlanRepo', () => {
     await expect(tripPlanRepo.apply(7, 1)).rejects.toThrow();
   });
 
+  it('shares the exact revision and validates the returned trip before navigation', async () => {
+    const sent: unknown[] = [];
+    server.use(
+      http.post('/api/assistant/itinerary-drafts/7/share', async ({ request }) => {
+        sent.push(await request.json());
+        return HttpResponse.json({ trip_id: 31 });
+      })
+    );
+    await expect(tripPlanRepo.share(7, 1)).resolves.toBe(31);
+    expect(sent).toEqual([{ revision: 1 }]);
+    vi.spyOn(tripPlanApi, 'share').mockResolvedValue({ trip_id: -1 });
+    await expect(tripPlanRepo.share(7, 1)).rejects.toThrow();
+  });
+
   it('makes no requests while offline', async () => {
     setForcedOffline(true);
     const get = vi.spyOn(tripPlanApi, 'get');
     const apply = vi.spyOn(tripPlanApi, 'apply');
+    const share = vi.spyOn(tripPlanApi, 'share');
     await expect(tripPlanRepo.get(7)).rejects.toBeInstanceOf(OnlineOnlyError);
     await expect(tripPlanRepo.apply(7, 1)).rejects.toBeInstanceOf(OnlineOnlyError);
+    await expect(tripPlanRepo.share(7, 1)).rejects.toBeInstanceOf(OnlineOnlyError);
     expect(get).not.toHaveBeenCalled();
     expect(apply).not.toHaveBeenCalled();
+    expect(share).not.toHaveBeenCalled();
   });
 });

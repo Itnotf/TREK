@@ -39,11 +39,15 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.stale':
     'Lent már elérhető egy újabb változat. Az utazás létrehozásához a legfrissebb változatot erősítsd meg.',
   'assistant.plan.confirm': 'Megerősítés és utazás létrehozása',
-  'assistant.plan.created': 'Ez a vázlat utazásként lett mentve.',
+  'assistant.plan.created':
+    'Ez a vázlat egy utazáshoz kapcsolódik. Nyisd meg a közös terv megbeszéléséhez és módosításához.',
   'assistant.plan.loadFailed': 'Nem sikerült betölteni ezt a vázlatot. Próbáld újra.',
   'assistant.plan.applyFailed':
     'Nem sikerült létrehozni az utazást. Ellenőrizd a legfrissebb vázlatot, és próbáld újra.',
   'assistant.plan.unverified': 'A pontos hely még nincs ellenőrizve',
+  'assistant.plan.share': 'Beszéljétek meg együtt ezt a tervet',
+  'assistant.plan.shareHint':
+    'Oszd meg az útitervet az utazás közös terében, mielőtt jóváhagyod. A privát beszélgetésed privát marad.',
 };
 
 export default assistantHome;

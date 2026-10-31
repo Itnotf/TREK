@@ -40,10 +40,14 @@ const assistantHome: TranslationStrings = {
     'Quer mudar alguma coisa? Diga no chat e eu atualizarei o rascunho. Confirme quando estiver satisfeito.',
   'assistant.plan.stale': 'Há uma versão mais recente abaixo. Confirme a versão mais recente para criar sua viagem.',
   'assistant.plan.confirm': 'Confirmar e criar viagem',
-  'assistant.plan.created': 'Este rascunho foi salvo como viagem.',
+  'assistant.plan.created':
+    'Este rascunho está vinculado a uma viagem. Abra-a para discutir e revisar o plano compartilhado.',
   'assistant.plan.loadFailed': 'Não foi possível carregar este rascunho. Tente novamente.',
   'assistant.plan.applyFailed': 'Não foi possível criar a viagem. Confira o rascunho mais recente e tente novamente.',
   'assistant.plan.unverified': 'A localização exata ainda não foi verificada',
+  'assistant.plan.share': 'Conversar sobre este plano juntos',
+  'assistant.plan.shareHint':
+    'Compartilhe este roteiro no espaço da viagem antes de confirmar. Sua conversa privada continua privada.',
 };
 
 export default assistantHome;

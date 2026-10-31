@@ -19,6 +19,7 @@ describe('TripNavigation', () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     render(<TripNavigation tripId={5} tabs={tabs} activeTab="plan" onChange={onChange} />);
+    expect(screen.getByRole('link', { name: 'Plan together' })).toHaveAttribute('href', '/trips/5/planning');
     expect(screen.getByRole('link', { name: 'Travel guide' })).toHaveAttribute('href', '/trips/5/guide');
     expect(screen.getByRole('button', { name: 'Daily itinerary' })).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Walking & outdoor routes' })).not.toBeInTheDocument();

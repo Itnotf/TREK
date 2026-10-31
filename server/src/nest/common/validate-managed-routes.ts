@@ -101,6 +101,7 @@ export const MANAGED_ROUTE_ALLOW_LIST: string[] = [
   'AssistantController.undo',
   'AssistantItineraryController.apply',
   'AssistantItineraryController.get',
+  'TripPlanningController.generate',
   'AssistantRendersController.upload',
   'AuthController.createMcpToken',
   'AuthController.validateKeys',

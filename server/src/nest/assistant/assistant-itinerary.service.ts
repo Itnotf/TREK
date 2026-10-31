@@ -244,6 +244,17 @@ export class AssistantItineraryService {
     return { trip: result.trip };
   }
 
+  /** A shared planning space adopts the plan only; no private conversation becomes shared. */
+  async markSharedTrip(userId: number, draftId: number, tripId: number): Promise<void> {
+    await this.uow.transactional(async () => {
+      const draft = await this.requireDraft(userId, draftId);
+      if (!(await this.trips.get(tripId, userId))) throw new DomainError(404, 'Trip not found');
+      if (draft.applied_trip_id && draft.applied_trip_id !== tripId)
+        throw new DomainError(409, 'This itinerary already belongs to another trip.');
+      await this.drafts.markApplied(draftId, tripId, dbNow());
+    });
+  }
+
   private async requireThread(userId: number, threadId: number): Promise<void> {
     if (!(await this.threads.findOwnedAtHome(threadId, userId))) {
       throw new DomainError(404, 'Conversation not found');

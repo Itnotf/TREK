@@ -38,7 +38,10 @@ const assistantHome: TranslationStrings = {
     'Want changes? Tell me in the chat and I will update the draft. Confirm when you are happy with it.',
   'assistant.plan.stale': 'A newer version is available below. Confirm the latest version to create your trip.',
   'assistant.plan.confirm': 'Confirm and create trip',
-  'assistant.plan.created': 'This draft has been saved as a trip.',
+  'assistant.plan.created': 'This draft is linked to a trip. Open it to discuss and revise the shared plan.',
+  'assistant.plan.share': 'Discuss this plan together',
+  'assistant.plan.shareHint':
+    'Share this itinerary in a trip space before confirming it. Your private conversation stays private.',
   'assistant.plan.unverified': 'Location not verified yet',
   'assistant.plan.loadFailed': 'Could not load this draft. Please try again.',
   'assistant.plan.applyFailed': 'Could not create the trip. Check the latest draft and try again.',

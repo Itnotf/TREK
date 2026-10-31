@@ -37,10 +37,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.editHint': 'هل تريد إجراء تعديلات؟ أخبرني في المحادثة وسأحدث المسودة. أكّدها عندما تكون راضيًا عنها.',
   'assistant.plan.stale': 'يتوفر إصدار أحدث أدناه. أكّد أحدث إصدار لإنشاء رحلتك.',
   'assistant.plan.confirm': 'تأكيد وإنشاء الرحلة',
-  'assistant.plan.created': 'تم حفظ هذه المسودة كرحلة.',
+  'assistant.plan.created': 'هذه المسودة مرتبطة برحلة. افتحها لمناقشة الخطة المشتركة وتعديلها.',
   'assistant.plan.loadFailed': 'تعذر تحميل هذه المسودة. يرجى المحاولة مرة أخرى.',
   'assistant.plan.applyFailed': 'تعذر إنشاء الرحلة. راجع أحدث مسودة وحاول مرة أخرى.',
   'assistant.plan.unverified': 'لم يتم التحقق من الموقع الدقيق بعد',
+  'assistant.plan.share': 'ناقشوا هذه الخطة معًا',
+  'assistant.plan.shareHint': 'شارك برنامج الرحلة في مساحة مشتركة قبل تأكيده. تبقى محادثتك الخاصة سرية.',
 };
 
 export default assistantHome;

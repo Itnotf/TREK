@@ -1,4 +1,4 @@
-import { BookOpen, ChevronDown } from 'lucide-react';
+import { BookOpen, ChevronDown, MessagesSquare } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { Link, useNavigate } from 'react-router';
 
@@ -40,6 +40,14 @@ export default function TripNavigation({
   };
   return (
     <nav aria-label={t('trip.navigation.label')} className="flex min-w-0 items-center gap-1">
+      <Link
+        to={`/trips/${tripId}/planning`}
+        aria-current={activeTab === 'planning' ? 'page' : undefined}
+        className={`inline-flex min-h-9 flex-none items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-caption font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${activeTab === 'planning' ? 'bg-accent text-accent-text' : 'text-content-muted hover:bg-surface-hover'}`}
+      >
+        <MessagesSquare size={15} aria-hidden="true" />
+        {t('trip.planning.title')}
+      </Link>
       <Link
         to={`/trips/${tripId}/guide`}
         aria-current={activeTab === 'guide' ? 'page' : undefined}

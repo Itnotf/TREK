@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.share': 'Dit plan samen bespreken',
+  'assistant.plan.shareHint':
+    'Deel dit reisplan in de reisruimte voordat je het bevestigt. Je privégesprek blijft privé.',
   'assistant.home.title': 'Je reizen',
   'assistant.home.welcome': 'Waarmee kan ik helpen?',
   'assistant.home.placeholder': 'Beschrijf je reis of plak een link naar een reisgids',

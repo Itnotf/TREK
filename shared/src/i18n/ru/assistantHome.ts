@@ -42,6 +42,9 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Не удалось загрузить этот черновик. Попробуйте ещё раз.',
   'assistant.plan.applyFailed': 'Не удалось создать поездку. Проверьте последний черновик и попробуйте ещё раз.',
   'assistant.plan.unverified': 'Точное расположение ещё не проверено',
+  'assistant.plan.share': 'Обсудить этот план вместе',
+  'assistant.plan.shareHint':
+    'Прежде чем подтвердить маршрут, поделитесь им в пространстве поездки. Ваша личная беседа останется закрытой.',
 };
 
 export default assistantHome;

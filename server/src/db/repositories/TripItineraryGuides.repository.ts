@@ -13,6 +13,8 @@ export class TripItineraryGuidesRepository extends TrekRepository<TripItineraryG
   }
 
   async saveConfirmed(tripId: number, plan: string, baseline_hash: string): Promise<void> {
-    await this.insert({ trip: tripId, plan, baseline_hash });
+    const previous = await this.findOne({ trip: tripId });
+    if (previous) await this.nativeUpdate({ id: previous.id }, { plan, baseline_hash });
+    else await this.insert({ trip: tripId, plan, baseline_hash });
   }
 }

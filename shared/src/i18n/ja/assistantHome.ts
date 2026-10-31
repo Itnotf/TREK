@@ -42,6 +42,9 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'この下書きを読み込めませんでした。もう一度お試しください。',
   'assistant.plan.applyFailed': '旅行を作成できませんでした。最新の下書きを確認して、もう一度お試しください。',
   'assistant.plan.unverified': '正確な場所はまだ確認できていません',
+  'assistant.plan.share': 'このプランをみんなで話し合う',
+  'assistant.plan.shareHint':
+    '確定する前に、この日程を旅行の共有スペースで共有しましょう。非公開の会話は公開されません。',
 };
 
 export default assistantHome;

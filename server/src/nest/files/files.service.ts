@@ -563,6 +563,10 @@ export class FilesService {
     await this.fileLinksRepo.deleteById(toRowId(linkId) ?? -1, toRowId(fileId) ?? -1);
   }
 
+  async hasAssignmentLinks(assignmentId: number): Promise<boolean> {
+    return (await this.fileLinksRepo.count({ assignment: assignmentId })) > 0;
+  }
+
   async getFileLinks(fileId: string | number) {
     return await this.fileLinksRepo.listForFileWithReservationTitle(toRowId(fileId) ?? -1);
   }

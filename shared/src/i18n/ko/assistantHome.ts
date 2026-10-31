@@ -42,6 +42,8 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': '이 초안을 불러오지 못했습니다. 다시 시도해 주세요.',
   'assistant.plan.applyFailed': '여행을 만들지 못했습니다. 최신 초안을 확인한 뒤 다시 시도해 주세요.',
   'assistant.plan.unverified': '정확한 위치가 아직 확인되지 않았습니다',
+  'assistant.plan.share': '이 계획을 함께 의논하기',
+  'assistant.plan.shareHint': '확정하기 전에 이 일정을 여행 공간에 공유하세요. 비공개 대화는 공개되지 않습니다.',
 };
 
 export default assistantHome;

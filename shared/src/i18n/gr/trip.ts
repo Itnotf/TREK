@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.shortTitle': 'Σχεδιασμός',
+  'trip.planning.title': 'Σχεδιάστε μαζί',
   'trip.guide.current': 'Τρέχον πρόγραμμα',
   'trip.guide.currentHelp': 'Οι τοποθεσίες, οι ώρες και η διαμονή ακολουθούν το ημερήσιο πρόγραμμα.',
   'trip.guide.original': 'Αρχικός οδηγός · αναφορά',

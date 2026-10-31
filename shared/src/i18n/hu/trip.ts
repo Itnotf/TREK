@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.shortTitle': 'Tervezés',
+  'trip.planning.title': 'Tervezzetek együtt',
   'trip.guide.current': 'Aktuális útiterv',
   'trip.guide.currentHelp': 'A helyek, időpontok és szállások a napi útitervet követik.',
   'trip.guide.original': 'Eredeti útikalauz · tájékoztató',

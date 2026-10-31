@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.title': '一起规划',
+  'trip.planning.shortTitle': '规划',
   'trip.guide.current': '当前旅行安排',
   'trip.guide.currentHelp': '地点、时间和住宿与每日行程保持一致。',
   'trip.guide.original': '最初的攻略 · 参考',

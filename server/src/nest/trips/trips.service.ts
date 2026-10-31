@@ -309,8 +309,8 @@ export class TripsService {
     return await this.em.getRepository(Trips).isOwner(tripId, userId);
   }
 
-  async can(action: string, role: string, ownerId: number | null, userId: number, isMember: boolean): Promise<boolean> {
-    return this.permissions.checkPermission(action, role, ownerId, userId, isMember);
+  async can(action: string, role: string, ownerId: number | null, userId: number, isMember: boolean, tripId?: string | number): Promise<boolean> {
+    return this.permissions.checkPermission(action, role, ownerId, userId, isMember, tripId);
   }
 
   broadcast<E extends TrekWsTripEventName>(tripId: string, event: E, payload: TrekWsPayload<E>, socketId: string | undefined): void {

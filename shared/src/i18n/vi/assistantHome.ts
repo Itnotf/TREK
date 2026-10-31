@@ -42,6 +42,9 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Không thể tải bản nháp này. Vui lòng thử lại.',
   'assistant.plan.applyFailed': 'Không thể tạo chuyến đi. Hãy kiểm tra bản nháp mới nhất rồi thử lại.',
   'assistant.plan.unverified': 'Vị trí chính xác chưa được xác minh',
+  'assistant.plan.share': 'Cùng thảo luận kế hoạch này',
+  'assistant.plan.shareHint':
+    'Chia sẻ lịch trình này trong không gian chuyến đi trước khi xác nhận. Cuộc trò chuyện riêng của bạn vẫn được giữ riêng tư.',
 };
 
 export default assistantHome;

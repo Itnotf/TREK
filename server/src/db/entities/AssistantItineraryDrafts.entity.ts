@@ -1,7 +1,8 @@
-import { EntityRepositoryType, type Opt, type Ref, defineEntity, p } from '@mikro-orm/core';
+import { Collection, EntityRepositoryType, type Opt, type Ref, defineEntity, p } from '@mikro-orm/core';
 import { AssistantItineraryDraftsRepository } from '../repositories/AssistantItineraryDrafts.repository';
 import { DbTimestampType } from '../types';
 import { AssistantThreads } from './AssistantThreads.entity';
+import { TripPlanningRevisions } from './TripPlanningRevisions.entity';
 import { Trips } from './Trips.entity';
 
 export class AssistantItineraryDrafts {
@@ -15,6 +16,7 @@ export class AssistantItineraryDrafts {
   applied_trip_id?: number | null;
   applied_at?: string | null;
   created_at!: string & Opt;
+  trip_planning_revisions_collection = new Collection<TripPlanningRevisions>(this);
 }
 
 export const AssistantItineraryDraftsSchema = defineEntity({
@@ -31,5 +33,6 @@ export const AssistantItineraryDraftsSchema = defineEntity({
     applied_trip_id: p.integer().nullable().persist(false).index('idx_assistant_itinerary_drafts_trip'),
     applied_at: p.type(DbTimestampType).nullable(),
     created_at: p.type(DbTimestampType).defaultRaw(`CURRENT_TIMESTAMP`),
+    trip_planning_revisions_collection: () => p.oneToMany(TripPlanningRevisions).mappedBy('sourceDraft').hidden(),
   },
 });

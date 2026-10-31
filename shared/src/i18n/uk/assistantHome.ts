@@ -42,6 +42,9 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Не вдалося завантажити цю чернетку. Спробуйте ще раз.',
   'assistant.plan.applyFailed': 'Не вдалося створити подорож. Перевірте останню чернетку й спробуйте ще раз.',
   'assistant.plan.unverified': 'Точне розташування ще не перевірено',
+  'assistant.plan.share': 'Обговорити цей план разом',
+  'assistant.plan.shareHint':
+    'Перш ніж підтвердити маршрут, поділіться ним у просторі подорожі. Ваша приватна розмова залишиться приватною.',
 };
 
 export default assistantHome;

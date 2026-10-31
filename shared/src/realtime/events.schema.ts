@@ -236,6 +236,7 @@ export const TREK_WS_EVENTS = {
 
   // ── Trip / members ───────────────────────────────────────────────────────
   'trip:updated': { scope: 'trip', payload: z.object({ trip: entity }) },
+  'planning:updated': { scope: 'trip', payload: z.object({ revision: z.number().int().nonnegative() }) },
   // Note the key is `id`, not `tripId` (the transport injects tripId anyway).
   'trip:deleted': { scope: 'trip', payload: z.object({ id }) },
   'member:added': { scope: 'trip', payload: z.object({ member: entity }) },

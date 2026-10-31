@@ -38,10 +38,13 @@ const assistantHome: TranslationStrings = {
     'Chcesz coś zmienić? Napisz mi na czacie, a zaktualizuję szkic. Zatwierdź go, gdy będzie Ci odpowiadać.',
   'assistant.plan.stale': 'Poniżej jest nowsza wersja. Zatwierdź najnowszą wersję, aby utworzyć podróż.',
   'assistant.plan.confirm': 'Zatwierdź i utwórz podróż',
-  'assistant.plan.created': 'Ten szkic został zapisany jako podróż.',
+  'assistant.plan.created': 'Ten szkic jest powiązany z podróżą. Otwórz ją, aby omówić i poprawić wspólny plan.',
   'assistant.plan.loadFailed': 'Nie udało się wczytać tego szkicu. Spróbuj ponownie.',
   'assistant.plan.applyFailed': 'Nie udało się utworzyć podróży. Sprawdź najnowszy szkic i spróbuj ponownie.',
   'assistant.plan.unverified': 'Dokładna lokalizacja nie została jeszcze zweryfikowana',
+  'assistant.plan.share': 'Omówcie ten plan razem',
+  'assistant.plan.shareHint':
+    'Udostępnij ten plan w przestrzeni podróży przed zatwierdzeniem. Twoja prywatna rozmowa pozostaje prywatna.',
 };
 
 export default assistantHome;
