@@ -349,6 +349,24 @@ describe('MSheet', () => {
       expect(screen.getByRole('alertdialog')).toBeInTheDocument();
     });
 
+    it('returns focus outside when discarding closes the entire form', () => {
+      function Controlled() {
+        const [open, setOpen] = React.useState(false);
+        return <><button onClick={() => setOpen(true)}>Open form</button><Form open={open} onClose={() => setOpen(false)} /></>;
+      }
+      render(<Controlled />);
+      const opener = screen.getByRole('button', { name: 'Open form' });
+      opener.focus();
+      fireEvent.click(opener);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      input.focus();
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(backdrop());
+      fireEvent.click(screen.getByRole('button', { name: /discard|common.discard/i }));
+      expect(document.activeElement).toBe(opener);
+    });
+
     it('FE-MOB-SHEET-020: a tap on the scrim asks before throwing a change away, and keep editing stays', () => {
       const onClose = vi.fn();
       render(<Form open onClose={onClose} />);

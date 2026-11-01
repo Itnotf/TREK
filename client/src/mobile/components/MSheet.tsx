@@ -117,7 +117,15 @@ export default function MSheet({
 
   // Move focus into the dialog on open, hand it back on close.
   useModalFocus(panelRef, open && rendered)
-  useModalFocus(keepEditingRef, open && asking)
+  useEffect(() => {
+    if (!open || !asking) return
+    const previous = document.activeElement as HTMLElement | null
+    keepEditingRef.current?.focus()
+    return () => {
+      // A closed form must not regain input focus during its exit animation.
+      if (panelRef.current?.dataset.mSheet === 'open') previous?.focus()
+    }
+  }, [open, asking])
 
   if (!rendered) return null
 
