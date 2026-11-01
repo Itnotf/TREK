@@ -548,13 +548,21 @@ export type AssistantWeather = z.infer<typeof assistantWeatherSchema>;
 export const ASSISTANT_FOLLOW_UPS_TOOL = 'suggest_follow_ups';
 /** The longest follow-up question the chat shows on one chip. */
 export const MAX_FOLLOW_UP_CHARS = 80;
+/** The longest clarification shown above its answer choices. */
+export const MAX_FOLLOW_UP_QUESTION_CHARS = 200;
 /** How many follow-up questions an answer offers at most. */
 export const MAX_FOLLOW_UPS = 3;
 
 /** The questions the model offers to ask next, fitting the conversation, in the user's language. */
-export const assistantFollowUpsSchema = z.object({
-  questions: z.array(z.string().min(1).max(MAX_FOLLOW_UP_CHARS)).min(1).max(MAX_FOLLOW_UPS),
-});
+export const assistantFollowUpsSchema = z
+  .object({
+    questions: z.array(z.string().min(1).max(MAX_FOLLOW_UP_CHARS)).min(1).max(MAX_FOLLOW_UPS),
+    question: z.string().trim().min(1).max(MAX_FOLLOW_UP_QUESTION_CHARS).optional(),
+  })
+  .refine((offer) => !offer.question || offer.questions.length >= 2, {
+    message: 'A clarification needs at least two answer choices',
+    path: ['questions'],
+  });
 export type AssistantFollowUps = z.infer<typeof assistantFollowUpsSchema>;
 
 /**

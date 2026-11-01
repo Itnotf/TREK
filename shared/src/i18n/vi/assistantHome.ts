@@ -5,14 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Trao đổi với mọi người trước (không bắt buộc)',
   'assistant.plan.preview': 'Xem trước lịch trình',
   'assistant.home.title': 'Các chuyến đi của bạn',
-  'assistant.home.welcome': 'Tôi có thể giúp gì cho bạn?',
-  'assistant.home.placeholder': 'Mô tả chuyến đi của bạn hoặc dán liên kết đến bài hướng dẫn du lịch',
+  'assistant.home.welcome': 'Lần này bạn muốn đi đâu?',
+  'assistant.home.placeholder':
+    'Thử nhập “muốn tự lái xe đi miền tây Tứ Xuyên”, hoặc dán liên kết đến bài hướng dẫn du lịch',
   'assistant.home.switch': 'Trò chuyện về một chuyến đi',
   'assistant.home.back': 'Quay lại tất cả chuyến đi',
-  'assistant.suggest.homeNext': 'Lên kế hoạch tự lái xe thư thả trong 5 ngày từ Thành Đô đến miền tây Tứ Xuyên',
-  'assistant.suggest.homeCompare': 'So sánh các chuyến đi sắp tới của tôi',
-  'assistant.suggest.homeAtlas': 'Tôi đã đến bao nhiêu quốc gia?',
-  'assistant.suggest.homeVacay': 'Năm nay tôi còn bao nhiêu ngày nghỉ phép?',
+  'assistant.suggest.homeNext': 'Muốn tự lái xe đi miền tây Tứ Xuyên',
   'assistant.card.tripChat.label': 'Tiếp tục trong cuộc trò chuyện của chuyến đi',
   'assistant.card.tripChat.eyebrow': 'Trò chuyện chuyến đi',
   'assistant.card.tripChat.dates': 'từ {start} đến {end}',
@@ -48,6 +46,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Cùng thảo luận kế hoạch này',
   'assistant.plan.shareHint':
     'Chia sẻ lịch trình này trong không gian chuyến đi trước khi xác nhận. Cuộc trò chuyện riêng của bạn vẫn được giữ riêng tư.',
+  'assistant.followUp.answerHint': 'Chọn một phương án hoặc tự nhập câu trả lời bên dưới.',
+  'assistant.followUp.useDefaults': 'Lên lịch từ thông tin hiện có',
+  'assistant.followUp.useDefaultsPrompt':
+    'Dùng những gì chúng ta đã trao đổi và các giả định hợp lý để tạo ngay lịch trình đầy đủ, không cần hỏi thêm.',
+  'assistant.suggest.homeWeekend': 'Đi chơi cuối tuần cùng các con',
+  'assistant.suggest.homeUnsure': 'Muốn tìm một nơi để đi nghỉ thư giãn',
 };
 
 export default assistantHome;

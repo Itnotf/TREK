@@ -148,6 +148,17 @@ describe('a home turn', () => {
     expect(HOME_USE_TOOLS_SPEC.description).toContain('list_trips');
     expect(USE_TOOLS_SPEC.description).toContain('The trip itself');
   });
+
+  it('starts from a short request, asks one missing essential through choices, and proceeds without a form', () => {
+    const prompt = homePrompt('Chinese');
+    expect(prompt).toContain('想去川西自驾');
+    expect(prompt).toContain('single missing fact');
+    expect(prompt).toContain('two or three brief rounds');
+    expect(prompt).toContain('skip anything already known');
+    expect(prompt).toContain('When the user asks you to decide or generate directly');
+    expect(prompt).toContain('question and two or three concrete answers');
+    expect(prompt).toContain('without requiring another confirmation');
+  });
 });
 
 describe("the way into a trip's chat", () => {

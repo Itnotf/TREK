@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': '先に同行者と相談する（任意）',
   'assistant.plan.preview': '旅程をプレビュー',
   'assistant.home.title': 'あなたの旅',
-  'assistant.home.welcome': '何をお手伝いしましょうか？',
-  'assistant.home.placeholder': '旅行の希望を話すか、旅行ガイドのリンクを貼り付けてください',
+  'assistant.home.welcome': '今回はどこへ行きたいですか？',
+  'assistant.home.placeholder': '例：四川省西部をドライブしたい（旅行ガイドのリンクでもOK）',
   'assistant.home.switch': 'ひとつの旅についてチャット',
   'assistant.home.back': 'すべての旅に戻る',
-  'assistant.suggest.homeNext': '成都発、四川省西部を巡るゆったりとした5日間のドライブ旅行を計画して',
-  'assistant.suggest.homeCompare': '今後の旅を比べて',
-  'assistant.suggest.homeAtlas': 'これまでに何か国を訪れましたか？',
-  'assistant.suggest.homeVacay': '今年の休暇はあと何日残っていますか？',
+  'assistant.suggest.homeNext': '四川省西部をドライブしたい',
   'assistant.card.tripChat.label': '旅のチャットで続ける',
   'assistant.card.tripChat.eyebrow': '旅のチャット',
   'assistant.card.tripChat.dates': '{start}から{end}まで',
@@ -48,6 +45,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'このプランをみんなで話し合う',
   'assistant.plan.shareHint':
     '確定する前に、この日程を旅行の共有スペースで共有しましょう。非公開の会話は公開されません。',
+  'assistant.followUp.answerHint': '選択肢を選ぶか、下の入力欄で自由に答えてください。',
+  'assistant.followUp.useDefaults': '今の情報でプランを作って',
+  'assistant.followUp.useDefaultsPrompt':
+    'これまでの話と妥当な仮定をもとに、追加の質問はせず、完全な旅程を作成してください。',
+  'assistant.suggest.homeWeekend': '週末に子どもと出かけたい',
+  'assistant.suggest.homeUnsure': 'のんびり過ごせる場所に行きたい',
 };
 
 export default assistantHome;

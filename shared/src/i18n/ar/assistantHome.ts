@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'ناقشها مع الآخرين أولًا (اختياري)',
   'assistant.plan.preview': 'معاينة برنامج الرحلة',
   'assistant.home.title': 'رحلاتك',
-  'assistant.home.welcome': 'بماذا يمكنني مساعدتك؟',
-  'assistant.home.placeholder': 'صِف رحلتك أو ألصق رابط دليل سفر',
+  'assistant.home.welcome': 'إلى أين ترغب في السفر هذه المرة؟',
+  'assistant.home.placeholder': 'جرّب «رحلة بالسيارة في غرب سيتشوان»، أو ألصق رابط دليل سفر',
   'assistant.home.switch': 'دردشة حول رحلة واحدة',
   'assistant.home.back': 'العودة إلى كل الرحلات',
-  'assistant.suggest.homeNext': 'خطط لرحلة هادئة بالسيارة لمدة 5 أيام من تشنغدو إلى غرب سيتشوان',
-  'assistant.suggest.homeCompare': 'قارن رحلاتي القادمة',
-  'assistant.suggest.homeAtlas': 'كم دولة زرت؟',
-  'assistant.suggest.homeVacay': 'كم يوم إجازة تبقى لي هذا العام؟',
+  'assistant.suggest.homeNext': 'رحلة بالسيارة في غرب سيتشوان',
   'assistant.card.tripChat.label': 'المتابعة في دردشة رحلة',
   'assistant.card.tripChat.eyebrow': 'دردشة الرحلة',
   'assistant.card.tripChat.dates': 'من {start} إلى {end}',
@@ -46,6 +43,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.unverified': 'لم يتم التحقق من الموقع الدقيق بعد',
   'assistant.plan.share': 'ناقشوا هذه الخطة معًا',
   'assistant.plan.shareHint': 'شارك برنامج الرحلة في مساحة مشتركة قبل تأكيده. تبقى محادثتك الخاصة سرية.',
+  'assistant.followUp.answerHint': 'اختر إجابة، أو اكتب إجابتك أدناه.',
+  'assistant.followUp.useDefaults': 'خطط بما تعرفه الآن',
+  'assistant.followUp.useDefaultsPrompt':
+    'استخدم ما ناقشناه وافتراضات معقولة لإنشاء برنامج الرحلة الكامل الآن، دون أسئلة أخرى.',
+  'assistant.suggest.homeWeekend': 'عطلة نهاية أسبوع مع الأطفال',
+  'assistant.suggest.homeUnsure': 'مكان لرحلة هادئة',
 };
 
 export default assistantHome;

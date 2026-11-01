@@ -5,15 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Diskusikan dengan yang lain dulu (opsional)',
   'assistant.plan.preview': 'Pratinjau rencana perjalanan',
   'assistant.home.title': 'Perjalananmu',
-  'assistant.home.welcome': 'Ada yang bisa saya bantu?',
-  'assistant.home.placeholder': 'Ceritakan rencana perjalananmu atau tempel tautan panduan wisata',
+  'assistant.home.welcome': 'Kali ini ingin pergi ke mana?',
+  'assistant.home.placeholder': 'Coba “perjalanan mobil di Sichuan barat”, atau tempel tautan panduan wisata',
   'assistant.home.switch': 'Mengobrol tentang satu perjalanan',
   'assistant.home.back': 'Kembali ke semua perjalanan',
-  'assistant.suggest.homeNext':
-    'Rencanakan perjalanan santai dengan mobil selama 5 hari dari Chengdu ke Sichuan bagian barat',
-  'assistant.suggest.homeCompare': 'Bandingkan perjalananku yang akan datang',
-  'assistant.suggest.homeAtlas': 'Sudah berapa negara yang kukunjungi?',
-  'assistant.suggest.homeVacay': 'Berapa hari cuti yang tersisa tahun ini?',
+  'assistant.suggest.homeNext': 'Perjalanan mobil di Sichuan barat',
   'assistant.card.tripChat.label': 'Lanjutkan di obrolan perjalanan',
   'assistant.card.tripChat.eyebrow': 'Obrolan perjalanan',
   'assistant.card.tripChat.dates': '{start} sampai {end}',
@@ -50,6 +46,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Diskusikan rencana ini bersama',
   'assistant.plan.shareHint':
     'Bagikan rencana perjalanan ini ke ruang perjalanan sebelum mengonfirmasinya. Percakapan pribadimu tetap bersifat pribadi.',
+  'assistant.followUp.answerHint': 'Pilih salah satu, atau tulis jawabanmu sendiri di bawah.',
+  'assistant.followUp.useDefaults': 'Susun dengan info yang ada',
+  'assistant.followUp.useDefaultsPrompt':
+    'Gunakan pembahasan kita dan asumsi yang wajar untuk membuat rencana perjalanan lengkap sekarang, tanpa pertanyaan tambahan.',
+  'assistant.suggest.homeWeekend': 'Liburan akhir pekan bersama anak-anak',
+  'assistant.suggest.homeUnsure': 'Tempat untuk liburan santai',
 };
 
 export default assistantHome;

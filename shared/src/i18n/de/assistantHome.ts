@@ -8,14 +8,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Teile den Reisevorschlag vor der Bestätigung in einem gemeinsamen Reisebereich. Dein privater Chat bleibt privat.',
   'assistant.home.title': 'Deine Reisen',
-  'assistant.home.welcome': 'Wobei kann ich helfen?',
-  'assistant.home.placeholder': 'Beschreibe deine Reise oder füge einen Link zu einem Reiseführer ein',
+  'assistant.home.welcome': 'Wohin möchtest du reisen?',
+  'assistant.home.placeholder': 'Zum Beispiel „eine Autoreise durch Westsichuan“ oder ein Link zu einem Reiseführer',
   'assistant.home.switch': 'Zu einer Reise chatten',
   'assistant.home.back': 'Zurück zu allen Reisen',
-  'assistant.suggest.homeNext': 'Plane eine entspannte fünftägige Autoreise von Chengdu nach Westsichuan',
-  'assistant.suggest.homeCompare': 'Vergleiche meine kommenden Reisen',
-  'assistant.suggest.homeAtlas': 'Wie viele Länder habe ich schon besucht?',
-  'assistant.suggest.homeVacay': 'Wie viele Urlaubstage habe ich dieses Jahr noch?',
+  'assistant.suggest.homeNext': 'Eine Autoreise durch Westsichuan',
   'assistant.card.tripChat.label': 'Im Chat einer Reise weitermachen',
   'assistant.card.tripChat.eyebrow': 'Reise-Chat',
   'assistant.card.tripChat.dates': '{start} bis {end}',
@@ -51,6 +48,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.applyFailed':
     'Die Reise konnte nicht erstellt werden. Prüfe den neuesten Entwurf und versuche es erneut.',
   'assistant.plan.unverified': 'Der genaue Ort wurde noch nicht überprüft',
+  'assistant.followUp.answerHint': 'Wähle eine Option oder schreibe unten deine eigene Antwort.',
+  'assistant.followUp.useDefaults': 'Plane mit den bisherigen Angaben',
+  'assistant.followUp.useDefaultsPrompt':
+    'Erstelle jetzt mit unseren bisherigen Angaben und sinnvollen Annahmen den vollständigen Reiseplan, ohne weitere Fragen zu stellen.',
+  'assistant.suggest.homeWeekend': 'Ein Wochenende mit den Kindern verreisen',
+  'assistant.suggest.homeUnsure': 'Ein Ziel für eine entspannte Reise',
 };
 
 export default assistantHome;

@@ -808,6 +808,47 @@ describe('runAgentLoop', () => {
       expect(t.requests).toHaveLength(2);
       expect(t.chunks.some((chunk) => chunk.type === 'data-trek-follow-ups')).toBe(false);
     });
+
+    it('a complete clarification can be the whole answer and persists without another model call', async () => {
+      const args = { question: '准备玩几天？', questions: ['玩3天左右', '玩5天左右', '还没确定，你推荐'] };
+      const t = setup([
+        [
+          { type: 'tool-call', call: { id: 'clarify-1', name: ASSISTANT_FOLLOW_UPS_TOOL, args } },
+          { type: 'finish', reason: 'tool-calls' },
+        ],
+      ]);
+      const outcome = await runAgentLoop(t.deps, t.input, t.writer, new AbortController().signal);
+      expect(outcome.end).toBe('stop');
+      expect(t.requests).toHaveLength(1);
+      expect(t.tools.call).not.toHaveBeenCalled();
+      expect(t.chunks).toContainEqual({ type: 'data-trek-follow-ups', data: args });
+      expect(t.memory.saved[0].step.parts).toEqual([
+        {
+          type: 'tool-call',
+          toolCallId: 'clarify-1',
+          toolName: ASSISTANT_FOLLOW_UPS_TOOL,
+          args,
+          result: FOLLOW_UPS_ANSWER,
+        },
+        { type: 'data-trek-follow-ups', data: args },
+      ]);
+    });
+
+    it.each([
+      { question: ' ', questions: ['Three days', 'Five days'] },
+      { question: 42, questions: ['Three days', 'Five days'] },
+      { question: 'How long?', questions: ['Five days'] },
+      { question: 'How long?', questions: ['Five days', ' five days '] },
+      { question: 'How long?', questions: [] },
+    ])('does not silently finish on an incomplete clarification: %j', async (args) => {
+      const t = setup([
+        [{ type: 'tool-call', call: { id: 'clarify-1', name: ASSISTANT_FOLLOW_UPS_TOOL, args } }],
+        [{ type: 'text-delta', delta: 'How long would you like to travel?' }],
+      ]);
+      expect((await runAgentLoop(t.deps, t.input, t.writer, new AbortController().signal)).end).toBe('stop');
+      expect(t.requests).toHaveLength(2);
+      expect(t.chunks.some((chunk) => chunk.type === 'data-trek-follow-ups')).toBe(false);
+    });
   });
 
   it('ASTAGT-038: followUpsOf trims, drops duplicates and blanks, cuts each to a chip and keeps three', () => {
@@ -817,6 +858,19 @@ describe('runAgentLoop', () => {
     });
     expect(followUpsOf({ questions: [] })).toBeNull();
     expect(followUpsOf({})).toBeNull();
+  });
+
+  it('cleans clarification text, limits its length, and requires distinct answer choices', () => {
+    expect(followUpsOf({ question: '  准备   玩几天？ ', questions: [' 玩3天左右 ', '玩5天左右'] })).toEqual({
+      question: '准备 玩几天？',
+      questions: ['玩3天左右', '玩5天左右'],
+    });
+    expect(followUpsOf({ question: 'x'.repeat(250), questions: ['Three days', 'Five days'] })?.question).toHaveLength(
+      200,
+    );
+    expect(followUpsOf({ question: 'How long?', questions: ['Five days', ' five days '] })).toEqual({
+      questions: ['Five days'],
+    });
   });
 
   it('ASTAGT-039: a provider web search is a step of its own, the cited pages a part after the text, neither sent back as a call', async () => {

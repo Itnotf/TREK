@@ -226,14 +226,12 @@ const PHASE_SUGGESTIONS: Record<TripPhase, AssistantSuggestion[]> = {
 const MAX_SUGGESTIONS = 4;
 
 /**
- * What the empty home chat offers, outside any one trip: questions across the
- * user's trips and about the parts of TREK that belong to none of them.
+ * Short travel ideas start the conversation; the assistant asks for missing details.
  */
 export const HOME_SUGGESTIONS: readonly AssistantSuggestion[] = [
   { id: 'homeNext', labelKey: 'assistant.suggest.homeNext' },
-  { id: 'homeCompare', labelKey: 'assistant.suggest.homeCompare' },
-  { id: 'homeAtlas', labelKey: 'assistant.suggest.homeAtlas' },
-  { id: 'homeVacay', labelKey: 'assistant.suggest.homeVacay' },
+  { id: 'homeWeekend', labelKey: 'assistant.suggest.homeWeekend' },
+  { id: 'homeUnsure', labelKey: 'assistant.suggest.homeUnsure' },
 ];
 
 /**

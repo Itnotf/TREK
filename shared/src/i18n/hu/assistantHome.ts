@@ -5,14 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Előbb egyeztess másokkal (opcionális)',
   'assistant.plan.preview': 'Útiterv előnézete',
   'assistant.home.title': 'Az utazásaid',
-  'assistant.home.welcome': 'Miben segíthetek?',
-  'assistant.home.placeholder': 'Írd le az utazási tervedet, vagy illessz be egy útikalauzra mutató hivatkozást',
+  'assistant.home.welcome': 'Hová szeretnél utazni?',
+  'assistant.home.placeholder':
+    'Például: „autós utazás Nyugat-Szecsuanban”, vagy illessz be egy útikalauzra mutató hivatkozást',
   'assistant.home.switch': 'Csevegés egy utazásról',
   'assistant.home.back': 'Vissza az összes utazáshoz',
-  'assistant.suggest.homeNext': 'Tervezz egy nyugodt, 5 napos autós utazást Csengtuból Szecsuan nyugati részére',
-  'assistant.suggest.homeCompare': 'Hasonlítsd össze a közelgő utazásaimat',
-  'assistant.suggest.homeAtlas': 'Hány országban jártam már?',
-  'assistant.suggest.homeVacay': 'Hány szabadnapom maradt idén?',
+  'assistant.suggest.homeNext': 'Autós utazás Nyugat-Szecsuanban',
   'assistant.card.tripChat.label': 'Folytatás egy utazás csevegésében',
   'assistant.card.tripChat.eyebrow': 'Utazás csevegés',
   'assistant.card.tripChat.dates': '{start} és {end} között',
@@ -51,6 +49,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Beszéljétek meg együtt ezt a tervet',
   'assistant.plan.shareHint':
     'Oszd meg az útitervet az utazás közös terében, mielőtt jóváhagyod. A privát beszélgetésed privát marad.',
+  'assistant.followUp.answerHint': 'Válassz egy lehetőséget, vagy írd le a saját válaszodat alább.',
+  'assistant.followUp.useDefaults': 'Tervezz az eddigiek alapján',
+  'assistant.followUp.useDefaultsPrompt':
+    'Az eddig megbeszéltek és ésszerű feltételezések alapján készítsd el most a teljes útitervet, további kérdések nélkül.',
+  'assistant.suggest.homeWeekend': 'Hétvégi kiruccanás a gyerekekkel',
+  'assistant.suggest.homeUnsure': 'Egy nyugodt úti cél pihenéshez',
 };
 
 export default assistantHome;

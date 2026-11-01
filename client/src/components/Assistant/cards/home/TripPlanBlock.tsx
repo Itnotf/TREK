@@ -8,14 +8,13 @@ import CardFrame from '../parts/CardFrame';
 import CardHeader from '../parts/CardHeader';
 import { useTripPlan } from './useTripPlan';
 
-const errorMessages = {
-  load: 'assistant.plan.loadFailed',
-  unavailable: 'assistant.change.expired',
-  apply: 'assistant.plan.applyFailed',
-};
-
 function PlanDraft({ card }: { card: TripPlanCard }) {
   const { t } = useTranslation();
+  const errorMessages = {
+    load: t('assistant.plan.loadFailed'),
+    unavailable: t('assistant.change.expired'),
+    apply: t('assistant.plan.applyFailed'),
+  };
   const state = useTripPlan(card);
   const plan = state.draft?.plan;
   const created = !!state.draft?.created_trip_id;
@@ -47,7 +46,7 @@ function PlanDraft({ card }: { card: TripPlanCard }) {
       )}
       {state.error && (
         <div role="alert" className="mt-3 text-caption text-danger">
-          <p>{t(errorMessages[state.error])}</p>
+          <p>{errorMessages[state.error]}</p>
           {state.error === 'load' && (
             <button type="button" className="mt-2 underline" onClick={state.retry}>
               {t('assistant.errorAction.retry')}

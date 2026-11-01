@@ -92,12 +92,15 @@ describe('useAssistantHomeLauncher', () => {
 });
 
 describe('the empty home chat', () => {
-  it('FE-AI-HOME-004: offers questions across the trips, all of them, and holds nothing back', () => {
+  it('FE-AI-HOME-004: starts with short travel ideas that need no prepared brief', () => {
     render(<Suggestions />);
     const items = screen.getAllByRole('listitem').map((item) => item.textContent);
     expect(items).toHaveLength(HOME_SUGGESTIONS.length);
-    expect(items).toContain('Plan a relaxed 5-day road trip from Chengdu to western Sichuan');
-    expect(items).toContain('How many countries have I visited?');
+    expect(items).toEqual([
+      'A road trip in western Sichuan',
+      'A weekend away with the kids',
+      'Somewhere for a relaxing trip',
+    ]);
     expect(screen.getByRole('list')).toHaveAttribute('data-can-edit', 'true');
   });
 });

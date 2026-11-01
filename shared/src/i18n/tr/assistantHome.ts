@@ -8,14 +8,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Onaylamadan önce gezi planını ortak gezi alanında paylaşın. Özel sohbetiniz gizli kalır.',
   'assistant.home.title': 'Seyahatlerin',
-  'assistant.home.welcome': 'Sana nasıl yardımcı olabilirim?',
-  'assistant.home.placeholder': 'Seyahatinizi anlatın veya bir gezi rehberi bağlantısı yapıştırın',
+  'assistant.home.welcome': 'Bu kez nereye gitmek istersiniz?',
+  'assistant.home.placeholder':
+    'Örneğin “Batı Siçuan’da bir araba gezisi” yazın veya bir gezi rehberi bağlantısı yapıştırın',
   'assistant.home.switch': 'Tek bir seyahat hakkında sohbet et',
   'assistant.home.back': 'Tüm seyahatlere dön',
-  'assistant.suggest.homeNext': 'Chengdu’dan Batı Siçuan’a sakin tempolu, 5 günlük bir araba gezisi planla',
-  'assistant.suggest.homeCompare': 'Yaklaşan seyahatlerimi karşılaştır',
-  'assistant.suggest.homeAtlas': 'Kaç ülke ziyaret ettim?',
-  'assistant.suggest.homeVacay': 'Bu yıl kaç izin günüm kaldı?',
+  'assistant.suggest.homeNext': 'Batı Siçuan’da bir araba gezisi',
   'assistant.card.tripChat.label': 'Bir seyahatin sohbetinde devam et',
   'assistant.card.tripChat.eyebrow': 'Seyahat sohbeti',
   'assistant.card.tripChat.dates': '{start} ile {end} arası',
@@ -49,6 +47,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Bu taslak yüklenemedi. Lütfen tekrar deneyin.',
   'assistant.plan.applyFailed': 'Seyahat oluşturulamadı. En son taslağı kontrol edip tekrar deneyin.',
   'assistant.plan.unverified': 'Kesin konum henüz doğrulanmadı',
+  'assistant.followUp.answerHint': 'Bir seçenek seçin veya aşağıya kendi yanıtınızı yazın.',
+  'assistant.followUp.useDefaults': 'Bildiklerinle planla',
+  'assistant.followUp.useDefaultsPrompt':
+    'Konuştuklarımızı ve makul varsayımları kullanarak başka soru sormadan şimdi tam gezi planını oluştur.',
+  'assistant.suggest.homeWeekend': 'Çocuklarla hafta sonu kaçamağı',
+  'assistant.suggest.homeUnsure': 'Dinlendirici bir gezi için bir yer',
 };
 
 export default assistantHome;

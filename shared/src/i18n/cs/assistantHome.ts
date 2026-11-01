@@ -5,14 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Nejprve probrat s ostatními (volitelné)',
   'assistant.plan.preview': 'Náhled itineráře',
   'assistant.home.title': 'Tvoje cesty',
-  'assistant.home.welcome': 'S čím ti můžu pomoct?',
-  'assistant.home.placeholder': 'Popište svou cestu nebo vložte odkaz na cestovatelského průvodce',
+  'assistant.home.welcome': 'Kam byste se chtěli podívat?',
+  'assistant.home.placeholder':
+    'Zkuste „výlet autem po západním S’-čchuanu“ nebo vložte odkaz na cestovatelského průvodce',
   'assistant.home.switch': 'Chatovat o jedné cestě',
   'assistant.home.back': 'Zpět na všechny cesty',
-  'assistant.suggest.homeNext': 'Naplánuj pohodový pětidenní výlet autem z Čcheng-tu do západního S’-čchuanu',
-  'assistant.suggest.homeCompare': 'Porovnej moje nadcházející cesty',
-  'assistant.suggest.homeAtlas': 'Kolik zemí jsem navštívil?',
-  'assistant.suggest.homeVacay': 'Kolik dní dovolené mi letos zbývá?',
+  'assistant.suggest.homeNext': 'Výlet autem po západním S’-čchuanu',
   'assistant.card.tripChat.label': 'Pokračovat v chatu cesty',
   'assistant.card.tripChat.eyebrow': 'Chat cesty',
   'assistant.card.tripChat.dates': '{start} až {end}',
@@ -49,6 +47,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Probrat tento plán společně',
   'assistant.plan.shareHint':
     'Sdílejte itinerář v prostoru cesty ještě před potvrzením. Váš soukromý rozhovor zůstane soukromý.',
+  'assistant.followUp.answerHint': 'Vyberte možnost nebo napište vlastní odpověď níže.',
+  'assistant.followUp.useDefaults': 'Naplánuj to podle toho, co víš',
+  'assistant.followUp.useDefaultsPrompt':
+    'Použij to, co jsme probrali, a rozumné předpoklady a vytvoř teď celý itinerář bez dalších otázek.',
+  'assistant.suggest.homeWeekend': 'Víkendový výlet s dětmi',
+  'assistant.suggest.homeUnsure': 'Někam na pohodový výlet',
 };
 
 export default assistantHome;

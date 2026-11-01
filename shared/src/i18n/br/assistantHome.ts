@@ -5,15 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Conversar com outras pessoas primeiro (opcional)',
   'assistant.plan.preview': 'Prévia do roteiro',
   'assistant.home.title': 'Suas viagens',
-  'assistant.home.welcome': 'Como posso ajudar?',
-  'assistant.home.placeholder': 'Descreva sua viagem ou cole um link de um guia de viagem',
+  'assistant.home.welcome': 'Para onde você quer viajar?',
+  'assistant.home.placeholder':
+    'Experimente “uma viagem de carro pelo oeste de Sichuan” ou cole um link de um guia de viagem',
   'assistant.home.switch': 'Conversar sobre uma viagem',
   'assistant.home.back': 'Voltar para todas as viagens',
-  'assistant.suggest.homeNext':
-    'Planeje uma viagem tranquila de carro de 5 dias saindo de Chengdu para o oeste de Sichuan',
-  'assistant.suggest.homeCompare': 'Compare minhas próximas viagens',
-  'assistant.suggest.homeAtlas': 'Quantos países eu já visitei?',
-  'assistant.suggest.homeVacay': 'Quantos dias de férias ainda tenho este ano?',
+  'assistant.suggest.homeNext': 'Uma viagem de carro pelo oeste de Sichuan',
   'assistant.card.tripChat.label': 'Continuar no chat de uma viagem',
   'assistant.card.tripChat.eyebrow': 'Chat da viagem',
   'assistant.card.tripChat.dates': 'de {start} a {end}',
@@ -51,6 +48,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Conversar sobre este plano juntos',
   'assistant.plan.shareHint':
     'Compartilhe este roteiro no espaço da viagem antes de confirmar. Sua conversa privada continua privada.',
+  'assistant.followUp.answerHint': 'Escolha uma opção ou escreva sua resposta abaixo.',
+  'assistant.followUp.useDefaults': 'Planejar com o que já sabe',
+  'assistant.followUp.useDefaultsPrompt':
+    'Use o que conversamos e suposições razoáveis para criar o roteiro completo agora, sem fazer mais perguntas.',
+  'assistant.suggest.homeWeekend': 'Um fim de semana fora com as crianças',
+  'assistant.suggest.homeUnsure': 'Um lugar para uma viagem tranquila',
 };
 
 export default assistantHome;

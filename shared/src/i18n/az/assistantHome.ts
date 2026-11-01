@@ -5,14 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Əvvəlcə başqaları ilə müzakirə et (istəyə bağlı)',
   'assistant.plan.preview': 'Səyahət planına önbaxış',
   'assistant.home.title': 'Səyahətləriniz',
-  'assistant.home.welcome': 'Nə ilə kömək edə bilərəm?',
-  'assistant.home.placeholder': 'Səfərinizi təsvir edin və ya səyahət bələdçisinin keçidini yapışdırın',
+  'assistant.home.welcome': 'Bu dəfə hara səyahət etmək istərdiniz?',
+  'assistant.home.placeholder':
+    'Məsələn, «Qərbi Sıçuanı avtomobillə gəzmək» yazın və ya səyahət bələdçisinin keçidini yapışdırın',
   'assistant.home.switch': 'Bir səyahət haqqında söhbət',
   'assistant.home.back': 'Bütün səyahətlərə qayıt',
-  'assistant.suggest.homeNext': 'Çenqdudan Sıçuanın qərbinə rahat tempdə 5 günlük avtomobil səfəri planlaşdır',
-  'assistant.suggest.homeCompare': 'Qarşıdakı səyahətlərimi müqayisə et',
-  'assistant.suggest.homeAtlas': 'Neçə ölkəyə səfər etmişəm?',
-  'assistant.suggest.homeVacay': 'Bu il neçə məzuniyyət günüm qalıb?',
+  'assistant.suggest.homeNext': 'Qərbi Sıçuanı avtomobillə gəzmək',
   'assistant.card.tripChat.label': 'Səyahətin söhbətində davam et',
   'assistant.card.tripChat.eyebrow': 'Səyahət söhbəti',
   'assistant.card.tripChat.dates': '{start} ilə {end} arası',
@@ -49,6 +47,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.unverified': 'Dəqiq məkan hələ yoxlanılmayıb',
   'assistant.plan.share': 'Bu planı birlikdə müzakirə edin',
   'assistant.plan.shareHint': 'Təsdiqdən əvvəl bu marşrutu səyahət məkanında paylaşın. Şəxsi söhbətiniz gizli qalır.',
+  'assistant.followUp.answerHint': 'Bir variant seçin və ya öz cavabınızı aşağıda yazın.',
+  'assistant.followUp.useDefaults': 'Bildiklərinlə plan hazırla',
+  'assistant.followUp.useDefaultsPrompt':
+    'Müzakirə etdiklərimizə və məntiqli fərziyyələrə əsaslanaraq, əlavə sual vermədən tam səyahət planını indi hazırla.',
+  'assistant.suggest.homeWeekend': 'Uşaqlarla həftəsonu səfəri',
+  'assistant.suggest.homeUnsure': 'Dincəlmək üçün bir yerə səfər',
 };
 
 export default assistantHome;

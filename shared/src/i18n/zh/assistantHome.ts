@@ -2,14 +2,11 @@ import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'AI 旅行规划',
-  'assistant.home.welcome': '想去哪儿，准备玩几天？',
-  'assistant.home.placeholder': '说说你的旅行想法，或粘贴一条旅行攻略链接',
+  'assistant.home.welcome': '这次想去哪儿玩？',
+  'assistant.home.placeholder': '比如：想去川西自驾（也可以粘贴攻略链接）',
   'assistant.home.switch': '聊聊某一次旅行',
   'assistant.home.back': '返回全部旅行',
-  'assistant.suggest.homeNext': '帮我规划从成都出发的川西 5 天自驾，节奏轻松一点',
-  'assistant.suggest.homeCompare': '比较我即将开始的旅行',
-  'assistant.suggest.homeAtlas': '我去过多少个国家？',
-  'assistant.suggest.homeVacay': '今年我还剩几天假期？',
+  'assistant.suggest.homeNext': '想去川西自驾',
   'assistant.card.tripChat.label': '在旅行的聊天中继续',
   'assistant.card.tripChat.eyebrow': '旅行聊天',
   'assistant.card.tripChat.dates': '{start} 至 {end}',
@@ -47,6 +44,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.openItinerary': '打开这趟旅行',
   'assistant.plan.shareOptions': '先和同行人商量（可选）',
   'assistant.plan.preview': '展开完整行程预览',
+  'assistant.followUp.answerHint': '点选一个，也可以在下方直接补充。',
+  'assistant.followUp.useDefaults': '先帮我安排',
+  'assistant.followUp.useDefaultsPrompt': '请根据已知需求和合理假设，直接生成完整行程，暂不继续提问。',
+  'assistant.suggest.homeWeekend': '周末带娃出去玩',
+  'assistant.suggest.homeUnsure': '想找个轻松的地方玩',
 };
 
 export default assistantHome;

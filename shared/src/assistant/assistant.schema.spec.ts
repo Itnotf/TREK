@@ -9,6 +9,7 @@ import {
   assistantChatRequestSchema,
   assistantDecisionsRequestSchema,
   assistantFoundPlaceSchema,
+  assistantFollowUpsSchema,
   assistantInsertFoundPlaceRequestSchema,
   assistantMessageSchema,
   assistantPlacesSchema,
@@ -34,6 +35,33 @@ const dataEvents = (body: string) =>
     .map((event) => event.slice('data: '.length));
 
 const fixture = readFileSync(fileURLToPath(new URL('./__fixtures__/ui-stream.v1.txt', import.meta.url)), 'utf8');
+
+describe('clarification choices', () => {
+  const data = { question: '准备玩几天？', questions: ['玩3天左右', '玩5天左右', '还没确定，你推荐'] };
+
+  it('keeps the question in both live events and saved messages, while older follow-ups stay valid', () => {
+    expect(assistantFollowUpsSchema.parse({ questions: ['What to pack?'] })).toEqual({ questions: ['What to pack?'] });
+    const part = { type: 'data-trek-follow-ups', data };
+    expect(uiStreamChunkSchema.parse(part)).toEqual(part);
+    expect(
+      assistantMessageSchema.parse({
+        id: 'msg-1',
+        role: 'assistant',
+        parts: [part],
+        status: 'complete',
+        createdAt: '2026-11-01T00:00:00Z',
+      }).parts,
+    ).toEqual([part]);
+  });
+
+  it('refuses an empty or overlong question and a clarification without alternative answers', () => {
+    for (const question of ['', '   ', 'x'.repeat(201)]) {
+      expect(assistantFollowUpsSchema.safeParse({ ...data, question }).success).toBe(false);
+    }
+    expect(assistantFollowUpsSchema.safeParse({ ...data, questions: ['玩5天左右'] }).success).toBe(false);
+    expect(assistantFollowUpsSchema.safeParse({ ...data, questions: [] }).success).toBe(false);
+  });
+});
 
 describe('assistantChatRequestSchema', () => {
   it('takes a first message without a thread and trims the text', () => {

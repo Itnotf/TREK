@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': '먼저 다른 사람들과 상의하기 (선택)',
   'assistant.plan.preview': '여행 일정 미리보기',
   'assistant.home.title': '나의 여행',
-  'assistant.home.welcome': '무엇을 도와드릴까요?',
-  'assistant.home.placeholder': '여행 계획을 이야기하거나 여행 가이드 링크를 붙여 넣으세요',
+  'assistant.home.welcome': '이번에는 어디로 떠나고 싶으세요?',
+  'assistant.home.placeholder': '예: 쓰촨 서부로 자동차 여행을 가고 싶어요. 여행 가이드 링크도 붙여 넣을 수 있어요',
   'assistant.home.switch': '한 여행에 대해 채팅',
   'assistant.home.back': '모든 여행으로 돌아가기',
-  'assistant.suggest.homeNext': '청두에서 출발해 쓰촨 서부를 둘러보는 여유로운 5일 자동차 여행을 계획해 줘',
-  'assistant.suggest.homeCompare': '다가오는 여행들을 비교해 줘',
-  'assistant.suggest.homeAtlas': '지금까지 몇 개국을 방문했나요?',
-  'assistant.suggest.homeVacay': '올해 남은 휴가는 며칠인가요?',
+  'assistant.suggest.homeNext': '쓰촨 서부로 자동차 여행을 가고 싶어요',
   'assistant.card.tripChat.label': '여행 채팅에서 계속하기',
   'assistant.card.tripChat.eyebrow': '여행 채팅',
   'assistant.card.tripChat.dates': '{start}부터 {end}까지',
@@ -47,6 +44,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.unverified': '정확한 위치가 아직 확인되지 않았습니다',
   'assistant.plan.share': '이 계획을 함께 의논하기',
   'assistant.plan.shareHint': '확정하기 전에 이 일정을 여행 공간에 공유하세요. 비공개 대화는 공개되지 않습니다.',
+  'assistant.followUp.answerHint': '하나를 선택하거나 아래에 직접 답변을 입력하세요.',
+  'assistant.followUp.useDefaults': '지금 정보로 계획해 줘',
+  'assistant.followUp.useDefaultsPrompt':
+    '지금까지 나눈 이야기와 합리적인 가정을 바탕으로, 추가 질문 없이 전체 여행 일정을 바로 만들어 주세요.',
+  'assistant.suggest.homeWeekend': '주말에 아이들과 놀러 가고 싶어요',
+  'assistant.suggest.homeUnsure': '편히 쉴 수 있는 곳으로 여행 가고 싶어요',
 };
 
 export default assistantHome;

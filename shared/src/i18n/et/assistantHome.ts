@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Aruta esmalt teistega (valikuline)',
   'assistant.plan.preview': 'Reisikava eelvaade',
   'assistant.home.title': 'Sinu reisid',
-  'assistant.home.welcome': 'Millega saan aidata?',
-  'assistant.home.placeholder': 'Kirjelda oma reisi või kleebi reisijuhi link',
+  'assistant.home.welcome': 'Kuhu sooviksid reisida?',
+  'assistant.home.placeholder': 'Proovi näiteks „autoreis Lääne-Sichuanis” või kleebi reisijuhi link',
   'assistant.home.switch': 'Vestle ühe reisi üle',
   'assistant.home.back': 'Tagasi kõigi reiside juurde',
-  'assistant.suggest.homeNext': 'Koosta rahulik 5-päevane autoreis Chengdust Sichuani lääneossa',
-  'assistant.suggest.homeCompare': 'Võrdle mu eelseisvaid reise',
-  'assistant.suggest.homeAtlas': 'Mitu riiki olen külastanud?',
-  'assistant.suggest.homeVacay': 'Mitu puhkusepäeva mul tänavu veel on?',
+  'assistant.suggest.homeNext': 'Autoreis Lääne-Sichuanis',
   'assistant.card.tripChat.label': 'Jätka reisi vestluses',
   'assistant.card.tripChat.eyebrow': 'Reisi vestlus',
   'assistant.card.tripChat.dates': '{start} kuni {end}',
@@ -48,6 +45,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Arutame seda plaani koos',
   'assistant.plan.shareHint':
     'Jagage reisikava enne kinnitamist reisi ühises ruumis. Teie privaatne vestlus jääb privaatseks.',
+  'assistant.followUp.answerHint': 'Vali vastus või kirjuta oma vastus allpool.',
+  'assistant.followUp.useDefaults': 'Koosta plaan senise info põhjal',
+  'assistant.followUp.useDefaultsPrompt':
+    'Kasuta meie arutelu ja mõistlikke eeldusi, et koostada nüüd täielik reisikava ilma lisaküsimusteta.',
+  'assistant.suggest.homeWeekend': 'Nädalavahetuse reis lastega',
+  'assistant.suggest.homeUnsure': 'Mõni paik rahulikuks puhkuseks',
 };
 
 export default assistantHome;

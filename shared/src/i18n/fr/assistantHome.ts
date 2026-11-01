@@ -8,15 +8,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Partagez ce programme dans l’espace du voyage avant de le confirmer. Votre conversation privée reste privée.',
   'assistant.home.title': 'Vos voyages',
-  'assistant.home.welcome': 'En quoi puis-je vous aider ?',
-  'assistant.home.placeholder': 'Décrivez votre voyage ou collez un lien vers un guide de voyage',
+  'assistant.home.welcome': 'Où aimeriez-vous partir ?',
+  'assistant.home.placeholder':
+    'Essayez « un circuit en voiture dans l’ouest du Sichuan » ou collez un lien vers un guide de voyage',
   'assistant.home.switch': "Discuter d'un voyage",
   'assistant.home.back': 'Retour à tous les voyages',
-  'assistant.suggest.homeNext':
-    'Prépare un circuit tranquille de 5 jours en voiture de Chengdu vers l’ouest du Sichuan',
-  'assistant.suggest.homeCompare': 'Compare mes prochains voyages',
-  'assistant.suggest.homeAtlas': 'Combien de pays ai-je visités ?',
-  'assistant.suggest.homeVacay': 'Combien de jours de congé me reste-t-il cette année ?',
+  'assistant.suggest.homeNext': 'Un circuit en voiture dans l’ouest du Sichuan',
   'assistant.card.tripChat.label': "Continuer dans le chat d'un voyage",
   'assistant.card.tripChat.eyebrow': 'Chat du voyage',
   'assistant.card.tripChat.dates': 'du {start} au {end}',
@@ -51,6 +48,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Impossible de charger ce brouillon. Veuillez réessayer.',
   'assistant.plan.applyFailed': 'Impossible de créer le voyage. Vérifiez le dernier brouillon et réessayez.',
   'assistant.plan.unverified': 'L’emplacement exact n’a pas encore été vérifié',
+  'assistant.followUp.answerHint': 'Choisissez une option ou écrivez votre réponse ci-dessous.',
+  'assistant.followUp.useDefaults': 'Planifier avec les informations disponibles',
+  'assistant.followUp.useDefaultsPrompt':
+    'Utilisez ce dont nous avons parlé et des hypothèses raisonnables pour créer l’itinéraire complet maintenant, sans autres questions.',
+  'assistant.suggest.homeWeekend': 'Un week-end avec les enfants',
+  'assistant.suggest.homeUnsure': 'Une destination pour un voyage reposant',
 };
 
 export default assistantHome;

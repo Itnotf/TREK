@@ -8,14 +8,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Condividi l’itinerario nello spazio del viaggio prima di confermarlo. La tua conversazione privata resta privata.',
   'assistant.home.title': 'I tuoi viaggi',
-  'assistant.home.welcome': 'Come posso aiutarti?',
-  'assistant.home.placeholder': 'Descrivi il tuo viaggio o incolla un link a una guida di viaggio',
+  'assistant.home.welcome': 'Dove vorresti andare?',
+  'assistant.home.placeholder':
+    'Prova “un viaggio in auto nel Sichuan occidentale” o incolla un link a una guida di viaggio',
   'assistant.home.switch': 'Chatta su un viaggio',
   'assistant.home.back': 'Torna a tutti i viaggi',
-  'assistant.suggest.homeNext': 'Organizza un tranquillo viaggio in auto di 5 giorni da Chengdu al Sichuan occidentale',
-  'assistant.suggest.homeCompare': 'Confronta i miei prossimi viaggi',
-  'assistant.suggest.homeAtlas': 'Quanti paesi ho visitato?',
-  'assistant.suggest.homeVacay': "Quanti giorni di ferie mi restano quest'anno?",
+  'assistant.suggest.homeNext': 'Un viaggio in auto nel Sichuan occidentale',
   'assistant.card.tripChat.label': 'Continua nella chat di un viaggio',
   'assistant.card.tripChat.eyebrow': 'Chat del viaggio',
   'assistant.card.tripChat.dates': 'dal {start} al {end}',
@@ -50,6 +48,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'Impossibile caricare questa bozza. Riprova.',
   'assistant.plan.applyFailed': 'Impossibile creare il viaggio. Controlla l’ultima bozza e riprova.',
   'assistant.plan.unverified': 'La posizione esatta non è ancora stata verificata',
+  'assistant.followUp.answerHint': 'Scegli un’opzione o scrivi la tua risposta qui sotto.',
+  'assistant.followUp.useDefaults': 'Pianifica con quello che sai',
+  'assistant.followUp.useDefaultsPrompt':
+    'Usa quello di cui abbiamo parlato e ipotesi ragionevoli per creare subito l’itinerario completo, senza altre domande.',
+  'assistant.suggest.homeWeekend': 'Un fine settimana fuori con i bambini',
+  'assistant.suggest.homeUnsure': 'Una meta per un viaggio rilassante',
 };
 
 export default assistantHome;

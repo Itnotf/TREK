@@ -3,13 +3,10 @@ import type { TranslationStrings } from '../types';
 const assistantHome: TranslationStrings = {
   'assistant.home.title': 'AI trip planner',
   'assistant.home.welcome': 'Where would you like to go?',
-  'assistant.home.placeholder': 'Describe your trip, or paste a travel guide link',
+  'assistant.home.placeholder': 'Try “a road trip in western Sichuan”, or paste a travel guide link',
   'assistant.home.switch': 'Chat about one trip',
   'assistant.home.back': 'Back to all trips',
-  'assistant.suggest.homeNext': 'Plan a relaxed 5-day road trip from Chengdu to western Sichuan',
-  'assistant.suggest.homeCompare': 'Compare my upcoming trips',
-  'assistant.suggest.homeAtlas': 'How many countries have I visited?',
-  'assistant.suggest.homeVacay': 'How many vacation days do I have left this year?',
+  'assistant.suggest.homeNext': 'A road trip in western Sichuan',
   'assistant.card.tripChat.label': 'Continue in a trip chat',
   'assistant.card.tripChat.eyebrow': 'Trip chat',
   'assistant.card.tripChat.dates': '{start} to {end}',
@@ -48,6 +45,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.openItinerary': 'Open this trip',
   'assistant.plan.shareOptions': 'Discuss with others first (optional)',
   'assistant.plan.preview': 'Preview the itinerary',
+  'assistant.followUp.answerHint': 'Choose an option, or type your own answer below.',
+  'assistant.followUp.useDefaults': 'Plan with what you know',
+  'assistant.followUp.useDefaultsPrompt':
+    'Use what we have discussed and reasonable assumptions to generate the complete itinerary now, without further questions.',
+  'assistant.suggest.homeWeekend': 'A weekend away with the kids',
+  'assistant.suggest.homeUnsure': 'Somewhere for a relaxing trip',
 };
 
 export default assistantHome;

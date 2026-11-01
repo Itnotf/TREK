@@ -4,7 +4,9 @@
 
 ## Plan with AI
 
-When AI is available, **Plan with AI**, the dashboard's **+**, and `/dashboard?create=1` start a new private planning conversation. Describe the destination, duration and travellers, or paste a travel guide link. AI can ask a few questions before preparing a draft.
+When AI is available, **Plan with AI**, the dashboard's **+**, and `/dashboard?create=1` start a new private planning conversation. Start with a short idea, such as “a road trip in western Sichuan” or “a weekend away with the kids”, or paste a travel guide link. You do not need to prepare a complete brief.
+
+AI asks one important question at a time and offers answers you can tap. You can also type your own answer or add several details at once. It skips information you have already given, normally prepares the complete draft after two or three short rounds, and lists any remaining assumptions. **Plan with what you know** lets you request the draft immediately. If your first message already contains enough detail, it can generate the draft straight away.
 
 The draft shows a summary and a short list of days. Expand **Preview the itinerary** for the full guide, places, transport and accommodation advice. Request changes in the same chat until you are happy, then choose **Use this itinerary**. This creates the actual trip and opens **Daily itinerary** directly.
 

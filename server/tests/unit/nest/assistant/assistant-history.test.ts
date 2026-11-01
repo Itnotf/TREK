@@ -61,6 +61,41 @@ function call(id: string, state: string, extra: Partial<AssistantToolCallRow> = 
 const NOW = new Date('2026-10-21T10:05:00Z');
 
 describe('toChatHistory', () => {
+  it('replays clarification and chosen answers after a reconnect so the next round keeps known facts', () => {
+    const data = { question: '准备玩几天？', questions: ['玩3天左右', '玩5天左右'] };
+    const rows = [
+      row('user', [{ type: 'text', text: '想去川西自驾' }]),
+      row('assistant', [
+        {
+          type: 'tool-call',
+          toolCallId: 'clarify-1',
+          toolName: 'suggest_follow_ups',
+          args: data,
+          result: 'Shown to the user as suggestions.',
+        },
+        { type: 'data-trek-follow-ups', data },
+      ]),
+      row('user', [{ type: 'text', text: '玩5天左右' }]),
+    ];
+    expect(toThreadMessages(rows, new Map(), NOW)[1].parts).toContainEqual({ type: 'data-trek-follow-ups', data });
+    expect(toChatHistory(rows, new Map())).toEqual([
+      { role: 'user', text: '想去川西自驾' },
+      {
+        role: 'assistant',
+        text: '',
+        toolCalls: [{ id: 'clarify-1', name: 'suggest_follow_ups', args: data }],
+        providerState: null,
+      },
+      {
+        role: 'tool',
+        toolCallId: 'clarify-1',
+        name: 'suggest_follow_ups',
+        output: 'Shown to the user as suggestions.',
+      },
+      { role: 'user', text: '玩5天左右' },
+    ]);
+  });
+
   it('ASTHIS-001: starts at the first user message and answers every call', () => {
     const rows = [
       row('assistant', [{ type: 'text', text: 'orphan' }]),

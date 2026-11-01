@@ -8,14 +8,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Deel dit reisplan in de reisruimte voordat je het bevestigt. Je privégesprek blijft privé.',
   'assistant.home.title': 'Je reizen',
-  'assistant.home.welcome': 'Waarmee kan ik helpen?',
-  'assistant.home.placeholder': 'Beschrijf je reis of plak een link naar een reisgids',
+  'assistant.home.welcome': 'Waar wil je naartoe?',
+  'assistant.home.placeholder': 'Probeer “een autorondreis door West-Sichuan” of plak een link naar een reisgids',
   'assistant.home.switch': 'Over één reis chatten',
   'assistant.home.back': 'Terug naar alle reizen',
-  'assistant.suggest.homeNext': 'Plan een ontspannen autorondreis van 5 dagen van Chengdu naar het westen van Sichuan',
-  'assistant.suggest.homeCompare': 'Vergelijk mijn komende reizen',
-  'assistant.suggest.homeAtlas': 'Hoeveel landen heb ik bezocht?',
-  'assistant.suggest.homeVacay': 'Hoeveel vakantiedagen heb ik dit jaar nog?',
+  'assistant.suggest.homeNext': 'Een autorondreis door West-Sichuan',
   'assistant.card.tripChat.label': 'Verder in de chat van een reis',
   'assistant.card.tripChat.eyebrow': 'Reischat',
   'assistant.card.tripChat.dates': '{start} tot {end}',
@@ -50,6 +47,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.applyFailed':
     'De reis kon niet worden gemaakt. Controleer het nieuwste concept en probeer het opnieuw.',
   'assistant.plan.unverified': 'De precieze locatie is nog niet gecontroleerd',
+  'assistant.followUp.answerHint': 'Kies een optie of typ hieronder je eigen antwoord.',
+  'assistant.followUp.useDefaults': 'Plan met wat je al weet',
+  'assistant.followUp.useDefaultsPrompt':
+    'Gebruik wat we besproken hebben en redelijke aannames om nu het volledige reisschema te maken, zonder verdere vragen.',
+  'assistant.suggest.homeWeekend': 'Een weekend weg met de kinderen',
+  'assistant.suggest.homeUnsure': 'Een bestemming voor een ontspannen reis',
 };
 
 export default assistantHome;

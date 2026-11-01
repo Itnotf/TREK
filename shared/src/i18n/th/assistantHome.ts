@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'พูดคุยกับคนอื่นก่อน (ไม่บังคับ)',
   'assistant.plan.preview': 'ดูตัวอย่างแผนการเดินทาง',
   'assistant.home.title': 'ทริปของคุณ',
-  'assistant.home.welcome': 'ให้ช่วยอะไรดี?',
-  'assistant.home.placeholder': 'เล่าทริปที่ต้องการ หรือวางลิงก์คู่มือท่องเที่ยว',
+  'assistant.home.welcome': 'ทริปนี้อยากไปเที่ยวไหน?',
+  'assistant.home.placeholder': 'ลองพิมพ์ “อยากขับรถเที่ยวเสฉวนตะวันตก” หรือวางลิงก์คู่มือท่องเที่ยว',
   'assistant.home.switch': 'แชตเกี่ยวกับทริปเดียว',
   'assistant.home.back': 'กลับไปที่ทริปทั้งหมด',
-  'assistant.suggest.homeNext': 'ช่วยวางแผนขับรถเที่ยวสบาย ๆ 5 วัน จากเฉิงตูไปทางตะวันตกของเสฉวน',
-  'assistant.suggest.homeCompare': 'เปรียบเทียบทริปที่กำลังจะถึงของฉัน',
-  'assistant.suggest.homeAtlas': 'ฉันไปมาแล้วกี่ประเทศ?',
-  'assistant.suggest.homeVacay': 'ปีนี้ฉันเหลือวันลาพักร้อนกี่วัน?',
+  'assistant.suggest.homeNext': 'อยากขับรถเที่ยวเสฉวนตะวันตก',
   'assistant.card.tripChat.label': 'ไปต่อในแชตของทริป',
   'assistant.card.tripChat.eyebrow': 'แชตทริป',
   'assistant.card.tripChat.dates': '{start} ถึง {end}',
@@ -46,6 +43,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.unverified': 'ยังไม่ได้ตรวจสอบตำแหน่งที่แน่นอน',
   'assistant.plan.share': 'พูดคุยแผนนี้ด้วยกัน',
   'assistant.plan.shareHint': 'แชร์แผนการเดินทางนี้ในพื้นที่ทริปก่อนยืนยัน บทสนทนาส่วนตัวของคุณจะยังเป็นส่วนตัว',
+  'assistant.followUp.answerHint': 'เลือกคำตอบ หรือพิมพ์คำตอบของคุณเองด้านล่างได้เลย',
+  'assistant.followUp.useDefaults': 'วางแผนจากข้อมูลที่มีเลย',
+  'assistant.followUp.useDefaultsPrompt':
+    'ใช้สิ่งที่เราคุยกันและสมมติฐานที่สมเหตุสมผลเพื่อจัดทำแผนเที่ยวฉบับสมบูรณ์ตอนนี้ โดยไม่ต้องถามเพิ่มเติม',
+  'assistant.suggest.homeWeekend': 'อยากพาลูกไปเที่ยวสุดสัปดาห์',
+  'assistant.suggest.homeUnsure': 'อยากหาที่เที่ยวสบาย ๆ',
 };
 
 export default assistantHome;

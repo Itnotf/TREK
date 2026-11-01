@@ -5,14 +5,11 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Сначала обсудить с другими (необязательно)',
   'assistant.plan.preview': 'Предпросмотр маршрута',
   'assistant.home.title': 'Ваши поездки',
-  'assistant.home.welcome': 'Чем могу помочь?',
-  'assistant.home.placeholder': 'Опишите поездку или вставьте ссылку на путеводитель',
+  'assistant.home.welcome': 'Куда хотите отправиться?',
+  'assistant.home.placeholder': 'Например, «автопутешествие по западному Сычуаню» или ссылка на путеводитель',
   'assistant.home.switch': 'Чат об одной поездке',
   'assistant.home.back': 'Назад ко всем поездкам',
-  'assistant.suggest.homeNext': 'Спланируй спокойное автопутешествие на 5 дней из Чэнду по западному Сычуаню',
-  'assistant.suggest.homeCompare': 'Сравни мои предстоящие поездки',
-  'assistant.suggest.homeAtlas': 'Сколько стран я посетил?',
-  'assistant.suggest.homeVacay': 'Сколько дней отпуска у меня осталось в этом году?',
+  'assistant.suggest.homeNext': 'Автопутешествие по западному Сычуаню',
   'assistant.card.tripChat.label': 'Продолжить в чате поездки',
   'assistant.card.tripChat.eyebrow': 'Чат поездки',
   'assistant.card.tripChat.dates': 'с {start} по {end}',
@@ -48,6 +45,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Обсудить этот план вместе',
   'assistant.plan.shareHint':
     'Прежде чем подтвердить маршрут, поделитесь им в пространстве поездки. Ваша личная беседа останется закрытой.',
+  'assistant.followUp.answerHint': 'Выберите вариант или напишите свой ответ ниже.',
+  'assistant.followUp.useDefaults': 'Составь план по имеющимся данным',
+  'assistant.followUp.useDefaultsPrompt':
+    'Используй то, что мы обсудили, и разумные предположения, чтобы сейчас составить полный маршрут без дополнительных вопросов.',
+  'assistant.suggest.homeWeekend': 'Поездка с детьми на выходные',
+  'assistant.suggest.homeUnsure': 'Место для спокойного отдыха',
 };
 
 export default assistantHome;

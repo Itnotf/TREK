@@ -8,14 +8,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareHint':
     'Comparteix l’itinerari a l’espai del viatge abans de confirmar-lo. La teva conversa privada continua sent privada.',
   'assistant.home.title': 'Els teus viatges',
-  'assistant.home.welcome': 'En què et puc ajudar?',
-  'assistant.home.placeholder': 'Descriu el teu viatge o enganxa un enllaç a una guia de viatge',
+  'assistant.home.welcome': 'On t’agradaria anar?',
+  'assistant.home.placeholder':
+    'Prova «una ruta en cotxe per l’oest de Sichuan» o enganxa un enllaç a una guia de viatge',
   'assistant.home.switch': 'Xatejar sobre un viatge',
   'assistant.home.back': 'Tornar a tots els viatges',
-  'assistant.suggest.homeNext': 'Planifica una ruta tranquil·la de 5 dies en cotxe de Chengdu a l’oest de Sichuan',
-  'assistant.suggest.homeCompare': 'Compara els meus propers viatges',
-  'assistant.suggest.homeAtlas': 'Quants països he visitat?',
-  'assistant.suggest.homeVacay': 'Quants dies de vacances em queden aquest any?',
+  'assistant.suggest.homeNext': 'Una ruta en cotxe per l’oest de Sichuan',
   'assistant.card.tripChat.label': "Continuar al xat d'un viatge",
   'assistant.card.tripChat.eyebrow': 'Xat del viatge',
   'assistant.card.tripChat.dates': 'del {start} al {end}',
@@ -49,6 +47,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.loadFailed': 'No s’ha pogut carregar aquest esborrany. Torna-ho a provar.',
   'assistant.plan.applyFailed': 'No s’ha pogut crear el viatge. Revisa l’últim esborrany i torna-ho a provar.',
   'assistant.plan.unverified': 'La ubicació exacta encara no s’ha verificat',
+  'assistant.followUp.answerHint': 'Tria una opció o escriu la teva resposta a continuació.',
+  'assistant.followUp.useDefaults': 'Planifica amb el que ja saps',
+  'assistant.followUp.useDefaultsPrompt':
+    'Fes servir el que hem comentat i suposicions raonables per generar ara l’itinerari complet, sense més preguntes.',
+  'assistant.suggest.homeWeekend': 'Un cap de setmana fora amb els nens',
+  'assistant.suggest.homeUnsure': 'Un lloc per fer un viatge tranquil',
 };
 
 export default assistantHome;

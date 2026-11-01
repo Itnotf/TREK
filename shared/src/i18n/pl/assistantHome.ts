@@ -5,14 +5,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.shareOptions': 'Najpierw omów z innymi (opcjonalnie)',
   'assistant.plan.preview': 'Podgląd planu podróży',
   'assistant.home.title': 'Twoje podróże',
-  'assistant.home.welcome': 'W czym mogę pomóc?',
-  'assistant.home.placeholder': 'Opisz swoją podróż lub wklej link do przewodnika turystycznego',
+  'assistant.home.welcome': 'Dokąd chcesz pojechać?',
+  'assistant.home.placeholder':
+    'Spróbuj „podróż samochodem po zachodnim Syczuanie” lub wklej link do przewodnika turystycznego',
   'assistant.home.switch': 'Czat o jednej podróży',
   'assistant.home.back': 'Wróć do wszystkich podróży',
-  'assistant.suggest.homeNext': 'Zaplanuj spokojną, 5-dniową podróż samochodem z Chengdu do zachodniego Syczuanu',
-  'assistant.suggest.homeCompare': 'Porównaj moje nadchodzące podróże',
-  'assistant.suggest.homeAtlas': 'Ile krajów odwiedziłem?',
-  'assistant.suggest.homeVacay': 'Ile dni urlopu zostało mi w tym roku?',
+  'assistant.suggest.homeNext': 'Podróż samochodem po zachodnim Syczuanie',
   'assistant.card.tripChat.label': 'Kontynuuj na czacie podróży',
   'assistant.card.tripChat.eyebrow': 'Czat podróży',
   'assistant.card.tripChat.dates': 'od {start} do {end}',
@@ -48,6 +46,12 @@ const assistantHome: TranslationStrings = {
   'assistant.plan.share': 'Omówcie ten plan razem',
   'assistant.plan.shareHint':
     'Udostępnij ten plan w przestrzeni podróży przed zatwierdzeniem. Twoja prywatna rozmowa pozostaje prywatna.',
+  'assistant.followUp.answerHint': 'Wybierz opcję lub wpisz własną odpowiedź poniżej.',
+  'assistant.followUp.useDefaults': 'Zaplanuj na podstawie tego, co wiesz',
+  'assistant.followUp.useDefaultsPrompt':
+    'Wykorzystaj to, co omówiliśmy, i rozsądne założenia, aby teraz stworzyć pełny plan podróży, bez kolejnych pytań.',
+  'assistant.suggest.homeWeekend': 'Weekendowy wyjazd z dziećmi',
+  'assistant.suggest.homeUnsure': 'Miejsce na spokojny wyjazd',
 };
 
 export default assistantHome;
