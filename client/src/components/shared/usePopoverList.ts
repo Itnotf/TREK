@@ -39,11 +39,12 @@ export function usePopoverList(currentIndex: number, options: { estimatedHeight?
   useLayoutEffect(() => {
     const menu = menuRef.current;
     if (!listShown || !menu) return;
-    menu.style.translate = '';
+    // Position with left: reduced-motion styles may disable hover translations.
+    menu.style.left = `${box.left}px`;
     const rect = menu.getBoundingClientRect();
     let shift = Math.min(0, window.innerWidth - EDGE - rect.right);
     if (rect.left + shift < EDGE) shift = EDGE - rect.left;
-    if (shift) menu.style.translate = `${Math.round(shift)}px 0`;
+    if (shift) menu.style.left = `${Math.round(rect.left + shift)}px`;
   }, [listShown, box]);
 
   useEffect(() => {

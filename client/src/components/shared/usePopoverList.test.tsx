@@ -102,6 +102,8 @@ describe('usePopoverList', () => {
     render(<Picker />);
     fireEvent.click(trigger());
     // 240 wide from 100 short of the edge: 140 past it, and the 8 kept clear of it.
-    expect(screen.getByRole('group').style.translate).toBe('-148px 0');
+    const group = screen.getByRole('group');
+    expect(group.style.left).toBe(`${window.innerWidth - 248}px`);
+    expect(group.style.translate).toBe('');
   });
 });
