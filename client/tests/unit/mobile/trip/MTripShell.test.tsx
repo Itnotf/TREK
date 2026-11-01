@@ -12,11 +12,13 @@ import type { Day, PackingItem, TodoItem } from '../../../../src/types'
 
 // FE-MOB-SHELL-001 to FE-MOB-SHELL-068
 
-const mocks = vi.hoisted(() => ({ planner: {} as TripPlanner }))
+const mocks = vi.hoisted(() => ({ planner: {} as TripPlanner, back: vi.fn(), backLayer: vi.fn() }))
 
 vi.mock('../../../../src/pages/tripPlanner/useTripPlanner', () => ({
   useTripPlanner: () => mocks.planner,
 }))
+vi.mock('../../../../src/hooks/useBackNavigation', () => ({ useBackNavigation: () => mocks.back }))
+vi.mock('../../../../src/hooks/useBackLayer', () => ({ useBackLayer: mocks.backLayer }))
 
 // The real slots pull in the map engine and every tab panel; the shell only
 // ever hands them props, so they are replaced by the probes below.
@@ -125,6 +127,8 @@ const spy = (planner: TripPlanner, name: keyof TripPlanner) =>
 
 describe('MTripShell', () => {
   beforeEach(() => {
+    mocks.back.mockClear()
+    mocks.backLayer.mockClear()
     sessionStorage.clear()
     // Document sync as a fresh install has it: every provider off, nothing bound.
     useDocSyncOfferStore.setState({ bound: {}, providers: null })
@@ -243,10 +247,91 @@ describe('MTripShell', () => {
     expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(11)
   })
 
-  it('FE-MOB-SHELL-008: the back button leaves for the dashboard', () => {
-    const { planner } = renderShell()
+  it('restores the selected day after a guide visit and the trip loading reset', () => {
+    const previous = renderShell()
+    previous.planner.selectedDayId = 12
+    previous.rerenderShell()
+    previous.unmount()
+
+    const { planner, rerenderShell } = renderShell({ isLoading: true, days: [], selectedDayId: null })
+    expect(planner.tripActions.setSelectedDay).not.toHaveBeenCalled()
+    planner.isLoading = false
+    planner.days = DAYS
+    rerenderShell()
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(12)
+  })
+
+  it('does not restore a remembered day that was deleted while viewing the guide', () => {
+    const previous = renderShell({ selectedDayId: 12 })
+    previous.unmount()
+    const { planner } = renderShell({ days: [DAYS[0]], selectedDayId: null })
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(11)
+  })
+
+  it('keeps remembered days separate when navigating to another trip', () => {
+    const previous = renderShell({ selectedDayId: 12 })
+    previous.unmount()
+    const { planner } = renderShell({
+      tripId: 2,
+      trip: buildTrip({ id: 2 }),
+      days: DAYS.map(day => ({ ...day, id: day.id + 10, trip_id: 2 })),
+      selectedDayId: null,
+    })
+    expect(planner.tripActions.setSelectedDay).toHaveBeenCalledWith(21)
+  })
+
+  it('FE-MOB-SHELL-008: the default view delegates Back to app navigation', () => {
+    renderShell()
     fireEvent.click(screen.getByRole('button', { name: 'common.back' }))
-    expect(planner.navigate).toHaveBeenCalledWith('/dashboard')
+    expect(mocks.back).toHaveBeenCalledOnce()
+  })
+
+  it.each(['trip.mobilePlaces', 'trip.mobilePlan'])('returns from %s to the day before leaving the trip', (name) => {
+    const { planner } = renderShell()
+    fireEvent.click(screen.getByRole('button', { name }))
+    fireEvent.click(screen.getByRole('button', { name: 'common.back' }))
+    expect(shellApi.mode).toBe('go')
+    expect(screen.getByTestId('plan-timeline')).toBeInTheDocument()
+    expect(planner.navigate).not.toHaveBeenCalled()
+    expect(mocks.back).not.toHaveBeenCalled()
+    expect(planner.handleSelectDay).not.toHaveBeenCalled()
+  })
+
+  it('returns from the map to the same day before leaving the trip', () => {
+    const { planner } = renderShell()
+    fireEvent.click(screen.getByRole('button', { name: 'mobileTrip.mapView' }))
+    vi.mocked(planner.handleSelectDay).mockClear()
+    fireEvent.click(screen.getByRole('button', { name: 'common.back' }))
+    expect(shellApi.view).toBe('plan')
+    expect(shellApi.mode).toBe('go')
+    expect(screen.getByTestId('plan-timeline')).toBeInTheDocument()
+    expect(planner.navigate).not.toHaveBeenCalled()
+    expect(mocks.back).not.toHaveBeenCalled()
+    expect(planner.handleSelectDay).not.toHaveBeenCalled()
+  })
+
+  it('registers the map as a temporary Back layer and returns without changing the day', () => {
+    const { planner } = renderShell()
+    fireEvent.click(screen.getByRole('button', { name: 'mobileTrip.mapView' }))
+    const [open, onBack, priority] = mocks.backLayer.mock.calls.slice(-1)[0] as [boolean, () => void, number]
+    expect(open).toBe(true)
+    expect(priority).toBe(10)
+    vi.mocked(planner.handleSelectDay).mockClear()
+    act(onBack)
+    expect(shellApi.mapFront).toBe(false)
+    expect(shellApi.mode).toBe('go')
+    expect(mocks.back).not.toHaveBeenCalled()
+    expect(planner.handleSelectDay).not.toHaveBeenCalled()
+  })
+
+  it('returns from the road-trip map to its list within the same tab', () => {
+    const { planner } = renderShell({ activeTab: 'roadtrip', TRIP_TABS: RT_TABS } as Partial<TripPlanner>)
+    fireEvent.click(screen.getByRole('button', { name: 'mobileTrip.mapView' }))
+    fireEvent.click(screen.getByRole('button', { name: 'common.back' }))
+    expect(shellApi.rtView).toBe('list')
+    expect(shellApi.trTab).toBe('roadtrip')
+    expect(mocks.back).not.toHaveBeenCalled()
+    expect(planner.handleTabChange).not.toHaveBeenCalled()
   })
 
   it('FE-MOB-SHELL-009: the plan tab mounts the map under the timeline and no browser', () => {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useBackLayer } from '../../../../hooks/useBackLayer'
 import { createPortal } from 'react-dom'
 import { ArrowUp, ChevronUp, ImagePlus, Loader2, Reply, Trash2 } from 'lucide-react'
 import MDancingTrek from '../../../components/MDancingTrek'
@@ -379,6 +380,7 @@ function MessageActionsPopover({ x, y, canDeleteOwn, t, onReact, onReply, onDele
   onClose: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  useBackLayer(true, onClose, 30)
 
   useEffect(() => {
     const close = (e: PointerEvent) => {

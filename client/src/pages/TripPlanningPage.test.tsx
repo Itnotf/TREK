@@ -115,6 +115,16 @@ beforeEach(() => {
 });
 
 describe('shared trip planning', () => {
+  it('offers a mobile Back button on a direct visit and falls back to the daily itinerary', async () => {
+    window.history.replaceState({ idx: 0 }, '', '/');
+    server.use(http.get('/api/trips/31/planning', () => HttpResponse.json(state())));
+    show();
+    await screen.findByText('What would make this a good trip?');
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    expect(await screen.findByRole('heading', { name: 'Daily itinerary' })).toBeVisible();
+    expect(screen.getByRole('status')).toHaveTextContent('?tab=plan');
+  });
+
   it('lets a solo organiser generate without a member vote and confirms only after a separate action', async () => {
     let current = state({ members: [{ id: 1, username: 'Organiser' }] });
     const generated: unknown[] = [];

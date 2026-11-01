@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ChevronRight, Search } from 'lucide-react'
 import { useTranslation } from '../../../i18n'
+import { lockBodyScroll } from '../../../utils/bodyScrollLock'
+import { useBackLayer } from '../../../hooks/useBackLayer'
 
 interface CountryOption {
   code: string
@@ -40,6 +42,8 @@ export default function MAtlasSearch({
 }: MAtlasSearchProps) {
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
+  useBackLayer(open, onClose, 30)
+  useEffect(() => { if (open) return lockBodyScroll() }, [open])
 
   useEffect(() => {
     if (!open) setQuery('')

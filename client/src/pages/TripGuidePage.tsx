@@ -1,21 +1,22 @@
-import { ArrowLeft, CalendarDays, RefreshCw } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { CalendarDays, ChevronLeft, RefreshCw } from 'lucide-react';
+import { Link, useParams } from 'react-router';
 
 import PageShell from '../components/Layout/PageShell';
 import CurrentTripGuide from '../components/Trips/CurrentTripGuide';
 import { TripGuideContents } from '../components/Trips/TripGuideContents';
 import TripNavigation from '../components/Trips/TripNavigation';
 import { useTranslation } from '../i18n';
+import { useBackNavigation } from '../hooks/useBackNavigation';
 import { useTripGuide } from './tripPlanner/useTripGuide';
 
 export default function TripGuidePage() {
   const { id } = useParams();
   const tripId = Number(id);
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const state = useTripGuide(tripId);
   const { plan, current, status } = state.data ?? {};
   const tripPath = Number.isSafeInteger(tripId) && tripId > 0 ? `/trips/${tripId}?tab=plan` : '/dashboard';
+  const goBack = useBackNavigation(tripPath);
   return (
     <PageShell
       className="bg-surface"
@@ -23,20 +24,19 @@ export default function TripGuidePage() {
         tripTitle: current?.title ?? plan?.title,
         tripId,
         showBack: true,
-        onBack: () => {
-          void navigate(tripPath);
-        },
+        onBack: goBack,
       }}
     >
+      <div className="sticky top-0 z-30 border-b border-edge-faint bg-surface pt-[env(safe-area-inset-top,0px)] md:hidden">
+        <div className="mx-auto flex h-14 max-w-3xl items-center gap-3 px-4">
+          <button type="button" onClick={goBack} aria-label={t('common.back')} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+            <ChevronLeft size={22} aria-hidden="true" />
+          </button>
+          <span className="min-w-0 truncate text-body font-semibold text-content">{t('trip.guide.title')}</span>
+        </div>
+      </div>
       <main className="mx-auto max-w-3xl px-5 pb-28 pt-6 sm:px-8 sm:pt-10">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <Link
-            to="/dashboard"
-            className="inline-flex min-h-11 items-center gap-2 text-body text-content-secondary hover:underline"
-          >
-            <ArrowLeft size={16} aria-hidden="true" />
-            {t('common.back')}
-          </Link>
           <Link
             to={tripPath}
             className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-edge px-3 text-body font-medium text-content hover:bg-surface-secondary"

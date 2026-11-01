@@ -315,11 +315,23 @@ describe('MAssistantScreen', () => {
 
   it('FE-MOB-ASSIST-008: the back gesture closes the chat instead of leaving the trip', () => {
     renderScreen();
-    expect(window.history.state).toMatchObject({ trekAssistant: true });
+    expect(window.history.state).toMatchObject({ trekBackLayer: true });
     act(() => {
       window.history.replaceState({ idx: 0 }, '');
       window.dispatchEvent(new PopStateEvent('popstate'));
     });
     expect(useAssistantStore.getState().window.open).toBe(false);
+  });
+
+  it('Back closes recent chats before the assistant screen', () => {
+    renderScreen();
+    fireEvent.click(screen.getByRole('button', { name: 'Recent chats' }));
+    act(() => {
+      window.history.replaceState({ idx: 0 }, '');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    expect(screen.getByRole('button', { name: 'Recent chats' })).toHaveAttribute('aria-expanded', 'false');
+    expect(useAssistantStore.getState().window.open).toBe(true);
+    expect(screen.getByTestId('chat-surface')).toBeInTheDocument();
   });
 });

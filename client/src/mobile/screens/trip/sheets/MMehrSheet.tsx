@@ -21,8 +21,8 @@ const TILE_COLORS: Record<string, string> = {
 }
 
 /**
- * "Mehr" dock-overflow sheet: bottom-anchored panel above the dock with a
- * transparent scrim. Grid of the trip sections that did not fit the dock
+ * "Mehr" dock-overflow sheet: bottom-anchored panel over the dock with a
+ * dimmed scrim. Grid of the trip sections that did not fit the dock
  * (files/collab/plugins, with short stats) plus the share/export/settings rows.
  */
 export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
@@ -69,7 +69,7 @@ export default function MMehrSheet({ planner, shell }: MTripSheetsProps) {
   ]
 
   return (
-    <MSheet open={open} onClose={shell.closeSheet} variant="bottom" dimTransparent ariaLabel={t('mobileTrip.more')}>
+    <MSheet open={open} onClose={shell.closeSheet} variant="bottom" ariaLabel={t('mobileTrip.more')}>
       <div className="overflow-y-auto p-[10px]">
         {/* The assistant leads the sheet: the one way into it on the phone besides "Ask" on a place. */}
         {assistant.available && (

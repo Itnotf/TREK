@@ -24,6 +24,7 @@ function show(id = '31') {
   return render(
     <Routes>
       <Route path="/trips/:id/guide" element={<TripGuidePage />} />
+      <Route path="/trips/:id" element={<h1>Daily itinerary destination</h1>} />
     </Routes>,
     {
       initialEntries: [`/trips/${id}/guide`],
@@ -38,6 +39,15 @@ afterEach(() => {
 });
 
 describe('saved trip guide', () => {
+  it('offers a mobile Back button on a direct visit and falls back to the daily itinerary', async () => {
+    window.history.replaceState({ idx: 0 }, '', '/');
+    server.use(http.get('/api/trips/31/guide', () => HttpResponse.json(buildSavedGuide())));
+    show();
+    await screen.findByRole('heading', { level: 1, name: 'Western Sichuan' });
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    expect(await screen.findByRole('heading', { name: 'Daily itinerary destination' })).toBeVisible();
+  });
+
   it('shows current moved activities, actual time and bookings while keeping outdated prose folded', async () => {
     const response = buildSavedGuide();
     response.status = 'changed';
@@ -185,7 +195,7 @@ describe('saved trip guide', () => {
     show();
     expect(await screen.findByRole('alert')).toHaveTextContent('Check your connection');
     setForcedOffline(false);
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Western Sichuan' })).toBeInTheDocument();
   });
 

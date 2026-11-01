@@ -36,45 +36,8 @@ import MListRow from '../../../components/MListRow';
 import { keepTabInside, useModalFocus } from '../../../components/modalFocus';
 import MConfirmSheet from '../../settings/MConfirmSheet';
 import type { MTripSheetsProps } from '../MTripShell';
-
-const HISTORY_MARK = 'trekAssistant';
-
-const ownEntryOnTop = () => (window.history.state as Record<string, unknown> | null)?.[HISTORY_MARK] === true;
-
-/**
- * The phone's back gesture closes the screen instead of leaving the trip: an
- * entry of our own goes onto the history while it is open, and going back
- * pops it. Closed from inside, the entry is taken back off, unless a
- * navigation has already put another one on top. The step back waits a
- * tick, so an effect that only re-runs (React's development double run)
- * keeps its entry instead of losing it.
- */
-function useBackCloses(open: boolean, onClose: () => void): void {
-  const onCloseRef = useRef(onClose);
-  const openRef = useRef(false);
-  useLayoutEffect(() => {
-    onCloseRef.current = onClose;
-  });
-
-  useEffect(() => {
-    if (!open) return;
-    openRef.current = true;
-    if (!ownEntryOnTop()) {
-      window.history.pushState({ ...(window.history.state as object | null), [HISTORY_MARK]: true }, '');
-    }
-    const onPop = () => {
-      if (!ownEntryOnTop()) onCloseRef.current();
-    };
-    window.addEventListener('popstate', onPop);
-    return () => {
-      openRef.current = false;
-      window.removeEventListener('popstate', onPop);
-      setTimeout(() => {
-        if (!openRef.current && ownEntryOnTop()) window.history.back();
-      }, 0);
-    };
-  }, [open]);
-}
+import { useBackLayer } from '../../../../hooks/useBackLayer';
+import { lockBodyScroll } from '../../../../utils/bodyScrollLock';
 
 /**
  * The ways the chat hands the screen to the map, a tab of the trip or another
@@ -183,7 +146,11 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
   const tripChat = assistantScopeOf(tripId).kind === 'trip';
   const hints = useAssistantHintsSetting();
   const sectionRef = useRef<HTMLElement>(null);
-  useBackCloses(!hidden, close);
+  useBackLayer(!hidden, close, 20);
+  useEffect(() => {
+    if (hidden) { setPanel(null); return; }
+    return lockBodyScroll();
+  }, [hidden]);
   useModalFocus(sectionRef, !hidden);
 
   const pick = (run: () => void) => {
@@ -205,11 +172,11 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
       hidden={hidden}
       tabIndex={-1}
       onKeyDown={(e) => keepTabInside(e, sectionRef.current)}
-      className={`fixed inset-0 z-[var(--z-bar)] ${hidden ? 'hidden' : 'flex'} flex-col bg-[var(--m-bg)] bg-[image:var(--m-scr)] text-m-ink outline-none`}
+      className={`fixed inset-0 z-[70] ${hidden ? 'hidden' : 'flex'} flex-col bg-[var(--m-bg)] bg-[image:var(--m-scr)] text-m-ink outline-none`}
       style={{ paddingBottom: `max(env(safe-area-inset-bottom, 0px), ${keyboard}px)` }}
     >
       <header className="flex flex-none items-center gap-2 px-4 pb-2 pt-[var(--m-safe-top,12px)]">
-        <MIconBtn ariaLabel={t('common.back')} onClick={close}>
+        <MIconBtn ariaLabel={t('common.back')} onClick={close} size={44}>
           <ChevronLeft size={19} strokeWidth={2.2} />
         </MIconBtn>
         <div className="min-w-0 flex-1">
@@ -222,11 +189,12 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
             </div>
           )}
         </div>
-        <MIconBtn ariaLabel={t('assistant.history.open')} ariaExpanded={panel === 'history'} onClick={openHistory}>
+        <MIconBtn ariaLabel={t('assistant.history.open')} ariaExpanded={panel === 'history'} onClick={openHistory} size={44}>
           <History size={16} strokeWidth={2} />
         </MIconBtn>
         <MIconBtn
           ariaLabel={t('assistant.history.new')}
+          size={44}
           onClick={thread.newThread}
           disabled={thread.threadId === null && !thread.isRunning}
         >
@@ -234,6 +202,7 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
         </MIconBtn>
         <MIconBtn
           ariaLabel={t('assistant.window.menu')}
+          size={44}
           ariaExpanded={panel === 'menu'}
           ariaHaspopup="menu"
           onClick={() => setPanel('menu')}
@@ -243,9 +212,9 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
       </header>
 
       <MDropdownPanel
-        open={panel === 'history'}
+        open={!hidden && panel === 'history'}
         onClose={() => setPanel(null)}
-        className="end-4 top-[calc(var(--m-safe-top,12px)+48px)] max-h-[60vh] overflow-y-auto"
+        className="end-4 top-[calc(var(--m-safe-top,12px)+54px)] max-h-[60vh] overflow-y-auto"
       >
         <MListRow icon={Plus} label={t('assistant.history.new')} onClick={() => pick(thread.newThread)} />
         {threads.length === 0 ? (
@@ -272,9 +241,9 @@ export function AssistantScreen({ tripId, tripTitle, hidden, hops, onOpenTripCha
       </MDropdownPanel>
 
       <MDropdownPanel
-        open={panel === 'menu'}
+        open={!hidden && panel === 'menu'}
         onClose={() => setPanel(null)}
-        className="end-4 top-[calc(var(--m-safe-top,12px)+48px)]"
+        className="end-4 top-[calc(var(--m-safe-top,12px)+54px)]"
       >
         {tripChat && (
           <MListRow

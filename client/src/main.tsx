@@ -43,6 +43,7 @@ import { requestPersistentStorage } from './sync/persistentStorage'
 import ErrorBoundary, { RootErrorFallback } from './components/shared/ErrorBoundary'
 import { installGlobalErrorHandlers } from './utils/globalErrorHandlers'
 import { schedulePrecacheRepair } from './utils/serviceWorkerShell'
+import { initializeMobileBack } from './hooks/useBackLayer'
 
 void maybeInstallTouchDragPolyfill()
 startConnectivityProbe()
@@ -53,6 +54,7 @@ installGlobalErrorHandlers()
 // A page the precache keeps under a stylesheet's or a script's name would be
 // handed on to every later release (#2524).
 schedulePrecacheRepair()
+initializeMobileBack()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

@@ -6,6 +6,7 @@ import { lockBodyScroll } from '../../../../utils/bodyScrollLock'
 import { useMediaLightbox } from '../../../../components/Files/useMediaLightbox'
 import VideoPlayer from '../../../../components/Journey/VideoPlayerLazy'
 import type { TranslationFn, TripFile } from '../../../../types'
+import { useBackLayer } from '../../../../hooks/useBackLayer'
 
 interface MFileLightboxProps {
   files: TripFile[]
@@ -36,6 +37,7 @@ export default function MFileLightbox({ files, index, onIndexChange, onClose, t 
   })
 
   useEffect(() => lockBodyScroll(), [])
+  useBackLayer(!!file, onClose, 50)
 
   if (!file) return null
 
@@ -45,7 +47,7 @@ export default function MFileLightbox({ files, index, onIndexChange, onClose, t 
       // tap-to-dismiss. Escape / arrow keys and the header buttons are the
       // keyboard equivalents, wired up in useMediaLightbox.
       role="presentation"
-      className="m-root fixed inset-0 z-[65] flex flex-col bg-black/[.92]"
+      className="m-root fixed inset-0 z-[90] flex flex-col bg-black/[.92]"
       onClick={onClose}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}

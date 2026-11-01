@@ -2,7 +2,9 @@ import React, { useEffect, useCallback, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { AlertTriangle, HelpCircle } from 'lucide-react'
 import { useTranslation } from '../../i18n'
-import { useIsPhone } from '../../mobile/useIsPhone'
+import { useIsPhone } from '../../hooks/useIsPhone'
+import { useBackLayer } from '../../hooks/useBackLayer'
+import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { DialogTile, NEUTRAL_TINT, fs } from './DialogShell'
 
 interface ConfirmDialogProps {
@@ -41,6 +43,8 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   const { t } = useTranslation()
   const isPhone = useIsPhone()
+  useBackLayer(isPhone && isOpen, onClose, 60)
+  useEffect(() => { if (isOpen && isPhone) return lockBodyScroll() }, [isOpen, isPhone])
 
   // Captured and stopped here: the question often opens over another dialog
   // (a Modal) that closes on Escape too, and one key press should only take

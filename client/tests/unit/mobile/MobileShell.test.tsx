@@ -45,6 +45,16 @@ describe('MobileShell', () => {
     expect(screen.getByText('page body')).toBeInTheDocument();
   });
 
+  it.each(['/trips/7/guide', '/trips/7/planning'])('keeps %s inside the trip navigation', (path) => {
+    render(
+      <MobileShell isPhone><p>trip page body</p></MobileShell>,
+      { initialEntries: [path] },
+    );
+
+    expect(screen.queryByRole('button', { name: 'My Trips' })).not.toBeInTheDocument();
+    expect(screen.getByText('trip page body')).toBeInTheDocument();
+  });
+
   it('FE-MOB-MSHELL-004: the mobile toast presenter takes over the global bridge', () => {
     const previous = vi.fn(() => 0);
     window.__addToast = previous;

@@ -151,10 +151,10 @@ describe('MBottomNav', () => {
 
   it('FE-MOB-NAV-012: tapping the scrim closes the More popover again', () => {
     seedAddons(['vacay', 'atlas', 'journey', 'collections']);
-    const { container } = render(<MBottomNav />, { initialEntries: ['/dashboard'] });
+    render(<MBottomNav />, { initialEntries: ['/dashboard'] });
 
     fireEvent.click(screen.getByRole('button', { name: 'More' }));
-    const scrim = container.querySelector('.fixed.inset-0') as HTMLElement;
+    const scrim = screen.getByRole('dialog', { name: 'More' }).parentElement!.parentElement!;
 
     fireEvent.click(scrim);
 
@@ -164,10 +164,10 @@ describe('MBottomNav', () => {
 
   it('FE-MOB-NAV-013: a click inside the popover does not close it', () => {
     seedAddons(['vacay', 'atlas', 'journey', 'collections']);
-    const { container } = render(<MBottomNav />, { initialEntries: ['/dashboard'] });
+    render(<MBottomNav />, { initialEntries: ['/dashboard'] });
 
     fireEvent.click(screen.getByRole('button', { name: 'More' }));
-    fireEvent.click(container.querySelector('.fixed.inset-0 > div') as HTMLElement);
+    fireEvent.click(screen.getByRole('dialog', { name: 'More' }));
 
     expect(screen.getByRole('button', { name: /Journey/ })).toBeInTheDocument();
   });

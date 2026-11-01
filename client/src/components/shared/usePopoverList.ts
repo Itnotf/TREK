@@ -1,5 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
+import { useIsPhone } from '../../hooks/useIsPhone';
+import { useBackLayer } from '../../hooks/useBackLayer';
 
 const itemsOf = (list: HTMLElement | null) => Array.from(list?.querySelectorAll('button') ?? []);
 
@@ -15,6 +17,7 @@ const EDGE = 8;
  */
 export function usePopoverList(currentIndex: number, options: { estimatedHeight?: number } = {}) {
   const [open, setOpen] = useState(false);
+  const isPhone = useIsPhone();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const startAt = useRef(0);
@@ -74,6 +77,7 @@ export function usePopoverList(currentIndex: number, options: { estimatedHeight?
     setOpen(false);
     triggerRef.current?.focus();
   };
+  useBackLayer(isPhone && open, close, 70);
 
   const onListKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Tab') {

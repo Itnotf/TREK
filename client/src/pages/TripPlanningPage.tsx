@@ -1,9 +1,10 @@
-import { RefreshCw, Users } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router';
+import { ChevronLeft, RefreshCw, Users } from 'lucide-react';
+import { useParams } from 'react-router';
 
 import PageShell from '../components/Layout/PageShell';
 import TripMembersModal from '../components/Trips/TripMembersModal';
 import TripNavigation from '../components/Trips/TripNavigation';
+import { useBackNavigation } from '../hooks/useBackNavigation';
 import { useTranslation } from '../i18n';
 import { TripPlanningMembers } from './tripPlanner/TripPlanningMembers';
 import {
@@ -24,7 +25,6 @@ export default function TripPlanningPage() {
 
 function TripPlanningWorkspace({ tripId }: { tripId: number }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const workspace = useTripPlanningWorkspace(tripId);
   const {
     planning,
@@ -38,6 +38,7 @@ function TripPlanningWorkspace({ tripId }: { tripId: number }) {
     tripPath,
     saveCollaborators,
   } = workspace;
+  const goBack = useBackNavigation(tripPath === '/dashboard' ? tripPath : `${tripPath}?tab=plan`);
 
   return (
     <PageShell
@@ -46,11 +47,17 @@ function TripPlanningWorkspace({ tripId }: { tripId: number }) {
         tripId,
         tripTitle: data?.title,
         showBack: true,
-        onBack: () => {
-          void navigate(tripPath);
-        },
+        onBack: goBack,
       }}
     >
+      <div className="sticky top-0 z-30 border-b border-edge-faint bg-surface pt-[env(safe-area-inset-top,0px)] md:hidden">
+        <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
+          <button type="button" onClick={goBack} aria-label={t('common.back')} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
+            <ChevronLeft size={22} aria-hidden="true" />
+          </button>
+          <span className="min-w-0 truncate text-body font-semibold text-content">{t('trip.planning.title')}</span>
+        </div>
+      </div>
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-5 sm:px-7 sm:pt-8">
         <div className="mb-5 overflow-x-auto pb-1">
           <TripNavigation tripId={tripId} activeTab="planning" />

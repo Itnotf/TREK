@@ -1,4 +1,6 @@
 import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import { lockBodyScroll } from '../../utils/bodyScrollLock'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 interface MDropdownPanelProps {
   open: boolean
@@ -12,7 +14,7 @@ interface MDropdownPanelProps {
  * Floating popover panel (user menu, filter dropdowns): heavy glass, r20,
  * closed by a transparent full-screen backdrop — no dim, unlike sheets.
  * Layered above the scrolling content but below the bottom nav (z-40) and
- * sheets (z-60), matching the design's stacking order. Opened, it takes the
+ * sheets (z-80), matching the design's stacking order. Opened, it takes the
  * focus onto its first button and Escape closes it; closed, the focus goes
  * back to the button it was opened from, unless a pick moved it on.
  */
@@ -22,9 +24,11 @@ export default function MDropdownPanel({ open, onClose, className = '', children
   useLayoutEffect(() => {
     onCloseRef.current = onClose
   })
+  useBackLayer(open, onClose, 30)
 
   useEffect(() => {
     if (!open) return
+    const release = lockBodyScroll()
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
     panelRef.current?.querySelector<HTMLElement>('button:not(:disabled)')?.focus({ preventScroll: true })
     // Captured and stopped, so the key closes the panel and nothing under it.
@@ -35,6 +39,7 @@ export default function MDropdownPanel({ open, onClose, className = '', children
     }
     document.addEventListener('keydown', onKey, true)
     return () => {
+      release()
       document.removeEventListener('keydown', onKey, true)
       // The focused button left with the panel: the focus fell back to the page, and goes to the opener.
       const lost = document.activeElement === null || document.activeElement === document.body

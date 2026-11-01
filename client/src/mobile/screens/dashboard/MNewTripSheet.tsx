@@ -177,7 +177,8 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
 
   return (
     <>
-    <MSheet open={open} onClose={onClose} variant="card" material="opaque" ariaLabel={isEditing ? t('dashboard.editTrip') : t('dashboard.createTrip')}>
+    <MSheet open={open} onClose={onClose} variant="card" material="opaque" ariaLabel={isEditing ? t('dashboard.editTrip') : t('dashboard.createTrip')}
+      discardGuard={{ title, description, startDate, endDate, currency, dayCount, reminderDays, roadtripSetup, cover: cover.coverPreview }}>
       <div className="flex items-center gap-[11px] p-[16px_16px_0]">
         <div className="min-w-0 flex-1 truncate text-[1.0625rem] font-bold">
           {isEditing ? t('dashboard.editTrip') : t('dashboard.createTrip')}

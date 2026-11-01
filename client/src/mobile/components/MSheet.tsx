@@ -4,6 +4,7 @@ import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { useTranslation } from '../../i18n'
 import { useDiscardGuard } from '../../components/shared/useDiscardGuard'
 import { keepTabInside, useModalFocus } from './modalFocus'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 export type MSheetVariant = 'card' | 'bottom' | 'drawer'
 export type MSheetMaterial = 'glass' | 'bar-glass' | 'opaque'
@@ -11,11 +12,11 @@ export type MSheetMaterial = 'glass' | 'bar-glass' | 'opaque'
 interface MSheetProps {
   open: boolean
   onClose: () => void
-  /** card = centred floating card, bottom = docked panel above the nav, drawer = left drawer */
+  /** card = centred floating card, bottom = sheet at the screen edge, drawer = left drawer */
   variant?: MSheetVariant
   /**
    * glass = translucent sheet (--m-sheet), bar-glass = lighter bar glass
-   * (--m-glass, default for the bottom variant), opaque = solid (--m-sheetop)
+   * (--m-glass), opaque = solid (--m-sheetop, default for the bottom variant)
    */
   material?: MSheetMaterial
   /** Transparent scrim (the "Mehr" sheet sits on the UI without dimming it) */
@@ -37,13 +38,13 @@ const DISCARD_BUTTON = 'rounded-full bg-danger px-4 py-2 text-body font-semibold
 
 const POSITION: Record<MSheetVariant, string> = {
   card: 'absolute inset-x-[14px] top-1/2 -translate-y-1/2',
-  bottom: 'absolute inset-x-4 bottom-[calc(var(--bottom-nav-h,84px)+16px)]',
+  bottom: 'absolute inset-x-0 bottom-0',
   drawer: 'absolute left-0 top-0 bottom-0 w-[78%] max-w-[320px]',
 }
 
 const SHAPE: Record<MSheetVariant, string> = {
   card: 'rounded-[28px] shadow-[0_30px_80px_-24px_rgba(0,0,0,.6)] max-h-[calc(100dvh-var(--m-safe-top,12px)-96px)]',
-  bottom: 'rounded-[26px] shadow-[0_-8px_40px_-14px_rgba(0,0,0,.45)] max-h-[calc(100dvh-var(--bottom-nav-h,84px)-var(--m-safe-top,12px)-72px)]',
+  bottom: 'rounded-t-[28px] pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-8px_40px_-14px_rgba(0,0,0,.45)] max-h-[calc(100dvh-var(--m-safe-top,12px)-12px)]',
   drawer: 'h-full shadow-[0_0_60px_-10px_rgba(0,0,0,.5)]',
 }
 
@@ -103,22 +104,7 @@ export default function MSheet({
     return () => clearTimeout(t)
   }, [open, reset])
 
-  // Escape belongs to the sheet on top only: a question opened over another
-  // sheet closes alone, and the sheet under it stays open with whatever was
-  // typed into it. Sheets portal in the order they open, so the top one is the
-  // last open panel in the document.
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
-      const openPanels = document.querySelectorAll('[data-m-sheet="open"]')
-      if (openPanels[openPanels.length - 1] !== panelRef.current) return
-      if (asking) keepEditing()
-      else requestClose()
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, asking, keepEditing, requestClose])
+  useBackLayer(open, asking ? keepEditing : requestClose)
 
   useEffect(() => {
     if (!open) return
@@ -163,7 +149,7 @@ export default function MSheet({
   const exitClass = variant === 'drawer' ? 'm-drawer-out' : 'm-sheet-out'
   const animation = open ? (entered ? '' : enterClass) : exitClass
 
-  const resolvedMaterial = material ?? (variant === 'bottom' ? 'bar-glass' : 'glass')
+  const resolvedMaterial = material ?? (variant === 'bottom' ? 'opaque' : 'glass')
 
   const dragStyle: React.CSSProperties =
     dragY !== null
@@ -178,8 +164,10 @@ export default function MSheet({
     // opacity<1 ancestor becomes a backdrop-root that cancels the sheet's own
     // backdrop-blur (the "liquid glass" frost). The sheet still slides via m-sheet-in.
     <div
-      className={`m-root fixed inset-0 z-[60] ${dimTransparent ? 'bg-transparent' : `bg-[color:var(--m-dim)] ${open ? 'm-fade-in' : 'm-fade-out'}`}`}
+      className={`m-root fixed inset-0 z-[80] ${dimTransparent ? 'bg-transparent' : `bg-[color:var(--m-dim)] ${open ? 'm-fade-in' : 'm-fade-out'}`}`}
+      style={{ pointerEvents: open ? undefined : 'none' }}
       role="presentation"
+      aria-hidden={!open || undefined}
       onClick={(e) => {
         if (e.target === e.currentTarget) requestClose()
       }}
@@ -203,15 +191,16 @@ export default function MSheet({
           }}
         >
           {variant === 'bottom' && (
-            // Invisible drag strip along the top edge — the design shows no
-            // handle, the panel starts directly with its content.
             <div
-              className="absolute inset-x-0 top-0 z-[1] h-5 cursor-grab touch-none active:cursor-grabbing"
+              aria-hidden="true"
+              className="flex h-7 flex-none cursor-grab touch-none items-center justify-center active:cursor-grabbing"
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
               onPointerUp={handlePointerEnd}
-              onPointerCancel={handlePointerEnd}
-            />
+              onPointerCancel={() => { dragRef.current = null; setDragY(null) }}
+            >
+              <span className="h-1 w-9 rounded-full bg-[color:var(--m-faint)] opacity-40" />
+            </div>
           )}
           {children}
           {asking && (

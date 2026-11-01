@@ -234,6 +234,21 @@ describe('MSheet', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it('a system-cancelled drag restores the sheet without discarding it', () => {
+    HTMLElement.prototype.setPointerCapture = vi.fn();
+    const onClose = vi.fn();
+    render(<MSheet open onClose={onClose} variant="bottom"><input defaultValue="Draft" /></MSheet>);
+    const dialog = screen.getByRole('dialog');
+    Object.defineProperty(dialog, 'offsetHeight', { configurable: true, value: 400 });
+    const strip = dialog.querySelector('.cursor-grab') as HTMLElement;
+    fireEvent.pointerDown(strip, { pointerId: 1, clientY: 100 });
+    fireEvent.pointerMove(strip, { pointerId: 1, clientY: 300 });
+    fireEvent.pointerCancel(strip, { pointerId: 1 });
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByRole('textbox')).toHaveValue('Draft');
+    expect(dialog.style.transform).toBe('');
+  });
+
   it('FE-MOB-SHEET-006: locks body scroll while open and releases it on close', () => {
     const { rerender } = render(
       <MSheet open onClose={() => {}}>

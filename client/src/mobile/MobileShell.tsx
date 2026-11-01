@@ -27,11 +27,11 @@ interface MobileShellProps {
  * one from here.
  */
 export default function MobileShell({ isPhone, children }: MobileShellProps) {
-  // The trip planner (/trips/:id) is a full-screen takeover that ships its own
-  // in-trip dock (MTripShell). The global dock must not render underneath it:
+  // Trip pages keep their own navigation, including the guide and planning views.
+  // The global dock must not render underneath the planner's in-trip dock:
   // on iOS Safari a position:fixed nav paints THROUGH the trip overlay's higher
   // stacking context, so the wrong (global) bar shows on top of the trip screen.
-  const inTripPlanner = useMatch('/trips/:id')
+  const inTrip = useMatch('/trips/:id/*')
 
   if (!isPhone) {
     return (
@@ -60,7 +60,7 @@ export default function MobileShell({ isPhone, children }: MobileShellProps) {
           for this breakpoint. */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[color:var(--m-bg)] bg-[image:var(--m-scr)]" />
       <div className="flex-1">{children}</div>
-      {!inTripPlanner && <ErrorBoundary boundaryId="chrome:m-bottom-nav" fallback={null}><MBottomNav /></ErrorBoundary>}
+      {!inTrip && <ErrorBoundary boundaryId="chrome:m-bottom-nav" fallback={null}><MBottomNav /></ErrorBoundary>}
       <ErrorBoundary boundaryId="chrome:m-toast" fallback={null}><MToastHost /></ErrorBoundary>
       <div id="m-sheet-root" />
     </div>

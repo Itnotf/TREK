@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { findFocusDayId, findTodayDayId } from '../../../components/Planner/today'
-import { takeResumeDay } from '../../../utils/resumeRoute'
+import { rememberTripDay, takeResumeDay } from '../../../utils/resumeRoute'
 import {
   CalendarCheck, CalendarDays, ChevronDown, ChevronLeft, Download, FileDown, FolderSync, List, Map as MapIcon, MoreHorizontal, Plane, Plus, Route, Rows3, SlidersHorizontal, Trash2, Upload,
 } from 'lucide-react'
@@ -23,6 +23,8 @@ import type { CorridorReach } from '../../../components/Roadtrip/corridorSearchM
 import { useSettingsStore } from '../../../store/settingsStore'
 import { useAuthStore } from '../../../store/authStore'
 import { useListsSubTab, type ListsSubTab } from '../../../hooks/useListsSubTab'
+import { useBackNavigation } from '../../../hooks/useBackNavigation'
+import { useBackLayer } from '../../../hooks/useBackLayer'
 import { canManageDocSync } from '../../../components/Files/docsync/useDocSync'
 import { useDocSyncOffered } from '../../../components/Files/docsync/useDocSyncOffered'
 import type { Day, Trip } from '../../../types'
@@ -207,7 +209,8 @@ export default function MTripShell({
   Sheets = MTripSheets,
 }: MTripShellProps) {
   const planner = useTripPlanner()
-  const { t, language, tripId, days, trip, navigate, packingItems, todoItems, isLoading } = planner
+  const { t, language, tripId, days, trip, packingItems, todoItems, isLoading } = planner
+  const goBack = useBackNavigation('/dashboard')
 
   // Per-day colours from the dayTintProvider plugin hook — the mobile counterpart
   // of the desktop day-card wash, carried on the day chips. Empty without a plugin.
@@ -243,7 +246,7 @@ export default function MTripShell({
     // Re-entering the same trip from the dashboard starts with that trip's old
     // selection still in the store. The first render treats it as seeded, then
     // loadTrip clears it. Reset the guard with that load cycle so the freshly
-    // loaded days get their normal today/Day 1 selection.
+    // loaded days can restore the last choice or use the normal focus day.
     if (isLoading) {
       seededDayRef.current = null
       return
@@ -254,7 +257,11 @@ export default function MTripShell({
     // A day that is already active counts as seeded: a later deselect is the
     // user's, and re-seeding it here would be exactly the fight this guard
     // exists to avoid.
-    if (days.some(day => day.id === planner.selectedDayId)) { seededDayRef.current = tripId; return }
+    if (planner.selectedDayId != null && days.some(day => day.id === planner.selectedDayId)) {
+      seededDayRef.current = tripId
+      rememberTripDay(tripId, planner.selectedDayId)
+      return
+    }
     if (seededDayRef.current === tripId && planner.selectedDayId == null) return
     seededDayRef.current = tripId
     // Off the same helper file as the desktop day plan (#1567), so the two
@@ -386,6 +393,22 @@ export default function MTripShell({
   }
 
   const mapFront = (trTab === 'plan' && view === 'map') || (trTab === 'roadtrip' && rtView === 'map')
+
+  const temporaryView = mapFront || (trTab === 'plan' && mode !== 'go')
+  const closeTemporaryView = () => {
+    if (mapFront) {
+      if (trTab === 'roadtrip') toggleRtView()
+      else {
+        toggleView()
+        setMode('go')
+      }
+    } else setTravelMode('go')
+  }
+  useBackLayer(temporaryView, closeTemporaryView, 10)
+  const handleBack = () => {
+    if (temporaryView) closeTemporaryView()
+    else goBack()
+  }
 
   const openSheet = (id: string, payload?: unknown) => setSheet({ id, payload })
   const closeSheet = () => setSheet(null)
@@ -567,8 +590,8 @@ export default function MTripShell({
       )}
 
       {/* ── Top controls (z-42 — above every layer incl. tab overlays) ── */}
-      <div className="absolute inset-x-4 z-[42] flex h-10 items-center justify-between top-[var(--m-safe-top,12px)]">
-        <MIconBtn ariaLabel={t('common.back')} onClick={() => navigate('/dashboard')} className="backdrop-blur-[24px] backdrop-saturate-[1.7]">
+      <div className="absolute inset-x-4 z-[42] flex h-11 items-center justify-between top-[var(--m-safe-top,12px)]">
+        <MIconBtn ariaLabel={t('common.back')} onClick={handleBack} size={44} className="backdrop-blur-[24px] backdrop-saturate-[1.7]">
           <ChevronLeft size={19} strokeWidth={2.2} />
         </MIconBtn>
 
@@ -757,6 +780,7 @@ export default function MTripShell({
           <MIconBtn
             ariaLabel={mapFront ? t('mobileTrip.listView') : t('mobileTrip.mapView')}
             onClick={trTab === 'roadtrip' ? toggleRtView : toggleView}
+            size={44}
             className="backdrop-blur-[24px] backdrop-saturate-[1.7]"
           >
             {mapFront ? <List size={18} strokeWidth={2} /> : <MapIcon size={18} strokeWidth={2} />}
@@ -803,7 +827,7 @@ export default function MTripShell({
 /** Centre glass pill of the top controls (segments for plan/lists/collab). */
 function GlassSegment({ children }: { children: ReactNode }) {
   return (
-    <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-glass)] p-[3px] backdrop-blur-[24px] backdrop-saturate-[1.7]">
+    <div className="absolute left-1/2 top-1/2 flex max-w-[calc(100%_-_104px)] -translate-x-1/2 -translate-y-1/2 overflow-x-auto rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-glass)] p-[3px] backdrop-blur-[24px] backdrop-saturate-[1.7] [&>*]:shrink-0">
       {children}
     </div>
   )
