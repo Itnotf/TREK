@@ -103,7 +103,7 @@ export default function MNoteSheet({ planner, open, payload, onClose }: MNoteShe
   }
 
   return (
-    <MSheet open={open} onClose={onClose} ariaLabel={note ? t('dayplan.noteEdit') : t('dayplan.noteAdd')}>
+    <MSheet open={open} onClose={onClose} ariaLabel={note ? t('dayplan.noteEdit') : t('dayplan.noteAdd')} discardGuard={{ title, detail, icon, color }}>
       <FormSheetHeader
         title={note ? t('dayplan.noteEdit') : t('dayplan.noteAdd')}
         onClose={onClose}

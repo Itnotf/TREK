@@ -151,7 +151,8 @@ export function useTripMembers({ isOpen, tripId, onClose, onMembersChanged }: {
   /** After a change to the roster, so the planner can refresh Costs participants, Collab and the rest. */
   onMembersChanged?: () => void
 }) {
-  const [data, setData] = useState<MembersData | null>(null)
+  const [roster, setRoster] = useState<{ tripId: number; data: MembersData } | null>(null)
+  const data = roster?.tripId === tripId ? roster.data : null
   const [allUsers, setAllUsers] = useState<DirectoryUser[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedUserId, setSelectedUserId] = useState('')
@@ -166,16 +167,17 @@ export function useTripMembers({ isOpen, tripId, onClose, onMembersChanged }: {
   const { user } = useAuthStore()
   const { t } = useTranslation()
   const can = useCanDo()
-  const trip = useTripStore(s => s.trip)
+  const activeTripId = useTripStore(s => s.trip?.id)
   const loadBudgetItems = useTripStore(s => s.loadBudgetItems)
 
   const loadMembers = async (notify = false) => {
     setLoading(true)
     try {
-      setData(await tripsApi.getMembers(tripId))
+      setRoster({ tripId, data: await tripsApi.getMembers(tripId) })
       // Only after an actual change: the load on opening would be a redundant re-sync.
       if (notify) onMembersChanged?.()
     } catch {
+      setRoster(null)
       toast.error(t('members.loadError'))
     } finally {
       setLoading(false)
@@ -287,7 +289,7 @@ export function useTripMembers({ isOpen, tripId, onClose, onMembersChanged }: {
     try {
       await tripsApi.deleteGuest(tripId, userId)
       await loadMembers(true)
-      await loadBudgetItems(tripId)
+      if (activeTripId === tripId) await loadBudgetItems(tripId)
       toast.success(t('members.guestRemoved'))
     } catch (err: unknown) {
       // A guest who paid for something or is part of a recorded payment stays (#2604):
@@ -309,8 +311,8 @@ export function useTripMembers({ isOpen, tripId, onClose, onMembersChanged }: {
   return {
     user, loading, realMembers, guests, allUsers, availableUsers,
     isCurrentOwner: !!data && data.owner?.id === user?.id,
-    canManageMembers: can('member_manage', trip),
-    canManageShare: can('share_manage', trip),
+    canManageMembers: !!data && can('member_manage', { user_id: data.owner.id }),
+    canManageShare: !!data && can('share_manage', { user_id: data.owner.id }),
     selectedUserId, setSelectedUserId, adding, add,
     transferringId, transfer, removingId, remove,
     newGuestName, setNewGuestName, addingGuest, addGuest,

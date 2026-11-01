@@ -29,7 +29,9 @@ import { AssistantBookGate } from './assistant-book-gate';
 import { AssistantBookingImportService } from './assistant-booking-import.service';
 import { AssistantFileAnswers } from './assistant-file-answer.service';
 import { AssistantFoundPlacesService } from './assistant-found-places.service';
+import { AssistantItineraryModule } from './assistant-itinerary.module';
 import { AssistantKeepFileService } from './assistant-keep-file.service';
+import { AssistantPlanningService } from './assistant-planning.service';
 import { AssistantProposalsService } from './assistant-proposals.service';
 import { AssistantRenderRegistry, InMemoryAssistantRenderRegistry } from './assistant-render.registry';
 import { AssistantRendersController } from './assistant-renders.controller';
@@ -77,6 +79,7 @@ import { Module } from '@nestjs/common';
     AddonsModule,
     AiConnectionsModule,
     AirportsModule,
+    AssistantItineraryModule,
     AuditModule,
     BookingImportModule,
     CollabModule,
@@ -113,6 +116,7 @@ import { Module } from '@nestjs/common';
   // here instead.
   providers: [
     AssistantService,
+    AssistantPlanningService,
     AssistantToolsService,
     AssistantBookingImportService,
     AssistantFileAnswers,

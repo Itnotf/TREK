@@ -38,7 +38,12 @@ interface ChatBody {
   tools?: Array<{ function: { name: string; parameters: { properties?: Record<string, unknown> } } }>;
 }
 
-type Step = (body: ChatBody) => { chunks: object[] };
+type Step = (body: ChatBody) => {
+  chunks: object[];
+  wait?: Promise<void>;
+  opened?: () => void;
+  closed?: () => void;
+};
 
 const provider = { requests: [] as ChatBody[], script: [] as Step[] };
 
@@ -91,6 +96,11 @@ async function answer(req: IncomingMessage, res: ServerResponse): Promise<void> 
   const reply = (provider.script.shift() ?? say('Nothing more.'))(body);
   if (res.destroyed) return;
   res.writeHead(200, { 'content-type': 'text/event-stream' });
+  res.flushHeaders();
+  reply.opened?.();
+  if (reply.closed) res.once('close', reply.closed);
+  await reply.wait;
+  if (res.destroyed) return;
   for (const chunk of reply.chunks) res.write(`data: ${JSON.stringify(chunk)}\n\n`);
   res.end('data: [DONE]\n\n');
 }
@@ -117,6 +127,7 @@ beforeAll(async () => {
     .set('Cookie', sessionCookie(adminId))
     .send({ kind: 'custom', baseUrl: `http://127.0.0.1:${port}/v1`, model: 'fake-model' });
   expect(res.status).toBe(200);
+  await nestApp.listen(0, '127.0.0.1');
 });
 
 beforeEach(async () => {
@@ -185,9 +196,219 @@ const toolNames = (body: ChatBody) => (body.tools ?? []).map((tool) => tool.func
 
 const threadOf = (answer: Answer) => ofType(answer.chunks, 'data-trek-thread')[0].data.threadId;
 
+function pausedReply(text: string) {
+  let release!: () => void;
+  let opened!: () => void;
+  let closed!: () => void;
+  const wait = new Promise<void>((resolve) => (release = resolve));
+  const started = new Promise<void>((resolve) => (opened = resolve));
+  const disconnected = new Promise<void>((resolve) => (closed = resolve));
+  const step: Step = (body) => ({ ...say(text)(body), wait, opened, closed });
+  return { step, release, started, disconnected };
+}
+
+async function openTurn(
+  userId: number,
+  path = `${BASE}/chat`,
+  body: object = { ...CTX, threadId: null, text: 'Plan a relaxed five-day trip' },
+  threadId?: number,
+) {
+  const server = nestApp.getHttpServer() as HttpServer;
+  const disconnected = new Promise<void>((resolve) => {
+    server.once('request', (_req, res) => res.once('close', () => resolve()));
+  });
+  const controller = new AbortController();
+  const { port } = server.address() as AddressInfo;
+  const response = await fetch(`http://127.0.0.1:${port}${path}`, {
+    method: 'POST',
+    headers: { cookie: sessionCookie(userId), 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: controller.signal,
+  });
+  expect(response.status).toBe(200);
+  if (threadId !== undefined) return { controller, disconnected, threadId };
+  if (!response.body) throw new Error('Stream has no body');
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let text = '';
+  while (!text.includes('data-trek-thread')) {
+    // eslint-disable-next-line no-await-in-loop -- The next fragment depends on the preceding stream read.
+    const chunk = await reader.read();
+    if (chunk.done) throw new Error('Stream ended before announcing its thread');
+    text += decoder.decode(chunk.value, { stream: true });
+  }
+  const thread = text.split('\n\n').find((line) => line.includes('data-trek-thread'));
+  if (!thread) throw new Error('Stream did not announce its thread');
+  const { data } = JSON.parse(thread.slice('data: '.length)) as { data: { threadId: number } };
+  return { controller, disconnected, threadId: data.threadId };
+}
+
 // ── Cases ────────────────────────────────────────────────────────────────────
 
 describe('Home assistant e2e', () => {
+  it('keeps a home turn generating and saves its answer once after the response disconnects', async () => {
+    const { userId } = await ownerWithTrips();
+    const paused = pausedReply('The complete five-day plan.');
+    provider.script = [paused.step];
+    const turn = await openTurn(userId);
+    try {
+      await paused.started;
+      turn.controller.abort();
+      await turn.disconnected;
+      paused.release();
+      await expect
+        .poll(
+          async () => {
+            const response = await get(`${BASE}/threads/${turn.threadId}`, userId);
+            return response.body.messages.at(-1)?.status;
+          },
+          { timeout: 1500 },
+        )
+        .toBe('complete');
+      const restored = await get(`${BASE}/threads/${turn.threadId}`, userId);
+      expect(restored.body.messages).toHaveLength(2);
+      expect(JSON.stringify(restored.body.messages)).toContain('The complete five-day plan.');
+      expect(provider.requests).toHaveLength(1);
+    } finally {
+      paused.release();
+      turn.controller.abort();
+    }
+  });
+
+  it('reports the active home thread only to its owner, with another thread remaining idle', async () => {
+    const { userId } = await ownerWithTrips();
+    const { user: other } = await makeUser(orm);
+    provider.script = [say('An older conversation.')];
+    const idle = threadOf(await post(`${BASE}/chat`, userId, { ...CTX, threadId: null, text: 'Hello' }));
+    const paused = pausedReply('A new plan.');
+    provider.script = [paused.step];
+    const turn = await openTurn(userId);
+    try {
+      await paused.started;
+      expect((await get(`${BASE}/threads/${turn.threadId}`, userId)).body.running).toBe(true);
+      expect((await get(`${BASE}/threads/${turn.threadId}`, other.id)).status).toBe(404);
+      expect((await get(`${BASE}/threads/${idle}`, userId)).body.running).toBe(false);
+    } finally {
+      paused.release();
+      turn.controller.abort();
+      await post(`${BASE}/stop`, userId, {});
+    }
+  });
+
+  it('an explicit stop still cancels a disconnected home turn and saves its stopped response', async () => {
+    const { userId } = await ownerWithTrips();
+    const paused = pausedReply('This must not be saved.');
+    provider.script = [paused.step];
+    const turn = await openTurn(userId);
+    try {
+      await paused.started;
+      turn.controller.abort();
+      await turn.disconnected;
+      expect((await post(`${BASE}/stop`, userId, {})).status).toBe(200);
+      await paused.disconnected;
+      const restored = await get(`${BASE}/threads/${turn.threadId}`, userId);
+      expect(restored.body.running).toBe(false);
+      expect(restored.body.messages.at(-1)).toMatchObject({ status: 'aborted', parts: [] });
+      expect(provider.requests).toHaveLength(1);
+    } finally {
+      paused.release();
+      turn.controller.abort();
+    }
+  });
+
+  it('keeps cancelling trip chat when its response disconnects', async () => {
+    const { userId, nextId } = await ownerWithTrips();
+    const paused = pausedReply('This trip response must stop.');
+    provider.script = [paused.step];
+    const tripBase = `/api/trips/${nextId}/assistant`;
+    const turn = await openTurn(userId, `${tripBase}/chat`);
+    try {
+      await paused.started;
+      turn.controller.abort();
+      await turn.disconnected;
+      await paused.disconnected;
+      const restored = await get(`${tripBase}/threads/${turn.threadId}`, userId);
+      expect(restored.body.messages.at(-1)).toMatchObject({ status: 'aborted', parts: [] });
+      expect(restored.body).not.toHaveProperty('running');
+    } finally {
+      paused.release();
+      turn.controller.abort();
+    }
+  });
+
+  it('keeps an explicitly approved home follow-up running after disconnect, without applying it twice', async () => {
+    const { userId } = await ownerWithTrips();
+    provider.script = [
+      callTool('load_atlas', 'use_addon_tools', { groups: ['atlas'] }),
+      callTool('mark_country', 'mark_country_visited', { country_code: 'JP' }),
+    ];
+    const proposed = await post(`${BASE}/chat`, userId, { ...CTX, threadId: null, text: 'I visited Japan' });
+    const threadId = threadOf(proposed);
+    const [held] = ofType(proposed.chunks, 'tool-approval-request');
+    expect(await countRows(orm, VisitedCountries, { user: userId, country_code: 'JP' })).toBe(0);
+    const paused = pausedReply('Japan is saved in your atlas.');
+    provider.script = [paused.step];
+    const turn = await openTurn(
+      userId,
+      `${BASE}/threads/${threadId}/decisions`,
+      {
+        ...CTX,
+        decisions: [{ toolCallId: held.toolCallId, approved: true }],
+      },
+      threadId,
+    );
+    try {
+      await paused.started;
+      turn.controller.abort();
+      await turn.disconnected;
+      expect((await get(`${BASE}/threads/${threadId}`, userId)).body.running).toBe(true);
+      paused.release();
+      await expect
+        .poll(async () => (await get(`${BASE}/threads/${threadId}`, userId)).body.running, { timeout: 1500 })
+        .toBe(false);
+      const restored = await get(`${BASE}/threads/${threadId}`, userId);
+      expect(restored.body.messages.at(-1).status).toBe('complete');
+      expect(JSON.stringify(restored.body.messages)).toContain('Japan is saved in your atlas.');
+      expect(await countRows(orm, VisitedCountries, { user: userId, country_code: 'JP' })).toBe(1);
+      expect(provider.requests).toHaveLength(3);
+    } finally {
+      paused.release();
+      turn.controller.abort();
+      await post(`${BASE}/stop`, userId, {});
+    }
+  });
+
+  it('stops and drains a background turn before deleting its owned thread', async () => {
+    const { userId } = await ownerWithTrips();
+    const { user: other } = await makeUser(orm);
+    const paused = pausedReply('Do not write after deletion.');
+    provider.script = [paused.step];
+    const turn = await openTurn(userId);
+    try {
+      await paused.started;
+      turn.controller.abort();
+      await turn.disconnected;
+      expect(
+        (
+          await request(nestApp.getHttpServer())
+            .delete(`${BASE}/threads/${turn.threadId}`)
+            .set('Cookie', sessionCookie(other.id))
+        ).status,
+      ).toBe(404);
+      const removed = await request(nestApp.getHttpServer())
+        .delete(`${BASE}/threads/${turn.threadId}`)
+        .set('Cookie', sessionCookie(userId));
+      expect(removed.status).toBe(200);
+      await paused.disconnected;
+      paused.release();
+      expect((await get(`${BASE}/threads/${turn.threadId}`, userId)).status).toBe(404);
+      expect(await countRows(orm, AssistantThreads, { id: turn.threadId })).toBe(0);
+    } finally {
+      paused.release();
+      turn.controller.abort();
+    }
+  });
+
   it('ASTHE2E-001: the AI addon, auth and the body come before anything else', async () => {
     const h = await ownerWithTrips();
     await setAddonEnabled(orm, 'ai_assistant', false);

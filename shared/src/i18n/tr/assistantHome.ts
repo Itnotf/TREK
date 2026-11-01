@@ -1,15 +1,19 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Bu seyahati aç',
+  'assistant.plan.shareOptions': 'Önce diğerleriyle konuş (isteğe bağlı)',
+  'assistant.plan.preview': 'Seyahat planını önizle',
+  'assistant.plan.share': 'Bu planı birlikte konuşun',
+  'assistant.plan.shareHint':
+    'Onaylamadan önce gezi planını ortak gezi alanında paylaşın. Özel sohbetiniz gizli kalır.',
   'assistant.home.title': 'Seyahatlerin',
-  'assistant.home.welcome': 'Sana nasıl yardımcı olabilirim?',
-  'assistant.home.placeholder': 'Seyahatlerin hakkında her şeyi sor',
+  'assistant.home.welcome': 'Bu kez nereye gitmek istersiniz?',
+  'assistant.home.placeholder':
+    'Örneğin “Batı Siçuan’da bir araba gezisi” yazın veya bir gezi rehberi bağlantısı yapıştırın',
   'assistant.home.switch': 'Tek bir seyahat hakkında sohbet et',
   'assistant.home.back': 'Tüm seyahatlere dön',
-  'assistant.suggest.homeNext': 'Sıradaki seyahat hangisi ve neler eksik?',
-  'assistant.suggest.homeCompare': 'Yaklaşan seyahatlerimi karşılaştır',
-  'assistant.suggest.homeAtlas': 'Kaç ülke ziyaret ettim?',
-  'assistant.suggest.homeVacay': 'Bu yıl kaç izin günüm kaldı?',
+  'assistant.suggest.homeNext': 'Batı Siçuan’da bir araba gezisi',
   'assistant.card.tripChat.label': 'Bir seyahatin sohbetinde devam et',
   'assistant.card.tripChat.eyebrow': 'Seyahat sohbeti',
   'assistant.card.tripChat.dates': '{start} ile {end} arası',
@@ -26,6 +30,29 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Günlük',
   'assistant.card.journalChat.open': 'Bu günlüğün sohbetinde devam et',
   'assistant.step.openJournalChat': 'Günlüğü buluyorum',
+  'assistant.plan.start': 'Yapay zekâyla planla',
+  'assistant.plan.manual': 'Elle oluştur',
+  'assistant.plan.unavailable':
+    'Yapay zekâyla planlama şu anda kullanılamıyor. Seyahatinizi yine de elle oluşturabilirsiniz.',
+  'assistant.plan.label': 'Seyahat taslağı',
+  'assistant.plan.version': 'Sürüm {version}',
+  'assistant.plan.requirements': 'Seyahat tercihleriniz',
+  'assistant.plan.assumptions': 'Bu varsayımları kontrol edin',
+  'assistant.plan.overnight': 'Geceleme: {city}',
+  'assistant.plan.editHint':
+    'Bir değişiklik ister misiniz? Sohbette söyleyin, taslağı güncelleyeyim. Memnun kaldığınızda onaylayın.',
+  'assistant.plan.stale': 'Aşağıda daha yeni bir sürüm var. Seyahatinizi oluşturmak için en son sürümü onaylayın.',
+  'assistant.plan.confirm': 'Onayla ve seyahati oluştur',
+  'assistant.plan.created': 'Bu taslak seyahat olarak kaydedildi.',
+  'assistant.plan.loadFailed': 'Bu taslak yüklenemedi. Lütfen tekrar deneyin.',
+  'assistant.plan.applyFailed': 'Seyahat oluşturulamadı. En son taslağı kontrol edip tekrar deneyin.',
+  'assistant.plan.unverified': 'Kesin konum henüz doğrulanmadı',
+  'assistant.followUp.answerHint': 'Bir seçenek seçin veya aşağıya kendi yanıtınızı yazın.',
+  'assistant.followUp.useDefaults': 'Bildiklerinle planla',
+  'assistant.followUp.useDefaultsPrompt':
+    'Konuştuklarımızı ve makul varsayımları kullanarak başka soru sormadan şimdi tam gezi planını oluştur.',
+  'assistant.suggest.homeWeekend': 'Çocuklarla hafta sonu kaçamağı',
+  'assistant.suggest.homeUnsure': 'Dinlendirici bir gezi için bir yer',
 };
 
 export default assistantHome;

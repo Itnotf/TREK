@@ -1,3 +1,7 @@
+import { TripMembers } from '../entities/TripMembers.entity';
+import { TripPlanningCollaborators } from '../entities/TripPlanningCollaborators.entity';
+import { TripPlanningRevisions } from '../entities/TripPlanningRevisions.entity';
+import { Users } from '../entities/Users.entity';
 import { QueryFlag } from '@mikro-orm/core';
 import type { Trips } from '../entities/Trips.entity';
 import { coalesceParam, currentTimestamp, nowDateOffset } from '../dialect/sql-functions';
@@ -82,6 +86,24 @@ export interface ActiveTripRow {
 type ActiveTripKyselyDB = Pick<DB, 'trips' | 'trip_members'>;
 
 export class TripsRepository extends TrekRepository<Trips> {
+  /** Current account roles for planning, projected here beside the ordinary trip-access projection. */
+  async planningAccess(tripId: number, userId: number) {
+    const trip = await this.findAccessible(tripId, userId);
+    if (!trip) return null;
+    const em = this.getEntityManager();
+    const memberIds = await em.getRepository(TripMembers).rosterUserIds(tripId);
+    const accounts = await em.getRepository(Users).find({ id: { $in: [...memberIds] }, is_guest: 0 });
+    const members = accounts.map((user) => ({ id: user.id, username: user.display_name || user.username }));
+    const designated = await em.getRepository(TripPlanningCollaborators).find({ trip: tripId });
+    const collaborators = designated.map((row) => row.user.id).filter((id) => memberIds.has(id));
+    const managed = !!(await em.getRepository(TripPlanningRevisions).findOne({ trip: tripId }));
+    return { trip, members, collaborators, managed };
+  }
+
+  async hasSharedPlanning(tripId: number): Promise<boolean> {
+    return !!(await this.getEntityManager().getRepository(TripPlanningRevisions).findOne({ trip: tripId }));
+  }
+
   /**
    * The `LEFT JOIN trip_members m ON m.trip_id = t.id AND m.user_id = ?
    * WHERE (t.user_id = ? OR m.user_id IS NOT NULL)` half `findAccessible`
@@ -985,26 +1007,9 @@ export class TripsRepository extends TrekRepository<Trips> {
     return { trips: Number(row?.trips ?? 0), days: Number(row?.days ?? 0) };
   }
 
-  // ---------------------------------------------------------------------------
-  // Plan 3h Task 3 (`DawarichSyncService`/`DawarichTracksService`) — additive.
-  // ---------------------------------------------------------------------------
-
   /**
-   * DSY2 (`dawarich-sync.service.ts::listTripsToSync`) — `SELECT DISTINCT
-   * t.id, t.start_date, t.end_date FROM trips t LEFT JOIN trip_members m ON
-   * m.trip_id = t.id AND m.user_id = ? WHERE (t.user_id = ? OR m.user_id IS
-   * NOT NULL) AND COALESCE(t.is_archived, 0) = 0 AND t.start_date IS NOT
-   * NULL AND (t.end_date IS NULL OR t.end_date >= date('now', '-400 days'))
-   * AND t.start_date <= date('now', '+1 day') ORDER BY t.start_date DESC`.
-   * `accessibleTripsQuery` for the LEFT JOIN/OR half (the same join builder
-   * `findAccessible`/`listReachableActiveTrips` share); `coalesceParam` for
-   * the `COALESCE(is_archived, 0) = 0` guard (mirrors a nullable column the
-   * same way the legacy statement does, even though `is_archived` is
-   * effectively never NULL in practice); `nowDateOffset` (Task 0) for both
-   * `date('now', …)` literal-offset forms — expressible entirely through
-   * the QueryBuilder, so no `nowDateOffsetKysely` twin was needed for this
-   * site (Task 0's own CONTROLLER NOTE flagged this as a possibility, not a
-   * certainty).
+   * DSY2 — Reachable, non-archived trips for Dawarich sync: retain the
+   * nullable archive guard and portable date offsets (-400 days to tomorrow).
    */
   async listTripsToSync(user_id: number): Promise<{ id: number; start_date: string | null; end_date: string | null }[]> {
     const platform = this.getEntityManager().getPlatform();
@@ -1032,13 +1037,7 @@ export class TripsRepository extends TrekRepository<Trips> {
   // ("Plan 3c is the one that builds a TripsRepository") now being met.
   // ---------------------------------------------------------------------------
 
-  /**
-   * RI2 — `SELECT id, title FROM trips ORDER BY title COLLATE NOCASE ASC`
-   * (the admin invite dialog's trip picker). Kysely, `PlacesRepository
-   * .listImportable`'s precedent: `ORDER BY … COLLATE NOCASE` is Kysely's
-   * own `OrderByItemBuilder.collate('nocase')`, a portable Kysely builder
-   * API, not a raw SQLite fragment — no `sql-functions.ts` helper needed.
-   */
+  /** RI2 — Admin invite trip picker, ordered case-insensitively through Kysely's portable collation. */
   async listIdTitleOrderedByTitle(): Promise<{ id: number; title: string }[]> {
     return await this.kysely<TripIdTitleKyselyDB>()
       .selectFrom('trips')

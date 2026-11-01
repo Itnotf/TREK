@@ -195,19 +195,21 @@ describe('useRoadtripRoutes', () => {
     expect(calculateRouteWithLegs.mock.calls[0][1].profile).toBe('walking')
   })
 
-  it('FE-ROADTRIP-ROUTES-004: drops a stop without coordinates and a day left with one stop', async () => {
+  it('FE-ROADTRIP-ROUTES-004: retains an unresolved stop outside the route and marks the result incomplete', async () => {
     const days = [day(1, 1), day(2, 2)]
     const assignments = {
-      ...map(1, [{ id: 1, at: HAMBURG }, { id: 2, at: LUENEBURG, noCoords: true }]),
+      ...map(1, [{ id: 1, at: HAMBURG }, { id: 2, at: LUENEBURG, noCoords: true, dwell: 45, time: '12:00' }]),
       ...map(2, [{ id: 3, at: HAMBURG }, { id: 4, at: BERLIN }]),
     } as AssignmentsMap
 
     const { result } = renderHook(() => useRoadtripRoutes(7, days, assignments))
     await waitFor(() => expect(result.current.loading).toBe(false))
 
-    // Day 1 lost its second stop and with it its reason to appear at all.
+    expect(result.current.unlocatedActivities).toEqual([expect.objectContaining({ assignmentId: 2, dayId: 1, time: '12:00', dwellMinutes: 45 })])
+    expect(result.current.unlocatedDwellMinutes).toBe(45)
+    expect(result.current.dayWindowIssue).toBe('incomplete')
     expect(result.current.days.map(d => d.dayId)).toEqual([2])
-    expect(result.current.totalStops).toBe(2)
+    expect(result.current.totalStops).toBe(3)
   })
 
   it('FE-ROADTRIP-ROUTES-013: a charger on the way is part of the drive, not a stop', async () => {

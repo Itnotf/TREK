@@ -117,6 +117,26 @@ afterEach(() => {
 });
 
 describe('TripMembersModal', () => {
+  it('uses the loaded roster for owner permissions when opened outside the daily itinerary', async () => {
+    seedStore(useTripStore, { trip: null });
+    seedStore(usePermissionsStore, { permissions: { member_manage: 'trip_owner', share_manage: 'trip_owner' } });
+    render(<TripMembersModal {...defaultProps} />);
+    await screen.findByText('owner');
+    expect(screen.getByRole('button', { name: 'Invite' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sharing/ })).toBeInTheDocument();
+  });
+
+  it('does not borrow owner rights from another trip left in the global store', async () => {
+    seedStore(useAuthStore, { user: memberUser, isAuthenticated: true });
+    seedStore(useTripStore, { trip: buildTrip({ id: 99, user_id: memberUser.id }) });
+    seedStore(usePermissionsStore, { permissions: { member_manage: 'trip_owner', share_manage: 'trip_owner' } });
+    mockRoster([{ id: memberUser.id, username: memberUser.username, avatar_url: null }]);
+    render(<TripMembersModal {...defaultProps} />);
+    await screen.findByText('owner');
+    expect(screen.queryByRole('button', { name: 'Invite' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Sharing/ })).not.toBeInTheDocument();
+  });
+
   it('FE-COMP-MEMBERS-001: renders without crashing', () => {
     render(<TripMembersModal {...defaultProps} />);
     expect(document.body).toBeInTheDocument();

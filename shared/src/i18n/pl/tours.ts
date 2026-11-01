@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Sekcje podróży',
+  'tours.navigation.help': 'Trasy piesze, rowerowe i inne aktywności na świeżym powietrzu można dodać do planu dnia.',
   'trip.tabs.tourPlanner': 'Wycieczki',
   'tours.mode.places': 'Miejsca',
   'tours.mode.tours': 'Wycieczki',

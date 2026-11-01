@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} arquivada',
   'dashboard.newTrip': 'Nova viagem',
   'dashboard.newTripSub': 'Planeje uma nova viagem do zero',
+  'dashboard.roadtrip.enable': 'Planejar uma viagem de carro por várias cidades',
+  'dashboard.roadtrip.hint':
+    'Salve as cidades e os limites de direção com a viagem. Depois de criá-la, você pode pedir ajuda à IA para planejar. Seus requisitos são salvos mesmo sem conexão com a IA.',
+  'dashboard.roadtrip.origin': 'Cidade de partida',
+  'dashboard.roadtrip.viaCities': 'Cidades para visitar (opcional)',
+  'dashboard.roadtrip.viaHint': 'Separe as cidades por vírgulas ou quebras de linha. A IA pode sugerir a ordem.',
+  'dashboard.roadtrip.roundTrip': 'Voltar à cidade de partida',
+  'dashboard.roadtrip.destination': 'Cidade de chegada',
+  'dashboard.roadtrip.dailyHours': 'Tempo máximo diário ao volante (horas)',
+  'dashboard.roadtrip.vehicle': 'Tipo de veículo',
+  'dashboard.roadtrip.combustion': 'Veículo a combustão',
+  'dashboard.roadtrip.electric': 'Veículo elétrico',
+  'dashboard.roadtrip.rangeKm': 'Autonomia realista com tanque cheio ou carga completa (km)',
+  'dashboard.roadtrip.originRequired': 'Informe uma cidade de partida para sua viagem de carro.',
+  'dashboard.roadtrip.destinationRequired': 'Informe uma cidade de chegada ou escolha voltar à cidade de partida.',
+  'dashboard.roadtrip.invalidHours': 'Informe um limite diário de direção entre 1 e 12 horas.',
+  'dashboard.roadtrip.invalidRange': 'Informe uma autonomia realista entre 1 e 2.000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Requisitos da viagem de carro por várias cidades',
+  'dashboard.roadtrip.planningInstruction':
+    'Sugira a ordem das cidades e as cidades de pernoite antes das atividades diárias. Respeite as datas fixas, as hospedagens reservadas e o limite de direção. Verifique as rotas rodoviárias reais e sinalize as informações desconhecidas. Peça confirmação da proposta antes de alterar a viagem.',
+  'dashboard.roadtrip.planPrompt':
+    'Ajude-me a planejar uma viagem de carro por várias cidades usando os requisitos desta descrição e as configurações de direção salvas. Sugira primeiro a ordem das cidades e cidades reais para pernoitar, depois planeje as atividades diárias após minha confirmação. Respeite as datas fixas, as hospedagens reservadas e o limite diário de direção. Verifique as rotas rodoviárias reais e sinalize claramente qualquer informação não verificada. Não altere a viagem até que eu confirme a proposta.',
   'dashboard.subscribeAllTrips': 'Assinar todas as viagens',
   'dashboard.subscribeAllTripsDesc':
     'Um feed de calendário para todas as suas viagens ativas, mantido em sincronia automaticamente. Exclui viagens arquivadas e viagens que terminaram há mais de 90 dias.',

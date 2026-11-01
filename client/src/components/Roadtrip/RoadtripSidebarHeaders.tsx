@@ -58,8 +58,8 @@ export function TripSummary({ routes, narrow }: { routes: RoadtripRoutes; narrow
   const cells: [string, string][] = [
     // `totalStops` already leaves the service stops out, so the head and the day pills
     // below count the same thing without either of them recounting the other's stops.
-    [t('roadtrip.summary.distance'), formatDistance(routes.totalDistance / 1000, distanceUnit)],
-    [t('roadtrip.summary.driving'), formatDurationShort(routes.totalDuration)],
+    [t('roadtrip.summary.distance'), routes.unlocatedActivities?.length ? '—' : formatDistance(routes.totalDistance / 1000, distanceUnit)],
+    [t('roadtrip.summary.driving'), routes.unlocatedActivities?.length ? '—' : formatDurationShort(routes.totalDuration)],
     ...(narrow ? [] : [[t('roadtrip.summary.stops'), String(routes.totalStops)] as [string, string]]),
   ]
   return (

@@ -1,6 +1,29 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.shortTitle': 'Planuj',
+  'trip.planning.title': 'Planujcie razem',
+  'trip.guide.current': 'Aktualny plan podróży',
+  'trip.guide.currentHelp': 'Miejsca, godziny i noclegi odpowiadają planowi dziennemu.',
+  'trip.guide.original': 'Pierwotny przewodnik · odniesienie',
+  'trip.guide.originalHelp':
+    'Plan się zmienił lub nie można zweryfikować tego starszego przewodnika. Trasa, porady i budżet pochodzą z wersji początkowej.',
+  'trip.guide.refresh': 'Odśwież',
+  'trip.guide.title': 'Przewodnik po podróży',
+  'trip.guide.shortTitle': 'Przewodnik',
+  'trip.guide.route': 'Trasa',
+  'trip.guide.highlights': 'Przeżycia, na które warto czekać',
+  'trip.guide.days': 'Przejdź do dnia',
+  'trip.guide.dining': 'Gdzie i co zjeść',
+  'trip.guide.stay': 'Gdzie się zatrzymać',
+  'trip.guide.alternative': 'Gdy plany się zmienią',
+  'trip.guide.schedule': 'Godziny i szczegóły transportu',
+  'trip.guide.budget': 'Szacowany budżet',
+  'trip.guide.preparation': 'Przed wyjazdem',
+  'trip.guide.notes': 'Twoje preferencje, założenia i źródła',
+  'trip.guide.openPlan': 'Otwórz plan dzienny',
+  'trip.guide.loadFailed': 'Nie udało się wczytać przewodnika. Sprawdź połączenie i spróbuj ponownie.',
+  'trip.guide.unavailable': 'Ta podróż jest niedostępna lub nie masz do niej dostępu.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Transport',
   'trip.tabs.reservations': 'Rezerwacje',

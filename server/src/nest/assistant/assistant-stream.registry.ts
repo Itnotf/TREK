@@ -11,30 +11,56 @@ export abstract class AssistantStreamRegistry {
   abstract claim(userId: number, controller: AbortController): Promise<boolean>;
   /** Forgets the turn, if it is still the one registered. */
   abstract release(userId: number, controller: AbortController): Promise<void>;
-  /** Stops the user's running turn; false when none was running. */
-  abstract abort(userId: number): Promise<boolean>;
+  /** Associates a claimed turn with its saved conversation. */
+  abstract bind(userId: number, controller: AbortController, threadId: number): Promise<void>;
+  abstract isRunning(userId: number, threadId: number): Promise<boolean>;
+  /** Stops and drains the turn before another can start; an optional thread id limits the stop. */
+  abstract abort(userId: number, threadId?: number): Promise<boolean>;
+}
+
+interface RunningTurn {
+  controller: AbortController;
+  threadId: number | null;
+  done: Promise<void>;
+  finish: () => void;
 }
 
 export class InMemoryAssistantStreamRegistry extends AssistantStreamRegistry {
-  private readonly running = new Map<number, AbortController>();
+  // shortcut: a server restart stops these turns; use durable jobs when running multiple processes.
+  private readonly running = new Map<number, RunningTurn>();
 
   claim(userId: number, controller: AbortController): Promise<boolean> {
-    const current = this.running.get(userId);
-    if (current && !current.signal.aborted) return Promise.resolve(false);
-    this.running.set(userId, controller);
+    if (this.running.has(userId)) return Promise.resolve(false);
+    let finish!: () => void;
+    const done = new Promise<void>((resolve) => (finish = resolve));
+    this.running.set(userId, { controller, threadId: null, done, finish });
     return Promise.resolve(true);
   }
 
   release(userId: number, controller: AbortController): Promise<void> {
-    if (this.running.get(userId) === controller) this.running.delete(userId);
+    const current = this.running.get(userId);
+    if (current?.controller === controller) {
+      this.running.delete(userId);
+      current.finish();
+    }
     return Promise.resolve();
   }
 
-  abort(userId: number): Promise<boolean> {
+  bind(userId: number, controller: AbortController, threadId: number): Promise<void> {
     const current = this.running.get(userId);
-    if (!current) return Promise.resolve(false);
-    this.running.delete(userId);
-    current.abort();
-    return Promise.resolve(true);
+    if (current?.controller === controller) current.threadId = threadId;
+    return Promise.resolve();
+  }
+
+  isRunning(userId: number, threadId: number): Promise<boolean> {
+    return Promise.resolve(this.running.get(userId)?.threadId === threadId);
+  }
+
+  async abort(userId: number, threadId?: number): Promise<boolean> {
+    const current = this.running.get(userId);
+    if (!current || (threadId !== undefined && current.threadId !== threadId)) return false;
+    current.controller.abort();
+    await current.done;
+    return true;
   }
 }

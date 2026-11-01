@@ -59,6 +59,7 @@ interface NominatimResult {
   type?: string;
   name?: string;
   display_name?: string;
+  address?: Record<string, string>;
   lat: string;
   lon: string;
   extratags?: Record<string, string> | null;
@@ -598,6 +599,7 @@ export class OsmClient {
     lat: number | null;
     lng: number | null;
     extratags: Record<string, string> | null;
+    photo_localities: string[];
   } | null> {
     const typePrefix = osmType.charAt(0).toUpperCase(); // N, W, R
     const params = new URLSearchParams({
@@ -606,6 +608,7 @@ export class OsmClient {
       // Overpass is the richer source but it is also the one that times out;
       // whatever Nominatim already knows costs nothing extra here.
       extratags: '1',
+      addressdetails: '1',
       'accept-language': toApiLang(lang),
     });
     try {
@@ -622,6 +625,9 @@ export class OsmClient {
         lat: Number.isFinite(lat) ? lat : null,
         lng: Number.isFinite(lng) ? lng : null,
         extratags: item.extratags ?? null,
+        photo_localities: ['town', 'village', 'residential', 'neighbourhood', 'quarter', 'park']
+          .map((key) => item.address?.[key])
+          .filter((value): value is string => typeof value === 'string' && value.trim().length > 1),
       };
     } catch {
       return null;
@@ -702,6 +708,7 @@ export class OsmClient {
       lat: nominatim?.lat ?? null,
       lng: nominatim?.lng ?? null,
       osm_id: placeId,
+      photo_localities: nominatim?.photo_localities ?? [],
     };
   }
 

@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Reisi jaotised',
+  'tours.navigation.help': 'Jalutus-, ratta- ja muud välitegevuste marsruudid saab lisada päevakavasse.',
   'trip.tabs.tourPlanner': 'Retked',
   'tours.mode.places': 'Kohad',
   'tours.mode.tours': 'Retked',

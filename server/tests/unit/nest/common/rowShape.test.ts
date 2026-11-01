@@ -31,6 +31,7 @@ function makeRow(overrides: Partial<AssignmentWithPlaceRow> = {}): AssignmentWit
     created_at: '2024-01-01T00:00:00Z',
     place_name: 'Eiffel Tower',
     place_description: 'Famous landmark',
+    place_source: null,
     lat: 48.8584,
     lng: 2.2945,
     address: 'Champ de Mars, Paris',

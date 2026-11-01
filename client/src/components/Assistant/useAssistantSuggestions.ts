@@ -22,8 +22,7 @@ export interface ReadySuggestion {
  * hand, so it gets the general questions and none that would change it. A
  * journey's chat in TREK Studio gets none, since they all ask about a trip,
  * and its rights are the journey's role, as the Studio itself reads it. The
- * home chat outside any one trip gets its own questions across the user's
- * trips; what it may change the server decides, so nothing is held back here.
+ * home chat offers short travel ideas; what it may change the server decides.
  */
 export function useAssistantSuggestions(tripId: number): { suggestions: ReadySuggestion[]; canEdit: boolean } {
   const { t } = useTranslation();

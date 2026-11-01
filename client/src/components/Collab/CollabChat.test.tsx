@@ -735,4 +735,23 @@ describe('CollabChat', () => {
       createObjURL.mockRestore(); revokeObjURL.mockRestore();
     }
   });
+
+  it('uses the requested trip’s permission on a standalone planning page', async () => {
+    seedStore(useTripStore, { trip: null });
+    render(<CollabChat {...defaultProps} canEdit={true} />);
+    expect(await screen.findByLabelText('Type a message...')).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Send' })).toBeInTheDocument();
+  });
+
+  it('does not send from the keyboard when the planning page makes discussion read only', async () => {
+    const send = vi.fn(() => HttpResponse.json({ message: { id: 3, text: 'blocked' } }));
+    server.use(http.post('/api/trips/1/collab/messages', send));
+    render(<CollabChat {...defaultProps} canEdit={false} />);
+    const input = await screen.findByLabelText('Type a message...');
+    expect(input).toBeDisabled();
+    fireEvent.change(input, { target: { value: 'Should not send' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(send).not.toHaveBeenCalled();
+    expect(screen.queryByRole('button', { name: 'Send' })).not.toBeInTheDocument();
+  });
 });

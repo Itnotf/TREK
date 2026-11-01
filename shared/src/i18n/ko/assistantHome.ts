@@ -1,15 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': '이 여행 열기',
+  'assistant.plan.shareOptions': '먼저 다른 사람들과 상의하기 (선택)',
+  'assistant.plan.preview': '여행 일정 미리보기',
   'assistant.home.title': '나의 여행',
-  'assistant.home.welcome': '무엇을 도와드릴까요?',
-  'assistant.home.placeholder': '여행에 대해 무엇이든 물어보세요',
+  'assistant.home.welcome': '이번에는 어디로 떠나고 싶으세요?',
+  'assistant.home.placeholder': '예: 쓰촨 서부로 자동차 여행을 가고 싶어요. 여행 가이드 링크도 붙여 넣을 수 있어요',
   'assistant.home.switch': '한 여행에 대해 채팅',
   'assistant.home.back': '모든 여행으로 돌아가기',
-  'assistant.suggest.homeNext': '다음 여행은 어디이고 아직 남은 일은 무엇인가요?',
-  'assistant.suggest.homeCompare': '다가오는 여행들을 비교해 줘',
-  'assistant.suggest.homeAtlas': '지금까지 몇 개국을 방문했나요?',
-  'assistant.suggest.homeVacay': '올해 남은 휴가는 며칠인가요?',
+  'assistant.suggest.homeNext': '쓰촨 서부로 자동차 여행을 가고 싶어요',
   'assistant.card.tripChat.label': '여행 채팅에서 계속하기',
   'assistant.card.tripChat.eyebrow': '여행 채팅',
   'assistant.card.tripChat.dates': '{start}부터 {end}까지',
@@ -26,6 +26,30 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': '저널',
   'assistant.card.journalChat.open': '이 저널의 채팅에서 계속하기',
   'assistant.step.openJournalChat': '저널을 찾는 중',
+  'assistant.plan.start': 'AI로 여행 계획하기',
+  'assistant.plan.manual': '직접 만들기',
+  'assistant.plan.unavailable': '지금은 AI 여행 계획을 이용할 수 없습니다. 여행을 직접 만들 수는 있습니다.',
+  'assistant.plan.label': '여행 초안',
+  'assistant.plan.version': '버전 {version}',
+  'assistant.plan.requirements': '여행 희망 사항',
+  'assistant.plan.assumptions': '이 가정들을 확인해 주세요',
+  'assistant.plan.overnight': '{city}에서 숙박',
+  'assistant.plan.editHint':
+    '바꾸고 싶은 내용이 있나요? 채팅으로 알려 주시면 초안을 수정할게요. 마음에 들면 확정하세요.',
+  'assistant.plan.stale': '아래에 더 새로운 버전이 있습니다. 여행을 만들려면 최신 버전을 확정하세요.',
+  'assistant.plan.confirm': '확정하고 여행 만들기',
+  'assistant.plan.created': '이 초안을 여행으로 저장했습니다.',
+  'assistant.plan.loadFailed': '이 초안을 불러오지 못했습니다. 다시 시도해 주세요.',
+  'assistant.plan.applyFailed': '여행을 만들지 못했습니다. 최신 초안을 확인한 뒤 다시 시도해 주세요.',
+  'assistant.plan.unverified': '정확한 위치가 아직 확인되지 않았습니다',
+  'assistant.plan.share': '이 계획을 함께 의논하기',
+  'assistant.plan.shareHint': '확정하기 전에 이 일정을 여행 공간에 공유하세요. 비공개 대화는 공개되지 않습니다.',
+  'assistant.followUp.answerHint': '하나를 선택하거나 아래에 직접 답변을 입력하세요.',
+  'assistant.followUp.useDefaults': '지금 정보로 계획해 줘',
+  'assistant.followUp.useDefaultsPrompt':
+    '지금까지 나눈 이야기와 합리적인 가정을 바탕으로, 추가 질문 없이 전체 여행 일정을 바로 만들어 주세요.',
+  'assistant.suggest.homeWeekend': '주말에 아이들과 놀러 가고 싶어요',
+  'assistant.suggest.homeUnsure': '편히 쉴 수 있는 곳으로 여행 가고 싶어요',
 };
 
 export default assistantHome;

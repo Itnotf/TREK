@@ -6,6 +6,8 @@ import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { Tooltip } from './Tooltip'
 import { focusDialog, trapTab } from './dialogFocus'
 import { useDiscardGuard } from './useDiscardGuard'
+import { useIsPhone } from '../../hooks/useIsPhone'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 /** A font size that follows the user's text size setting for its tier. */
 export const fs = (px: number, tier: 'caption' | 'body' | 'subtitle' | 'title' = 'caption'): CSSProperties => ({ fontSize: `calc(${px}px * var(--fs-scale-${tier}, 1))` })
@@ -70,6 +72,8 @@ function DialogFrame({ onClose, labelledBy, width = 'detail', align = 'center', 
   // ways out a hand can take by accident; both go through requestClose.
   const { asking, markStart, requestClose, keepEditing, discard } = useDiscardGuard(discardGuard, onClose)
   const held = blocked || asking
+  const isPhone = useIsPhone()
+  useBackLayer(isPhone, () => { if (!blocked) { if (asking) keepEditing(); else requestClose() } }, 50)
 
   useEffect(() => {
     if (held) return

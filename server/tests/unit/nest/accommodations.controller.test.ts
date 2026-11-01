@@ -318,7 +318,7 @@ describe('stay use cases: the shared gate and checks', () => {
       remove: vi.fn().mockResolvedValue(cancelled),
     });
     await svc.deleteStay(5, 9, writer('admin'));
-    expect(checkPermission).toHaveBeenCalledWith('day_edit', 'admin', 2, 1, true);
+    expect(checkPermission).toHaveBeenCalledWith('day_edit', 'admin', 2, 1, true, 5);
   });
 
   it('ACC-UC-004: every reference miss is listed for MCP, the first one answers REST', async () => {

@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'กิจกรรมที่ยังไม่ได้เลือกสถานที่',
+  'roadtrip.unlocated.hint':
+    'กิจกรรมเหล่านี้ต้องใช้เวลา {time} ยอดรวมเส้นทางยังไม่ครบ กรุณาเลือกสถานที่ก่อนจัดตารางรายวันอัตโนมัติ',
   'roadtrip.stay.portals': 'ค้นหาที่พัก',
   'roadtrip.stay.portalHint': 'ตรวจสอบปลายทาง วันที่ และผู้เข้าพักในพอร์ทัล CHECK24 ต้องค้นหาด้วยตนเอง',
   'roadtrip.charging.available': 'พร้อมใช้งาน',

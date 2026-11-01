@@ -223,7 +223,7 @@
   "mobile/screens/trip/places/MPlacesSaveToCollectionSheet.tsx": 7,
   "mobile/screens/trip/places/MPlacesToursModeSwitch.tsx": 1,
   "mobile/screens/trip/plan/MPlanTimeline.tsx": 14,
-  "mobile/screens/trip/plan/MPlanTimelineRows.tsx": 26,
+  "mobile/screens/trip/plan/MPlanTimelineRows.tsx": 23,
   "mobile/screens/trip/roadtrip/MRoadtripRows.tsx": 31,
   "mobile/screens/trip/roadtrip/MRoadtripTab.tsx": 16,
   "mobile/screens/trip/roadtrip/MRtAlternativesBar.tsx": 8,

@@ -249,7 +249,21 @@ export interface QuietDay {
   stops: RoadtripStop[];
 }
 
+/** A saved activity whose position must be chosen before routing its day. */
+export interface UnlocatedActivity {
+  stopType?: string | null;
+  assignmentId: number;
+  dayId: number;
+  dayNumber: number;
+  name: string;
+  time: string | null;
+  leaveAt: string | null;
+  dwellMinutes: number | null;
+}
+
 export interface RoadtripRoutes {
+  unlocatedActivities?: UnlocatedActivity[];
+  unlocatedDwellMinutes?: number;
   boundaryPath?: DayBoundaryLeg[];
   validateBoundaries?: (boundaries: RoadtripDayBoundary[]) => WindowPlan['issue'];
   dayWindowIssue?: 'incomplete' | 'conflict' | 'tooLong' | 'legTooLong' | null;

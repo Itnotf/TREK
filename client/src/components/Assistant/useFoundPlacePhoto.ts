@@ -41,16 +41,20 @@ function proxiedPhoto(url: string | null | undefined): string | null {
  * are off, for a place known only by its position, and for any answer that is
  * not the proxy's own address.
  */
-export function useFoundPlacePhoto(place: PhotoPlace, ref: RefObject<Element | null>): string | null {
+export function useFoundPlacePhotoDetails(place: PhotoPlace, ref: RefObject<Element | null>, eager = false) {
   const enabled = useAuthStore((s) => s.placesPhotosEnabled);
   const key = photoKeyOf(place);
-  const [src, setSrc] = useState<string | null>(() => (key ? proxiedPhoto(getCached(key)?.photoUrl) : null));
+  const [photo, setPhoto] = useState(() => ({
+    key,
+    src: key ? proxiedPhoto(getCached(key)?.photoUrl) : null,
+    attribution: key ? (getCached(key)?.attribution ?? null) : null,
+  }));
   // Without an IntersectionObserver every card counts as in view.
-  const [visible, setVisible] = useState(() => typeof IntersectionObserver === 'undefined');
+  const [visible, setVisible] = useState(() => eager || typeof IntersectionObserver === 'undefined');
 
   useEffect(() => {
     const el = ref.current;
-    if (!enabled || !key || !el || typeof IntersectionObserver === 'undefined') return;
+    if (eager || !enabled || !key || !el || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
@@ -61,18 +65,22 @@ export function useFoundPlacePhoto(place: PhotoPlace, ref: RefObject<Element | n
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [enabled, key, ref]);
+  }, [eager, enabled, key, ref]);
 
   useEffect(() => {
     if (!visible || !enabled || !key) return;
     let cancelled = false;
     fetchPhoto(key, key, place.lat ?? undefined, place.lng ?? undefined, place.name, (entry) => {
-      if (!cancelled) setSrc(proxiedPhoto(entry.photoUrl));
+      if (!cancelled) setPhoto({ key, src: proxiedPhoto(entry.photoUrl), attribution: entry.attribution ?? null });
     });
     return () => {
       cancelled = true;
     };
   }, [visible, enabled, key, place.lat, place.lng, place.name]);
 
-  return enabled ? src : null;
+  return enabled && photo.key === key ? photo : { src: null, attribution: null };
+}
+
+export function useFoundPlacePhoto(place: PhotoPlace, ref: RefObject<Element | null>): string | null {
+  return useFoundPlacePhotoDetails(place, ref).src;
 }

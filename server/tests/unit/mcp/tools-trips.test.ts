@@ -9,6 +9,7 @@
  */
 import { db as testDb } from '../../../src/db/database';
 import { Days } from '../../../src/db/entities/Days.entity';
+import { RoadtripPreferences } from '../../../src/db/entities/RoadtripPreferences.entity';
 import { Trips } from '../../../src/db/entities/Trips.entity';
 import { VacayEntries } from '../../../src/db/entities/VacayEntries.entity';
 import { VacayUserYears } from '../../../src/db/entities/VacayUserYears.entity';
@@ -107,6 +108,33 @@ async function withHarness(userId: number, fn: (h: McpHarness) => Promise<void>)
 // ---------------------------------------------------------------------------
 
 describe('Tool: create_trip', () => {
+  it('persists driving preferences through the shared creation contract', async () => {
+    const { user } = createUser(testDb);
+    const preferences = { roadtrip_day_minutes: 240, roadtrip_connect_days: true };
+    await withHarness(user.id, async (h) => {
+      const result = await h.client.callTool({
+        name: 'create_trip',
+        arguments: { title: 'Yunnan loop', roadtrip_preferences: preferences },
+      });
+      expect(result.isError).not.toBe(true);
+      expect(await countRows(orm, Trips)).toBe(1);
+      const rows = await findRows(orm, RoadtripPreferences);
+      expect(Object.fromEntries(rows.map((row) => [row.key, JSON.parse(row.value)]))).toEqual(preferences);
+    });
+  });
+
+  it('refuses malformed driving preferences without creating a trip', async () => {
+    const { user } = createUser(testDb);
+    await withHarness(user.id, async (h) => {
+      const result = await h.client.callTool({
+        name: 'create_trip',
+        arguments: { title: 'Invalid', roadtrip_preferences: { roadtrip_day_minutes: -1 } },
+      });
+      expect(result.isError).toBe(true);
+      expect(await countRows(orm, Trips)).toBe(0);
+    });
+  });
+
   it('creates a trip with title only and generates 7 default days', async () => {
     const { user } = createUser(testDb);
     await withHarness(user.id, async (h) => {

@@ -15,6 +15,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.few': ' · {count} archivované',
   'dashboard.newTrip': 'Nová cesta',
   'dashboard.newTripSub': 'Naplánujte novú cestu od začiatku',
+  'dashboard.roadtrip.enable': 'Naplánovať cestu autom cez viacero miest',
+  'dashboard.roadtrip.hint':
+    'Uložte mestá a limity šoférovania k ceste. Po jej vytvorení môžete požiadať AI o pomoc s plánovaním. Vaše požiadavky sa uložia aj bez pripojenia k AI.',
+  'dashboard.roadtrip.origin': 'Východiskové mesto',
+  'dashboard.roadtrip.viaCities': 'Mestá na návštevu (voliteľné)',
+  'dashboard.roadtrip.viaHint': 'Mestá oddeľte čiarkami alebo novými riadkami. AI môže navrhnúť poradie.',
+  'dashboard.roadtrip.roundTrip': 'Vrátiť sa do východiskového mesta',
+  'dashboard.roadtrip.destination': 'Cieľové mesto',
+  'dashboard.roadtrip.dailyHours': 'Maximálny denný čas šoférovania (hodiny)',
+  'dashboard.roadtrip.vehicle': 'Typ vozidla',
+  'dashboard.roadtrip.combustion': 'Vozidlo so spaľovacím motorom',
+  'dashboard.roadtrip.electric': 'Elektromobil',
+  'dashboard.roadtrip.rangeKm': 'Reálny dojazd s plnou nádržou alebo batériou (km)',
+  'dashboard.roadtrip.originRequired': 'Zadajte východiskové mesto svojej cesty autom.',
+  'dashboard.roadtrip.destinationRequired': 'Zadajte cieľové mesto alebo zvoľte návrat do východiskového mesta.',
+  'dashboard.roadtrip.invalidHours': 'Zadajte denný limit šoférovania od 1 do 12 hodín.',
+  'dashboard.roadtrip.invalidRange': 'Zadajte reálny dojazd od 1 do 2 000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Požiadavky na cestu autom cez viacero miest',
+  'dashboard.roadtrip.planningInstruction':
+    'Pred dennými aktivitami navrhnite poradie miest a mestá na prenocovanie. Rešpektujte pevné termíny, rezervované ubytovanie a limit šoférovania. Overte skutočné cestné trasy a označte neznáme informácie. Pred zmenou cesty si nechajte návrh potvrdiť.',
+  'dashboard.roadtrip.planPrompt':
+    'Pomôž mi naplánovať cestu autom cez viacero miest podľa požiadaviek v opise cesty a uložených nastavení šoférovania. Najprv navrhni poradie miest a skutočné mestá na prenocovanie, denné aktivity plánuj až po mojom potvrdení. Rešpektuj pevné termíny, rezervované ubytovanie a denný limit šoférovania. Over skutočné cestné trasy a jasne označ neoverené informácie. Cestu nemeň, kým návrh nepotvrdím.',
   'dashboard.subscribeAllTrips': 'Odoberať všetky cesty',
   'dashboard.subscribeAllTripsDesc':
     'Jeden kalendárový kanál pre všetky vaše aktívne cesty, automaticky udržiavaný v synchronizácii. Nezahŕňa archivované cesty a cesty, ktoré skončili pred viac ako 90 dňami.',

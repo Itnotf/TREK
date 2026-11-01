@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} archiviato',
   'dashboard.newTrip': 'Nuovo Viaggio',
   'dashboard.newTripSub': 'Pianifica un nuovo viaggio da zero',
+  'dashboard.roadtrip.enable': 'Pianifica un viaggio in auto tra più città',
+  'dashboard.roadtrip.hint':
+    'Salva le città e i limiti di guida insieme al viaggio. Dopo averlo creato, puoi chiedere aiuto all’IA per pianificarlo. Le tue esigenze vengono salvate anche senza connessione all’IA.',
+  'dashboard.roadtrip.origin': 'Città di partenza',
+  'dashboard.roadtrip.viaCities': 'Città da visitare (facoltativo)',
+  'dashboard.roadtrip.viaHint': 'Separa le città con virgole o andando a capo. L’IA può suggerire l’ordine.',
+  'dashboard.roadtrip.roundTrip': 'Torna alla città di partenza',
+  'dashboard.roadtrip.destination': 'Città di arrivo',
+  'dashboard.roadtrip.dailyHours': 'Guida giornaliera massima (ore)',
+  'dashboard.roadtrip.vehicle': 'Tipo di veicolo',
+  'dashboard.roadtrip.combustion': 'Veicolo a combustione',
+  'dashboard.roadtrip.electric': 'Veicolo elettrico',
+  'dashboard.roadtrip.rangeKm': 'Autonomia realistica con il pieno o una ricarica completa (km)',
+  'dashboard.roadtrip.originRequired': 'Inserisci una città di partenza per il tuo viaggio in auto.',
+  'dashboard.roadtrip.destinationRequired': 'Inserisci una città di arrivo o scegli di tornare alla città di partenza.',
+  'dashboard.roadtrip.invalidHours': 'Inserisci un limite di guida giornaliera tra 1 e 12 ore.',
+  'dashboard.roadtrip.invalidRange': 'Inserisci un’autonomia realistica tra 1 e 2.000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Esigenze del viaggio in auto tra più città',
+  'dashboard.roadtrip.planningInstruction':
+    'Proponi l’ordine delle città e le città in cui pernottare prima delle attività giornaliere. Rispetta le date fisse, gli alloggi prenotati e il limite di guida. Verifica i percorsi stradali reali e segnala le informazioni sconosciute. Chiedi conferma della proposta prima di modificare il viaggio.',
+  'dashboard.roadtrip.planPrompt':
+    'Aiutami a pianificare un viaggio in auto tra più città usando le esigenze di questa descrizione e le impostazioni di guida salvate. Proponi prima l’ordine delle città e città reali in cui pernottare, poi pianifica le attività giornaliere dopo la mia conferma. Rispetta le date fisse, gli alloggi prenotati e il limite di guida giornaliera. Verifica i percorsi stradali reali e segnala chiaramente le informazioni non verificate. Non modificare il viaggio finché non confermo la proposta.',
   'dashboard.subscribeAllTrips': 'Iscriviti a tutti i viaggi',
   'dashboard.subscribeAllTripsDesc':
     'Un unico feed di calendario per tutti i tuoi viaggi attivi, mantenuto sincronizzato automaticamente. Esclude i viaggi archiviati e quelli terminati più di 90 giorni fa.',

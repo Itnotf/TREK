@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': '旅行のメニュー',
+  'tours.navigation.help': '散策やサイクリングなどの屋外ルートを、各日の行程にアクティビティとして追加できます。',
   'trip.tabs.tourPlanner': 'ツアー',
   'tours.mode.places': 'スポット',
   'tours.mode.tours': 'ツアー',

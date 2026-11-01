@@ -4,6 +4,8 @@ import VideoPlayer from './VideoPlayerLazy'
 import { usePhotoZoom } from './usePhotoZoom'
 import { Tooltip } from '../shared/Tooltip'
 import { isRtlLanguage, useTranslation } from '../../i18n'
+import { useIsPhone } from '../../hooks/useIsPhone'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 interface LightboxPhoto {
   id: string
@@ -37,6 +39,8 @@ export default function PhotoLightbox({ photos, startIndex = 0, onClose, label }
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const dialogRef = useRef<HTMLDivElement>(null)
   const { t, language } = useTranslation()
+  const isPhone = useIsPhone()
+  useBackLayer(isPhone, onClose, 80)
   // Right to left, the next photo lies to the left: the arrow keys and swipes follow the reading direction.
   // Taken from the language, not read off <html dir>, so it stays put across re-renders.
   const rtl = isRtlLanguage(language)

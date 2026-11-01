@@ -37,12 +37,14 @@ import MRtDraftSheet from '../roadtrip/MRtDraftSheet'
 import type { MTripSheetsProps } from '../MTripShell'
 import { lockBodyScroll } from '../../../../utils/bodyScrollLock'
 import { focusDialog, trapTab } from '../../../../components/shared/dialogFocus'
+import { useBackLayer } from '../../../../hooks/useBackLayer'
 
 /** The one global mobile tour-detail owner, independent of which surface selected it. */
 export function MSelectedTourDetail({ planner }: Pick<MTripSheetsProps, 'planner'>) {
   const panelRef = useRef<HTMLDivElement>(null)
   const selectedTourId = planner.selectedTour?.place_id ?? null
   const selectedPlaceId = planner.selectedPlace?.id ?? null
+  useBackLayer(selectedTourId != null && selectedPlaceId != null, () => planner.setSelectedPlaceId(null), 50)
   useEffect(() => {
     if (selectedTourId == null || selectedPlaceId == null) return
     const previous = document.activeElement as HTMLElement | null

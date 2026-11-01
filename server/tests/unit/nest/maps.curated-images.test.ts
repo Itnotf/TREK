@@ -10,6 +10,7 @@
  * fetch is stubbed; the DB is mocked the same way maps.service.test.ts does it.
  */
 import { WikimediaClient } from '../../../src/nest/maps/providers/wikimedia.client';
+import { safeFetchFollow } from '../../../src/utils/ssrfGuard';
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
@@ -24,6 +25,96 @@ vi.mock('../../../src/utils/ssrfGuard', () => ({
 }));
 
 const svcOf = () => new WikimediaClient();
+
+describe('verified OSM marker photos', () => {
+  const candidate = (title: string, descriptors = '') => ({
+    photoUrl: `https://upload.wikimedia.org/${encodeURIComponent(title)}.jpg`,
+    attribution: 'Photographer',
+    license: 'CC BY 3.0',
+    licenseUrl: null,
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Photo.jpg',
+    pageId: null,
+    title,
+    width: 1200,
+    height: 800,
+    descriptors,
+  });
+  const imageResponse = () => new Response(new Uint8Array([1, 2, 3]), { status: 200 });
+
+  it('uses a verified locality photo, rejects a closer dog, and preserves credits/context', async () => {
+    const wiki = svcOf();
+    vi.spyOn(wiki, 'fetchCommonsCandidates').mockResolvedValue([
+      candidate('File:街子古镇-流浪的狗狗.jpg'),
+      candidate('File:街子古镇塔.jpg'),
+    ]);
+    vi.mocked(safeFetchFollow).mockResolvedValueOnce(imageResponse());
+    const result = await wiki.downloadOsmPhoto(30.814, 103.556, {
+      name: '字库塔',
+      address: '字库塔, 瑞龙廊桥, 街子古镇, Chengdu',
+      photo_localities: ['Jiezi', '街子镇'],
+    });
+    expect(result).toMatchObject({ kind: 'photo', attribution: expect.stringContaining('街子区域参考图') });
+    expect(result).toMatchObject({ attribution: expect.stringContaining('CC BY 3.0') });
+    expect(vi.mocked(safeFetchFollow).mock.calls.at(-1)?.[0]).toContain(encodeURIComponent('街子古镇塔'));
+  });
+
+  it('matches a trusted English locality for a Chinese named large attraction', async () => {
+    const wiki = svcOf();
+    vi.spyOn(wiki, 'fetchCommonsCandidates').mockResolvedValue([
+      candidate('File:Yuantong Catholic Church.jpg'),
+      candidate('File:Unrelated street.jpg'),
+    ]);
+    vi.mocked(safeFetchFollow).mockResolvedValueOnce(imageResponse());
+    expect(
+      await wiki.downloadOsmPhoto(30.733, 103.62, {
+        name: '元通古镇',
+        address: '元通古镇, 锦江路, Yuantong, Chengdu, Sichuan',
+        photo_localities: ['Yuantong'],
+      }),
+    ).toMatchObject({ kind: 'photo', attribution: expect.stringContaining('Yuantong区域参考图') });
+    expect(wiki.fetchCommonsCandidates).toHaveBeenCalledWith(30.733, 103.62, 5, 1000, true);
+  });
+
+  it('does not use an unrelated nearby picture or a city match', async () => {
+    const wiki = svcOf();
+    vi.spyOn(wiki, 'fetchCommonsCandidates').mockResolvedValue([candidate('File:Chengdu restaurant.jpg')]);
+    expect(
+      await wiki.downloadOsmPhoto(30.733, 103.62, {
+        name: '元通古镇',
+        address: '元通古镇, 锦江路, 元通镇, Chengdu, Sichuan',
+        photo_localities: ['元通镇'],
+      }),
+    ).toEqual({ kind: 'none' });
+  });
+
+  it('prefers the exact Wikidata image to a locality search', async () => {
+    const wiki = svcOf();
+    vi.spyOn(wiki, 'fetchWikidataCandidates').mockResolvedValue({
+      candidates: [candidate('File:Exact attraction.jpg')],
+      commonsCategory: null,
+    });
+    const nearby = vi.spyOn(wiki, 'fetchCommonsCandidates');
+    vi.mocked(safeFetchFollow).mockResolvedValueOnce(imageResponse());
+    expect(await wiki.downloadOsmPhoto(30.733, 103.62, { name: 'Place', wikidata: 'Q1' })).toMatchObject({
+      kind: 'photo',
+      attribution: expect.not.stringContaining('区域参考图'),
+    });
+    expect(nearby).not.toHaveBeenCalled();
+  });
+
+  it('treats an HTTP 200 Commons operational error as a short-lived provider failure', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => ({
+          error: { code: 'cirrussearch-too-busy-error' },
+        }),
+      })),
+    );
+    expect(await svcOf().downloadOsmPhoto(30.73, 103.62, { name: '元通古镇' })).toEqual({ kind: 'failed' });
+  });
+});
 
 const filePage = (over: Record<string, unknown> = {}) => ({
   pageid: 4711,

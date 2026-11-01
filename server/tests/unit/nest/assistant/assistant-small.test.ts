@@ -33,8 +33,11 @@ describe('InMemoryAssistantStreamRegistry', () => {
     expect(await registry.claim(1, first)).toBe(true);
     expect(await registry.claim(1, new AbortController())).toBe(false);
     expect(await registry.claim(2, new AbortController())).toBe(true);
-    expect(await registry.abort(1)).toBe(true);
+    const stopped = registry.abort(1);
     expect(first.signal.aborted).toBe(true);
+    expect(await registry.claim(1, new AbortController())).toBe(false);
+    await registry.release(1, first);
+    expect(await stopped).toBe(true);
     expect(await registry.abort(1)).toBe(false);
     expect(await registry.claim(1, new AbortController())).toBe(true);
   });
@@ -43,13 +46,33 @@ describe('InMemoryAssistantStreamRegistry', () => {
     const registry = new InMemoryAssistantStreamRegistry();
     const old = new AbortController();
     await registry.claim(1, old);
-    await registry.abort(1);
+    const stopped = registry.abort(1);
+    await registry.release(1, old);
+    await stopped;
     const current = new AbortController();
     await registry.claim(1, current);
     await registry.release(1, old);
     expect(await registry.claim(1, new AbortController())).toBe(false);
     await registry.release(1, current);
     expect(await registry.claim(1, new AbortController())).toBe(true);
+  });
+
+  it('binds running state to the same user and thread and only stops that thread', async () => {
+    const registry = new InMemoryAssistantStreamRegistry();
+    const controller = new AbortController();
+    await registry.claim(1, controller);
+    await registry.bind(1, controller, 9);
+    expect(await registry.isRunning(1, 9)).toBe(true);
+    expect(await registry.isRunning(2, 9)).toBe(false);
+    expect(await registry.isRunning(1, 10)).toBe(false);
+    expect(await registry.abort(1, 10)).toBe(false);
+    expect(controller.signal.aborted).toBe(false);
+    const stopped = registry.abort(1, 9);
+    expect(controller.signal.aborted).toBe(true);
+    expect(await registry.isRunning(1, 9)).toBe(true);
+    await registry.release(1, controller);
+    expect(await stopped).toBe(true);
+    expect(await registry.isRunning(1, 9)).toBe(false);
   });
 });
 

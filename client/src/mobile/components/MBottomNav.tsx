@@ -8,6 +8,7 @@ import { normalizeAppearance } from '@trek/shared'
 import { useNavItems, splitMobileNav } from '../../components/Layout/navItems'
 import { isNavItemActive, useCreateAction } from '../../components/Layout/useCreateAction'
 import MFab from './MFab'
+import MSheet from './MSheet'
 import { useAssistantHomeLauncher } from '../../components/Assistant/useAssistantHome'
 
 interface NavItem { to: string; label: string; icon: LucideIcon }
@@ -94,13 +95,9 @@ export default function MBottomNav() {
 
   return (
     <>
-      {moreOpen && (
-        // Invisible scrim (the popover sits on the UI without dimming it).
-        <div className="fixed inset-0 z-[60]" role="presentation" onClick={() => setMoreOpen(false)}>
+      <MSheet open={moreOpen} onClose={() => setMoreOpen(false)} variant="bottom" ariaLabel={t('mobileNav.more')}>
           <div
-            className="absolute inset-x-4 flex flex-col gap-2 rounded-[26px] border border-[color:var(--m-gbr)] bg-[color:var(--m-glass)] p-[10px] shadow-[0_-8px_40px_-14px_rgba(0,0,0,.45)] backdrop-blur-[30px] backdrop-saturate-[1.8] bottom-[calc(env(safe-area-inset-bottom,0px)+86px)]"
-            role="presentation"
-            onClick={e => e.stopPropagation()}
+            className="flex min-h-0 flex-col gap-2 overflow-y-auto overscroll-contain p-[10px]"
           >
             {moreRows.map(({ key, label, icon: Icon, go }) => (
               <button
@@ -117,8 +114,7 @@ export default function MBottomNav() {
               </button>
             ))}
           </div>
-        </div>
-      )}
+      </MSheet>
 
       <nav className="fixed inset-x-4 z-40 flex h-[62px] items-center rounded-[31px] border border-[color:var(--m-gbr)] bg-[color:var(--m-glass)] px-3 shadow-[0_16px_44px_-14px_rgba(0,0,0,.35)] backdrop-blur-[30px] backdrop-saturate-[1.8] bottom-[calc(env(safe-area-inset-bottom,0px)+12px)]">
         <div className="flex min-w-0 flex-1 items-center justify-around">{left.map(renderItem)}</div>

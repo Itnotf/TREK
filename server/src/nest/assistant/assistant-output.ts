@@ -142,7 +142,11 @@ export function fitToSize(value: Json, maxChars = MAX_TOOL_OUTPUT_CHARS): Json {
 }
 
 /** A tool's answer as the provider and the client see it: projected, redacted and cut to size. */
-export function toolOutputForProvider(toolName: string, value: Json, maxChars = MAX_TOOL_OUTPUT_CHARS): Json {
+export function toolOutputForProvider(toolName: string, value: Json, maxChars?: number): Json {
   const project = CORE_PROJECTIONS[toolName] ?? PROJECTIONS[toolName];
-  return fitToSize(redactForProvider(project ? project(value) : value), maxChars);
+  // A validated itinerary is up to 60k characters; losing its last days corrupts the next revision.
+  const limit =
+    maxChars ??
+    (toolName === 'get_itinerary_draft' || toolName === 'save_itinerary_draft' ? 64_000 : MAX_TOOL_OUTPUT_CHARS);
+  return fitToSize(redactForProvider(project ? project(value) : value), limit);
 }

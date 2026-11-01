@@ -1,5 +1,11 @@
 import type { AiToolSpec } from '../ai-connections/ai-chat-client.interface';
-import { ASSISTANT_FOLLOW_UPS_TOOL, type AssistantFollowUps, MAX_FOLLOW_UP_CHARS, MAX_FOLLOW_UPS } from '@trek/shared';
+import {
+  ASSISTANT_FOLLOW_UPS_TOOL,
+  type AssistantFollowUps,
+  MAX_FOLLOW_UP_CHARS,
+  MAX_FOLLOW_UP_QUESTION_CHARS,
+  MAX_FOLLOW_UPS,
+} from '@trek/shared';
 
 /**
  * What the user may ask next, offered by the model itself at the end of an
@@ -13,10 +19,13 @@ export const FOLLOW_UPS_SPEC: AiToolSpec = {
   name: ASSISTANT_FOLLOW_UPS_TOOL,
   description:
     'Offer the user up to three short questions or requests they are likely to send next, shown as one-tap chips ' +
-    'under your answer. Call it once, last, after your answer is written, together with nothing else. Each must ' +
+    'under your answer. Call it once, last, together with nothing else; ordinary follow-ups come after your text. Each must ' +
     'follow from what was just discussed and the part of TREK it is about (a planned hike: an easier variant, what ' +
     'to pack; a budget: who owes whom), be written as the user would say it, in their language, and be something ' +
-    'you can do. Never repeat what was just done; skip it when nothing sensible follows.',
+    'you can do. When essential trip information is missing, set question to ONE short clarification and put ' +
+    'two or three likely ANSWERS in questions (not more questions). Each answer must make sense as a user ' +
+    'message on its own, for example "About five days". A clarification may be the whole reply; do not repeat ' +
+    'its question in text. Never repeat known information or what was just done; skip it when nothing sensible follows.',
   parameters: {
     type: 'object',
     properties: {
@@ -25,7 +34,13 @@ export const FOLLOW_UPS_SPEC: AiToolSpec = {
         minItems: 1,
         maxItems: MAX_FOLLOW_UPS,
         items: { type: 'string', maxLength: MAX_FOLLOW_UP_CHARS },
-        description: "The questions, each a few words, in the user's language.",
+        description: "Short user messages, or likely answers when question is set, in the user's language.",
+      },
+      question: {
+        type: 'string',
+        minLength: 1,
+        maxLength: MAX_FOLLOW_UP_QUESTION_CHARS,
+        description: 'Optional single clarification above two or three answer choices; omit for ordinary follow-ups.',
       },
     },
     required: ['questions'],
@@ -50,5 +65,10 @@ export function followUpsOf(args: Record<string, unknown>): AssistantFollowUps |
     questions.push(text);
     if (questions.length === MAX_FOLLOW_UPS) break;
   }
-  return questions.length > 0 ? { questions } : null;
+  if (questions.length === 0) return null;
+  const question =
+    typeof args.question === 'string'
+      ? args.question.replace(/\s+/g, ' ').trim().slice(0, MAX_FOLLOW_UP_QUESTION_CHARS)
+      : '';
+  return { questions, ...(question && questions.length >= 2 ? { question } : {}) };
 }

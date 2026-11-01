@@ -1,6 +1,7 @@
 import type { CardView } from '../cardTypes';
 import { JournalChatBlock } from './JournalChatBlock';
 import { TripChatBlock } from './TripChatBlock';
+import { TripPlanBlock } from './TripPlanBlock';
 
 /**
  * How the home chat's kinds draw: the trip or the journal it offers to go on
@@ -11,4 +12,5 @@ import { TripChatBlock } from './TripChatBlock';
 export const HOME_VIEWS = {
   tripChat: { Block: TripChatBlock },
   journalChat: { Block: JournalChatBlock },
-} satisfies { [K in 'tripChat' | 'journalChat']: CardView<K> };
+  tripPlan: { Block: TripPlanBlock },
+} satisfies { [K in 'tripChat' | 'journalChat' | 'tripPlan']: CardView<K> };

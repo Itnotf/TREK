@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · {count} 个已归档',
   'dashboard.newTrip': '新建旅行',
   'dashboard.newTripSub': '从零开始规划新旅行',
+  'dashboard.roadtrip.enable': '规划多城市自驾',
+  'dashboard.roadtrip.hint':
+    '先保存想去的城市和驾驶限制，创建旅行后可请 AI 协助规划。未连接 AI 时，也可以正常保存这些需求。',
+  'dashboard.roadtrip.origin': '出发城市',
+  'dashboard.roadtrip.viaCities': '想去的城市（选填）',
+  'dashboard.roadtrip.viaHint': '用逗号或换行分隔城市，AI 可协助建议游玩顺序。',
+  'dashboard.roadtrip.roundTrip': '返回出发城市',
+  'dashboard.roadtrip.destination': '结束城市',
+  'dashboard.roadtrip.dailyHours': '每天最多驾驶（小时）',
+  'dashboard.roadtrip.vehicle': '车辆类型',
+  'dashboard.roadtrip.combustion': '燃油车',
+  'dashboard.roadtrip.electric': '电动车',
+  'dashboard.roadtrip.rangeKm': '满油或满电的实际续航（公里）',
+  'dashboard.roadtrip.originRequired': '请输入自驾的出发城市。',
+  'dashboard.roadtrip.destinationRequired': '请输入结束城市，或选择返回出发城市。',
+  'dashboard.roadtrip.invalidHours': '每天驾驶上限须为 1 至 12 小时。',
+  'dashboard.roadtrip.invalidRange': '实际续航须为 1 至 2000 公里。',
+  'dashboard.roadtrip.summaryTitle': '多城市自驾需求',
+  'dashboard.roadtrip.planningInstruction':
+    '先建议城市顺序和每晚住宿城市，再细化每天的活动。遵守固定日期、已订住宿和驾驶上限，核实真实道路路线，标注待核实信息；方案经确认后再修改旅行。',
+  'dashboard.roadtrip.planPrompt':
+    '请根据旅行描述中保存的自驾需求和驾驶设置，帮我规划多城市自驾。先提出城市顺序和真实的每晚住宿城市，等我确认后再细化每日活动。遵守固定日期、已订住宿和每天驾驶上限，核实真实道路路线，清楚标注尚未核实的信息。未经我确认方案，请勿修改旅行内容。',
   'dashboard.subscribeAllTrips': '订阅所有旅行',
   'dashboard.subscribeAllTripsDesc':
     '一个日历订阅源，涵盖你所有进行中的旅行，并自动保持同步。不含已归档的旅行以及结束超过 90 天的旅行。',

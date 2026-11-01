@@ -62,7 +62,7 @@ function Suggestions() {
 describe('useAssistantHome', () => {
   it('FE-AI-HOME-001: names the home chat and keeps it under its own key', () => {
     render(<Home switchTo={vi.fn()} />);
-    expect(screen.getByText('chat 0 Your travels')).toBeInTheDocument();
+    expect(screen.getByText('chat 0 AI trip planner')).toBeInTheDocument();
   });
 
   it("FE-AI-HOME-002: goes on in a trip's chat with the question waiting, and never over one typed there", () => {
@@ -92,12 +92,15 @@ describe('useAssistantHomeLauncher', () => {
 });
 
 describe('the empty home chat', () => {
-  it('FE-AI-HOME-004: offers questions across the trips, all of them, and holds nothing back', () => {
+  it('FE-AI-HOME-004: starts with short travel ideas that need no prepared brief', () => {
     render(<Suggestions />);
     const items = screen.getAllByRole('listitem').map((item) => item.textContent);
     expect(items).toHaveLength(HOME_SUGGESTIONS.length);
-    expect(items).toContain('Which trip is next, and what is still open?');
-    expect(items).toContain('How many countries have I visited?');
+    expect(items).toEqual([
+      'A road trip in western Sichuan',
+      'A weekend away with the kids',
+      'Somewhere for a relaxing trip',
+    ]);
     expect(screen.getByRole('list')).toHaveAttribute('data-can-edit', 'true');
   });
 });

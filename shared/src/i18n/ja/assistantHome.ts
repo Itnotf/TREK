@@ -1,15 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'この旅行を開く',
+  'assistant.plan.shareOptions': '先に同行者と相談する（任意）',
+  'assistant.plan.preview': '旅程をプレビュー',
   'assistant.home.title': 'あなたの旅',
-  'assistant.home.welcome': '何をお手伝いしましょうか？',
-  'assistant.home.placeholder': '旅について何でも質問',
+  'assistant.home.welcome': '今回はどこへ行きたいですか？',
+  'assistant.home.placeholder': '例：四川省西部をドライブしたい（旅行ガイドのリンクでもOK）',
   'assistant.home.switch': 'ひとつの旅についてチャット',
   'assistant.home.back': 'すべての旅に戻る',
-  'assistant.suggest.homeNext': '次の旅はどれで、まだ何が残っていますか？',
-  'assistant.suggest.homeCompare': '今後の旅を比べて',
-  'assistant.suggest.homeAtlas': 'これまでに何か国を訪れましたか？',
-  'assistant.suggest.homeVacay': '今年の休暇はあと何日残っていますか？',
+  'assistant.suggest.homeNext': '四川省西部をドライブしたい',
   'assistant.card.tripChat.label': '旅のチャットで続ける',
   'assistant.card.tripChat.eyebrow': '旅のチャット',
   'assistant.card.tripChat.dates': '{start}から{end}まで',
@@ -26,6 +26,31 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'ジャーナル',
   'assistant.card.journalChat.open': 'このジャーナルのチャットで続ける',
   'assistant.step.openJournalChat': 'ジャーナルを探しています',
+  'assistant.plan.start': 'AIで旅行を計画',
+  'assistant.plan.manual': '手動で作成',
+  'assistant.plan.unavailable': '現在、AIによる旅行計画は利用できません。手動で旅行を作成することはできます。',
+  'assistant.plan.label': '旅行プランの下書き',
+  'assistant.plan.version': '第{version}版',
+  'assistant.plan.requirements': '旅行の希望',
+  'assistant.plan.assumptions': 'この前提条件を確認してください',
+  'assistant.plan.overnight': '{city}で宿泊',
+  'assistant.plan.editHint':
+    '変更したいことがあれば、チャットで教えてください。下書きを更新します。内容に満足したら確定してください。',
+  'assistant.plan.stale': '下に新しい版があります。旅行を作成するには、最新版を確定してください。',
+  'assistant.plan.confirm': '確定して旅行を作成',
+  'assistant.plan.created': 'この下書きは旅行として保存されました。',
+  'assistant.plan.loadFailed': 'この下書きを読み込めませんでした。もう一度お試しください。',
+  'assistant.plan.applyFailed': '旅行を作成できませんでした。最新の下書きを確認して、もう一度お試しください。',
+  'assistant.plan.unverified': '正確な場所はまだ確認できていません',
+  'assistant.plan.share': 'このプランをみんなで話し合う',
+  'assistant.plan.shareHint':
+    '確定する前に、この日程を旅行の共有スペースで共有しましょう。非公開の会話は公開されません。',
+  'assistant.followUp.answerHint': '選択肢を選ぶか、下の入力欄で自由に答えてください。',
+  'assistant.followUp.useDefaults': '今の情報でプランを作って',
+  'assistant.followUp.useDefaultsPrompt':
+    'これまでの話と妥当な仮定をもとに、追加の質問はせず、完全な旅程を作成してください。',
+  'assistant.suggest.homeWeekend': '週末に子どもと出かけたい',
+  'assistant.suggest.homeUnsure': 'のんびり過ごせる場所に行きたい',
 };
 
 export default assistantHome;

@@ -185,7 +185,7 @@ describe('MSettingsGeneral', () => {
     render(<MSettingsGeneral />);
 
     expect(screen.getByText('Start tab')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Plan' }));
+    await user.click(screen.getByRole('button', { name: 'Daily itinerary' }));
     await user.click(await screen.findByText('Costs'));
 
     expect(updateSetting).toHaveBeenCalledWith('start_trip_tab', 'finanzplan');

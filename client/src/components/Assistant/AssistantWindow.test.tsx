@@ -147,7 +147,7 @@ describe('AssistantWindow', () => {
   it('FE-AI-WIN-004: outside a trip it opens on the home chat, whose head opens one trip chat and goes back', async () => {
     seed({ open: true, minimized: false });
     render(<AssistantWindow trip={null} />);
-    expect(screen.getByText('chat 0 Your travels')).toBeInTheDocument();
+    expect(screen.getByText('chat 0 AI trip planner')).toBeInTheDocument();
     expect(resume).toHaveBeenCalledWith(0);
     // The home chat has no trip notes.
     expect(screen.queryByRole('button', { name: 'Trip notes' })).not.toBeInTheDocument();
@@ -155,7 +155,7 @@ describe('AssistantWindow', () => {
     fireEvent.click(await screen.findByRole('button', { name: /Lisbon/ }));
     expect(screen.getByText('chat 9 Lisbon')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Back to all trips' }));
-    expect(screen.getByText('chat 0 Your travels')).toBeInTheDocument();
+    expect(screen.getByText('chat 0 AI trip planner')).toBeInTheDocument();
   });
 
   it("FE-AI-WIN-013: the home chat's card goes on in the trip's chat with the question waiting there", () => {
@@ -168,10 +168,19 @@ describe('AssistantWindow', () => {
     expect(screen.queryByRole('button', { name: 'go on in Lisbon' })).not.toBeInTheDocument();
   });
 
+  it('a fresh planning request returns an already open trip chat to the home chat', () => {
+    seed({ open: true, minimized: false });
+    render(<AssistantWindow trip={null} />);
+    fireEvent.click(screen.getByRole('button', { name: 'go on in Lisbon' }));
+    expect(screen.getByText('chat 9 Lisbon')).toBeInTheDocument();
+    act(() => useAssistantStore.getState().newThread(0));
+    expect(screen.getByText('chat 0 AI trip planner')).toBeInTheDocument();
+  });
+
   it('FE-AI-WIN-014: minimized outside a trip, the round button brings the home chat back', () => {
     seed({ open: true, minimized: true });
     render(<AssistantWindow trip={null} />);
-    expect(screen.getByText('chat 0 Your travels')).not.toBeVisible();
+    expect(screen.getByText('chat 0 AI trip planner')).not.toBeVisible();
     fireEvent.click(screen.getByRole('button', { name: 'Assistant' }));
     expect(useAssistantStore.getState().window.minimized).toBe(false);
   });

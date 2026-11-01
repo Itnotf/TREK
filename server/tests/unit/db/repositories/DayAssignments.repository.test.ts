@@ -67,7 +67,7 @@ function legacyProjectionRow(id: number): unknown {
   return testDb
     .prepare(
       `
-    SELECT da.*, p.id as place_id, p.name as place_name, p.description as place_description,
+    SELECT da.*, p.id as place_id, p.name as place_name, p.description as place_description, p.source as place_source,
       p.lat, p.lng, p.address, p.category_id, p.price, p.currency as place_currency,
       COALESCE(da.assignment_time, p.place_time) as place_time,
       COALESCE(da.assignment_end_time, p.end_time) as end_time,
@@ -1101,15 +1101,29 @@ describe('DayAssignmentsRepository.listRoadtripVisits (RPL2, roadtrip-plan.servi
       t,
       Places,
       { id: place.id },
-      { place_time: '09:00', end_time: '11:00', duration_minutes: 90, stop_type: null, fill_percent: null },
+      {
+        place_time: '09:00',
+        end_time: '11:00',
+        duration_minutes: 90,
+        source: 'assistant',
+        stop_type: null,
+        fill_percent: null,
+      },
     );
     createDayAssignment(testDb, day.id, place.id);
 
     // test-sql-allow: the legacy RPL2 statement is the parity oracle the repository is compared against.
     const legacy = testDb.prepare(LEGACY_LIST_ROADTRIP_VISITS).all(trip.id);
     const typed = await assignments.listRoadtripVisits(trip.id);
-    expect(typed).toEqual(legacy);
+    expect(
+      typed.map(
+        ({ source: _source, assignment_time: _time, assignment_end_time: _end, ...legacyFields }) => legacyFields,
+      ),
+    ).toEqual(legacy);
     expect(typed[0]).toMatchObject({
+      source: 'assistant',
+      assignment_time: null,
+      assignment_end_time: null,
       time: '09:00',
       end_time: '11:00',
       stay_id: null,
@@ -1153,7 +1167,11 @@ describe('DayAssignmentsRepository.listRoadtripVisits (RPL2, roadtrip-plan.servi
     // test-sql-allow: the legacy RPL2 statement is the parity oracle the repository is compared against.
     const legacy = testDb.prepare(LEGACY_LIST_ROADTRIP_VISITS).all(trip.id);
     const typed = await assignments.listRoadtripVisits(trip.id);
-    expect(typed).toEqual(legacy);
+    expect(
+      typed.map(
+        ({ source: _source, assignment_time: _time, assignment_end_time: _end, ...legacyFields }) => legacyFields,
+      ),
+    ).toEqual(legacy);
     expect(typed[0]).toMatchObject({
       time: '14:00',
       end_time: '14:30',

@@ -1,11 +1,14 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
-  'trip.tabs.tourPlanner': 'Tours',
+  'trip.navigation.label': 'Trip sections',
+  'tours.navigation.help':
+    'Walking, cycling and other outdoor routes can be added as activities in the daily itinerary.',
+  'trip.tabs.tourPlanner': 'Walking & outdoor routes',
   'tours.mode.places': 'Places',
-  'tours.mode.tours': 'Tours',
+  'tours.mode.tours': 'Outdoor routes',
   'tours.mode.label': 'Add view',
-  'tours.title': 'Tours',
+  'tours.title': 'Outdoor routes',
   'tours.empty.title': 'No tours yet',
   'tours.empty.body': 'Plan a tour or import a GPX or KML file to get started.',
   'tours.addToDay': 'Add to day',

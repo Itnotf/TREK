@@ -73,6 +73,7 @@ const FIXTURES: Record<TrekWsEventName, Record<string, unknown>> = {
   'accommodation:updated': { accommodation: { id: 8 } },
   'accommodation:deleted': { accommodationId: 8 },
   'trip:updated': { trip: { id: 1, name: 'Paris' } },
+  'planning:updated': { revision: 2 },
   'trip:deleted': { id: 1 },
   'member:added': { member: { user_id: 2 } },
   'member:removed': { userId: 2 },
@@ -159,7 +160,7 @@ const DRIFT_VARIANTS: Partial<Record<TrekWsEventName, Record<string, unknown>[]>
 };
 
 describe('@trek/shared realtime event registry', () => {
-  it('WSEVT-REG-001: pins the authoritative inventory counts (79 trip + 41 user = 120)', () => {
+  it('WSEVT-REG-001: pins the authoritative inventory counts (80 trip + 41 user = 121)', () => {
     // 67th to 69th trip event: the three collab:link:* a shared link emits.
     // 70th and 71st: the road trip's vias and tracks, which used to be written silently.
     // 74th: docsync:changed, so a sync run that moved documents refreshes the
@@ -177,9 +178,9 @@ describe('@trek/shared realtime event registry', () => {
     // notification:read-all, trips:changed, settings:updated, tags:changed,
     // atlas:changed, journey:updated, journey:deleted). Registered first, the
     // writes that send them follow.
-    expect(TREK_WS_TRIP_EVENT_NAMES).toHaveLength(79);
+    expect(TREK_WS_TRIP_EVENT_NAMES).toHaveLength(80);
     expect(TREK_WS_USER_EVENT_NAMES).toHaveLength(41);
-    expect(TREK_WS_EVENT_NAMES).toHaveLength(120);
+    expect(TREK_WS_EVENT_NAMES).toHaveLength(121);
   });
 
   it('WSEVT-REG-002: every name is domain:action shaped and outside the reserved plugin: namespace', () => {

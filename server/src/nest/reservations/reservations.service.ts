@@ -203,7 +203,7 @@ export class ReservationsService {
   }
 
   async canEdit(trip: Trip, user: User): Promise<boolean> {
-    return this.permissions.checkPermission('reservation_edit', user.role, trip.user_id, user.id, trip.user_id !== user.id);
+    return this.permissions.checkPermission('reservation_edit', user.role, trip.user_id, user.id, trip.user_id !== user.id, trip.id);
   }
 
   broadcast<E extends TrekWsTripEventName>(tripId: string, event: E, payload: TrekWsPayload<E>, socketId: string | undefined): void {

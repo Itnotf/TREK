@@ -1,15 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Buka perjalanan ini',
+  'assistant.plan.shareOptions': 'Diskusikan dengan yang lain dulu (opsional)',
+  'assistant.plan.preview': 'Pratinjau rencana perjalanan',
   'assistant.home.title': 'Perjalananmu',
-  'assistant.home.welcome': 'Ada yang bisa saya bantu?',
-  'assistant.home.placeholder': 'Tanyakan apa saja tentang perjalananmu',
+  'assistant.home.welcome': 'Kali ini ingin pergi ke mana?',
+  'assistant.home.placeholder': 'Coba “perjalanan mobil di Sichuan barat”, atau tempel tautan panduan wisata',
   'assistant.home.switch': 'Mengobrol tentang satu perjalanan',
   'assistant.home.back': 'Kembali ke semua perjalanan',
-  'assistant.suggest.homeNext': 'Perjalanan mana yang berikutnya, dan apa yang masih belum beres?',
-  'assistant.suggest.homeCompare': 'Bandingkan perjalananku yang akan datang',
-  'assistant.suggest.homeAtlas': 'Sudah berapa negara yang kukunjungi?',
-  'assistant.suggest.homeVacay': 'Berapa hari cuti yang tersisa tahun ini?',
+  'assistant.suggest.homeNext': 'Perjalanan mobil di Sichuan barat',
   'assistant.card.tripChat.label': 'Lanjutkan di obrolan perjalanan',
   'assistant.card.tripChat.eyebrow': 'Obrolan perjalanan',
   'assistant.card.tripChat.dates': '{start} sampai {end}',
@@ -26,6 +26,32 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Jurnal',
   'assistant.card.journalChat.open': 'Lanjutkan di obrolan jurnal ini',
   'assistant.step.openJournalChat': 'Mencari jurnalnya',
+  'assistant.plan.start': 'Rencanakan dengan AI',
+  'assistant.plan.manual': 'Buat secara manual',
+  'assistant.plan.unavailable':
+    'Perencanaan dengan AI sedang tidak tersedia. Kamu tetap bisa membuat perjalanan secara manual.',
+  'assistant.plan.label': 'Draf perjalanan',
+  'assistant.plan.version': 'Versi {version}',
+  'assistant.plan.requirements': 'Preferensi perjalananmu',
+  'assistant.plan.assumptions': 'Periksa asumsi-asumsi ini',
+  'assistant.plan.overnight': 'Menginap di {city}',
+  'assistant.plan.editHint':
+    'Ingin mengubah sesuatu? Beri tahu lewat obrolan dan saya akan memperbarui drafnya. Konfirmasikan jika sudah sesuai.',
+  'assistant.plan.stale': 'Ada versi yang lebih baru di bawah. Konfirmasikan versi terbaru untuk membuat perjalananmu.',
+  'assistant.plan.confirm': 'Konfirmasi dan buat perjalanan',
+  'assistant.plan.created': 'Draf ini telah disimpan sebagai perjalanan.',
+  'assistant.plan.loadFailed': 'Draf ini tidak dapat dimuat. Silakan coba lagi.',
+  'assistant.plan.applyFailed': 'Perjalanan tidak dapat dibuat. Periksa draf terbaru dan coba lagi.',
+  'assistant.plan.unverified': 'Lokasi tepatnya belum diverifikasi',
+  'assistant.plan.share': 'Diskusikan rencana ini bersama',
+  'assistant.plan.shareHint':
+    'Bagikan rencana perjalanan ini ke ruang perjalanan sebelum mengonfirmasinya. Percakapan pribadimu tetap bersifat pribadi.',
+  'assistant.followUp.answerHint': 'Pilih salah satu, atau tulis jawabanmu sendiri di bawah.',
+  'assistant.followUp.useDefaults': 'Susun dengan info yang ada',
+  'assistant.followUp.useDefaultsPrompt':
+    'Gunakan pembahasan kita dan asumsi yang wajar untuk membuat rencana perjalanan lengkap sekarang, tanpa pertanyaan tambahan.',
+  'assistant.suggest.homeWeekend': 'Liburan akhir pekan bersama anak-anak',
+  'assistant.suggest.homeUnsure': 'Tempat untuk liburan santai',
 };
 
 export default assistantHome;

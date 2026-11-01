@@ -250,6 +250,9 @@ export function foundPlaceArgs(args: Record<string, unknown>): Record<string, un
 
 /** Calls the server makes on its own: replayed to the model as a note, never as a call of an unknown tool. */
 export const ASSISTANT_SERVER_TOOLS: ReadonlySet<string> = new Set([
+  'save_itinerary_draft',
+  'get_itinerary_draft',
+  'read_travel_link',
   READ_BOOKING_FILE_TOOL,
   READ_TOUR_FILE_TOOL,
   ...Object.keys(ASSISTANT_SERVER_WRITE_TOOLS),
@@ -262,6 +265,9 @@ export const ASSISTANT_SERVER_TOOLS: ReadonlySet<string> = new Set([
  * server took, which the provider never saw.
  */
 export const ASSISTANT_MODEL_CALLED_SERVER_TOOLS: ReadonlySet<string> = new Set([
+  'save_itinerary_draft',
+  'get_itinerary_draft',
+  'read_travel_link',
   REMEMBER_TOOL,
   READ_ATTACHED_FILE_TOOL,
   KEEP_ATTACHED_FILE_TOOL,

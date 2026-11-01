@@ -11,6 +11,10 @@ describe('parseTimeToMinutes', () => {
     expect(parseTimeToMinutes('2025-03-30T14:00:00')).toBe(840)
   })
 
+  it.each(['Trip tips: rest after lunch', 'Transfer at T12:30', '2025-03-30Tnot-a-clock'])('keeps free text or invalid times untimed: %s', value => {
+    expect(parseTimeToMinutes(value)).toBeNull()
+  })
+
   it('returns null for null/empty', () => {
     expect(parseTimeToMinutes(null)).toBeNull()
     expect(parseTimeToMinutes(undefined)).toBeNull()
@@ -300,6 +304,19 @@ describe('getAssignmentReservations', () => {
 })
 
 describe('getMergedItems', () => {
+  it('keeps a prose note untimed so it cannot interrupt chronological stop sorting', () => {
+    const result = getMergedItems({
+      dayAssignments: [
+        { id: 1, order_index: 0, place: { place_time: '14:00' } },
+        { id: 2, order_index: 1, place: { place_time: '09:00' } },
+      ],
+      dayNotes: [{ id: 10, sort_order: 0, text: 'Daily plan', time: 'Trip tips: rest after lunch' }],
+      dayTransports: [],
+      dayId: 1,
+    })
+    expect(result.map(item => `${item.type}:${item.data.id}`)).toEqual(['place:2', 'place:1', 'note:10'])
+  })
+
   it('merges places and notes sorted by sortKey', () => {
     const dayAssignments = [
       { id: 1, order_index: 0, place: { place_time: null } },

@@ -12,7 +12,7 @@ import type { Assignment, AssignmentsMap, Accommodation, Day, Reservation, Route
 import type { RoadtripVia, RoadtripDayBoundary } from '@trek/shared'
 import { dayWindow } from './dayWindow'
 import { useTranslation } from '../../i18n/TranslationContext'
-import { stayStartingOn } from '../../utils/dayMerge'
+import { asStop, unlocatedActivitiesOf } from './roadtripVisits'
 import { staysAtTheirPlaces } from './nightBookend'
 import { viaKeyOf } from '../../utils/dayRouteVias'
 
@@ -156,36 +156,6 @@ export type RoadtripRoutesView = RoadtripRoutes & {
   reroute?: () => void
 }
 
-const asStop = (a: Assignment, ownerDayId: number, ownerIndex: number, accommodations: Accommodation[]): RoadtripStop | null => {
-  const p = a.place
-  if (!p || typeof p.lat !== 'number' || typeof p.lng !== 'number') return null
-  // Check-in only. A check-out is the LATEST the room has to be handed back, not the
-  // earliest anybody may leave, so it says nothing about when the drive sets off and
-  // has no business in the chain. It stays a booking detail, shown under Days.
-  const stay = stayStartingOn(accommodations, a.place_id, ownerDayId)
-  return {
-    assignmentId: a.id,
-    ownerDayId,
-    ownerIndex,
-    placeId: a.place_id,
-    name: p.name,
-    lat: p.lat,
-    lng: p.lng,
-    time: a.assignment_time ?? p.place_time ?? null,
-    // The visit's End is when the drive leaves it. Unlike a check-out it is the
-    // traveller's own statement about this stop, and the stay then runs until it.
-    leaveAt: a.assignment_end_time ?? p.end_time ?? null,
-    checkInTime: stay?.check_in ?? null,
-    night: stay !== undefined,
-    bookedNightId: a.accommodation_id ?? null,
-    dwellMinutes: typeof p.duration_minutes === 'number' ? p.duration_minutes : null,
-    endDay: a.end_day === true,
-    legMode: a.leg_transport_mode ?? null,
-    incomingLegMode: a.incoming_leg_transport_mode ?? null,
-    stopType: p.stop_type ?? null,
-    fillPercent: typeof p.fill_percent === 'number' ? p.fill_percent : null,
-  }
-}
 
 /**
  * Distance and driving time for every leg of every day of the trip.
@@ -309,6 +279,8 @@ export function useRoadtripRoutes(
   // Every stored day as the road trip reads it: its located stops in stored order, with
   // the terminals of its rides seated among them. Built once and split below, because
   // the two halves are one list read two ways.
+  const unlocatedActivities = useMemo(() => unlocatedActivitiesOf(days, assignments), [days, assignments])
+  const incompleteDays = useMemo(() => new Set(unlocatedActivities.map(a => a.dayId)), [unlocatedActivities])
   const storedDays = useMemo<PlanDay[]>(() => {
     return [...days]
       .sort((a, b) => (a.day_number ?? 0) - (b.day_number ?? 0))
@@ -406,8 +378,8 @@ export function useRoadtripRoutes(
   const viaKey = useMemo(() => viaKeyOf(viasByDay), [viasByDay])
 
   const planKey = useMemo(
-    () => `${plan.map(d => `${d.dayId}:${d.stops.map(stopKey).join('|')}`).join(';')}#${viaKey}`,
-    [plan, viaKey],
+    () => `${plan.map(d => `${d.dayId}:${d.stops.map(stopKey).join('|')}`).join(';')}#${viaKey}#${[...incompleteDays].join(',')}`,
+    [plan, viaKey, incompleteDays],
   )
 
   useEffect(() => {
@@ -548,6 +520,7 @@ export function useRoadtripRoutes(
     }
 
     for (const day of plan) {
+      if (incompleteDays.has(day.dayId)) continue
       const dayLegs: Record<string, RoutedLeg> = {}
       collected[day.dayId] = dayLegs
 
@@ -630,6 +603,7 @@ export function useRoadtripRoutes(
     const out: { from: RoadtripStop; to: RoadtripStop; dayId: number; mode: string; shape: string }[] = []
     const misses: Record<number, RouteAvoidClass[]> = {}
     const want = (from: RoadtripStop, to: RoadtripStop, dayId: number): void => {
+      if (incompleteDays.has(from.ownerDayId) || incompleteDays.has(to.ownerDayId)) return
       // The two ends of one ride: the leg between them is the booking's, never a road.
       if (rideLegs[legKey(from, to)]) return
       // A night spent at one hotel: nothing is driven, so nothing is asked.
@@ -676,7 +650,7 @@ export function useRoadtripRoutes(
       }
     }
     return { seams: out, seamMisses: misses }
-  }, [chains, plan, quietDays, window, legsByDay, seamLegs, rideLegs, viasByDay, connectDays, legModeOf, avoidKey, distanceUnit])
+  }, [chains, plan, quietDays, window, legsByDay, seamLegs, rideLegs, viasByDay, connectDays, legModeOf, avoidKey, distanceUnit, incompleteDays])
   /** Each card's unavoided classes, its own run's and those of the join it is reached by. */
   const missedOnCards = useMemo(() => {
     const out: Record<number, RouteAvoidClass[]> = { ...missedByDay }
@@ -820,8 +794,8 @@ export function useRoadtripRoutes(
 
   const reroute = useCallback(() => setRerouteRound(round => round + 1), [])
 
-  const assembled = useMemo(() => assembleRoadtrip({ plan, quietDays, window, distanceUnit, allLegs, snapByDay, missedByDay: missedOnCards, loading, limits, vehicleKind, connectDays, boundaries,
+  const assembled = useMemo(() => assembleRoadtrip({ plan, quietDays, window, unlocatedActivities, distanceUnit, allLegs, snapByDay, missedByDay: missedOnCards, loading, limits, vehicleKind, connectDays, boundaries,
     labels: { start: t('roadtrip.window.resume'), end: t('roadtrip.window.stop') },
-  }), [plan, quietDays, window, distanceUnit, t, allLegs, snapByDay, missedOnCards, loading, limits, vehicleKind, connectDays, boundaries])
+  }), [plan, quietDays, window, unlocatedActivities, distanceUnit, t, allLegs, snapByDay, missedOnCards, loading, limits, vehicleKind, connectDays, boundaries])
   return useMemo(() => ({ ...assembled, legRouter, reroute }), [assembled, legRouter, reroute])
 }

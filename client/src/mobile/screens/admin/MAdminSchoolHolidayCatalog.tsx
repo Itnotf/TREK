@@ -124,7 +124,7 @@ function RegionSheet({ region, busy, offline, error, onClose, onSave }: EditorPr
         }}
         footer={
           <>
-            <MAdminButton variant="ghost" onClick={onClose} disabled={busy}>
+            <MAdminButton variant="ghost" sheetDismiss onClick={onClose} disabled={busy}>
               {t('common.cancel')}
             </MAdminButton>
             <MAdminButton busy={busy} disabled={locked} onClick={save}>

@@ -44,6 +44,7 @@ import { AssistantFileAnswers, type FileAnswerRows } from './assistant-file-answ
 import { messageIdOf, outputText, partsOf, toChatHistory, toThreadMessages } from './assistant-history';
 import { rememberForTrip, rememberingPort } from './assistant-memory';
 import { toolOutputForProvider } from './assistant-output';
+import { AssistantPlanningService } from './assistant-planning.service';
 import { AssistantScopes, findScopedCall, scopedThreads, tripScope } from './assistant-scope';
 import { AssistantStreamRegistry } from './assistant-stream.registry';
 import { titleFrom } from './assistant-title';
@@ -191,6 +192,7 @@ export class AssistantService {
     private readonly cardContext: AssistantCardContext,
     private readonly scopes: AssistantScopes,
     private readonly vision: AssistantVision,
+    private readonly planning: AssistantPlanningService,
   ) {}
 
   async listThreads(userId: number, scope: AssistantScope): Promise<AssistantThreadListResponse> {
@@ -200,12 +202,21 @@ export class AssistantService {
   async getThread(userId: number, scope: AssistantScope, threadId: number): Promise<AssistantThreadResponse> {
     const thread = await scopedThreads(this.threads, scope).find(threadId, userId);
     if (!thread) throw threadNotFound();
+    const running = scope.kind === 'home' ? await this.streams.isRunning(userId, threadId) : undefined;
     const rows = await this.messages.listLatest(threadId, THREAD_ROWS);
-    return { thread: summaryOf(thread), messages: toThreadMessages(rows, await this.callsOf(rows), new Date()) };
+    return {
+      thread: summaryOf(thread),
+      messages: toThreadMessages(rows, await this.callsOf(rows), new Date()),
+      ...(running !== undefined ? { running } : {}),
+    };
   }
 
   /** Deletes the thread with its rows, then the bytes of the files attached in it. */
   async deleteThread(userId: number, scope: AssistantScope, threadId: number): Promise<void> {
+    if (scope.kind === 'home') {
+      if (!(await scopedThreads(this.threads, scope).find(threadId, userId))) throw threadNotFound();
+      await this.streams.abort(userId, threadId);
+    }
     const kept = scope.kind === 'trip' ? await this.attachments.objectsOfThread(threadId, userId) : [];
     if (!(await scopedThreads(this.threads, scope).remove(threadId, userId))) throw threadNotFound();
     await this.attachments.dropObjects(kept);
@@ -227,7 +238,7 @@ export class AssistantService {
     await this.admit(userId);
     const connection = await this.connections.resolveForUser(userId);
     const dailyTurns = await this.withinDailyLimit(userId, connection);
-    await this.claimed(userId, channel.signal, async (signal) => {
+    await this.claimed(userId, scope.kind === 'home' ? null : channel.signal, async (signal, bindThread) => {
       // Days, places and bookings are named with "@" in a trip only.
       const tripId = scope.kind === 'trip' ? scope.tripId : null;
       const mentions = tripId !== null ? (req.mentions ?? []) : [];
@@ -243,6 +254,7 @@ export class AssistantService {
           ...(items.length > 0 ? [{ type: 'data-trek-mentions' as const, data: { items } }] : []),
         ],
       });
+      await bindThread(begun.threadId);
       const stream = channel.open();
       const w = new UiStreamWriter(stream);
       w.start(messageIdOf(begun.rowId));
@@ -362,7 +374,8 @@ export class AssistantService {
     }
     const connection = await this.connections.resolveForUser(userId);
     const dailyTurns = await this.withinDailyLimit(userId, connection);
-    await this.claimed(userId, channel.signal, async (signal) => {
+    await this.claimed(userId, scope.kind === 'home' ? null : channel.signal, async (signal, bindThread) => {
+      await bindThread(threadId);
       const decided = await this.claimDecisions(threadId, req.decisions);
       // Taken but not run yet: whatever ends the turn before a change ran records it as failed.
       const unrun = new Set(decided.filter(({ approved }) => approved).map(({ call }) => call.id));
@@ -420,7 +433,8 @@ export class AssistantService {
     req: AssistantDecisionsRequest,
     channel: TurnChannel,
   ): Promise<void> {
-    await this.claimed(userId, channel.signal, async () => {
+    await this.claimed(userId, scope.kind === 'home' ? null : channel.signal, async (_signal, bindThread) => {
+      await bindThread(threadId);
       const decided = await this.claimDecisions(threadId, req.decisions);
       const unrun = new Set(decided.filter(({ approved }) => approved).map(({ call }) => call.id));
       const w = new UiStreamWriter(channel.open());
@@ -531,15 +545,17 @@ export class AssistantService {
   /** Runs `fn` as the user's one running turn, stoppable from the client and from a `stop`. */
   private async claimed(
     userId: number,
-    client: AbortSignal,
-    fn: (signal: AbortSignal) => Promise<void>,
+    client: AbortSignal | null,
+    fn: (signal: AbortSignal, bindThread: (threadId: number) => Promise<void>) => Promise<void>,
   ): Promise<void> {
     const controller = new AbortController();
     if (!(await this.streams.claim(userId, controller))) {
       throw aiRefusal('busy', 'The assistant is already answering in another window');
     }
     try {
-      await fn(AbortSignal.any([client, controller.signal]));
+      await fn(client ? AbortSignal.any([client, controller.signal]) : controller.signal, (threadId) =>
+        this.streams.bind(userId, controller, threadId),
+      );
     } finally {
       await this.streams.release(userId, controller);
     }
@@ -833,11 +849,12 @@ export class AssistantService {
       const { userId, threadId, connection } = spec;
       const seen = { userId, threadId, connection, renders: spec.renders === true, w, signal };
       const seeing = await this.vision.turnTools(spec.scope, session, seen);
+      const planning = await this.planning.forTurn(seeing.tools, spec, history);
       const outcome = await runAgentLoop(
         {
           client: this.chatClients.create(spec.connection),
           tools: attachedPort(
-            rememberingPort(seeing.tools, this.remembering(userId, spec.scope)),
+            rememberingPort(planning.tools, this.remembering(userId, spec.scope)),
             attached?.turn ?? null,
           ),
           store: this.stepStore(spec),
@@ -853,7 +870,7 @@ export class AssistantService {
         },
         {
           system,
-          context,
+          context: [context, planning.context].filter(Boolean).join('\n\n'),
           cacheKey: `trek-thread-${spec.threadId}`,
           history,
           usedCallIds: new Set(

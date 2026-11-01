@@ -27,6 +27,8 @@ import {
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from '../../../i18n'
 import { useCountUp } from '../../../hooks/useCountUp'
+import { useBackLayer } from '../../../hooks/useBackLayer'
+import { useBackNavigation } from '../../../hooks/useBackNavigation'
 import { useAdmin } from '../../../pages/admin/useAdmin'
 import MAdminAddonManager from './MAdminAddonManager'
 import MAdminMcpTokensPanel from './MAdminMcpTokensPanel'
@@ -71,7 +73,7 @@ export default function MAdmin() {
   const { t, locale } = useTranslation()
   const admin = useAdmin()
   const {
-    demoMode, mcpEnabled, devMode, managed, navigate,
+    demoMode, mcpEnabled, devMode, managed,
     activeTab, setActiveTab, stats, serverTimezone,
     bagTrackingEnabled, collabFeatures,
     setShowCreateUser,
@@ -79,6 +81,8 @@ export default function MAdmin() {
     saveDemoBaseline, toggleBagTracking, toggleCollabFeature,
   } = admin
   const [sectionsOpen, setSectionsOpen] = useState(false)
+  const goBack = useBackNavigation('/dashboard')
+  useBackLayer(sectionsOpen, () => setSectionsOpen(false))
 
   // Same sections and gating as the desktop sidebar, ordered and iconed like
   // the design's dropdown (§6.1).
@@ -110,8 +114,8 @@ export default function MAdmin() {
         <button
           type="button"
           aria-label={t('common.back')}
-          onClick={() => navigate('/dashboard')}
-          className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-sheet)] text-m-ink shadow-[0_5px_12px_-8px_rgba(0,0,0,.18)]"
+          onClick={sectionsOpen ? () => setSectionsOpen(false) : goBack}
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-sheet)] text-m-ink shadow-[0_5px_12px_-8px_rgba(0,0,0,.18)]"
         >
           <ChevronLeft size={18} strokeWidth={2.2} />
         </button>
@@ -130,7 +134,7 @@ export default function MAdmin() {
           type="button"
           aria-label={t('admin.createUser')}
           onClick={() => setShowCreateUser(true)}
-          className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full bg-m-act text-m-actfg shadow-[0_5px_12px_-8px_rgba(0,0,0,.3)]"
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-m-act text-m-actfg shadow-[0_5px_12px_-8px_rgba(0,0,0,.3)]"
         >
           <UserPlus size={16} strokeWidth={2.2} />
         </button>

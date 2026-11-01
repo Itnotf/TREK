@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Reisonderdelen',
+  'tours.navigation.help':
+    'Wandel-, fiets- en andere buitenroutes kunnen als activiteit aan de dagplanning worden toegevoegd.',
   'trip.tabs.tourPlanner': 'Tochten',
   'tours.mode.places': 'Plaatsen',
   'tours.mode.tours': 'Tochten',

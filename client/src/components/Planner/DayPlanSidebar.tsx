@@ -22,9 +22,7 @@ import ConfirmDialog from '../shared/ConfirmDialog'
 import { useContextMenu, ContextMenu } from '../shared/ContextMenu'
 import { useAssistantMenu } from '../Assistant/useAssistantMenu'
 import AssistantDayPreview from '../Assistant/AssistantDayPreview'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkBreaks from 'remark-breaks'
+import { DayNoteContent } from './DayNoteContent'
 import WeatherWidget from '../Weather/WeatherWidget'
 import { useToast } from '../shared/Toast'
 import { getCategoryIcon } from '../shared/categoryIcons'
@@ -65,7 +63,6 @@ import { RES_ICONS, getNoteIcon } from './DayPlanSidebar.constants'
 import { withDayPlanDefaults } from './DayPlanSidebar.defaults'
 import { dayBodyStyle, noteSurface } from './noteSurface'
 import { findTodayDayId } from './today'
-import { markdownLinkComponents } from '../shared/markdownLink'
 import { RouteConnector, HotelRouteConnector } from './DayPlanSidebarRouteConnector'
 import { resolveLegMode } from './legMode'
 import { useLegModeActions } from './useLegModeActions'
@@ -2473,19 +2470,7 @@ const DayPlanSidebar = React.memo(function DayPlanSidebar(props: DayPlanSidebarP
                           <div className="grid h-8 w-8 flex-none place-items-center overflow-hidden rounded-full" style={{ background: noteSkin.iconBackground }}>
                             <NoteIcon size={14} strokeWidth={1.9} color={noteSkin.iconColor} />
                           </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <span className="font-semibold text-content" style={{ ...fs(13, 'body'), wordBreak: 'break-word', lineHeight: 1.25 }}>
-                              {note.text}
-                            </span>
-                            {note.time && (
-                              <div className="collab-note-md mt-0.5 text-content-muted" style={{ ...fs(11), lineHeight: 1.4, wordBreak: 'break-word' }}>
-                                {/* A link in a note goes to its own tab, and remarkBreaks
-                                    keeps a single newline a line break — people write notes
-                                    as lines, not as Markdown paragraphs. */}
-                                <Markdown remarkPlugins={[remarkGfm, remarkBreaks]} components={markdownLinkComponents}>{note.time}</Markdown>
-                              </div>
-                            )}
-                          </div>
+                          <DayNoteContent text={note.text} detail={note.time} />
                         {canEditDays && <div className="dp-note-actions flex flex-none items-center">
                           <div className="reorder-buttons" style={{ flexShrink: 0, display: 'flex', gap: 1, transition: 'opacity 0.15s' }}>
                             <button type="button" onClick={e => { e.stopPropagation(); void moveNote(day.id, note.id, 'up') }} disabled={noteIdx === 0} aria-label={t('dayplan.moveUp')} className="flex text-content-faint hover:text-content disabled:cursor-default disabled:opacity-30"><ChevronUp size={12} strokeWidth={2} /></button>

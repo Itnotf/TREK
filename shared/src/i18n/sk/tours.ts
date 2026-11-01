@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Časti cesty',
+  'tours.navigation.help': 'Pešie, cyklistické a ďalšie vonkajšie trasy možno pridať ako aktivity do denného plánu.',
   'trip.tabs.tourPlanner': 'Túry',
   'tours.mode.places': 'Miesta',
   'tours.mode.tours': 'Túry',

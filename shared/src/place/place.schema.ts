@@ -150,9 +150,9 @@ export const placeSchema = z.object({
   // place that came from another provider.
   amap_poi_id: z.string().nullable().optional(),
   /**
-   * Where the place came from when it was not typed by a person — currently
-   * only `'dawarich'`, for a stay accepted out of someone's own recordings.
-   * null on every place added by hand, which is nearly all of them.
+   * Import origin: 'dawarich' for recorded stays, 'assistant' for AI activities.
+   * Assistant place times are suggestions; explicit assignment overrides pin them.
+   * Null for manually added places, whose existing time behavior is unchanged.
    */
   source: z.string().nullable().optional(),
   route_geometry: z.string().nullable().optional(),
@@ -212,6 +212,7 @@ export type Place = z.infer<typeof placeSchema>;
  * reservation_* — only the fields the planner needs to render the itinerary card.
  */
 export const assignmentPlaceSchema = z.object({
+  source: placeSchema.shape.source,
   id: z.number(),
   name: z.string(),
   description: z.string().nullable().optional(),

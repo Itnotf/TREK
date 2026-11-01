@@ -78,6 +78,7 @@ import tourPacking from './tourPacking';
 import tours from './tours';
 import transport from './transport';
 import trip from './trip';
+import tripPlanning from './tripPlanning';
 import trips from './trips';
 import undo from './undo';
 import vacay from './vacay';
@@ -85,6 +86,7 @@ import wanderer from './wanderer';
 import wandererWatch from './wandererWatch';
 
 const locale = {
+  ...tripPlanning,
   ...common,
   ...trips,
   ...nav,

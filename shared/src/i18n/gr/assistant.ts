@@ -355,6 +355,9 @@ const assistant: TranslationStrings = {
     'Η σύνδεσή σας ΤΝ: σε αυτήν τρέχει ο βοηθός και διαβάζει τις κρατήσεις που εισάγετε.',
   'assistant.connect.descriptionParsingOnly': 'Η σύνδεσή σας ΤΝ: διαβάζει τις κρατήσεις που εισάγετε.',
   'assistant.error.emptyAnswer': 'Ο βοηθός επέστρεψε χωρίς απάντηση. Να δοκιμάσω ξανά;',
+  'assistant.error.interrupted': 'Η απάντηση διακόπηκε. Μπορείτε να συνεχίσετε από εδώ.',
+  'assistant.backgroundRunning':
+    'Δημιουργείται το πρόγραμμά σας. Μπορείτε να φύγετε από αυτή τη σελίδα και να επιστρέψετε αργότερα.',
   'assistant.followUp.title': 'Συνέχεια',
   'assistant.followUp.cheaper': 'Μόνο φθηνότερα',
   'assistant.followUp.closer': 'Πιο κοντά στο κατάλυμα',
@@ -503,5 +506,16 @@ const assistant: TranslationStrings = {
   'assistant.change.verb.keepFile': 'Αποθήκευση του αρχείου στα Αρχεία',
   'assistant.change.label.attachedTo': 'Επισυνάπτεται σε',
   'assistant.card.file.open': 'Άνοιγμα στα Αρχεία',
+  'assistant.plan.timeSuggested': 'Προτεινόμενη ώρα',
+  'assistant.plan.timeFixed': 'Σταθερή ώρα',
+  'assistant.plan.timePending': 'Η ώρα εκκρεμεί',
+  'assistant.plan.kind.visit': 'Περιήγηση',
+  'assistant.plan.kind.meal': 'Γεύμα',
+  'assistant.plan.kind.rest': 'Ξεκούραση',
+  'assistant.plan.kind.activity': 'Δραστηριότητα',
+  'assistant.plan.travelEstimated': 'Εκτίμηση: {duration}',
+  'assistant.plan.travelPending': 'Η διάρκεια μετακίνησης χρειάζεται επιβεβαίωση',
+  'assistant.plan.stayPending': 'Διαμονή προς επιβεβαίωση · χωρίς κράτηση',
+  'assistant.plan.hotelPending': 'Εκκρεμεί επιλογή ξενοδοχείου',
 };
 export default assistant;

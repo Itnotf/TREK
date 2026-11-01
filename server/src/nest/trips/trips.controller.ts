@@ -142,7 +142,16 @@ export class TripsController {
     const parsedDayCount = day_count ? Math.min(Math.max(Number(day_count) || 7, 1), MAX_TRIP_DAYS) : undefined;
     try {
       const { trip, tripId, reminderDays } = await this.tripWrites.create(
-        { title, description, start_date, end_date, currency, reminder_days, day_count: parsedDayCount },
+        {
+          title,
+          description,
+          start_date,
+          end_date,
+          currency,
+          reminder_days,
+          day_count: parsedDayCount,
+          ...(body.roadtrip_preferences !== undefined ? { roadtrip_preferences: body.roadtrip_preferences } : {}),
+        },
         { userId: user.id, role: user.role, socketId },
       );
       await this.audit.writeAudit({
@@ -185,7 +194,7 @@ export class TripsController {
     // A body the caller may only partly write is refused on the first right it lacks, in the list's order.
     const needed = tripUpdatePermissions(body);
     const granted = await Promise.all(
-      needed.map(({ action }) => this.trips.can(action, user.role, ownerId, user.id, isMember)),
+      needed.map(({ action }) => this.trips.can(action, user.role, ownerId, user.id, isMember, id)),
     );
     const lacking = needed.find((_, i) => !granted[i]);
     if (lacking) throw new HttpException({ error: lacking.refusal }, 403);
@@ -319,7 +328,7 @@ export class TripsController {
     if (user.role !== 'admin' && !(await this.trips.canAccessTrip(id, user.id))) {
       throw new HttpException({ error: 'Trip not found' }, 404);
     }
-    if (!(await this.trips.can('trip_delete', user.role, owner.user_id, user.id, owner.user_id !== user.id))) {
+    if (!(await this.trips.can('trip_delete', user.role, owner.user_id, user.id, owner.user_id !== user.id, id))) {
       throw new HttpException({ error: 'No permission to delete this trip' }, 403);
     }
     const info = await this.tripWrites.remove(id, this.tripWrites.restWriter(id, user, socketId));

@@ -460,6 +460,7 @@
    badge at top 16px and runs through the pill. The row has 484px of text to
    itself, one line is the whole title either way. */
 .trek-dash .trips.list-view .trip-name { -webkit-line-clamp: 1; }
+.trek-dash .trips.list-view .trip-cover-credit { top: 8px; inset-inline-end: 190px; max-width: 150px; }
 .trek-dash .trips.list-view .trip-body { display: flex; align-items: center; justify-content: flex-end; padding: 16px 36px; gap: 28px; }
 /* Date rendered as a peer of the counts, set off by a vertical divider rather than
    floating alone at the far left. */

@@ -6,6 +6,7 @@ import { delay, http, HttpResponse } from 'msw';
 import { useAuthStore } from '../../store/authStore';
 import { useTripStore } from '../../store/tripStore';
 import { useSettingsStore } from '../../store/settingsStore';
+import { useAddonStore } from '../../store/addonStore';
 import { usePermissionsStore } from '../../store/permissionsStore';
 import { resetAllStores, seedStore } from '../../../tests/helpers/store';
 import { buildUser, buildTrip, buildDay, buildAssignment, buildPlace, buildReservation, buildBudgetItem } from '../../../tests/helpers/factories';
@@ -53,6 +54,60 @@ const submitNewTrip = async (user: ReturnType<typeof userEvent.setup>) => {
   const btn = screen.getAllByText('Create New Trip').find(el => el.closest('button'))!;
   await user.click(btn.closest('button')!);
 };
+
+describe('multi-city road trip creation', () => {
+  const enableRoadtrip = () => seedStore(useAddonStore, { addons: [{ id: 'roadtrip', enabled: true }] });
+
+  it('saves city requirements and driving settings without an AI connection', async () => {
+    enableRoadtrip();
+    const onSave = vi.fn();
+    render(<TripFormModal {...defaultProps} onSave={onSave} />);
+    fireEvent.change(screen.getByPlaceholderText('e.g. Summer in Japan'), { target: { value: '川西自驾' } });
+    fireEvent.change(screen.getByPlaceholderText('What is this trip about?'), { target: { value: '带父母出游' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Plan a multi-city road trip' }));
+    fireEvent.change(screen.getByLabelText('Departure city'), { target: { value: '成都' } });
+    fireEvent.change(screen.getByLabelText('Cities to visit (optional)'), { target: { value: '康定，理塘' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({
+      title: '川西自驾',
+      day_count: 7,
+      description: expect.stringContaining('带父母出游\n\n'),
+      roadtrip_preferences: { roadtrip_day_minutes: 240, roadtrip_vehicle: 'combustion', roadtrip_range_km: 600, roadtrip_connect_days: true, roadtrip_hotel_bookends: true },
+    });
+    expect(onSave.mock.calls[0][0].description).toContain('Arrival city: 成都');
+  });
+
+  it('validates driving limits and prevents a repeated create while saving', async () => {
+    enableRoadtrip();
+    let finishSave: (() => void) | undefined;
+    const onSave = vi.fn(() => new Promise<void>(resolve => { finishSave = resolve; }));
+    render(<TripFormModal {...defaultProps} onSave={onSave} />);
+    fireEvent.change(screen.getByPlaceholderText('e.g. Summer in Japan'), { target: { value: '自驾' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Plan a multi-city road trip' }));
+    fireEvent.change(screen.getByLabelText('Departure city'), { target: { value: '成都' } });
+    fireEvent.change(screen.getByLabelText('Maximum daily driving (hours)'), { target: { value: '13' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('between 1 and 12 hours');
+    fireEvent.change(screen.getByLabelText('Maximum daily driving (hours)'), { target: { value: '4' } });
+    const form = screen.getByPlaceholderText('e.g. Summer in Japan').closest('form');
+    if (!form) throw new Error('Trip form not found');
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+    expect(onSave).toHaveBeenCalledOnce();
+    finishSave?.();
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Create New Trip' })).toBeEnabled());
+  });
+
+  it('hides the option when the addon is disabled and when editing a trip', () => {
+    const { rerender } = render(<TripFormModal {...defaultProps} />);
+    expect(screen.queryByRole('checkbox', { name: 'Plan a multi-city road trip' })).not.toBeInTheDocument();
+    enableRoadtrip();
+    rerender(<TripFormModal {...defaultProps} trip={buildTrip()} />);
+    expect(screen.queryByRole('checkbox', { name: 'Plan a multi-city road trip' })).not.toBeInTheDocument();
+  });
+});
 
 describe('TripFormModal', () => {
   it('FE-COMP-TRIPFORM-001: renders without crashing', () => {
@@ -622,17 +677,29 @@ describe('TripFormModal', () => {
   it('FE-COMP-TRIPFORM-045: a staged cover file is uploaded once the trip exists', async () => {
     const user = userEvent.setup();
     const onCoverUpdate = vi.fn();
+    const onCreated = vi.fn();
+    const uploadStarted = vi.fn();
+    let releaseUpload = () => {};
+    const uploadReady = new Promise<void>(resolve => { releaseUpload = resolve; });
     server.use(
-      http.post('/api/trips/99/cover', () => HttpResponse.json({ cover_image: '/uploads/covers/new.jpg' })),
+      http.post('/api/trips/99/cover', async () => {
+        uploadStarted();
+        await uploadReady;
+        return HttpResponse.json({ cover_image: '/uploads/covers/new.jpg' });
+      }),
     );
     const onSave = vi.fn().mockResolvedValue({ trip: buildTrip({ id: 99 }) });
-    render(<TripFormModal {...defaultProps} trip={null} onSave={onSave} onCoverUpdate={onCoverUpdate} />);
+    render(<TripFormModal {...defaultProps} trip={null} onSave={onSave} onCreated={onCreated} onCoverUpdate={onCoverUpdate} />);
 
     fireEvent.change(fileInput(), { target: { files: [pngFile()] } });
     await waitFor(() => expect(createObjectURL).toHaveBeenCalled());
     await user.type(screen.getByPlaceholderText(/Summer in Japan/i), 'Cover Trip');
     await submitNewTrip(user);
 
+    await waitFor(() => expect(uploadStarted).toHaveBeenCalledOnce());
+    expect(onCreated).not.toHaveBeenCalled();
+    releaseUpload();
+    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(expect.objectContaining({ id: 99 }), expect.objectContaining({ title: 'Cover Trip' })));
     await waitFor(() => expect(onCoverUpdate).toHaveBeenCalledWith(99, '/uploads/covers/new.jpg'));
   });
 

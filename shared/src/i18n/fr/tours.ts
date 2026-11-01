@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Rubriques du voyage',
+  'tours.navigation.help':
+    'Les parcours à pied, à vélo et les autres activités de plein air peuvent être ajoutés au programme quotidien.',
   'trip.tabs.tourPlanner': 'Sorties',
   'tours.mode.places': 'Lieux',
   'tours.mode.tours': 'Sorties',

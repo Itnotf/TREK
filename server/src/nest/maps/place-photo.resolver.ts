@@ -8,25 +8,23 @@
  * failed" (minutes), the in-flight dedupe of concurrent requests for one place
  * and the shared photo-fetch slots. MapsService.getPlacePhoto delegates to it.
  */
-import { Places } from '../../db/entities/Places.entity';
-import type { PlacesRepository } from '../../db/repositories/Places.repository';
 import { PlacePhotoCacheService } from '../place-photos/place-photo-cache.service';
-import { isGooglePlaceId } from './maps.helpers';
+import { isGooglePlaceId, OSM_PLACE_ID } from './maps.helpers';
 import { withPhotoFetchSlot } from './photo-fetch-slot';
 import { PlacesProviderSelector } from './places-provider.selector';
 import { GooglePlacesClient } from './providers/google-places.provider';
+import { OsmClient } from './providers/osm.client';
 import { WikimediaClient } from './providers/wikimedia.client';
-import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PlacePhotoResolver {
   constructor(
     private readonly photoCache: PlacePhotoCacheService,
-    @InjectRepository(Places) private readonly placesRepo: PlacesRepository,
     private readonly googlePlaces: GooglePlacesClient,
     private readonly wiki: WikimediaClient,
     private readonly selector: PlacesProviderSelector,
+    private readonly osm: OsmClient,
   ) {}
 
   /**
@@ -34,8 +32,7 @@ export class PlacePhotoResolver {
    * Google (for a Google id) and Wikimedia, under the shared photo-fetch slots.
    *
    * @txIndependent cache bookkeeping around network fetches: the stored photo,
-   * the negative-cache entry and the image_url backfill are each complete on
-   * their own, and a failed one costs the cache, never the answer.
+   * and negative-cache entry are independent of the confirmed itinerary.
    */
   async resolve(
     userId: number,
@@ -55,8 +52,10 @@ export class PlacePhotoResolver {
     // same shape the photos kill-switch already returns.
     const noPhoto = { photoUrl: null, attribution: null };
 
-    // Recent miss — don't hammer the API
-    if (await this.photoCache.getErrored(placeId)) return noPhoto;
+    // The old OSM lookup guessed from an activity label and cached false misses.
+    // Version only those negative entries; existing photos keep their stable URLs.
+    const negativeKey = OSM_PLACE_ID.test(placeId) ? `${placeId}~osm-photo-v2` : placeId;
+    if (await this.photoCache.getErrored(negativeKey)) return noPhoto;
 
     // Deduplicate concurrent requests for the same placeId
     const existing = this.photoCache.getInFlight(placeId);
@@ -83,7 +82,28 @@ export class PlacePhotoResolver {
         // so a place added via search still gets a marker image when Google returns
         // nothing. Returns null (without marking an error) so the caller decides.
         const fetchWikimediaFallback = async (): Promise<{ attribution: string | null } | null> => {
-          const outcome = await this.wiki.downloadPhoto(lat, lng, name);
+          let osmPlace: Record<string, unknown> | null = null;
+          if (OSM_PLACE_ID.test(placeId)) {
+            const [type, id] = placeId.split(':');
+            const [details, local] = await Promise.all([
+              this.osm.elementDetails(placeId, 'en'),
+              this.osm.lookupNominatim(type, id, 'zh'),
+            ]);
+            if (details)
+              osmPlace = {
+                ...details,
+                photo_localities: [
+                  ...(Array.isArray(details.photo_localities) ? details.photo_localities : []),
+                  ...(local?.photo_localities ?? []),
+                ],
+              };
+          }
+          // No unverified 60m fallback for OSM: it can show a dog or a neighbour.
+          const outcome = OSM_PLACE_ID.test(placeId)
+            ? osmPlace
+              ? await this.wiki.downloadOsmPhoto(lat, lng, osmPlace)
+              : { kind: 'failed' as const }
+            : await this.wiki.downloadPhoto(lat, lng, name);
           if (outcome.kind === 'failed') providerFailed = true;
           if (outcome.kind !== 'photo') return null;
           try {
@@ -105,14 +125,8 @@ export class PlacePhotoResolver {
           if (outcome.kind === 'failed') providerFailed = true;
           if (outcome.kind !== 'photo') return null;
 
-          const cached = await this.photoCache.put(placeId, outcome.bytes, outcome.attribution);
-
-          // Persist stable proxy URL to database
-          try {
-            await this.placesRepo.setImageUrlIfUnset(placeId, cached.photoUrl);
-          } catch (dbErr) {
-            console.error('Failed to persist photo URL to database:', dbErr);
-          }
+          // Reading a photo must not change the itinerary's image_url or confirmation hash.
+          await this.photoCache.put(placeId, outcome.bytes, outcome.attribution);
 
           return { attribution: outcome.attribution };
         };
@@ -128,7 +142,7 @@ export class PlacePhotoResolver {
         const fallback = await fetchWikimediaFallback();
         if (fallback) return fallback;
 
-        await this.photoCache.markError(placeId, providerFailed ? 'provider-error' : 'no-photo');
+        await this.photoCache.markError(negativeKey, providerFailed ? 'provider-error' : 'no-photo');
         return null;
       });
     })();

@@ -1,15 +1,16 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Otwórz tę podróż',
+  'assistant.plan.shareOptions': 'Najpierw omów z innymi (opcjonalnie)',
+  'assistant.plan.preview': 'Podgląd planu podróży',
   'assistant.home.title': 'Twoje podróże',
-  'assistant.home.welcome': 'W czym mogę pomóc?',
-  'assistant.home.placeholder': 'Zapytaj o cokolwiek w sprawie swoich podróży',
+  'assistant.home.welcome': 'Dokąd chcesz pojechać?',
+  'assistant.home.placeholder':
+    'Spróbuj „podróż samochodem po zachodnim Syczuanie” lub wklej link do przewodnika turystycznego',
   'assistant.home.switch': 'Czat o jednej podróży',
   'assistant.home.back': 'Wróć do wszystkich podróży',
-  'assistant.suggest.homeNext': 'Która podróż jest następna i co jeszcze zostało?',
-  'assistant.suggest.homeCompare': 'Porównaj moje nadchodzące podróże',
-  'assistant.suggest.homeAtlas': 'Ile krajów odwiedziłem?',
-  'assistant.suggest.homeVacay': 'Ile dni urlopu zostało mi w tym roku?',
+  'assistant.suggest.homeNext': 'Podróż samochodem po zachodnim Syczuanie',
   'assistant.card.tripChat.label': 'Kontynuuj na czacie podróży',
   'assistant.card.tripChat.eyebrow': 'Czat podróży',
   'assistant.card.tripChat.dates': 'od {start} do {end}',
@@ -26,6 +27,31 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Dziennik',
   'assistant.card.journalChat.open': 'Kontynuuj na czacie tego dziennika',
   'assistant.step.openJournalChat': 'Szukam dziennika',
+  'assistant.plan.start': 'Zaplanuj z AI',
+  'assistant.plan.manual': 'Utwórz ręcznie',
+  'assistant.plan.unavailable': 'Planowanie z AI jest teraz niedostępne. Nadal możesz utworzyć podróż ręcznie.',
+  'assistant.plan.label': 'Szkic podróży',
+  'assistant.plan.version': 'Wersja {version}',
+  'assistant.plan.requirements': 'Twoje preferencje podróży',
+  'assistant.plan.assumptions': 'Sprawdź te założenia',
+  'assistant.plan.overnight': 'Nocleg w: {city}',
+  'assistant.plan.editHint':
+    'Chcesz coś zmienić? Napisz mi na czacie, a zaktualizuję szkic. Zatwierdź go, gdy będzie Ci odpowiadać.',
+  'assistant.plan.stale': 'Poniżej jest nowsza wersja. Zatwierdź najnowszą wersję, aby utworzyć podróż.',
+  'assistant.plan.confirm': 'Zatwierdź i utwórz podróż',
+  'assistant.plan.created': 'Ten szkic jest powiązany z podróżą. Otwórz ją, aby omówić i poprawić wspólny plan.',
+  'assistant.plan.loadFailed': 'Nie udało się wczytać tego szkicu. Spróbuj ponownie.',
+  'assistant.plan.applyFailed': 'Nie udało się utworzyć podróży. Sprawdź najnowszy szkic i spróbuj ponownie.',
+  'assistant.plan.unverified': 'Dokładna lokalizacja nie została jeszcze zweryfikowana',
+  'assistant.plan.share': 'Omówcie ten plan razem',
+  'assistant.plan.shareHint':
+    'Udostępnij ten plan w przestrzeni podróży przed zatwierdzeniem. Twoja prywatna rozmowa pozostaje prywatna.',
+  'assistant.followUp.answerHint': 'Wybierz opcję lub wpisz własną odpowiedź poniżej.',
+  'assistant.followUp.useDefaults': 'Zaplanuj na podstawie tego, co wiesz',
+  'assistant.followUp.useDefaultsPrompt':
+    'Wykorzystaj to, co omówiliśmy, i rozsądne założenia, aby teraz stworzyć pełny plan podróży, bez kolejnych pytań.',
+  'assistant.suggest.homeWeekend': 'Weekendowy wyjazd z dziećmi',
+  'assistant.suggest.homeUnsure': 'Miejsce na spokojny wyjazd',
 };
 
 export default assistantHome;

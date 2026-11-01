@@ -14,7 +14,7 @@
  */
 import { discardBody, exceedsDeclaredLength, readCapped } from '../../../utils/cappedFetch';
 import { safeFetchFollow } from '../../../utils/ssrfGuard';
-import { UA, stripWikiMarkup, parseWikipediaTag } from '../maps.helpers';
+import { UA, stripWikiMarkup, parseWikipediaTag, rankCommonsCandidates } from '../maps.helpers';
 import { Injectable } from '@nestjs/common';
 
 import { Jimp } from 'jimp';
@@ -369,8 +369,80 @@ export class WikimediaClient {
     try {
       const wiki = await this.fetchWikimediaPhoto(lat, lng, name);
       if (!wiki) return { kind: 'none' };
+      return await this.downloadImage(wiki.photoUrl, wiki.attribution);
+    } catch {
+      return { kind: 'failed' };
+    }
+  }
+
+  /** OSM's own name/identity, never the AI's activity label or an arbitrary nearby photo. */
+  async downloadOsmPhoto(lat: number, lng: number, details: Record<string, unknown>): Promise<WikimediaPhotoOutcome> {
+    const text = (key: string) => (typeof details[key] === 'string' ? details[key].trim() : '');
+    const name = text('name');
+    if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return { kind: 'none' };
+    let curated: CommonsCandidate[] = [];
+    let category = text('wikimedia_commons');
+    if (text('wikidata')) {
+      const found = await this.fetchWikidataCandidates(text('wikidata'), 1);
+      curated = found.candidates;
+      category ||= found.commonsCategory ?? '';
+    }
+    if (!curated.length && text('wikipedia')) {
+      const file = await this.fetchWikiLeadImageName(text('wikipedia'));
+      if (file) curated = [...(await this.fetchCommonsFilesByName([file])).values()];
+    }
+    if (!curated.length && category) curated = await this.fetchCommonsCategoryCandidates(category, 3);
+
+    let candidate = rankCommonsCandidates(curated, 1)[0];
+    let context = '';
+    if (!candidate) {
+      // A large old town's OSM point can be its entrance. Permit a wider search
+      // only when Commons names the same place or its immediate named locality.
+      // Address components farther out (city/province) cannot establish identity.
+      const locality = Array.isArray(details.photo_localities)
+        ? details.photo_localities.filter((part): part is string => typeof part === 'string' && part.length > 1)
+        : [];
+      const names = [
+        name,
+        ...locality.flatMap((place) => {
+          const stem = place.replace(/(?:古镇|古城|镇|村)$/, '');
+          return stem.length >= 2 ? [place, stem] : [place];
+        }),
+      ];
+      let nearby: CommonsCandidate[];
+      try {
+        nearby = await this.fetchCommonsCandidates(lat, lng, 5, 1000, true);
+      } catch {
+        return { kind: 'failed' };
+      }
+      const match = (photo: CommonsCandidate, place: string) =>
+        `${photo.title ?? ''} ${photo.descriptors ?? ''}`.toLocaleLowerCase().includes(place.toLocaleLowerCase());
+      const usable = nearby.filter(
+        (photo) =>
+          !/\bdogs?\b|\bcats?\b|流浪|狗|猫|protection sign|标牌|标识/i.test(
+            `${photo.title ?? ''} ${photo.descriptors ?? ''}`,
+          ),
+      );
+      const matched = names.flatMap((place) =>
+        rankCommonsCandidates(
+          usable.filter((photo) => match(photo, place)),
+          1,
+        ).map((photo) => ({ photo, place })),
+      )[0];
+      if (!matched) return { kind: 'none' };
+      candidate = matched.photo;
+      // A neighbourhood scene must never pretend to be a close-up of a pin.
+      context = `${matched.place}区域参考图 · `;
+    }
+    const subject = candidate.title?.replace(/^File:/i, '').replace(/\.[a-z0-9]+$/i, '');
+    const credit = [subject, candidate.attribution, candidate.license, candidate.sourceUrl].filter(Boolean).join(' · ');
+    return this.downloadImage(candidate.photoUrl, `${context}${credit}` || null);
+  }
+
+  private async downloadImage(photoUrl: string, attribution: string | null): Promise<WikimediaPhotoOutcome> {
+    try {
       const imgRes = await safeFetchFollow(
-        wiki.photoUrl,
+        photoUrl,
         { signal: AbortSignal.timeout(WIKI_TIMEOUT_MS) },
         { bypassInternalIpAllowed: true },
       );
@@ -381,7 +453,7 @@ export class WikimediaClient {
       }
       const { bytes, truncated } = await readCapped(imgRes, WIKIMEDIA_PHOTO_MAX_BYTES);
       if (truncated || bytes.byteLength === 0) return { kind: 'failed' };
-      return { kind: 'photo', bytes, attribution: wiki.attribution };
+      return { kind: 'photo', bytes, attribution };
     } catch {
       return { kind: 'failed' };
     }
@@ -455,14 +527,20 @@ export class WikimediaClient {
    * show the place. It does not fix the real problem, which is that nobody
    * photographed the shop, but it stops the wrong answer from being confident.
    */
-  async fetchCommonsCandidates(lat: number, lng: number, limit = 5): Promise<CommonsCandidate[]> {
+  async fetchCommonsCandidates(
+    lat: number,
+    lng: number,
+    limit = 5,
+    radius = 60,
+    failOnError = false,
+  ): Promise<CommonsCandidate[]> {
     const params = new URLSearchParams({
       action: 'query',
       format: 'json',
       generator: 'geosearch',
       ggsprimary: 'all',
       ggsnamespace: '6',
-      ggsradius: '60',
+      ggsradius: String(Math.max(60, Math.min(radius, 1000))),
       ggscoord: `${lat}|${lng}`,
       // Deliberately more than the caller asked for. Around anything worth
       // visiting the first few hits are survey tiles, passers-by and the
@@ -480,12 +558,15 @@ export class WikimediaClient {
         // no pictures is a fine answer, a request that never returns is not.
         signal: AbortSignal.timeout(WIKI_TIMEOUT_MS),
       });
-      if (!res.ok) return [];
-      const data = (await res.json()) as { query?: { pages?: Record<string, WikiCommonsPage> } };
+      if (!res.ok) throw new Error(`Commons photo lookup: HTTP ${res.status}`);
+      const data = (await res.json()) as { error?: unknown; query?: { pages?: Record<string, WikiCommonsPage> } };
+      // MediaWiki returns operational failures as HTTP 200 error envelopes.
+      if (data.error) throw new Error('Commons photo lookup failed');
       // Hand back the whole pool. fetchWikimediaPhoto still takes [0] and gets
       // what it always got; the enrichment column ranks before it cuts.
       return this.toCommonsCandidates(data.query?.pages, Number(params.get('ggslimit')));
-    } catch {
+    } catch (error) {
+      if (failOnError) throw error;
       return [];
     }
   }

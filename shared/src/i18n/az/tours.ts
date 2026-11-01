@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Səyahət bölmələri',
+  'tours.navigation.help':
+    'Piyada, velosiped və digər açıq hava marşrutları gündəlik plana fəaliyyət kimi əlavə edilə bilər.',
   'trip.tabs.tourPlanner': 'Turlar',
   'tours.mode.places': 'Məkanlar',
   'tours.mode.tours': 'Turlar',

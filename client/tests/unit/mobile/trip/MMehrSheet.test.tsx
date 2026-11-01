@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { FolderOpen, Users } from 'lucide-react'
 import type { AiStatusResponse } from '@trek/shared'
+import { useLocation } from 'react-router'
 import MMehrSheet from '../../../../src/mobile/screens/trip/sheets/MMehrSheet'
 import type { MTripShellApi, TripPlanner } from '../../../../src/mobile/screens/trip/MTripShell'
 import type { TripFile, TripMember } from '../../../../src/types'
@@ -63,6 +64,31 @@ describe('MMehrSheet', () => {
   it('FE-MOB-MEHR-002: opens as the "More" panel', () => {
     renderSheet()
     expect(screen.getByRole('dialog', { name: 'More' })).toBeInTheDocument()
+  })
+
+  it('keeps itinerary adjustments reachable from More for a read-only member', () => {
+    const shell = buildShell({ sheet: { id: 'mehr' } })
+    const planner = buildPlanner({ tripId: 31, can: vi.fn(() => false) })
+    function Location() { return <output>{useLocation().pathname}</output> }
+    render(<><MMehrSheet planner={planner} shell={shell} /><Location /></>)
+    fireEvent.click(screen.getByRole('button', { name: 'Review and adjust' }))
+    expect(shell.closeSheet).toHaveBeenCalledOnce()
+    expect(screen.getByRole('status')).toHaveTextContent('/trips/31/planning')
+  })
+
+  it('opens the existing outdoor-route browser from More, with its purpose explained', () => {
+    const setToursMode = vi.fn()
+    const { shell } = renderSheet({ toursEnabled: true, setToursMode })
+    fireEvent.click(screen.getByRole('button', { name: /Walking & outdoor routes/ }))
+    expect(setToursMode).toHaveBeenCalledWith(true)
+    expect(shell.setTravelMode).toHaveBeenCalledWith('browse')
+    expect(shell.closeSheet).toHaveBeenCalledOnce()
+    expect(screen.getByText(/can be added as activities in the daily itinerary/)).toBeVisible()
+  })
+
+  it('keeps the outdoor-route tool hidden when the addon is off', () => {
+    renderSheet({ toursEnabled: false })
+    expect(screen.queryByRole('button', { name: /Walking & outdoor routes/ })).not.toBeInTheDocument()
   })
 
   it('FE-MOB-MEHR-003: only tiles the sections that are not in the dock', () => {

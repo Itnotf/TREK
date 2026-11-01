@@ -95,7 +95,16 @@ export class GoogleRouteService {
     // `every` cannot await the permission check, so the same all-of test runs as
     // an explicit loop — same actions, same order, same short-circuit.
     for (const action of ['place_edit', 'day_edit']) {
-      if (!(await this.permissions.checkPermission(action, role, access.user_id, userId, access.user_id !== userId)))
+      if (
+        !(await this.permissions.checkPermission(
+          action,
+          role,
+          access.user_id,
+          userId,
+          access.user_id !== userId,
+          tripId,
+        ))
+      )
         throw new DomainError(403, 'Permission denied');
     }
     if (!(await this.assignments.dayExists(String(input.dayId), String(tripId))))

@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Az utazás részei',
+  'tours.navigation.help':
+    'A gyalogos, kerékpáros és más szabadtéri útvonalak programként hozzáadhatók a napi tervhez.',
   'trip.tabs.tourPlanner': 'Túrák',
   'tours.mode.places': 'Helyek',
   'tours.mode.tours': 'Túrák',

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import type { ReactNode } from 'react'
-import { forgetResumeRoute, rememberRoute, RESUME_MAX_AGE_MS, takeResumeDay, takeResumeRoute, useRememberRoute } from './resumeRoute'
+import { forgetResumeRoute, rememberRoute, rememberTripDay, RESUME_MAX_AGE_MS, takeResumeDay, takeResumeRoute, useRememberRoute } from './resumeRoute'
 
 const NOW = 1_800_000_000_000
 
@@ -13,6 +13,24 @@ beforeEach(() => {
 })
 
 describe('resume route (#1024)', () => {
+  it('remembers the latest day for each trip within the browser session', () => {
+    rememberTripDay(7, 55)
+    rememberTripDay(7, 56)
+    rememberTripDay(8, 65)
+    expect(takeResumeDay(7)).toBe(56)
+    expect(takeResumeDay(8)).toBe(65)
+    expect(takeResumeDay(7)).toBeNull()
+  })
+
+  it('ignores invalid day ids without replacing a valid selection', () => {
+    rememberTripDay(7, 55)
+    rememberTripDay(7, 0)
+    rememberTripDay(7, Number.NaN)
+    rememberTripDay(-1, 56)
+    expect(takeResumeDay(7)).toBe(55)
+    expect(takeResumeDay(-1)).toBeNull()
+  })
+
   it('FE-UTIL-RESUME-001: an installed relaunch goes back to the trip and its tab, once', () => {
     sessionStorage.setItem('trip-tab-7', 'buchungen')
     rememberRoute('/trips/7?tab=plan', NOW)

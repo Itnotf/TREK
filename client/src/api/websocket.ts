@@ -11,6 +11,7 @@ let reconnectDelay = 1000
 const MAX_RECONNECT_DELAY = 30000
 const listeners = new Set<WebSocketListener>()
 const activeTrips = new Set<string>()
+const refetchListeners = new Set<RefetchCallback>()
 
 /**
  * Studio books this tab has open, so presence survives a reconnect.
@@ -42,6 +43,12 @@ export function getActiveTrips(): string[] {
 
 export function setRefetchCallback(fn: RefetchCallback | null): void {
   refetchCallback = fn
+}
+
+/** Independent trip views also reload after reconnect and queued writes flush. */
+export function subscribeTripRefetch(fn: RefetchCallback): () => void {
+  refetchListeners.add(fn)
+  return () => { refetchListeners.delete(fn) }
 }
 
 /**
@@ -140,11 +147,14 @@ async function connectInternal(_isReconnect = false): Promise<void> {
           socket.send(JSON.stringify({ type: 'join', tripId }))
         }
       })
-      if (refetchCallback) {
+      if (refetchCallback || refetchListeners.size > 0) {
         const doRefetch = () => {
           activeTrips.forEach(tripId => {
-            try { refetchCallback!(tripId) } catch (err: unknown) {
-              console.error('Failed to refetch trip data on reconnect:', err)
+            for (const callback of [refetchCallback, ...refetchListeners]) {
+              if (!callback) continue
+              try { callback(tripId) } catch (err: unknown) {
+                console.error('Failed to refetch trip data on reconnect:', err)
+              }
             }
           })
         }

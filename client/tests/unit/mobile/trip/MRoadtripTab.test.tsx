@@ -152,7 +152,7 @@ function renderTab(p: TripPlanner = planner(), shell: MTripShellApi = buildShell
 function freezeAt(hour: number, minute: number): string {
   vi.useFakeTimers()
   vi.setSystemTime(new Date(2026, 4, 2, hour, minute))
-  return new Date().toISOString().slice(0, 10)
+  return '2026-05-02'
 }
 
 function today(date: string): Partial<TripPlanner> {

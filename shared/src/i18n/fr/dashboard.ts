@@ -12,6 +12,30 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} archivé',
   'dashboard.newTrip': 'Nouveau voyage',
   'dashboard.newTripSub': 'Planifiez un nouveau voyage à partir de zéro',
+  'dashboard.roadtrip.enable': 'Planifier un voyage en voiture dans plusieurs villes',
+  'dashboard.roadtrip.hint':
+    'Enregistrez les villes et les limites de conduite avec le voyage. Après sa création, vous pourrez demander de l’aide à l’IA. Vos critères sont conservés même sans connexion à l’IA.',
+  'dashboard.roadtrip.origin': 'Ville de départ',
+  'dashboard.roadtrip.viaCities': 'Villes à visiter (facultatif)',
+  'dashboard.roadtrip.viaHint':
+    'Séparez les villes par des virgules ou des retours à la ligne. L’IA peut proposer leur ordre.',
+  'dashboard.roadtrip.roundTrip': 'Revenir à la ville de départ',
+  'dashboard.roadtrip.destination': 'Ville d’arrivée',
+  'dashboard.roadtrip.dailyHours': 'Conduite quotidienne maximale (heures)',
+  'dashboard.roadtrip.vehicle': 'Type de véhicule',
+  'dashboard.roadtrip.combustion': 'Véhicule thermique',
+  'dashboard.roadtrip.electric': 'Véhicule électrique',
+  'dashboard.roadtrip.rangeKm': 'Autonomie réaliste avec le plein ou une charge complète (km)',
+  'dashboard.roadtrip.originRequired': 'Saisissez une ville de départ pour votre voyage en voiture.',
+  'dashboard.roadtrip.destinationRequired':
+    'Saisissez une ville d’arrivée ou choisissez de revenir à la ville de départ.',
+  'dashboard.roadtrip.invalidHours': 'Saisissez une limite de conduite quotidienne entre 1 et 12 heures.',
+  'dashboard.roadtrip.invalidRange': 'Saisissez une autonomie réaliste entre 1 et 2 000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Critères du voyage en voiture dans plusieurs villes',
+  'dashboard.roadtrip.planningInstruction':
+    'Proposez l’ordre des villes et les villes où passer la nuit avant les activités quotidiennes. Respectez les dates fixes, les hébergements réservés et la limite de conduite. Vérifiez les itinéraires routiers réels et signalez les informations inconnues. Faites confirmer la proposition avant de modifier le voyage.',
+  'dashboard.roadtrip.planPrompt':
+    'Aidez-moi à planifier un voyage en voiture dans plusieurs villes en utilisant les critères de cette description et les paramètres de conduite enregistrés. Proposez d’abord l’ordre des villes et des villes réelles où passer la nuit, puis les activités quotidiennes après ma confirmation. Respectez les dates fixes, les hébergements réservés et la limite de conduite quotidienne. Vérifiez les itinéraires routiers réels et signalez clairement toute information non vérifiée. Ne modifiez pas le voyage avant ma confirmation.',
   'dashboard.subscribeAllTrips': "S'abonner à tous les voyages",
   'dashboard.subscribeAllTripsDesc':
     'Un flux de calendrier unique pour tous vos voyages actifs, synchronisé automatiquement. Exclut les voyages archivés et les voyages terminés il y a plus de 90 jours.',

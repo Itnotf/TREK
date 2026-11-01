@@ -17,9 +17,15 @@ const KEY = 'trek:resume-route'
 const CHECKED_KEY = 'trek:resume-checked'
 const DAY_KEY = 'trek:resume-day-'
 
+/** Keep a trip's last selected day while its guide or another page is open. */
+export function rememberTripDay(tripId: number, dayId: number): void {
+  if (!Number.isSafeInteger(tripId) || tripId <= 0 || !Number.isSafeInteger(dayId) || dayId <= 0) return
+  try { sessionStorage.setItem(`${DAY_KEY}${tripId}`, String(dayId)) } catch { /* Storage refused: use the normal first-day selection. */ }
+}
+
 /**
- * The day the plan was on when the app went away (#666), handed over once to
- * whoever seeds the trip's first day selection. Null when there is none.
+ * The day the plan was on before leaving it, handed over once to the trip's
+ * first-day selection. A valid active day is remembered again by the planner.
  */
 export function takeResumeDay(tripId: number): number | null {
   try {

@@ -64,6 +64,8 @@ export class RoadtripPlanningMcp {
         settings: plan.preferences,
         failures: plan.failures,
         omittedVisitIds: plan.omittedVisits,
+        unlocatedActivities: calculated.unlocatedActivities,
+        unlocatedDwellMinutes: calculated.unlocatedDwellMinutes,
         undatedRides: plan.undatedRides,
         dayWindowIssue: calculated.dayWindowIssue,
         totalDistanceMetres: calculated.totalDistance,

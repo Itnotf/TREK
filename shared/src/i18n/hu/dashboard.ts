@@ -12,6 +12,29 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} archivált',
   'dashboard.newTrip': 'Új utazás',
   'dashboard.newTripSub': 'Tervezz egy új utazást a nulláról',
+  'dashboard.roadtrip.enable': 'Több várost érintő autós utazás tervezése',
+  'dashboard.roadtrip.hint':
+    'Mentsd el a városokat és a vezetési korlátokat az utazáshoz. A létrehozás után kérheted az MI segítségét a tervezéshez. Az igényeid MI-kapcsolat nélkül is megmaradnak.',
+  'dashboard.roadtrip.origin': 'Indulási város',
+  'dashboard.roadtrip.viaCities': 'Meglátogatandó városok (opcionális)',
+  'dashboard.roadtrip.viaHint': 'Vesszővel vagy sortöréssel válaszd el a városokat. Az MI javasolhat sorrendet.',
+  'dashboard.roadtrip.roundTrip': 'Visszatérés az indulási városba',
+  'dashboard.roadtrip.destination': 'Érkezési város',
+  'dashboard.roadtrip.dailyHours': 'Napi maximális vezetési idő (óra)',
+  'dashboard.roadtrip.vehicle': 'Járműtípus',
+  'dashboard.roadtrip.combustion': 'Belső égésű motoros jármű',
+  'dashboard.roadtrip.electric': 'Elektromos jármű',
+  'dashboard.roadtrip.rangeKm': 'Reális hatótáv teli tankkal vagy teljes töltéssel (km)',
+  'dashboard.roadtrip.originRequired': 'Add meg az autós utazás indulási városát.',
+  'dashboard.roadtrip.destinationRequired':
+    'Add meg az érkezési várost, vagy válaszd az indulási városba való visszatérést.',
+  'dashboard.roadtrip.invalidHours': 'Adj meg 1 és 12 óra közötti napi vezetési korlátot.',
+  'dashboard.roadtrip.invalidRange': 'Adj meg 1 és 2000 km közötti reális hatótávot.',
+  'dashboard.roadtrip.summaryTitle': 'A több várost érintő autós utazás igényei',
+  'dashboard.roadtrip.planningInstruction':
+    'A napi programok előtt javasolj várossorrendet és éjszakázási városokat. Vedd figyelembe a rögzített dátumokat, a lefoglalt szállásokat és a vezetési korlátot. Ellenőrizd a tényleges közúti útvonalakat, és jelöld az ismeretlen adatokat. Az utazás módosítása előtt kérj megerősítést a javaslatra.',
+  'dashboard.roadtrip.planPrompt':
+    'Segíts megtervezni egy több várost érintő autós utazást az utazás leírásában szereplő igények és a mentett vezetési beállítások alapján. Először javasolj várossorrendet és valós éjszakázási városokat, majd a jóváhagyásom után tervezd meg a napi programokat. Vedd figyelembe a rögzített dátumokat, a lefoglalt szállásokat és a napi vezetési korlátot. Ellenőrizd a tényleges közúti útvonalakat, és egyértelműen jelöld az ellenőrizetlen adatokat. Ne módosítsd az utazást, amíg nem hagyom jóvá a javaslatot.',
   'dashboard.subscribeAllTrips': 'Feliratkozás az összes utazásra',
   'dashboard.subscribeAllTripsDesc':
     'Egy naptár-feed az összes aktív utazásodhoz, automatikusan szinkronban tartva. Az archivált utazások és a több mint 90 napja véget ért utazások nem szerepelnek benne.',

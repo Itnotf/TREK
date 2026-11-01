@@ -18,6 +18,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.many': ' · {count} zarchiwizowanych',
   'dashboard.newTrip': 'Nowa podróż',
   'dashboard.newTripSub': 'Zaplanuj nową podróż od zera',
+  'dashboard.roadtrip.enable': 'Zaplanuj podróż samochodem przez kilka miast',
+  'dashboard.roadtrip.hint':
+    'Zapisz miasta i limity jazdy wraz z podróżą. Po jej utworzeniu możesz poprosić AI o pomoc w planowaniu. Twoje wymagania zostaną zapisane także bez połączenia z AI.',
+  'dashboard.roadtrip.origin': 'Miasto wyjazdu',
+  'dashboard.roadtrip.viaCities': 'Miasta do odwiedzenia (opcjonalnie)',
+  'dashboard.roadtrip.viaHint': 'Oddziel miasta przecinkami lub nowymi wierszami. AI może zaproponować kolejność.',
+  'dashboard.roadtrip.roundTrip': 'Powrót do miasta wyjazdu',
+  'dashboard.roadtrip.destination': 'Miasto docelowe',
+  'dashboard.roadtrip.dailyHours': 'Maksymalny dzienny czas jazdy (godziny)',
+  'dashboard.roadtrip.vehicle': 'Typ pojazdu',
+  'dashboard.roadtrip.combustion': 'Pojazd spalinowy',
+  'dashboard.roadtrip.electric': 'Pojazd elektryczny',
+  'dashboard.roadtrip.rangeKm': 'Realny zasięg z pełnym bakiem lub akumulatorem (km)',
+  'dashboard.roadtrip.originRequired': 'Podaj miasto wyjazdu dla swojej podróży samochodem.',
+  'dashboard.roadtrip.destinationRequired': 'Podaj miasto docelowe lub wybierz powrót do miasta wyjazdu.',
+  'dashboard.roadtrip.invalidHours': 'Podaj dzienny limit jazdy od 1 do 12 godzin.',
+  'dashboard.roadtrip.invalidRange': 'Podaj realny zasięg od 1 do 2000 km.',
+  'dashboard.roadtrip.summaryTitle': 'Wymagania podróży samochodem przez kilka miast',
+  'dashboard.roadtrip.planningInstruction':
+    'Zaproponuj kolejność miast i miasta na nocleg przed zaplanowaniem codziennych atrakcji. Uwzględnij ustalone daty, zarezerwowane noclegi i limit jazdy. Sprawdź rzeczywiste trasy drogowe i oznacz nieznane informacje. Poproś o potwierdzenie propozycji przed zmianą podróży.',
+  'dashboard.roadtrip.planPrompt':
+    'Pomóż mi zaplanować podróż samochodem przez kilka miast na podstawie wymagań w opisie podróży i zapisanych ustawień jazdy. Najpierw zaproponuj kolejność miast i rzeczywiste miasta na nocleg, a po moim potwierdzeniu zaplanuj codzienne atrakcje. Uwzględnij ustalone daty, zarezerwowane noclegi i dzienny limit jazdy. Sprawdź rzeczywiste trasy drogowe i wyraźnie oznacz wszystkie niezweryfikowane informacje. Nie zmieniaj podróży, dopóki nie potwierdzę propozycji.',
   'dashboard.subscribeAllTrips': 'Subskrybuj wszystkie podróże',
   'dashboard.subscribeAllTripsDesc':
     'Jeden kanał kalendarza dla wszystkich Twoich aktywnych podróży, automatycznie synchronizowany. Nie obejmuje zarchiwizowanych podróży ani podróży zakończonych ponad 90 dni temu.',

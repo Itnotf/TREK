@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'Τοποθεσίες προς επιλογή',
+  'roadtrip.unlocated.hint':
+    'Αυτές οι δραστηριότητες χρειάζονται {time}. Τα σύνολα της διαδρομής είναι ελλιπή. Επιλέξτε τις τοποθεσίες πριν από τον αυτόματο ημερήσιο προγραμματισμό.',
   'roadtrip.stay.portals': 'Βρείτε κατάλυμα',
   'roadtrip.stay.portalHint':
     'Ελέγξτε προορισμό, ημερομηνίες και επισκέπτες στην πύλη. Στο CHECK24 αναζητήστε χειροκίνητα.',

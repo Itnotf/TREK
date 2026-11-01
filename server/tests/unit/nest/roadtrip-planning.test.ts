@@ -291,6 +291,29 @@ describe('browser-independent roadtrip calculation', () => {
     Object.assign(s.visits[1], { lat: null });
     const plan = await s.plans.calculate(10, 5);
     expect(plan.omittedVisits).toEqual([2]);
+    expect(plan.calculated.unlocatedActivities).toEqual([
+      expect.objectContaining({ assignmentId: 2, dwellMinutes: 30 }),
+    ]);
+    expect(plan.calculated.unlocatedDwellMinutes).toBe(30);
+    expect(plan.calculated.dayWindowIssue).toBe('incomplete');
+    expect(plan.calculated.totalDuration).toBe(0);
+    expect(s.router.route).not.toHaveBeenCalled();
+  });
+  it('keeps AI suggested times flexible while visit overrides remain fixed', async () => {
+    const s = setup();
+    Object.assign(s.visits[1], {
+      source: 'assistant',
+      time: '09:00',
+      end_time: '10:00',
+      assignment_time: null,
+      assignment_end_time: null,
+    });
+    const suggested = await s.plans.calculate(10, 5, { roadtrip_day_start: '', roadtrip_day_end: '' });
+    expect(suggested.calculated.days[0].stops[1]).toMatchObject({ time: null, leaveAt: null });
+    Object.assign(s.visits[1], { assignment_time: '11:00', assignment_end_time: '12:00' });
+    const fixed = await s.plans.calculate(10, 5, { roadtrip_day_start: '', roadtrip_day_end: '' });
+    expect(fixed.calculated.days[0].stops[1]).toMatchObject({ time: '11:00', leaveAt: '12:00' });
+    expect(fixed.calculated.days[0].stops[0].time).toBe('07:00');
   });
   it('hands calculate_roadtrip the end time of a visit as the moment the drive leaves it', async () => {
     const s = setup();

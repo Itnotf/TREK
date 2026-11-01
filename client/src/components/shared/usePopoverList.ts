@@ -1,5 +1,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { useAnchoredPosition } from '../../hooks/useAnchoredPosition';
+import { useIsPhone } from '../../hooks/useIsPhone';
+import { useBackLayer } from '../../hooks/useBackLayer';
 
 const itemsOf = (list: HTMLElement | null) => Array.from(list?.querySelectorAll('button') ?? []);
 
@@ -15,6 +17,7 @@ const EDGE = 8;
  */
 export function usePopoverList(currentIndex: number, options: { estimatedHeight?: number } = {}) {
   const [open, setOpen] = useState(false);
+  const isPhone = useIsPhone();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const startAt = useRef(0);
@@ -39,11 +42,12 @@ export function usePopoverList(currentIndex: number, options: { estimatedHeight?
   useLayoutEffect(() => {
     const menu = menuRef.current;
     if (!listShown || !menu) return;
-    menu.style.translate = '';
+    // Position with left: reduced-motion styles may disable hover translations.
+    menu.style.left = `${box.left}px`;
     const rect = menu.getBoundingClientRect();
     let shift = Math.min(0, window.innerWidth - EDGE - rect.right);
     if (rect.left + shift < EDGE) shift = EDGE - rect.left;
-    if (shift) menu.style.translate = `${Math.round(shift)}px 0`;
+    if (shift) menu.style.left = `${Math.round(rect.left + shift)}px`;
   }, [listShown, box]);
 
   useEffect(() => {
@@ -73,6 +77,7 @@ export function usePopoverList(currentIndex: number, options: { estimatedHeight?
     setOpen(false);
     triggerRef.current?.focus();
   };
+  useBackLayer(isPhone && open, close, 70);
 
   const onListKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Tab') {

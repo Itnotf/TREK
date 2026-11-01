@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Sezioni del viaggio',
+  'tours.navigation.help':
+    'I percorsi a piedi, in bicicletta e per altre attività all’aperto possono essere aggiunti al programma giornaliero.',
   'trip.tabs.tourPlanner': 'Escursioni',
   'tours.mode.places': 'Luoghi',
   'tours.mode.tours': 'Escursioni',

@@ -1,6 +1,7 @@
 import { AppSettings } from '../../db/entities/AppSettings.entity';
 import { PermissionsCacheStore, permissionsCacheSlot, processPermissionsCache } from './permissions-cache';
 import { PermissionsService } from './permissions.service';
+import { PlanningAccessService } from './planning-access.service';
 import { TripAccessGuard } from './trip-access.guard';
 import { TripOwnerGuard } from './trip-owner.guard';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
@@ -21,11 +22,12 @@ import { Module, type OnModuleDestroy } from '@nestjs/common';
   // resolved to the readers outside it (the backup restore's flush).
   providers: [
     PermissionsService,
+    PlanningAccessService,
     TripAccessGuard,
     TripOwnerGuard,
     { provide: PermissionsCacheStore, useValue: processPermissionsCache },
   ],
-  exports: [PermissionsService, TripAccessGuard, TripOwnerGuard],
+  exports: [PlanningAccessService, PermissionsService, TripAccessGuard, TripOwnerGuard],
 })
 export class PermissionsModule implements OnModuleDestroy {
   constructor(private readonly cacheStore: PermissionsCacheStore) {

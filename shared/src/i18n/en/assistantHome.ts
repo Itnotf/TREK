@@ -1,15 +1,12 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
-  'assistant.home.title': 'Your travels',
-  'assistant.home.welcome': 'What can I help you with?',
-  'assistant.home.placeholder': 'Ask anything about your trips',
+  'assistant.home.title': 'AI trip planner',
+  'assistant.home.welcome': 'Where would you like to go?',
+  'assistant.home.placeholder': 'Try “a road trip in western Sichuan”, or paste a travel guide link',
   'assistant.home.switch': 'Chat about one trip',
   'assistant.home.back': 'Back to all trips',
-  'assistant.suggest.homeNext': 'Which trip is next, and what is still open?',
-  'assistant.suggest.homeCompare': 'Compare my upcoming trips',
-  'assistant.suggest.homeAtlas': 'How many countries have I visited?',
-  'assistant.suggest.homeVacay': 'How many vacation days do I have left this year?',
+  'assistant.suggest.homeNext': 'A road trip in western Sichuan',
   'assistant.card.tripChat.label': 'Continue in a trip chat',
   'assistant.card.tripChat.eyebrow': 'Trip chat',
   'assistant.card.tripChat.dates': '{start} to {end}',
@@ -26,6 +23,34 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Journal',
   'assistant.card.journalChat.open': "Continue in this journal's chat",
   'assistant.step.openJournalChat': 'Finding the journal',
+  'assistant.plan.start': 'Plan with AI',
+  'assistant.plan.manual': 'Create manually',
+  'assistant.plan.unavailable': 'AI planning is unavailable right now. You can still create your trip manually.',
+  'assistant.plan.label': 'Trip draft',
+  'assistant.plan.version': 'Version {version}',
+  'assistant.plan.requirements': 'Your travel preferences',
+  'assistant.plan.assumptions': 'Please check these assumptions',
+  'assistant.plan.overnight': 'Overnight in {city}',
+  'assistant.plan.editHint':
+    'Want changes? Tell me in the chat and I will update the draft. Confirm when you are happy with it.',
+  'assistant.plan.stale': 'A newer version is available below. Confirm the latest version to create your trip.',
+  'assistant.plan.confirm': 'Use this itinerary',
+  'assistant.plan.created': 'This draft is saved as a trip. Continue making changes there.',
+  'assistant.plan.share': 'Open a shared discussion',
+  'assistant.plan.shareHint':
+    'Save a shared draft, invite others if you like, then confirm it together. Your private conversation stays private.',
+  'assistant.plan.unverified': 'Location not verified yet',
+  'assistant.plan.loadFailed': 'Could not load this draft. Please try again.',
+  'assistant.plan.applyFailed': 'Could not use or open this itinerary. Check your connection and try again.',
+  'assistant.plan.openItinerary': 'Open this trip',
+  'assistant.plan.shareOptions': 'Discuss with others first (optional)',
+  'assistant.plan.preview': 'Preview the itinerary',
+  'assistant.followUp.answerHint': 'Choose an option, or type your own answer below.',
+  'assistant.followUp.useDefaults': 'Plan with what you know',
+  'assistant.followUp.useDefaultsPrompt':
+    'Use what we have discussed and reasonable assumptions to generate the complete itinerary now, without further questions.',
+  'assistant.suggest.homeWeekend': 'A weekend away with the kids',
+  'assistant.suggest.homeUnsure': 'Somewhere for a relaxing trip',
 };
 
 export default assistantHome;

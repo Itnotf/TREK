@@ -125,6 +125,7 @@ interface MAdminButtonProps {
   onClick?: () => void
   title?: string
   className?: string
+  sheetDismiss?: boolean
   children: ReactNode
 }
 
@@ -136,6 +137,7 @@ export function MAdminButton({
   onClick,
   title,
   className = '',
+  sheetDismiss,
   children,
 }: MAdminButtonProps) {
   const look =
@@ -148,6 +150,7 @@ export function MAdminButton({
     <button
       type="button"
       onClick={onClick}
+      data-m-sheet-dismiss={sheetDismiss || undefined}
       disabled={disabled || busy}
       title={title}
       className={`inline-flex flex-none items-center justify-center gap-[5px] whitespace-nowrap rounded-full px-3 py-[7px] text-[0.6875rem] font-bold disabled:opacity-50 ${look} ${className}`}
@@ -175,7 +178,7 @@ export function MAdminSheetFrame({
     <>
       <div className="flex flex-none items-center gap-2 px-4 pb-2 pt-4">
         <div className="min-w-0 flex-1 truncate text-[0.9375rem] font-extrabold text-m-ink">{title}</div>
-        <MIconBtn variant="neutral" size={34} ariaLabel={t('common.close')} onClick={onClose}>
+        <MIconBtn variant="neutral" size={44} sheetDismiss ariaLabel={t('common.close')} onClick={onClose}>
           <X size={16} strokeWidth={2.2} />
         </MIconBtn>
       </div>

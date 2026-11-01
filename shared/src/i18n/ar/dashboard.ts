@@ -24,6 +24,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.many': ' · {count} رحلة مؤرشفة',
   'dashboard.newTrip': 'رحلة جديدة',
   'dashboard.newTripSub': 'خطّط لرحلة جديدة من الصفر',
+  'dashboard.roadtrip.enable': 'تخطيط رحلة بالسيارة عبر عدة مدن',
+  'dashboard.roadtrip.hint':
+    'احفظ المدن وحدود القيادة مع الرحلة. بعد إنشائها، يمكنك طلب المساعدة من الذكاء الاصطناعي في التخطيط. تُحفظ متطلباتك حتى دون اتصال بالذكاء الاصطناعي.',
+  'dashboard.roadtrip.origin': 'مدينة الانطلاق',
+  'dashboard.roadtrip.viaCities': 'مدن لزيارتها (اختياري)',
+  'dashboard.roadtrip.viaHint': 'افصل المدن بفواصل أو أسطر جديدة. يمكن للذكاء الاصطناعي اقتراح ترتيبها.',
+  'dashboard.roadtrip.roundTrip': 'العودة إلى مدينة الانطلاق',
+  'dashboard.roadtrip.destination': 'مدينة الوصول',
+  'dashboard.roadtrip.dailyHours': 'الحد الأقصى للقيادة اليومية (ساعات)',
+  'dashboard.roadtrip.vehicle': 'نوع المركبة',
+  'dashboard.roadtrip.combustion': 'مركبة تعمل بالوقود',
+  'dashboard.roadtrip.electric': 'مركبة كهربائية',
+  'dashboard.roadtrip.rangeKm': 'المدى الواقعي بخزان ممتلئ أو شحن كامل (كم)',
+  'dashboard.roadtrip.originRequired': 'أدخل مدينة انطلاق لرحلتك بالسيارة.',
+  'dashboard.roadtrip.destinationRequired': 'أدخل مدينة وصول أو اختر العودة إلى مدينة الانطلاق.',
+  'dashboard.roadtrip.invalidHours': 'أدخل حدًا للقيادة اليومية بين ساعة واحدة و12 ساعة.',
+  'dashboard.roadtrip.invalidRange': 'أدخل مدى قيادة واقعيًا بين 1 و2,000 كم.',
+  'dashboard.roadtrip.summaryTitle': 'متطلبات رحلة بالسيارة عبر عدة مدن',
+  'dashboard.roadtrip.planningInstruction':
+    'اقترح ترتيب المدن ومدن المبيت قبل الأنشطة اليومية. التزم بالتواريخ المحددة والإقامات المحجوزة وحد القيادة. تحقّق من مسارات الطرق الفعلية وحدّد المعلومات المجهولة. اطلب تأكيد المقترح قبل تغيير الرحلة.',
+  'dashboard.roadtrip.planPrompt':
+    'ساعدني في تخطيط رحلة بالسيارة عبر عدة مدن باستخدام المتطلبات في وصف هذه الرحلة وإعدادات القيادة المحفوظة. اقترح أولًا ترتيب المدن ومدن مبيت حقيقية، ثم خطّط للأنشطة اليومية بعد تأكيدي. التزم بالتواريخ المحددة والإقامات المحجوزة وحد القيادة اليومي. تحقّق من مسارات الطرق الفعلية ووضّح أي معلومات لم يتم التحقّق منها. لا تغيّر الرحلة حتى أؤكد المقترح.',
   'dashboard.subscribeAllTrips': 'الاشتراك في جميع الرحلات',
   'dashboard.subscribeAllTripsDesc':
     'خلاصة تقويم واحدة لكل رحلاتك النشطة، تبقى متزامنة تلقائيًا. لا تشمل الرحلات المؤرشفة ولا الرحلات التي انتهت قبل أكثر من 90 يومًا.',

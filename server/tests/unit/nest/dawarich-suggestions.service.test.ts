@@ -1464,7 +1464,14 @@ describe('DawarichSuggestionsService — the Atlas hand-off', () => {
 
     await svc.accept(member.id, id, { target: 'place', tripId: trip.id });
 
-    expect(permissionsStub.checkPermission).toHaveBeenCalledWith('place_edit', 'user', owner.id, member.id, true);
+    expect(permissionsStub.checkPermission).toHaveBeenCalledWith(
+      'place_edit',
+      'user',
+      owner.id,
+      member.id,
+      true,
+      trip.id,
+    );
   });
 
   it('DAWARICH-SUG-038: a place made from a recording says where it came from', async () => {

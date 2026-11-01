@@ -2,6 +2,7 @@ import { Collection, EntityRepositoryType, type Opt, type Ref, defineEntity, p }
 import { TripsRepository } from '../repositories/Trips.repository';
 import { DbTimestampType } from '../types';
 import { AssistantAttachments } from './AssistantAttachments.entity';
+import { AssistantItineraryDrafts } from './AssistantItineraryDrafts.entity';
 import { AssistantThreads } from './AssistantThreads.entity';
 import { BudgetCategoryOrder } from './BudgetCategoryOrder.entity';
 import { BudgetItems } from './BudgetItems.entity';
@@ -35,10 +36,14 @@ import { TripAlbumLinks } from './TripAlbumLinks.entity';
 import { TripDocumentLinks } from './TripDocumentLinks.entity';
 import { TripFiles } from './TripFiles.entity';
 import { TripInviteTokens } from './TripInviteTokens.entity';
+import { TripItineraryGuides } from './TripItineraryGuides.entity';
 import { TripJournalLinks } from './TripJournalLinks.entity';
 import { TripMemberRemovals } from './TripMemberRemovals.entity';
 import { TripMembers } from './TripMembers.entity';
 import { TripPhotos } from './TripPhotos.entity';
+import { TripPlanPublications } from './TripPlanPublications.entity';
+import { TripPlanningCollaborators } from './TripPlanningCollaborators.entity';
+import { TripPlanningRevisions } from './TripPlanningRevisions.entity';
 import { Users } from './Users.entity';
 
 export class Trips {
@@ -59,6 +64,7 @@ export class Trips {
   updated_at?: string | null;
   reminder_sent_for?: string | null;
   assistant_attachments_collection = new Collection<AssistantAttachments>(this);
+  assistant_itinerary_drafts_collection = new Collection<AssistantItineraryDrafts>(this);
   assistant_threads_collection = new Collection<AssistantThreads>(this);
   budget_category_order_collection = new Collection<BudgetCategoryOrder>(this);
   budget_items_collection = new Collection<BudgetItems>(this);
@@ -92,10 +98,14 @@ export class Trips {
   trip_document_links_collection = new Collection<TripDocumentLinks>(this);
   trip_files_collection = new Collection<TripFiles>(this);
   trip_invite_tokens_collection = new Collection<TripInviteTokens>(this);
+  trip_itinerary_guides_collection = new Collection<TripItineraryGuides>(this);
   trip_journal_links_collection = new Collection<TripJournalLinks>(this);
   trip_member_removals_collection = new Collection<TripMemberRemovals>(this);
   trip_members_collection = new Collection<TripMembers>(this);
   trip_photos_collection = new Collection<TripPhotos>(this);
+  trip_plan_publications_collection = new Collection<TripPlanPublications>(this);
+  trip_planning_collaborators_collection = new Collection<TripPlanningCollaborators>(this);
+  trip_planning_revisions_collection = new Collection<TripPlanningRevisions>(this);
 }
 
 export const TripsSchema = defineEntity({
@@ -125,6 +135,7 @@ export const TripsSchema = defineEntity({
     updated_at: p.type(DbTimestampType).nullable().defaultRaw(`CURRENT_TIMESTAMP`),
     reminder_sent_for: p.text().nullable(),
     assistant_attachments_collection: () => p.oneToMany(AssistantAttachments).mappedBy('trip').hidden(),
+    assistant_itinerary_drafts_collection: () => p.oneToMany(AssistantItineraryDrafts).mappedBy('appliedTrip').hidden(),
     assistant_threads_collection: () => p.oneToMany(AssistantThreads).mappedBy('trip').hidden(),
     budget_category_order_collection: () => p.oneToMany(BudgetCategoryOrder).mappedBy('trip').hidden(),
     budget_items_collection: () => p.oneToMany(BudgetItems).mappedBy('trip').hidden(),
@@ -158,9 +169,13 @@ export const TripsSchema = defineEntity({
     trip_document_links_collection: () => p.oneToMany(TripDocumentLinks).mappedBy('trip').hidden(),
     trip_files_collection: () => p.oneToMany(TripFiles).mappedBy('trip').hidden(),
     trip_invite_tokens_collection: () => p.oneToMany(TripInviteTokens).mappedBy('trip').hidden(),
+    trip_itinerary_guides_collection: () => p.oneToMany(TripItineraryGuides).mappedBy('trip').hidden(),
     trip_journal_links_collection: () => p.oneToMany(TripJournalLinks).mappedBy('trip').hidden(),
     trip_member_removals_collection: () => p.oneToMany(TripMemberRemovals).mappedBy('trip').hidden(),
     trip_members_collection: () => p.oneToMany(TripMembers).mappedBy('trip').hidden(),
     trip_photos_collection: () => p.oneToMany(TripPhotos).mappedBy('trip').hidden(),
+    trip_plan_publications_collection: () => p.oneToMany(TripPlanPublications).mappedBy('trip').hidden(),
+    trip_planning_collaborators_collection: () => p.oneToMany(TripPlanningCollaborators).mappedBy('trip').hidden(),
+    trip_planning_revisions_collection: () => p.oneToMany(TripPlanningRevisions).mappedBy('trip').hidden(),
   },
 });

@@ -86,7 +86,14 @@ export class McpToolGuardsService {
     const tripOwnerId = await this.trips.getOwnerId(tripId);
     if (tripOwnerId === null) return false;
     const role = await this.users.getRole(userId);
-    return this.permissions.checkPermission(action, role ?? 'user', tripOwnerId, userId, tripOwnerId !== userId);
+    return this.permissions.checkPermission(
+      action,
+      role ?? 'user',
+      tripOwnerId,
+      userId,
+      tripOwnerId !== userId,
+      tripId,
+    );
   }
 
   /**

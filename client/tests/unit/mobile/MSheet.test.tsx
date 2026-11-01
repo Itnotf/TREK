@@ -234,6 +234,21 @@ describe('MSheet', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it('a system-cancelled drag restores the sheet without discarding it', () => {
+    HTMLElement.prototype.setPointerCapture = vi.fn();
+    const onClose = vi.fn();
+    render(<MSheet open onClose={onClose} variant="bottom"><input defaultValue="Draft" /></MSheet>);
+    const dialog = screen.getByRole('dialog');
+    Object.defineProperty(dialog, 'offsetHeight', { configurable: true, value: 400 });
+    const strip = dialog.querySelector('.cursor-grab') as HTMLElement;
+    fireEvent.pointerDown(strip, { pointerId: 1, clientY: 100 });
+    fireEvent.pointerMove(strip, { pointerId: 1, clientY: 300 });
+    fireEvent.pointerCancel(strip, { pointerId: 1 });
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByRole('textbox')).toHaveValue('Draft');
+    expect(dialog.style.transform).toBe('');
+  });
+
   it('FE-MOB-SHEET-006: locks body scroll while open and releases it on close', () => {
     const { rerender } = render(
       <MSheet open onClose={() => {}}>
@@ -299,10 +314,58 @@ describe('MSheet', () => {
       return (
         <MSheet open={open} onClose={onClose} ariaLabel="Form" discardGuard={{ name }}>
           <input aria-label="Name" value={name} onChange={e => setName(e.target.value)} />
+          <button type="button" data-m-sheet-dismiss onClick={onClose}><span>Close form</span></button>
         </MSheet>
       );
     }
     const backdrop = () => screen.getByRole('dialog', { name: 'Form' }).parentElement!.parentElement!;
+
+    it('keeps focus inside the discard question and restores the editor on continue', () => {
+      render(<Form open onClose={vi.fn()} />);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      input.focus();
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(backdrop());
+      const keep = screen.getByRole('button', { name: /keep editing|common.keepEditing/i });
+      const discard = screen.getByRole('button', { name: /discard|common.discard/i });
+      discard.focus();
+      fireEvent.keyDown(discard, { key: 'Tab' });
+      expect(document.activeElement).toBe(keep);
+      fireEvent.keyDown(keep, { key: 'Tab', shiftKey: true });
+      expect(document.activeElement).toBe(discard);
+      fireEvent.click(keep);
+      expect(document.activeElement).toBe(input);
+    });
+
+    it('routes an explicit dismiss control through the same unsaved guard', () => {
+      const onClose = vi.fn();
+      render(<Form open onClose={onClose} />);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(screen.getByText('Close form'));
+      expect(onClose).not.toHaveBeenCalled();
+      expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    });
+
+    it('returns focus outside when discarding closes the entire form', () => {
+      function Controlled() {
+        const [open, setOpen] = React.useState(false);
+        return <><button onClick={() => setOpen(true)}>Open form</button><Form open={open} onClose={() => setOpen(false)} /></>;
+      }
+      render(<Controlled />);
+      const opener = screen.getByRole('button', { name: 'Open form' });
+      opener.focus();
+      fireEvent.click(opener);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      input.focus();
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(backdrop());
+      fireEvent.click(screen.getByRole('button', { name: /discard|common.discard/i }));
+      expect(document.activeElement).toBe(opener);
+    });
 
     it('FE-MOB-SHEET-020: a tap on the scrim asks before throwing a change away, and keep editing stays', () => {
       const onClose = vi.fn();

@@ -78,6 +78,7 @@ import tourPacking from './tourPacking';
 import tours from './tours';
 import transport from './transport';
 import trip from './trip';
+import tripPlanning from './tripPlanning';
 import trips from './trips';
 import undo from './undo';
 import vacay from './vacay';
@@ -105,6 +106,7 @@ const locale = {
   ...collection,
   ...atlas,
   ...trip,
+  ...tripPlanning,
   ...places,
   ...inspector,
   ...reservations,

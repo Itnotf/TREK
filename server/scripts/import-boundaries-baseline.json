@@ -282,7 +282,6 @@
     "journey -> Trips (owned by trips)",
     "llm-parse -> Addons (owned by addons)",
     "maps -> AppSettings (owned by settings)",
-    "maps -> Places (owned by places)",
     "maps -> Users (owned by auth)",
     "mcp-shared -> Trips (owned by trips)",
     "mcp-shared -> Users (owned by auth)",

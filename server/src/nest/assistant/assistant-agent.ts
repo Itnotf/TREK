@@ -521,6 +521,7 @@ async function runStep(turn: Turn, step: number): Promise<AgentOutcome | null> {
   // The follow-ups the model offers are the server's to answer: they never run, and alone they end the turn.
   const asks = all.filter((call) => call.name === ASSISTANT_FOLLOW_UPS_TOOL);
   const received = all.filter((call) => call.name !== ASSISTANT_FOLLOW_UPS_TOOL);
+  const followUps = asks.length > 0 ? followUpsOf(asks[asks.length - 1].args) : null;
 
   const searched = searchParts(w, answer);
   const parts: AssistantMessagePart[] = [
@@ -528,7 +529,7 @@ async function runStep(turn: Turn, step: number): Promise<AgentOutcome | null> {
     ...(text ? [{ type: 'text' as const, text }] : []),
     ...searched.tail,
   ];
-  const empty = received.length === 0 && !text.trim();
+  const empty = received.length === 0 && !text.trim() && !followUps?.question;
   // An answer that offered follow-ups is finished, however it ends.
   const settled = asks.length > 0 && !empty;
   const announced = !settled && received.length === 0 && step === 0 && ANNOUNCED.test(text.trimEnd());
@@ -551,7 +552,6 @@ async function runStep(turn: Turn, step: number): Promise<AgentOutcome | null> {
   // Every call is answered, so the provider's own record of the step stays whole when it is replayed.
   parts.push(...asks.map((call) => answeredAsk(call)));
   if (received.length === 0) {
-    const followUps = asks.length > 0 ? followUpsOf(asks[asks.length - 1].args) : null;
     if (followUps) {
       parts.push({ type: 'data-trek-follow-ups', data: followUps });
       w.followUps(followUps);

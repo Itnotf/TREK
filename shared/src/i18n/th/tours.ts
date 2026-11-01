@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'ส่วนต่าง ๆ ของทริป',
+  'tours.navigation.help': 'สามารถเพิ่มเส้นทางเดิน ปั่นจักรยาน และกิจกรรมกลางแจ้งอื่น ๆ ลงในแผนรายวันได้',
   'trip.tabs.tourPlanner': 'ทัวร์',
   'tours.mode.places': 'สถานที่',
   'tours.mode.tours': 'ทัวร์',

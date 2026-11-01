@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Các mục chuyến đi',
+  'tours.navigation.help': 'Có thể thêm tuyến đi bộ, đạp xe và hoạt động ngoài trời khác vào lịch trình hằng ngày.',
   'trip.tabs.tourPlanner': 'Chuyến tham quan',
   'tours.mode.places': 'Địa điểm',
   'tours.mode.tours': 'Chuyến tham quan',

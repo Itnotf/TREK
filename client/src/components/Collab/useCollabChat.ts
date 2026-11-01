@@ -7,13 +7,13 @@ import { useCollabChatData } from './useCollabChatData'
 import { isEmojiOnlyText } from './collabModel'
 import { useToast } from '../shared/Toast'
 
-export function useCollabChat(tripId: any, currentUser: any) {
+export function useCollabChat(tripId: any, currentUser: any, canEditOverride?: boolean) {
   const { t } = useTranslation()
   const toast = useToast()
   const is12h = useSettingsStore(s => s.settings.time_format) === '12h'
   const can = useCanDo()
   const trip = useTripStore((s) => s.trip)
-  const canEdit = can('collab_edit', trip)
+  const canEdit = canEditOverride ?? can('collab_edit', trip)
 
   const [hoveredId, setHoveredId] = useState(null)
   const [showEmoji, setShowEmoji] = useState(false)
@@ -22,7 +22,7 @@ export function useCollabChat(tripId: any, currentUser: any) {
   const deleteTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const hideEmoji = useCallback(() => setShowEmoji(false), [])
   const chat = useCollabChatData({
-    tripId, t, toast, scrollOnRemoteDelete: true, trackUploadProgress: true, onSent: hideEmoji,
+    tripId, t, toast, canSend: canEdit, scrollOnRemoteDelete: true, trackUploadProgress: true, onSent: hideEmoji,
   })
   const {
     messages, setMessages, loading, setLoading, hasMore, setHasMore, loadingMore, setLoadingMore,

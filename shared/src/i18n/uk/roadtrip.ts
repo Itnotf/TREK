@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'Місця ще не вибрані',
+  'roadtrip.unlocated.hint':
+    'На ці заняття потрібно {time}. Підсумки маршруту неповні. Виберіть місця перед автоматичним плануванням днів.',
   'roadtrip.stay.portals': 'Знайти житло',
   'roadtrip.stay.portalHint': 'Перевірте місце, дати та гостей на порталі. У CHECK24 шукайте вручну.',
   'roadtrip.charging.available': 'вільні',

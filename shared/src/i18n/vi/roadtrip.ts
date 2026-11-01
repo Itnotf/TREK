@@ -1,6 +1,9 @@
 import type { TranslationStrings } from '../types';
 
 const roadtrip: TranslationStrings = {
+  'roadtrip.unlocated.title': 'Địa điểm cần chọn',
+  'roadtrip.unlocated.hint':
+    'Các hoạt động này cần {time}. Tổng số liệu lộ trình chưa đầy đủ. Hãy chọn địa điểm trước khi tự động lập lịch từng ngày.',
   'roadtrip.stay.portals': 'Tìm chỗ ở',
   'roadtrip.stay.portalHint': 'Kiểm tra điểm đến, ngày và khách trên cổng đặt chỗ. Tìm thủ công trên CHECK24.',
   'roadtrip.charging.available': 'còn trống',

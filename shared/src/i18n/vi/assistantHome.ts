@@ -1,15 +1,16 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Mở chuyến đi này',
+  'assistant.plan.shareOptions': 'Trao đổi với mọi người trước (không bắt buộc)',
+  'assistant.plan.preview': 'Xem trước lịch trình',
   'assistant.home.title': 'Các chuyến đi của bạn',
-  'assistant.home.welcome': 'Tôi có thể giúp gì cho bạn?',
-  'assistant.home.placeholder': 'Hỏi bất cứ điều gì về các chuyến đi của bạn',
+  'assistant.home.welcome': 'Lần này bạn muốn đi đâu?',
+  'assistant.home.placeholder':
+    'Thử nhập “muốn tự lái xe đi miền tây Tứ Xuyên”, hoặc dán liên kết đến bài hướng dẫn du lịch',
   'assistant.home.switch': 'Trò chuyện về một chuyến đi',
   'assistant.home.back': 'Quay lại tất cả chuyến đi',
-  'assistant.suggest.homeNext': 'Chuyến đi nào tiếp theo, và còn gì chưa xong?',
-  'assistant.suggest.homeCompare': 'So sánh các chuyến đi sắp tới của tôi',
-  'assistant.suggest.homeAtlas': 'Tôi đã đến bao nhiêu quốc gia?',
-  'assistant.suggest.homeVacay': 'Năm nay tôi còn bao nhiêu ngày nghỉ phép?',
+  'assistant.suggest.homeNext': 'Muốn tự lái xe đi miền tây Tứ Xuyên',
   'assistant.card.tripChat.label': 'Tiếp tục trong cuộc trò chuyện của chuyến đi',
   'assistant.card.tripChat.eyebrow': 'Trò chuyện chuyến đi',
   'assistant.card.tripChat.dates': 'từ {start} đến {end}',
@@ -26,6 +27,31 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Nhật ký',
   'assistant.card.journalChat.open': 'Tiếp tục trong cuộc trò chuyện của nhật ký này',
   'assistant.step.openJournalChat': 'Đang tìm nhật ký',
+  'assistant.plan.start': 'Lập kế hoạch với AI',
+  'assistant.plan.manual': 'Tạo thủ công',
+  'assistant.plan.unavailable': 'Hiện chưa thể lập kế hoạch bằng AI. Bạn vẫn có thể tạo chuyến đi thủ công.',
+  'assistant.plan.label': 'Bản nháp lịch trình',
+  'assistant.plan.version': 'Phiên bản {version}',
+  'assistant.plan.requirements': 'Mong muốn cho chuyến đi',
+  'assistant.plan.assumptions': 'Vui lòng kiểm tra các giả định này',
+  'assistant.plan.overnight': 'Nghỉ đêm tại {city}',
+  'assistant.plan.editHint':
+    'Bạn muốn thay đổi gì? Hãy nói trong cuộc trò chuyện, tôi sẽ cập nhật bản nháp. Xác nhận khi bạn đã hài lòng.',
+  'assistant.plan.stale': 'Có phiên bản mới hơn ở bên dưới. Hãy xác nhận phiên bản mới nhất để tạo chuyến đi.',
+  'assistant.plan.confirm': 'Xác nhận và tạo chuyến đi',
+  'assistant.plan.created': 'Bản nháp này đã được lưu thành chuyến đi.',
+  'assistant.plan.loadFailed': 'Không thể tải bản nháp này. Vui lòng thử lại.',
+  'assistant.plan.applyFailed': 'Không thể tạo chuyến đi. Hãy kiểm tra bản nháp mới nhất rồi thử lại.',
+  'assistant.plan.unverified': 'Vị trí chính xác chưa được xác minh',
+  'assistant.plan.share': 'Cùng thảo luận kế hoạch này',
+  'assistant.plan.shareHint':
+    'Chia sẻ lịch trình này trong không gian chuyến đi trước khi xác nhận. Cuộc trò chuyện riêng của bạn vẫn được giữ riêng tư.',
+  'assistant.followUp.answerHint': 'Chọn một phương án hoặc tự nhập câu trả lời bên dưới.',
+  'assistant.followUp.useDefaults': 'Lên lịch từ thông tin hiện có',
+  'assistant.followUp.useDefaultsPrompt':
+    'Dùng những gì chúng ta đã trao đổi và các giả định hợp lý để tạo ngay lịch trình đầy đủ, không cần hỏi thêm.',
+  'assistant.suggest.homeWeekend': 'Đi chơi cuối tuần cùng các con',
+  'assistant.suggest.homeUnsure': 'Muốn tìm một nơi để đi nghỉ thư giãn',
 };
 
 export default assistantHome;

@@ -5,6 +5,8 @@ import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { useTranslation } from '../../i18n'
 import { Tooltip } from './Tooltip'
 import { focusDialog, trapTab } from './dialogFocus'
+import { useIsPhone } from '../../hooks/useIsPhone'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 const sizeClasses: Record<string, string> = {
   sm: 'max-w-sm',
@@ -49,6 +51,8 @@ function ModalFrame({
   align = 'center',
 }: Omit<ModalProps, 'isOpen'>) {
   const { t } = useTranslation()
+  const isPhone = useIsPhone()
+  useBackLayer(isPhone, onClose, 50)
   const panelRef = useRef<HTMLDivElement>(null)
   const mouseDownTarget = useRef<EventTarget | null>(null)
   // Read while rendering, before a field inside can take the focus with autoFocus.

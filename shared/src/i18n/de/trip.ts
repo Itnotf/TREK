@@ -1,6 +1,30 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.title': 'Gemeinsam planen',
+  'trip.planning.shortTitle': 'Planen',
+  'trip.guide.current': 'Aktueller Reiseplan',
+  'trip.guide.currentHelp': 'Orte, Zeiten und Unterkünfte entsprechen deinem Tagesplan.',
+  'trip.guide.original': 'Ursprünglicher Reiseführer · Referenz',
+  'trip.guide.originalHelp':
+    'Der Plan wurde geändert oder dieser ältere Reiseführer lässt sich nicht abgleichen. Route, Tipps und Budget zeigen die ursprüngliche Version.',
+  'trip.guide.refresh': 'Aktualisieren',
+  'trip.guide.title': 'Reiseführer',
+  'trip.guide.shortTitle': 'Tipps',
+  'trip.guide.route': 'Die Route',
+  'trip.guide.highlights': 'Erlebnisse, auf die du dich freuen kannst',
+  'trip.guide.days': 'Zu einem Tag springen',
+  'trip.guide.dining': 'Wo und was essen',
+  'trip.guide.stay': 'Wo übernachten',
+  'trip.guide.alternative': 'Wenn sich Pläne ändern',
+  'trip.guide.schedule': 'Zeiten und Verkehrsverbindungen',
+  'trip.guide.budget': 'Geschätztes Budget',
+  'trip.guide.preparation': 'Vor der Abreise',
+  'trip.guide.notes': 'Deine Wünsche, Annahmen und Quellen',
+  'trip.guide.openPlan': 'Tagesplan öffnen',
+  'trip.guide.loadFailed':
+    'Der Reiseführer konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.',
+  'trip.guide.unavailable': 'Diese Reise ist nicht verfügbar oder du hast keinen Zugriff darauf.',
   'trip.tabs.plan': 'Karte',
   'trip.tabs.transports': 'Transport',
   'trip.tabs.reservations': 'Buchungen',

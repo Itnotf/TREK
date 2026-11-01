@@ -1,15 +1,15 @@
 import type { TranslationStrings } from '../types';
 
 const assistantHome: TranslationStrings = {
+  'assistant.plan.openItinerary': 'Ava see reis',
+  'assistant.plan.shareOptions': 'Aruta esmalt teistega (valikuline)',
+  'assistant.plan.preview': 'Reisikava eelvaade',
   'assistant.home.title': 'Sinu reisid',
-  'assistant.home.welcome': 'Millega saan aidata?',
-  'assistant.home.placeholder': 'Küsi oma reiside kohta mida iganes',
+  'assistant.home.welcome': 'Kuhu sooviksid reisida?',
+  'assistant.home.placeholder': 'Proovi näiteks „autoreis Lääne-Sichuanis” või kleebi reisijuhi link',
   'assistant.home.switch': 'Vestle ühe reisi üle',
   'assistant.home.back': 'Tagasi kõigi reiside juurde',
-  'assistant.suggest.homeNext': 'Milline reis on järgmine ja mis on veel tegemata?',
-  'assistant.suggest.homeCompare': 'Võrdle mu eelseisvaid reise',
-  'assistant.suggest.homeAtlas': 'Mitu riiki olen külastanud?',
-  'assistant.suggest.homeVacay': 'Mitu puhkusepäeva mul tänavu veel on?',
+  'assistant.suggest.homeNext': 'Autoreis Lääne-Sichuanis',
   'assistant.card.tripChat.label': 'Jätka reisi vestluses',
   'assistant.card.tripChat.eyebrow': 'Reisi vestlus',
   'assistant.card.tripChat.dates': '{start} kuni {end}',
@@ -26,6 +26,31 @@ const assistantHome: TranslationStrings = {
   'assistant.card.journalChat.eyebrow': 'Päevik',
   'assistant.card.journalChat.open': 'Jätka selle päeviku vestluses',
   'assistant.step.openJournalChat': 'Otsin päeviku üles',
+  'assistant.plan.start': 'Planeeri tehisaruga',
+  'assistant.plan.manual': 'Loo käsitsi',
+  'assistant.plan.unavailable': 'Tehisaruga planeerimine pole praegu saadaval. Saad reisi endiselt käsitsi luua.',
+  'assistant.plan.label': 'Reisi kavand',
+  'assistant.plan.version': 'Kavandi versioon {version}',
+  'assistant.plan.requirements': 'Sinu reisieelistused',
+  'assistant.plan.assumptions': 'Kontrolli neid eeldusi',
+  'assistant.plan.overnight': 'Ööbimine: {city}',
+  'assistant.plan.editHint':
+    'Soovid midagi muuta? Kirjuta mulle vestluses ja uuendan kavandit. Kinnita see, kui oled rahul.',
+  'assistant.plan.stale': 'Allpool on saadaval uuem versioon. Reisi loomiseks kinnita uusim versioon.',
+  'assistant.plan.confirm': 'Kinnita ja loo reis',
+  'assistant.plan.created': 'See mustand on reisiga seotud. Avage reis, et ühist plaani arutada ja muuta.',
+  'assistant.plan.loadFailed': 'Seda kavandit ei saanud laadida. Proovi uuesti.',
+  'assistant.plan.applyFailed': 'Reisi ei saanud luua. Kontrolli uusimat kavandit ja proovi uuesti.',
+  'assistant.plan.unverified': 'Täpset asukohta pole veel kontrollitud',
+  'assistant.plan.share': 'Arutame seda plaani koos',
+  'assistant.plan.shareHint':
+    'Jagage reisikava enne kinnitamist reisi ühises ruumis. Teie privaatne vestlus jääb privaatseks.',
+  'assistant.followUp.answerHint': 'Vali vastus või kirjuta oma vastus allpool.',
+  'assistant.followUp.useDefaults': 'Koosta plaan senise info põhjal',
+  'assistant.followUp.useDefaultsPrompt':
+    'Kasuta meie arutelu ja mõistlikke eeldusi, et koostada nüüd täielik reisikava ilma lisaküsimusteta.',
+  'assistant.suggest.homeWeekend': 'Nädalavahetuse reis lastega',
+  'assistant.suggest.homeUnsure': 'Mõni paik rahulikuks puhkuseks',
 };
 
 export default assistantHome;

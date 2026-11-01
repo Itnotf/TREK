@@ -11,6 +11,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { TranslationProvider } from '../../i18n/TranslationContext';
+import { HOME_CHAT_KEY } from '../../store/assistantChatKey';
 import { chatOf, useAssistantStore } from '../../store/assistantStore';
 import { useAssistantThread } from './useAssistantThread';
 
@@ -64,6 +65,60 @@ afterEach(() => {
 });
 
 describe('useAssistantThread', () => {
+  it('refreshes background work without overlapping requests and stops polling when it finishes', async () => {
+    vi.useFakeTimers();
+    let release = () => {};
+    const gate = new Promise<void>((done) => {
+      release = done;
+    });
+    const refresh = vi
+      .fn()
+      .mockImplementationOnce(() => gate)
+      .mockImplementationOnce(async () => {
+        const chat = chatOf(useAssistantStore.getState(), HOME_CHAT_KEY);
+        useAssistantStore.setState({ byTrip: { [HOME_CHAT_KEY]: { ...chat, isRunning: false } } });
+      });
+    seed(7, { mode: 'days', days: 90 });
+    useAssistantStore.setState({
+      refreshThread: refresh,
+      byTrip: {
+        [HOME_CHAT_KEY]: { ...chatOf(useAssistantStore.getState(), HOME_CHAT_KEY), threadId: 9, isRunning: true },
+      },
+    });
+    const { unmount } = renderHook(() => useAssistantThread(HOME_CHAT_KEY), { wrapper });
+    try {
+      expect(refresh).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10_000);
+        window.dispatchEvent(new Event('focus'));
+      });
+      expect(refresh).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        release();
+        await gate;
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(5_000);
+      });
+      expect(refresh).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10_000);
+      });
+      expect(refresh).toHaveBeenCalledTimes(2);
+    } finally {
+      unmount();
+      vi.useRealTimers();
+    }
+  });
+
+  it('leaves a home planning answer running when its screen is closed', () => {
+    seed(7, { mode: 'days', days: 90 });
+    const { unmount } = renderHook(() => useAssistantThread(HOME_CHAT_KEY), { wrapper });
+    expect(resume).toHaveBeenCalledWith(HOME_CHAT_KEY);
+    unmount();
+    expect(cancel).not.toHaveBeenCalled();
+  });
+
   it('FE-AI-THREAD-001: resumes the trip on show and stops a running answer on hide', () => {
     seed(7, { mode: 'days', days: 90 });
     const { unmount } = renderHook(() => useAssistantThread(TRIP), { wrapper });

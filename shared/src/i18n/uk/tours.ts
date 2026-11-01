@@ -1,6 +1,8 @@
 import type { TranslationStrings } from '../types';
 
 const tours: TranslationStrings = {
+  'trip.navigation.label': 'Розділи подорожі',
+  'tours.navigation.help': 'Піші, велосипедні та інші маршрути просто неба можна додати як заняття до плану дня.',
   'trip.tabs.tourPlanner': 'Тури',
   'tours.mode.places': 'Місця',
   'tours.mode.tours': 'Тури',

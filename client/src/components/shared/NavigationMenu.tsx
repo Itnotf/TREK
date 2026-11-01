@@ -4,6 +4,8 @@ import { Navigation } from 'lucide-react'
 import type { NavigationTarget } from '../Planner/placeNavigation'
 import { navigationTargetLabel, openNavigationTarget } from '../Planner/placeNavigation'
 import { useTranslation } from '../../i18n'
+import { useIsPhone } from '../../hooks/useIsPhone'
+import { useBackLayer } from '../../hooks/useBackLayer'
 
 interface NavigationMenuProps {
   targets: NavigationTarget[]
@@ -29,6 +31,8 @@ const EDGE = 8
  */
 export function NavigationMenu({ targets, anchor, onClose, title }: NavigationMenuProps) {
   const { t } = useTranslation()
+  const isPhone = useIsPhone()
+  useBackLayer(isPhone, onClose, 70)
   const ref = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
 

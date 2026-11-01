@@ -6,6 +6,7 @@ import { tripsApi } from '../../../../src/api/client';
 import { useAuthStore } from '../../../../src/store/authStore';
 import { usePermissionsStore } from '../../../../src/store/permissionsStore';
 import { useSettingsStore } from '../../../../src/store/settingsStore';
+import { useAddonStore } from '../../../../src/store/addonStore';
 import { buildAssignment, buildDay, buildPlace, buildUser } from '../../../helpers/factories';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../helpers/msw/server';
@@ -35,12 +36,11 @@ vi.mock('../../../../src/components/shared/CustomDateTimePicker', () => ({
 }));
 
 vi.mock('../../../../src/components/shared/CustomSelect', () => ({
-  default: ({ value, onChange, disabled }: {
-    value: string; onChange: (v: string) => void; disabled?: boolean
+  default: ({ value, onChange, disabled, ariaLabel, options }: {
+    value: string; onChange: (v: string) => void; disabled?: boolean; ariaLabel?: string; options: Array<{ value: string; label: string }>
   }) => (
-    <select aria-label="currency" value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
-      <option value="EUR">EUR</option>
-      <option value="USD">USD</option>
+    <select aria-label={ariaLabel || 'currency'} value={value} disabled={disabled} onChange={e => onChange(e.target.value)}>
+      {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
     </select>
   ),
 }));
@@ -77,6 +77,60 @@ beforeEach(() => {
   URL.revokeObjectURL = revokeSpy as unknown as typeof URL.revokeObjectURL;
   useAuthStore.setState({ isAuthenticated: true, user: buildUser({ id: 1, role: 'user' }) });
   usePermissionsStore.setState({ permissions: {} });
+  useAddonStore.setState({ addons: [] });
+});
+
+describe('mobile multi-city road trip creation', () => {
+  const enableRoadtrip = () => useAddonStore.setState({ addons: [{ id: 'roadtrip', enabled: true, name: 'Roadtrip', type: 'feature', icon: 'car' }] });
+
+  it('saves a one-way electric road trip with the existing trip dates', async () => {
+    enableRoadtrip();
+    const onSave = vi.fn();
+    render(<MNewTripSheet open trip={null} onClose={() => {}} onSave={onSave} />);
+    fireEvent.change(screen.getByPlaceholderText('e.g. Summer in Japan'), { target: { value: '川藏自驾' } });
+    fireEvent.change(screen.getByLabelText('Start Date'), { target: { value: '2026-11-01' } });
+    fireEvent.change(screen.getByLabelText('End Date'), { target: { value: '2026-11-10' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Plan a multi-city road trip' }));
+    fireEvent.change(screen.getByLabelText('Departure city'), { target: { value: '成都' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Return to the departure city' }));
+    fireEvent.change(screen.getByLabelText('Arrival city'), { target: { value: '拉萨' } });
+    fireEvent.change(screen.getByLabelText('Vehicle type'), { target: { value: 'electric' } });
+    fireEvent.change(screen.getByLabelText('Realistic range on a full tank or charge (km)'), { target: { value: '350' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0]).toMatchObject({
+      title: '川藏自驾', start_date: '2026-11-01', end_date: '2026-11-10',
+      description: expect.stringContaining('Arrival city: 拉萨'),
+      roadtrip_preferences: { roadtrip_day_minutes: 240, roadtrip_vehicle: 'electric', roadtrip_range_km: 350 },
+    });
+  });
+
+  it('requires a valid range, then allows opting out without changing ordinary creation', async () => {
+    enableRoadtrip();
+    const onSave = vi.fn();
+    render(<MNewTripSheet open trip={null} onClose={() => {}} onSave={onSave} />);
+    fireEvent.change(screen.getByPlaceholderText('e.g. Summer in Japan'), { target: { value: 'Trip' } });
+    fireEvent.change(screen.getByPlaceholderText('What is this trip about?'), { target: { value: 'My notes' } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Plan a multi-city road trip' }));
+    fireEvent.change(screen.getByLabelText('Departure city'), { target: { value: '成都' } });
+    fireEvent.change(screen.getByLabelText('Realistic range on a full tank or charge (km)'), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('between 1 and 2,000 km');
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Plan a multi-city road trip' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
+    await waitFor(() => expect(onSave).toHaveBeenCalledOnce());
+    expect(onSave.mock.calls[0][0].description).toBe('My notes');
+    expect(onSave.mock.calls[0][0]).not.toHaveProperty('roadtrip_preferences');
+  });
+
+  it('does not expose setup when the addon is disabled or the trip already exists', () => {
+    const { rerender } = render(<MNewTripSheet open trip={null} onClose={() => {}} onSave={() => {}} />);
+    expect(screen.queryByRole('checkbox', { name: 'Plan a multi-city road trip' })).not.toBeInTheDocument();
+    enableRoadtrip();
+    rerender(<MNewTripSheet open trip={buildDashTrip()} onClose={() => {}} onSave={() => {}} />);
+    expect(screen.queryByRole('checkbox', { name: 'Plan a multi-city road trip' })).not.toBeInTheDocument();
+  });
 });
 
 afterEach(() => {
@@ -214,10 +268,16 @@ describe('MNewTripSheet', () => {
   });
 
   it('FE-MOB-NTSH-009: create mode holds the picked file back until the trip exists', async () => {
-    const upload = vi.spyOn(tripsApi, 'uploadCover').mockResolvedValue({ cover_image: '/uploads/covers/new.jpg' });
+    let releaseUpload = () => {};
+    const uploadReady = new Promise<void>(resolve => { releaseUpload = resolve; });
+    const upload = vi.spyOn(tripsApi, 'uploadCover').mockImplementation(async () => {
+      await uploadReady;
+      return { cover_image: '/uploads/covers/new.jpg' };
+    });
     const onCoverUpdate = vi.fn();
+    const onCreated = vi.fn();
     const onSave = vi.fn(async () => ({ trip: { id: 77 } as Trip }));
-    render(<MNewTripSheet open trip={null} onClose={() => {}} onSave={onSave} onCoverUpdate={onCoverUpdate} />);
+    render(<MNewTripSheet open trip={null} onClose={() => {}} onSave={onSave} onCreated={onCreated} onCoverUpdate={onCoverUpdate} />);
 
     fireEvent.change(fileInput(), { target: { files: [png()] } });
     await waitFor(() => expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument());
@@ -228,6 +288,9 @@ describe('MNewTripSheet', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Create New Trip' }));
 
     await waitFor(() => expect(upload).toHaveBeenCalledWith(77, expect.any(FormData)));
+    expect(onCreated).not.toHaveBeenCalled();
+    releaseUpload();
+    await waitFor(() => expect(onCreated).toHaveBeenCalledWith(expect.objectContaining({ id: 77 }), expect.objectContaining({ title: 'Iceland' })));
     expect(onCoverUpdate).toHaveBeenCalledWith(77, '/uploads/covers/new.jpg');
   });
 

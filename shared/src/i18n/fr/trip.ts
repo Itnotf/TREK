@@ -1,6 +1,29 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.title': 'Planifier ensemble',
+  'trip.planning.shortTitle': 'Planifier',
+  'trip.guide.current': 'Itinéraire actuel',
+  'trip.guide.currentHelp': 'Les lieux, horaires et hébergements suivent votre programme quotidien.',
+  'trip.guide.original': 'Guide initial · référence',
+  'trip.guide.originalHelp':
+    'Le programme a changé ou cet ancien guide ne peut pas être vérifié. Le parcours, les conseils et le budget sont ceux de la version initiale.',
+  'trip.guide.refresh': 'Actualiser',
+  'trip.guide.title': 'Guide de voyage',
+  'trip.guide.shortTitle': 'Guide', // same-as-en
+  'trip.guide.route': 'L’itinéraire',
+  'trip.guide.highlights': 'Les expériences à découvrir',
+  'trip.guide.days': 'Aller à un jour',
+  'trip.guide.dining': 'Où et quoi manger',
+  'trip.guide.stay': 'Où séjourner',
+  'trip.guide.alternative': 'Si les plans changent',
+  'trip.guide.schedule': 'Horaires et détails des transports',
+  'trip.guide.budget': 'Budget estimatif',
+  'trip.guide.preparation': 'Avant de partir',
+  'trip.guide.notes': 'Vos préférences, hypothèses et sources',
+  'trip.guide.openPlan': 'Ouvrir le programme quotidien',
+  'trip.guide.loadFailed': 'Impossible de charger le guide. Vérifiez votre connexion et réessayez.',
+  'trip.guide.unavailable': 'Ce voyage est indisponible ou vous n’y avez pas accès.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Transports', // same-as-en
   'trip.tabs.reservations': 'Réservations',

@@ -12,6 +12,8 @@ export const HOME_LOOK = {
   tools: {},
   steps: {
     list_trips: { stepKey: 'assistant.step.readingTrips' },
+    save_itinerary_draft: { stepKey: 'assistant.step.working' },
+    get_itinerary_draft: { stepKey: 'assistant.step.reading' },
     open_trip_chat: { stepKey: 'assistant.step.openTripChat' },
     open_journey_chat: { stepKey: 'assistant.step.openJournalChat' },
   },
@@ -19,5 +21,6 @@ export const HOME_LOOK = {
   cards: {
     tripChat: {},
     journalChat: {},
+    tripPlan: {},
   },
-} satisfies PackLook<'tripChat' | 'journalChat'>;
+} satisfies PackLook<'tripChat' | 'journalChat' | 'tripPlan'>;

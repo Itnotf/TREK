@@ -1,3 +1,5 @@
+import { TripItineraryGuides } from '../../db/entities/TripItineraryGuides.entity';
+import { Trips } from '../../db/entities/Trips.entity';
 import { PluginGuardsModule } from '../../nest-rpc/plugin-guards.module';
 import { AccommodationsModule } from '../accommodations/accommodations.module';
 import { AddonsModule } from '../addons/addons.module';
@@ -24,6 +26,8 @@ import { TripMembershipModule } from '../trip-membership/trip-membership.module'
 import { TripReadModelModule } from '../trip-read-model/trip-read-model.module';
 import { UnsplashModule } from '../unsplash/unsplash.module';
 import { VacayModule } from '../vacay/vacay.module';
+import { TripGuideController } from './trip-guide.controller';
+import { TripGuideService } from './trip-guide.service';
 import { TripPromptsMcp } from './trip-prompts.mcp';
 import { TripWritesService } from './trip-writes.service';
 import { TripsController } from './trips.controller';
@@ -31,6 +35,7 @@ import { MAX_COVER_SIZE, TRIP_COVER_FILE_FILTER } from './trips.controller';
 import { TripsMcp } from './trips.mcp';
 import { TripsRpc } from './trips.rpc';
 import { TripsService } from './trips.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 
@@ -38,6 +43,7 @@ import { MulterModule } from '@nestjs/platform-express';
  *  not capture the nested sub-domain mounts (collab, files, ...). */
 @Module({
   imports: [
+    MikroOrmModule.forFeature([TripItineraryGuides, Trips]),
     MulterModule.registerAsync({
       imports: [StorageModule],
       inject: [StorageService],
@@ -73,9 +79,9 @@ import { MulterModule } from '@nestjs/platform-express';
     TripReadModelModule,
     SettingsModule,
   ],
-  controllers: [TripsController],
-  providers: [TripsService, TripWritesService, TripsMcp, TripPromptsMcp, TripsRpc],
+  controllers: [TripsController, TripGuideController],
+  providers: [TripsService, TripWritesService, TripsMcp, TripPromptsMcp, TripsRpc, TripGuideService],
   // Exported for FeedsModule (ICS feeds) and PluginsModule (RPC host injection).
-  exports: [TripsService],
+  exports: [TripsService, TripGuideService],
 })
 export class TripsModule {}

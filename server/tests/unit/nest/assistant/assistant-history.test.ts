@@ -61,6 +61,41 @@ function call(id: string, state: string, extra: Partial<AssistantToolCallRow> = 
 const NOW = new Date('2026-10-21T10:05:00Z');
 
 describe('toChatHistory', () => {
+  it('replays clarification and chosen answers after a reconnect so the next round keeps known facts', () => {
+    const data = { question: '准备玩几天？', questions: ['玩3天左右', '玩5天左右'] };
+    const rows = [
+      row('user', [{ type: 'text', text: '想去川西自驾' }]),
+      row('assistant', [
+        {
+          type: 'tool-call',
+          toolCallId: 'clarify-1',
+          toolName: 'suggest_follow_ups',
+          args: data,
+          result: 'Shown to the user as suggestions.',
+        },
+        { type: 'data-trek-follow-ups', data },
+      ]),
+      row('user', [{ type: 'text', text: '玩5天左右' }]),
+    ];
+    expect(toThreadMessages(rows, new Map(), NOW)[1].parts).toContainEqual({ type: 'data-trek-follow-ups', data });
+    expect(toChatHistory(rows, new Map())).toEqual([
+      { role: 'user', text: '想去川西自驾' },
+      {
+        role: 'assistant',
+        text: '',
+        toolCalls: [{ id: 'clarify-1', name: 'suggest_follow_ups', args: data }],
+        providerState: null,
+      },
+      {
+        role: 'tool',
+        toolCallId: 'clarify-1',
+        name: 'suggest_follow_ups',
+        output: 'Shown to the user as suggestions.',
+      },
+      { role: 'user', text: '玩5天左右' },
+    ]);
+  });
+
   it('ASTHIS-001: starts at the first user message and answers every call', () => {
     const rows = [
       row('assistant', [{ type: 'text', text: 'orphan' }]),
@@ -139,6 +174,29 @@ describe('toChatHistory', () => {
     expect(toChatHistory([row('assistant', [{ type: 'text', text: 'x' }])], new Map())).toEqual([]);
     expect(outputText('plain')).toBe('plain');
     expect(outputText({ a: 1 })).toBe('{"a":1}');
+  });
+
+  it('replaces earlier itinerary versions with a reread instruction and keeps the current full draft', () => {
+    const draft = {
+      plan: { days: Array.from({ length: 30 }, (_, i) => ({ title: `Day ${i + 1}`, notes: 'x'.repeat(1800) })) },
+    };
+    const rows = [
+      row('user', [{ type: 'text', text: 'Plan a long trip' }]),
+      row('assistant', [
+        { type: 'tool-call', toolCallId: 'saved', toolName: 'save_itinerary_draft', args: {}, result: { draft } },
+      ]),
+      row('user', [{ type: 'text', text: 'Make the last day easier' }]),
+      row('assistant', [
+        { type: 'tool-call', toolCallId: 'current', toolName: 'get_itinerary_draft', args: {}, result: { draft } },
+      ]),
+    ];
+    const outputs = toChatHistory(rows, new Map()).filter((m) => m.role === 'tool');
+    expect(outputs[0].output).toContain('get_itinerary_draft');
+    expect(outputs[0].output).toContain('complete latest plan');
+    expect(outputs[0].output).not.toContain('days');
+    expect(outputs[1].output.length).toBeGreaterThan(40_000);
+    expect(outputs[1].output).toBe(JSON.stringify({ draft }));
+    expect(outputs[1].output).toContain('Day 30');
   });
 
   it('ASTHIS-004: an attached file and the bookings read from it are notes, never calls of unknown tools', () => {
@@ -623,6 +681,29 @@ describe('toChatHistory: calls the model made of the server tools (#2845)', () =
 });
 
 describe('toThreadMessages', () => {
+  it('shows each saved itinerary version once when old history contains repeated draft reads', () => {
+    const card = (id: number, toolCallId: string): AssistantMessagePart => ({
+      type: 'data-trek-card',
+      data: {
+        toolCallId,
+        card: { kind: 'tripPlan', draftId: id, revision: id, title: '成都两日游', summary: '轻松自驾', dayCount: 2 },
+      },
+    });
+    const first = card(1, 'save_v1');
+    const latest = card(2, 'save_v2');
+    const text: AssistantMessagePart = { type: 'text', text: 'Updated the second day.' };
+    const rows = [
+      row('assistant', [first]),
+      row('user', [{ type: 'text', text: 'Leave later.' }]),
+      row('assistant', [card(1, 'read_v1'), latest, text]),
+      row('assistant', [card(2, 'read_v2')]),
+    ];
+    const messages = toThreadMessages(rows, new Map(), NOW);
+    expect(messages[0].parts).toEqual([first]);
+    expect(messages[2].parts).toEqual([latest, text]);
+    expect(toThreadMessages(rows, new Map(), NOW)).toEqual(messages);
+  });
+
   it('ASTHIS-010: the steps of one answer are one message under the first row id', () => {
     nextId = 10;
     const rows = [

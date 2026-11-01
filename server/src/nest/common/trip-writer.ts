@@ -107,6 +107,7 @@ interface TripGate {
       tripUserId: number | null,
       userId: number,
       isMember: boolean,
+      tripId?: number | string,
     ): Promise<boolean>;
   };
 }
@@ -122,7 +123,7 @@ export async function requireTripWrite(gate: TripGate, action: string, tripId: n
   const trip = await gate.access.findAccessible(tripId, writer.userId);
   if (!trip) throw tripNotFound();
   const shared = trip.user_id !== writer.userId;
-  if (!(await gate.permissions.checkPermission(action, writer.role, trip.user_id, writer.userId, shared))) {
+  if (!(await gate.permissions.checkPermission(action, writer.role, trip.user_id, writer.userId, shared, tripId))) {
     throw tripPermissionDenied();
   }
   return trip;

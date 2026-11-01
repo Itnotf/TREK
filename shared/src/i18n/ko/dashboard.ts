@@ -9,6 +9,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix': ' · {count}개 보관됨',
   'dashboard.newTrip': '새 여행',
   'dashboard.newTripSub': '새 여행을 처음부터 계획하기',
+  'dashboard.roadtrip.enable': '여러 도시를 둘러보는 자동차 여행 계획',
+  'dashboard.roadtrip.hint':
+    '도시와 운전 제한을 여행에 저장하세요. 여행을 만든 뒤 AI에 계획을 도와달라고 요청할 수 있습니다. AI에 연결되지 않아도 요구 사항은 저장됩니다.',
+  'dashboard.roadtrip.origin': '출발 도시',
+  'dashboard.roadtrip.viaCities': '방문할 도시 (선택 사항)',
+  'dashboard.roadtrip.viaHint': '쉼표나 줄바꿈으로 도시를 구분하세요. AI가 방문 순서를 제안할 수 있습니다.',
+  'dashboard.roadtrip.roundTrip': '출발 도시로 돌아오기',
+  'dashboard.roadtrip.destination': '도착 도시',
+  'dashboard.roadtrip.dailyHours': '하루 최대 운전 시간 (시간)',
+  'dashboard.roadtrip.vehicle': '차량 유형',
+  'dashboard.roadtrip.combustion': '내연기관 차량',
+  'dashboard.roadtrip.electric': '전기차',
+  'dashboard.roadtrip.rangeKm': '가득 주유하거나 완충했을 때의 현실적인 주행 거리 (km)',
+  'dashboard.roadtrip.originRequired': '자동차 여행의 출발 도시를 입력하세요.',
+  'dashboard.roadtrip.destinationRequired': '도착 도시를 입력하거나 출발 도시로 돌아오기를 선택하세요.',
+  'dashboard.roadtrip.invalidHours': '하루 운전 제한을 1~12시간으로 입력하세요.',
+  'dashboard.roadtrip.invalidRange': '현실적인 주행 거리를 1~2,000km로 입력하세요.',
+  'dashboard.roadtrip.summaryTitle': '여러 도시를 둘러보는 자동차 여행 요구 사항',
+  'dashboard.roadtrip.planningInstruction':
+    '일일 활동에 앞서 도시 방문 순서와 숙박할 도시를 제안하세요. 확정된 날짜, 예약한 숙소, 운전 제한을 지키세요. 실제 도로 경로를 확인하고 알 수 없는 정보를 표시하세요. 여행을 변경하기 전에 제안에 대한 승인을 받으세요.',
+  'dashboard.roadtrip.planPrompt':
+    '이 여행 설명의 요구 사항과 저장된 운전 설정을 바탕으로 여러 도시를 둘러보는 자동차 여행을 계획해 주세요. 먼저 도시 방문 순서와 실제 숙박할 도시를 제안하고, 제가 승인하면 일일 활동을 계획하세요. 확정된 날짜, 예약한 숙소, 하루 운전 제한을 지키세요. 실제 도로 경로를 확인하고 검증되지 않은 정보를 명확히 표시하세요. 제가 제안을 승인하기 전에는 여행을 변경하지 마세요.',
   'dashboard.subscribeAllTrips': '모든 여행 구독',
   'dashboard.subscribeAllTripsDesc':
     '활성 여행 전체를 하나의 캘린더 피드로 묶어 자동으로 동기화합니다. 보관된 여행과 종료된 지 90일이 지난 여행은 제외됩니다.',

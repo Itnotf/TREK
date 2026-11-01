@@ -1,6 +1,29 @@
 import type { TranslationStrings } from '../types';
 
 const trip: TranslationStrings = {
+  'trip.planning.shortTitle': 'Planlaşdırma',
+  'trip.planning.title': 'Birlikdə planlaşdırın',
+  'trip.guide.current': 'Cari səyahət planı',
+  'trip.guide.currentHelp': 'Məkanlar, vaxtlar və qalma yerləri gündəlik plana uyğundur.',
+  'trip.guide.original': 'İlkin bələdçi · istinad',
+  'trip.guide.originalHelp':
+    'Plan dəyişib və ya bu köhnə bələdçini yoxlamaq mümkün deyil. Marşrut, məsləhətlər və büdcə ilkin versiyaya aiddir.',
+  'trip.guide.refresh': 'Yenilə',
+  'trip.guide.title': 'Səyahət bələdçisi',
+  'trip.guide.shortTitle': 'Bələdçi',
+  'trip.guide.route': 'Marşrut',
+  'trip.guide.highlights': 'Sizi gözləyən təəssüratlar',
+  'trip.guide.days': 'Günə keçin',
+  'trip.guide.dining': 'Harada və nə yeməli',
+  'trip.guide.stay': 'Harada qalmalı',
+  'trip.guide.alternative': 'Planlar dəyişərsə',
+  'trip.guide.schedule': 'Vaxt və nəqliyyat təfərrüatları',
+  'trip.guide.budget': 'Təxmini büdcə',
+  'trip.guide.preparation': 'Yola çıxmazdan əvvəl',
+  'trip.guide.notes': 'İstəkləriniz, fərziyyələr və mənbələr',
+  'trip.guide.openPlan': 'Gündəlik səyahət planını açın',
+  'trip.guide.loadFailed': 'Bələdçini yükləmək mümkün olmadı. Bağlantınızı yoxlayın və yenidən cəhd edin.',
+  'trip.guide.unavailable': 'Bu səyahət mövcud deyil və ya ona giriş icazəniz yoxdur.',
   'trip.tabs.plan': 'Plan', // same-as-en
   'trip.tabs.transports': 'Nəqliyyat',
   'trip.tabs.reservations': 'Rezervasiyalar',

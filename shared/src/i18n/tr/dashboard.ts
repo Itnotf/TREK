@@ -12,6 +12,28 @@ const dashboard: TranslationStrings = {
   'dashboard.subtitle.archivedSuffix.one': ' · {count} arşivde',
   'dashboard.newTrip': 'Yeni Seyahat',
   'dashboard.newTripSub': 'Sıfırdan yeni bir seyahat planla',
+  'dashboard.roadtrip.enable': 'Birden fazla şehri kapsayan araba yolculuğu planla',
+  'dashboard.roadtrip.hint':
+    'Şehirleri ve sürüş sınırlarını geziyle birlikte kaydet. Geziyi oluşturduktan sonra planlama için yapay zekâdan yardım isteyebilirsin. İsteklerin yapay zekâ bağlantısı olmasa da kaydedilir.',
+  'dashboard.roadtrip.origin': 'Kalkış şehri',
+  'dashboard.roadtrip.viaCities': 'Ziyaret edilecek şehirler (isteğe bağlı)',
+  'dashboard.roadtrip.viaHint': 'Şehirleri virgülle veya yeni satırlarla ayır. Yapay zekâ sırayı önerebilir.',
+  'dashboard.roadtrip.roundTrip': 'Kalkış şehrine dön',
+  'dashboard.roadtrip.destination': 'Varış şehri',
+  'dashboard.roadtrip.dailyHours': 'Günlük azami sürüş süresi (saat)',
+  'dashboard.roadtrip.vehicle': 'Araç türü',
+  'dashboard.roadtrip.combustion': 'İçten yanmalı araç',
+  'dashboard.roadtrip.electric': 'Elektrikli araç',
+  'dashboard.roadtrip.rangeKm': 'Dolu depo veya tam şarjla gerçekçi menzil (km)',
+  'dashboard.roadtrip.originRequired': 'Araba yolculuğun için bir kalkış şehri gir.',
+  'dashboard.roadtrip.destinationRequired': 'Bir varış şehri gir veya kalkış şehrine dönmeyi seç.',
+  'dashboard.roadtrip.invalidHours': '1 ile 12 saat arasında bir günlük sürüş sınırı gir.',
+  'dashboard.roadtrip.invalidRange': '1 ile 2.000 km arasında gerçekçi bir menzil gir.',
+  'dashboard.roadtrip.summaryTitle': 'Birden fazla şehirli araba yolculuğunun gereksinimleri',
+  'dashboard.roadtrip.planningInstruction':
+    'Günlük etkinliklerden önce şehir sırasını ve konaklanacak şehirleri öner. Sabit tarihlere, rezerve edilmiş konaklamalara ve sürüş sınırına uy. Gerçek kara yolu rotalarını doğrula ve bilinmeyen bilgileri belirt. Geziyi değiştirmeden önce öneri için onay iste.',
+  'dashboard.roadtrip.planPrompt':
+    'Bu gezi açıklamasındaki gereksinimleri ve kayıtlı sürüş ayarlarını kullanarak birden fazla şehri kapsayan bir araba yolculuğu planlamama yardım et. Önce şehir sırasını ve konaklanacak gerçek şehirleri öner, ardından onayımdan sonra günlük etkinlikleri planla. Sabit tarihlere, rezerve edilmiş konaklamalara ve günlük sürüş sınırına uy. Gerçek kara yolu rotalarını kontrol et ve doğrulanmamış bilgileri açıkça belirt. Öneriyi onaylayana kadar geziyi değiştirme.',
   'dashboard.subscribeAllTrips': 'Tüm seyahatlere abone ol',
   'dashboard.subscribeAllTripsDesc':
     'Tüm etkin seyahatlerin için tek bir takvim akışı, otomatik olarak senkronize tutulur. Arşivlenmiş seyahatler ve 90 günden fazla önce sona ermiş seyahatler hariç tutulur.',

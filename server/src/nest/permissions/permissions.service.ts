@@ -3,9 +3,10 @@ import type { AppSettingsRepository } from '../../db/repositories/AppSettings.re
 import { logError } from '../audit/audit-log.logger';
 import { UnitOfWork } from '../database/unit-of-work';
 import { PermissionsCacheStore, permissionsCacheSlot } from './permissions-cache';
+import { PlanningAccessService } from './planning-access.service';
 import { ValidationError } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { PERMISSION_ACTIONS, evaluatePermission, type PermissionAction, type PermissionLevel } from '@trek/shared';
 
 // The catalog (keys, levels, defaults) and the decision rule live in
@@ -27,6 +28,7 @@ export class PermissionsService {
     @InjectRepository(AppSettings) private readonly appSettings: AppSettingsRepository,
     private readonly uow: UnitOfWork,
     private readonly cacheStore: PermissionsCacheStore = permissionsCacheSlot.get(),
+    @Optional() private readonly planning?: PlanningAccessService,
   ) {}
 
   private async loadPermissions(): Promise<Map<string, PermissionLevel>> {
@@ -143,7 +145,12 @@ export class PermissionsService {
     tripUserId: number | null,
     userId: number,
     isMember: boolean,
+    tripId?: number | string,
   ): Promise<boolean> {
+    if (tripId !== undefined) {
+      const planning = this.planning ?? new PlanningAccessService(this.appSettings.getEntityManager());
+      if (!(await planning.allowsFormalWrite(actionKey, Number(tripId), userId))) return false;
+    }
     // Admins always pass, without reading the configured level.
     if (userRole === 'admin') return true;
 

@@ -280,8 +280,9 @@ describe('MNoteSheet', () => {
     rerender(<MNoteSheet planner={planner} open={false} payload={undefined} onClose={onClose} />)
     // The parent drops the payload with the sheet id, but the exit animation
     // still shows the edit chrome.
-    expect(screen.getByRole('button', { name: 'common.delete' })).toBeInTheDocument()
-    expect(screen.getByRole('dialog', { name: 'dayplan.noteEdit' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'common.delete', hidden: true })).toBeInTheDocument()
+    expect(document.querySelector('[data-m-sheet="closing"]')).toHaveAttribute('aria-label', 'dayplan.noteEdit')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('FE-MOB-NOTESH-018: reopening on another note replaces the form state', () => {

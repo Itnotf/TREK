@@ -2,11 +2,21 @@
 
 ![Trip creation dialog](assets/TripCreate.png)
 
-## Opening the Dialog
+## Plan with AI
 
-On desktop, click the floating **New Trip** button in the bottom-right corner of the dashboard, or the dashed **New Trip** tile at the end of the trip grid, to open the Create New Trip dialog. On mobile the floating button is replaced by the **+** in the centre of the bottom tab bar, and an empty dashboard also offers a **Create First Trip** button.
+When AI is available, **Plan with AI**, the dashboard's **+**, and `/dashboard?create=1` start a new private planning conversation. Start with a short idea, such as “a road trip in western Sichuan” or “a weekend away with the kids”, or paste a travel guide link. You do not need to prepare a complete brief.
 
-You can also open it directly via a deep link: navigate to `/dashboard?create=1`. This is the URL used by system notices that prompt you to create a trip.
+AI asks one important question at a time and offers answers you can tap. You can also type your own answer or add several details at once. It skips information you have already given, normally prepares the complete draft after two or three short rounds, and lists any remaining assumptions. **Plan with what you know** lets you request the draft immediately. If your first message already contains enough detail, it can generate the draft straight away.
+
+The draft shows a summary and a short list of days. Expand **Preview the itinerary** for the full guide, places, transport and accommodation advice. Request changes in the same chat until you are happy, then choose **Use this itinerary**. This creates the actual trip and opens **Daily itinerary** directly.
+
+Inviting friends is optional. Expand **Discuss with others first (optional)** to save the draft in a trip discussion before confirmation. Only the itinerary is shared; the private conversation stays private. In **Review and adjust**, the proposal is shown first. Expand **Request changes** to ask AI for another version, or use **Discuss together** to talk with your travellers. Confirming a proposal opens the daily itinerary. Until then, existing confirmed arrangements are retained.
+
+Once saved, use **Daily itinerary** for the day-by-day schedule and **Travel guide** for descriptions and practical advice. Use **Review and adjust** for another AI revision. Other trip tools are under **More**; on a phone, **Review and adjust** is also under **More**.
+
+## Create manually
+
+Choose **Create manually** on the dashboard to open the form below. If AI is unavailable or you are offline, the create shortcut opens this form instead. On mobile, **+** is in the centre of the bottom tab bar.
 
 ## Fields
 

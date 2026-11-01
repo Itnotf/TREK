@@ -131,7 +131,8 @@ describe('a home turn', () => {
     expect(prompt).toContain('in German');
     expect(prompt).not.toContain('{language}');
     expect(prompt).toContain('open_trip_chat');
-    expect(prompt).toContain('You cannot change a trip from here.');
+    expect(prompt).toContain('save_itinerary_draft');
+    expect(prompt).toContain("only the user's confirmation creates the trip");
     expect(prompt).toContain('use_addon_tools');
     expect(OPEN_TRIP_CHAT_SPEC.name).toBe(OPEN_TRIP_CHAT_TOOL);
     expect(OPEN_TRIP_CHAT_SPEC.parameters.required).toEqual(['tripId']);
@@ -146,6 +147,17 @@ describe('a home turn', () => {
     expect(HOME_USE_TOOLS_SPEC.parameters).toEqual(USE_TOOLS_SPEC.parameters);
     expect(HOME_USE_TOOLS_SPEC.description).toContain('list_trips');
     expect(USE_TOOLS_SPEC.description).toContain('The trip itself');
+  });
+
+  it('starts from a short request, asks one missing essential through choices, and proceeds without a form', () => {
+    const prompt = homePrompt('Chinese');
+    expect(prompt).toContain('想去川西自驾');
+    expect(prompt).toContain('single missing fact');
+    expect(prompt).toContain('two or three brief rounds');
+    expect(prompt).toContain('skip anything already known');
+    expect(prompt).toContain('When the user asks you to decide or generate directly');
+    expect(prompt).toContain('question and two or three concrete answers');
+    expect(prompt).toContain('without requiring another confirmation');
   });
 });
 
