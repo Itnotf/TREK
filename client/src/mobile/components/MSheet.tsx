@@ -5,6 +5,7 @@ import { useTranslation } from '../../i18n'
 import { useDiscardGuard } from '../../components/shared/useDiscardGuard'
 import { keepTabInside, useModalFocus } from './modalFocus'
 import { useBackLayer } from '../../hooks/useBackLayer'
+import { useKeyboardInset } from '../../hooks/useKeyboardInset'
 
 export type MSheetVariant = 'card' | 'bottom' | 'drawer'
 export type MSheetMaterial = 'glass' | 'bar-glass' | 'opaque'
@@ -43,8 +44,8 @@ const POSITION: Record<MSheetVariant, string> = {
 }
 
 const SHAPE: Record<MSheetVariant, string> = {
-  card: 'rounded-[28px] shadow-[0_30px_80px_-24px_rgba(0,0,0,.6)] max-h-[calc(100dvh-var(--m-safe-top,12px)-96px)]',
-  bottom: 'rounded-t-[28px] pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-8px_40px_-14px_rgba(0,0,0,.45)] max-h-[calc(100dvh-var(--m-safe-top,12px)-12px)]',
+  card: 'rounded-[28px] shadow-[0_30px_80px_-24px_rgba(0,0,0,.6)] max-h-[calc(100dvh-var(--m-keyboard-inset,0px)-var(--m-safe-top,12px)-96px)]',
+  bottom: 'rounded-t-[28px] pb-[env(safe-area-inset-bottom,0px)] shadow-[0_-8px_40px_-14px_rgba(0,0,0,.45)] max-h-[calc(100dvh-var(--m-keyboard-inset,0px)-var(--m-safe-top,12px)-12px)]',
   drawer: 'h-full shadow-[0_0_60px_-10px_rgba(0,0,0,.5)]',
 }
 
@@ -81,6 +82,7 @@ export default function MSheet({
   discardGuard,
 }: MSheetProps) {
   const { t } = useTranslation()
+  const keyboard = useKeyboardInset()
   const { asking, markStart, requestClose, keepEditing, discard, reset } = useDiscardGuard(discardGuard, onClose)
   const [rendered, setRendered] = useState(open)
   // Once the enter animation has played it is removed again: its forwards
@@ -88,6 +90,8 @@ export default function MSheet({
   const [entered, setEntered] = useState(false)
   const [dragY, setDragY] = useState<number | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const confirmationRef = useRef<HTMLDivElement>(null)
+  const keepEditingRef = useRef<HTMLButtonElement>(null)
   const dragRef = useRef<{ startY: number; lastY: number; lastT: number; velocity: number } | null>(null)
 
   // Keep the sheet mounted through the exit animation.
@@ -113,6 +117,7 @@ export default function MSheet({
 
   // Move focus into the dialog on open, hand it back on close.
   useModalFocus(panelRef, open && rendered)
+  useModalFocus(keepEditingRef, open && asking)
 
   if (!rendered) return null
 
@@ -143,7 +148,7 @@ export default function MSheet({
   }
 
   // Keep Tab inside the dialog while it is open.
-  const handleKeyDown = (e: React.KeyboardEvent) => keepTabInside(e, panelRef.current)
+  const handleKeyDown = (e: React.KeyboardEvent) => keepTabInside(e, asking ? confirmationRef.current : panelRef.current)
 
   const enterClass = variant === 'drawer' ? 'm-drawer-in' : 'm-sheet-in'
   const exitClass = variant === 'drawer' ? 'm-drawer-out' : 'm-sheet-out'
@@ -165,7 +170,7 @@ export default function MSheet({
     // backdrop-blur (the "liquid glass" frost). The sheet still slides via m-sheet-in.
     <div
       className={`m-root fixed inset-0 z-[80] ${dimTransparent ? 'bg-transparent' : `bg-[color:var(--m-dim)] ${open ? 'm-fade-in' : 'm-fade-out'}`}`}
-      style={{ pointerEvents: open ? undefined : 'none' }}
+      style={{ pointerEvents: open ? undefined : 'none', bottom: keyboard, '--m-keyboard-inset': `${keyboard}px` } as React.CSSProperties}
       role="presentation"
       aria-hidden={!open || undefined}
       onClick={(e) => {
@@ -183,6 +188,15 @@ export default function MSheet({
           className={`relative flex flex-col overflow-hidden outline-none text-m-ink ${SHAPE[variant]} ${MATERIAL[resolvedMaterial]} ${animation} ${className}`}
           style={variant === 'bottom' ? dragStyle : undefined}
           onClick={(e) => e.stopPropagation()}
+          onClickCapture={(e) => {
+            if (discardGuard === undefined || !(e.target instanceof Element)) return
+            const dismiss = e.target.closest('[data-m-sheet-dismiss]')
+            if (!dismiss || dismiss.closest('[data-m-sheet]') !== e.currentTarget) return
+            // Header and cancel buttons share the guard; successful saves still close directly.
+            e.preventDefault()
+            e.stopPropagation()
+            requestClose()
+          }}
           onKeyDown={handleKeyDown}
           onKeyDownCapture={markStart}
           onPointerDownCapture={markStart}
@@ -205,11 +219,11 @@ export default function MSheet({
           {children}
           {asking && (
             <div className="absolute inset-0 z-10 grid place-items-center bg-[color:var(--m-dim)] p-5 backdrop-blur-[2px]">
-              <div role="alertdialog" aria-label={t('common.unsavedTitle')} className="w-full max-w-[320px] rounded-[22px] border border-[color:var(--m-shbr)] bg-[color:var(--m-sheetop)] p-5">
+              <div ref={confirmationRef} role="alertdialog" aria-modal="true" aria-label={t('common.unsavedTitle')} className="w-full max-w-[320px] rounded-[22px] border border-[color:var(--m-shbr)] bg-[color:var(--m-sheetop)] p-5">
                 <div className="text-subtitle font-semibold text-m-ink">{t('common.unsavedTitle')}</div>
                 <p className="m-0 mt-1.5 text-body text-m-muted">{t('common.unsavedMessage')}</p>
                 <div className="mt-4 flex justify-end gap-2">
-                  <button type="button" autoFocus onClick={keepEditing} className="rounded-full border border-[color:var(--m-shbr)] px-4 py-2 text-body font-semibold text-m-ink">
+                  <button ref={keepEditingRef} type="button" onClick={keepEditing} className="rounded-full border border-[color:var(--m-shbr)] px-4 py-2 text-body font-semibold text-m-ink">
                     {t('common.keepEditing')}
                   </button>
                   <button type="button" onClick={discard} className={DISCARD_BUTTON}>

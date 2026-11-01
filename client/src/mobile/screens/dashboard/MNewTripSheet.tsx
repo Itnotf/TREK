@@ -183,7 +183,7 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
         <div className="min-w-0 flex-1 truncate text-[1.0625rem] font-bold">
           {isEditing ? t('dashboard.editTrip') : t('dashboard.createTrip')}
         </div>
-        <MIconBtn ariaLabel={t('common.cancel')} variant="neutral" size={34} onClick={onClose}>
+        <MIconBtn ariaLabel={t('common.cancel')} variant="neutral" size={44} sheetDismiss onClick={onClose}>
           <X size={16} strokeWidth={2.2} />
         </MIconBtn>
       </div>
@@ -312,6 +312,7 @@ export default function MNewTripSheet({ open, trip: tripProp, onClose, onSave, o
         <button
           type="button"
           onClick={onClose}
+          data-m-sheet-dismiss
           className="flex-1 rounded-full bg-[color:var(--m-ic)] py-[10px] text-[0.8125rem] font-semibold text-m-ink"
         >
           {t('common.cancel')}

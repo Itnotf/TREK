@@ -14,6 +14,8 @@ interface MIconBtnProps {
   ariaExpanded?: boolean
   /** For a button that opens a panel: what kind it is (`menu` for a menu). */
   ariaHaspopup?: AriaAttributes['aria-haspopup']
+  /** Route a sheet's explicit close button through its unsaved-changes guard. */
+  sheetDismiss?: boolean
   children: ReactNode
 }
 
@@ -27,12 +29,14 @@ export default function MIconBtn({
   disabled = false,
   ariaExpanded,
   ariaHaspopup,
+  sheetDismiss,
   children,
 }: MIconBtnProps) {
   return (
     <button
       type="button"
       onClick={onClick}
+      data-m-sheet-dismiss={sheetDismiss || undefined}
       aria-label={ariaLabel}
       aria-expanded={ariaExpanded}
       aria-haspopup={ariaHaspopup}

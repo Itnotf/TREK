@@ -44,7 +44,7 @@ export function FormSheetHeader({ icon: Icon, title, subtitle, leading, onClose,
         <div className="truncate text-[1.0625rem] font-bold text-m-ink">{title}</div>
         {subtitle && <div className="truncate font-geist text-[0.71875rem] text-m-muted">{subtitle}</div>}
       </div>
-      <MIconBtn ariaLabel={closeLabel} onClick={onClose} variant="neutral" size={34}>
+      <MIconBtn ariaLabel={closeLabel} onClick={onClose} sheetDismiss variant="neutral" size={44}>
         <X size={15} strokeWidth={2.2} />
       </MIconBtn>
     </div>
@@ -88,6 +88,7 @@ export function FormSheetFooter({
       <button
         type="button"
         onClick={onCancel}
+        data-m-sheet-dismiss
         className="ms-auto rounded-full border border-[color:var(--m-rowbr)] bg-[color:var(--m-ic)] px-4 py-[9px] text-[0.78125rem] font-semibold text-m-ink"
       >
         {cancelLabel}

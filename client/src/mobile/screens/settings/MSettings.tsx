@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import {
   Bell,
   ChevronDown,
@@ -16,6 +15,8 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from '../../../i18n'
+import { useBackLayer } from '../../../hooks/useBackLayer'
+import { useBackNavigation } from '../../../hooks/useBackNavigation'
 import { useSettings } from '../../../pages/settings/useSettings'
 import MSettingsPlugins from './MSettingsPlugins'
 import MSettingsOffline from './MSettingsOffline'
@@ -41,9 +42,10 @@ interface SectionTab {
  */
 export default function MSettings() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const goBack = useBackNavigation('/dashboard')
   const { hasIntegrations, hasPlugins, appVersion, activeTab, setActiveTab, managed } = useSettings()
   const [dropOpen, setDropOpen] = useState(false)
+  useBackLayer(dropOpen, () => setDropOpen(false))
 
   const tabs: SectionTab[] = [
     { id: 'display', label: t('settings.tabs.display'), icon: SlidersHorizontal },
@@ -71,8 +73,8 @@ export default function MSettings() {
         <button
           type="button"
           aria-label={t('common.back')}
-          onClick={() => navigate('/dashboard')}
-          className="flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-sheet)] text-m-ink shadow-[0_5px_12px_-8px_rgba(0,0,0,.18)]"
+          onClick={dropOpen ? () => setDropOpen(false) : goBack}
+          className="flex h-11 w-11 flex-none items-center justify-center rounded-full border border-[color:var(--m-gbr)] bg-[color:var(--m-sheet)] text-m-ink shadow-[0_5px_12px_-8px_rgba(0,0,0,.18)]"
         >
           <ChevronLeft size={18} strokeWidth={2.2} />
         </button>

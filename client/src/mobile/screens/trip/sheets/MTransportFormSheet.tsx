@@ -553,6 +553,7 @@ export default function MTransportFormSheet({ planner, onOpenExpense }: MTranspo
           <button
             type="button"
             onClick={handleClose}
+            data-m-sheet-dismiss
             className="ms-auto rounded-full border border-[color:var(--m-rowbr)] bg-[color:var(--m-ic)] px-4 py-[9px] text-[0.78125rem] font-semibold text-m-ink"
           >
             {t('common.cancel')}

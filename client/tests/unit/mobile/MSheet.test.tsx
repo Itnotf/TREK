@@ -314,10 +314,40 @@ describe('MSheet', () => {
       return (
         <MSheet open={open} onClose={onClose} ariaLabel="Form" discardGuard={{ name }}>
           <input aria-label="Name" value={name} onChange={e => setName(e.target.value)} />
+          <button type="button" data-m-sheet-dismiss onClick={onClose}><span>Close form</span></button>
         </MSheet>
       );
     }
     const backdrop = () => screen.getByRole('dialog', { name: 'Form' }).parentElement!.parentElement!;
+
+    it('keeps focus inside the discard question and restores the editor on continue', () => {
+      render(<Form open onClose={vi.fn()} />);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      input.focus();
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(backdrop());
+      const keep = screen.getByRole('button', { name: /keep editing|common.keepEditing/i });
+      const discard = screen.getByRole('button', { name: /discard|common.discard/i });
+      discard.focus();
+      fireEvent.keyDown(discard, { key: 'Tab' });
+      expect(document.activeElement).toBe(keep);
+      fireEvent.keyDown(keep, { key: 'Tab', shiftKey: true });
+      expect(document.activeElement).toBe(discard);
+      fireEvent.click(keep);
+      expect(document.activeElement).toBe(input);
+    });
+
+    it('routes an explicit dismiss control through the same unsaved guard', () => {
+      const onClose = vi.fn();
+      render(<Form open onClose={onClose} />);
+      const input = screen.getByRole('textbox', { name: 'Name' });
+      fireEvent.pointerDown(input);
+      fireEvent.change(input, { target: { value: 'Lisbon' } });
+      fireEvent.click(screen.getByText('Close form'));
+      expect(onClose).not.toHaveBeenCalled();
+      expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    });
 
     it('FE-MOB-SHEET-020: a tap on the scrim asks before throwing a change away, and keep editing stays', () => {
       const onClose = vi.fn();

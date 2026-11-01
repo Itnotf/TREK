@@ -105,6 +105,7 @@ async function openSection(label: string) {
 }
 
 beforeEach(() => {
+  window.history.replaceState({ idx: 0 }, '', '/admin');
   resetAllStores();
   seedStore(useAuthStore, { isAuthenticated: true, user: buildAdmin() });
   server.use(
@@ -118,8 +119,9 @@ beforeEach(() => {
   );
 });
 
-afterEach(() => {
+afterEach(async () => {
   server.resetHandlers();
+  await new Promise(resolve => setTimeout(resolve, 30));
 });
 
 describe('MAdmin', () => {
@@ -162,6 +164,35 @@ describe('MAdmin', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
 
     expect(screen.getByText('dashboard page')).toBeInTheDocument();
+  });
+
+  it('returns to the page that opened administration', async () => {
+    window.history.replaceState({ idx: 1 }, '', '/admin');
+    render(
+      <Routes>
+        <Route path="/admin" element={<MAdmin />} />
+        <Route path="/settings" element={<div>source settings</div>} />
+        <Route path="/dashboard" element={<div>dashboard page</div>} />
+      </Routes>,
+      { initialEntries: ['/settings', '/admin'] },
+    );
+    await screen.findByText('alice');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+    await screen.findByText('source settings');
+  });
+
+  it('system Back closes the section list before leaving administration', async () => {
+    renderAdmin();
+    await screen.findByText('alice');
+    fireEvent.click(screen.getByRole('button', { name: 'Administration' }));
+    expect(screen.getByRole('button', { name: 'User Defaults' })).toBeInTheDocument();
+
+    window.history.back();
+
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'User Defaults' })).not.toBeInTheDocument());
+    expect(screen.getByText('alice')).toBeInTheDocument();
   });
 
   it('FE-MOB-ADMIN-004: the header plus opens the create-user sheet', async () => {
